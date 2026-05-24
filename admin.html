@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>لوحة التحكم — APEX</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --accent:#E8192C;
+  --accent2:#E8192C;
+  --bg:#0d0d0d;
+  --surface:#161616;
+  --surface2:#1e1e1e;
+  --border:#2a2a2a;
+  --text:#ffffff;
+  --muted:#888;
+  --font:'Segoe UI',Arial,sans-serif;
+}
+body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column}
+/* LAYOUT */
+.shell{display:grid;grid-template-columns:220px 1fr;grid-template-rows:56px 1fr;min-height:100vh}
+/* TOPBAR */
+.topbar{grid-column:1/-1;background:var(--surface);border-bottom:0.5px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 20px;gap:12px}
+.topbar-logo{font-size:18px;font-weight:900}
+.topbar-logo span{color:var(--accent)}
+.topbar-right{display:flex;align-items:center;gap:10px}
+.preview-btn{background:var(--accent);color:#fff;padding:6px 14px;border-radius:6px;font-size:12px;font-weight:700;border:none;cursor:pointer;font-family:var(--font)}
+.publish-btn{background:transparent;border:1px solid #2a2a2a;color:#ccc;padding:6px 14px;border-radius:6px;font-size:12px;cursor:pointer;font-family:var(--font)}
+.publish-btn:hover{border-color:var(--accent);color:var(--accent)}
+/* SIDEBAR */
+.sidebar{background:var(--surface);border-left:0.5px solid var(--border);padding:16px 0}
+.nav-item{display:flex;align-items:center;gap:10px;padding:10px 18px;font-size:13px;color:var(--muted);cursor:pointer;transition:.15s;border-right:2px solid transparent}
+.nav-item:hover{color:var(--text);background:var(--surface2)}
+.nav-item.active{color:var(--accent);border-right-color:var(--accent);background:rgba(232,25,44,0.07)}
+.nav-icon{font-size:16px;width:20px;text-align:center}
+.nav-sep{height:0.5px;background:var(--border);margin:10px 14px}
+/* MAIN */
+.main{background:var(--bg);padding:24px;overflow-y:auto}
+.section{display:none}
+.section.active{display:block}
+.page-title{font-size:18px;font-weight:700;margin-bottom:6px}
+.page-sub{font-size:13px;color:var(--muted);margin-bottom:24px}
+/* CARDS */
+.card{background:var(--surface);border:0.5px solid var(--border);border-radius:10px;padding:20px;margin-bottom:16px}
+.card-title{font-size:13px;font-weight:600;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center}
+/* FORM */
+.field{margin-bottom:14px}
+.field label{display:block;font-size:11px;color:var(--muted);margin-bottom:6px;font-weight:500;letter-spacing:.5px;text-transform:uppercase}
+.field input,.field textarea,.field select{width:100%;background:#0a0a0a;border:0.5px solid var(--border);color:var(--text);padding:9px 12px;border-radius:7px;font-size:13px;font-family:var(--font);outline:none;transition:.15s}
+.field input:focus,.field textarea:focus{border-color:var(--accent)}
+.field textarea{resize:vertical;min-height:80px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+/* COLOR GRID */
+.color-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}
+.color-item{background:#0a0a0a;border:0.5px solid var(--border);border-radius:8px;padding:12px;display:flex;align-items:center;gap:10px}
+.color-swatch{width:32px;height:32px;border-radius:6px;border:none;cursor:pointer;flex-shrink:0}
+.color-info{flex:1;min-width:0}
+.color-name{font-size:11px;color:var(--muted);margin-bottom:3px}
+.color-val{font-size:12px;font-family:monospace;color:var(--text)}
+/* FONT SELECT */
+.font-options{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.font-opt{padding:7px 14px;border-radius:6px;border:0.5px solid var(--border);font-size:12px;cursor:pointer;background:#0a0a0a;color:var(--muted);transition:.15s}
+.font-opt.active,.font-opt:hover{border-color:var(--accent);color:var(--accent)}
+/* PORTFOLIO GRID */
+.portfolio-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px}
+.port-card{background:#0a0a0a;border:0.5px solid var(--border);border-radius:10px;overflow:hidden;position:relative}
+.port-thumb{height:110px;display:flex;align-items:center;justify-content:center;font-size:36px;background:#1a0508}
+.port-info{padding:10px}
+.port-title{font-size:12px;font-weight:600;margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.port-cat{font-size:10px;color:var(--accent);font-weight:600}
+.port-actions{display:flex;gap:6px;margin-top:8px}
+.port-btn{flex:1;padding:5px;border-radius:5px;border:0.5px solid var(--border);background:transparent;color:var(--muted);font-size:11px;cursor:pointer;font-family:var(--font);transition:.15s}
+.port-btn:hover{border-color:var(--accent);color:var(--accent)}
+.port-btn.del:hover{border-color:#e84040;color:#e84040}
+.add-card{border:0.5px dashed var(--border);border-radius:10px;height:168px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;color:var(--muted);font-size:13px;gap:8px;transition:.15s;background:transparent}
+.add-card:hover{border-color:var(--accent);color:var(--accent)}
+/* UPLOAD */
+.upload-zone{border:1px dashed var(--border);border-radius:10px;padding:40px;text-align:center;cursor:pointer;transition:.2s;background:#0a0a0a}
+.upload-zone:hover,.upload-zone.drag{border-color:var(--accent);background:rgba(232,25,44,0.04)}
+.upload-icon{font-size:32px;margin-bottom:12px}
+.upload-label{font-size:13px;color:var(--muted)}
+.upload-label span{color:var(--accent);font-weight:600}
+/* STATS */
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px}
+.stat-card{background:var(--surface);border:0.5px solid var(--border);border-radius:10px;padding:16px}
+.stat-num{font-size:26px;font-weight:800;margin-bottom:4px}
+.stat-lab{font-size:11px;color:var(--muted)}
+/* BTN */
+.btn{padding:9px 18px;border-radius:7px;font-size:13px;font-weight:600;cursor:pointer;font-family:var(--font);border:none;transition:.15s}
+.btn-primary{background:var(--accent);color:#fff}
+.btn-primary:hover{opacity:.9}
+.btn-ghost{background:transparent;border:0.5px solid var(--border);color:var(--muted)}
+.btn-ghost:hover{border-color:var(--accent);color:var(--accent)}
+/* LIVE PREVIEW MINI */
+.preview-strip{background:#0a0a0a;border:0.5px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:16px}
+.preview-bar{background:#1e1e1e;padding:8px 14px;font-size:11px;color:var(--muted);display:flex;align-items:center;gap:8px;border-bottom:0.5px solid var(--border)}
+.dot{width:8px;height:8px;border-radius:50%}
+.preview-frame{padding:20px;display:flex;flex-direction:column;align-items:center;gap:8px}
+.pv-nav{width:100%;height:32px;border-radius:5px;display:flex;align-items:center;padding:0 12px;font-size:11px;font-weight:800;justify-content:space-between;transition:.3s}
+.pv-hero{width:100%;height:56px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;transition:.3s}
+.pv-btn{padding:5px 14px;border-radius:4px;font-size:10px;font-weight:700;border:none;cursor:default;transition:.3s}
+/* TOAST */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(60px);background:var(--surface2);border:0.5px solid var(--border);color:var(--text);padding:10px 22px;border-radius:8px;font-size:13px;z-index:999;transition:.3s;opacity:0;pointer-events:none}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+/* MODAL */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:200;display:none;align-items:center;justify-content:center}
+.overlay.open{display:flex}
+.modal{background:var(--surface);border:0.5px solid var(--border);border-radius:14px;padding:28px;width:480px;max-width:95vw;max-height:90vh;overflow-y:auto}
+.modal-title{font-size:16px;font-weight:700;margin-bottom:20px;display:flex;justify-content:space-between;align-items:center}
+.close-btn{background:transparent;border:none;color:var(--muted);font-size:18px;cursor:pointer;line-height:1}
+.close-btn:hover{color:var(--text)}
+/* SLIDER */
+input[type=range]{accent-color:var(--accent)}
+.slider-row{display:flex;align-items:center;gap:12px}
+.slider-row input[type=range]{flex:1}
+.slider-val{font-size:12px;color:var(--accent);min-width:36px;text-align:left;font-family:monospace}
+/* BADGE */
+.badge{display:inline-block;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:700}
+.badge-live{background:#0a1a0a;color:#3dd68c;border:0.5px solid #1a3a1a}
+.badge-draft{background:#1a1a0a;color:#e4b84a;border:0.5px solid #3a3a0a}
+</style>
+</head>
+<body>
+<div class="shell">
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="topbar-logo">APEX<span>.</span> <span style="font-size:11px;font-weight:400;color:var(--muted);margin-right:8px">لوحة التحكم</span></div>
+  <div class="topbar-right">
+    <span class="badge badge-live">● مباشر</span>
+    <button class="publish-btn" onclick="toast('جاري النشر...')">معاينة</button>
+    <button class="preview-btn" onclick="toast('✅ تم النشر بنجاح!')">نشر التغييرات</button>
+  </div>
+</div>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <div class="nav-item active" onclick="go('overview',this)"><span class="nav-icon">📊</span>نظرة عامة</div>
+  <div class="nav-item" onclick="go('design',this)"><span class="nav-icon">🎨</span>التصميم والألوان</div>
+  <div class="nav-item" onclick="go('portfolio',this)"><span class="nav-icon">🖼️</span>الأعمال</div>
+  <div class="nav-item" onclick="go('content',this)"><span class="nav-icon">✍️</span>المحتوى</div>
+  <div class="nav-item" onclick="go('services',this)"><span class="nav-icon">⚡</span>الخدمات</div>
+  <div class="nav-sep"></div>
+  <div class="nav-item" onclick="go('settings',this)"><span class="nav-icon">⚙️</span>الإعدادات</div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- OVERVIEW -->
+  <div class="section active" id="sec-overview">
+    <div class="page-title">نظرة عامة</div>
+    <div class="page-sub">مرحبًا! إليك ملخص موقعك.</div>
+    <div class="stats-row">
+      <div class="stat-card"><div class="stat-num" style="color:var(--accent)">6</div><div class="stat-lab">أعمال منشورة</div></div>
+      <div class="stat-card"><div class="stat-num">6</div><div class="stat-lab">خدمات</div></div>
+      <div class="stat-card"><div class="stat-num" style="color:#3dd68c">مباشر</div><div class="stat-lab">حالة الموقع</div></div>
+      <div class="stat-card"><div class="stat-num">عربي</div><div class="stat-lab">اللغة الافتراضية</div></div>
+    </div>
+    <div class="card">
+      <div class="card-title">معاينة سريعة للموقع</div>
+      <div class="preview-strip">
+        <div class="preview-bar">
+          <div class="dot" style="background:#ff5f57"></div>
+          <div class="dot" style="background:#febc2e"></div>
+          <div class="dot" style="background:#28c840"></div>
+          <span style="flex:1;text-align:center">apex-agency.com</span>
+        </div>
+        <div class="preview-frame">
+          <div class="pv-nav" id="pvNav" style="background:#141414;color:#fff">
+            <span style="font-weight:900;font-size:12px">APEX<span id="pvDot" style="color:var(--accent)">.</span></span>
+            <div style="display:flex;gap:10px;font-size:10px;color:#888">خدماتنا · أعمالنا · تواصل</div>
+          </div>
+          <div class="pv-hero" id="pvHero" style="background:linear-gradient(135deg,#0d0d0d,#1a0508);color:#fff">
+            نحوّل علامتك التجارية إلى <span id="pvAccentText" style="color:var(--accent);margin-right:4px">قوة تسويقية</span>
+          </div>
+          <button class="pv-btn" id="pvBtn" style="background:var(--accent);color:#fff">ابدأ معنا</button>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">روابط سريعة</div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn btn-ghost" onclick="go('design',document.querySelector('[onclick*=design]'))">🎨 تعديل التصميم</button>
+        <button class="btn btn-ghost" onclick="go('portfolio',document.querySelector('[onclick*=portfolio]'))">🖼️ رفع أعمال</button>
+        <button class="btn btn-ghost" onclick="go('content',document.querySelector('[onclick*=content]'))">✍️ تعديل المحتوى</button>
+        <button class="btn btn-ghost" onclick="go('services',document.querySelector('[onclick*=services]'))">⚡ إدارة الخدمات</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- DESIGN -->
+  <div class="section" id="sec-design">
+    <div class="page-title">التصميم والألوان</div>
+    <div class="page-sub">غيّر ألوان وخطوط الموقع وشوف التغيير مباشرة.</div>
+
+    <div class="card">
+      <div class="card-title">الألوان الرئيسية</div>
+      <div class="color-grid">
+        <div class="color-item">
+          <input type="color" class="color-swatch" value="#E8192C" id="c-accent" onchange="applyColor('--accent',this.value);applyColor('--accent2',this.value);updatePreview()">
+          <div class="color-info"><div class="color-name">اللون الرئيسي</div><div class="color-val" id="cv-accent">#E8192C</div></div>
+        </div>
+        <div class="color-item">
+          <input type="color" class="color-swatch" value="#0A0A0A" id="c-bg" onchange="applyColor('--bg',this.value);updatePreview()">
+          <div class="color-info"><div class="color-name">الخلفية</div><div class="color-val" id="cv-bg">#0A0A0A</div></div>
+        </div>
+        <div class="color-item">
+          <input type="color" class="color-swatch" value="#161616" id="c-surface" onchange="applyColor('--surface',this.value)">
+          <div class="color-info"><div class="color-name">الكروت</div><div class="color-val" id="cv-surface">#161616</div></div>
+        </div>
+        <div class="color-item">
+          <input type="color" class="color-swatch" value="#ffffff" id="c-text" onchange="applyColor('--text',this.value)">
+          <div class="color-info"><div class="color-name">النصوص</div><div class="color-val" id="cv-text">#ffffff</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">الخط</div>
+      <div style="font-size:12px;color:var(--muted);margin-bottom:8px">اختار خط الموقع</div>
+      <div class="font-options" id="fontOpts">
+        <div class="font-opt active" onclick="setFont('Segoe UI',this)" style="font-family:'Segoe UI'">Segoe UI</div>
+        <div class="font-opt" onclick="setFont('Georgia',this)" style="font-family:Georgia">Georgia</div>
+        <div class="font-opt" onclick="setFont('Courier New',this)" style="font-family:'Courier New'">Courier New</div>
+        <div class="font-opt" onclick="setFont('Arial',this)" style="font-family:Arial">Arial</div>
+        <div class="font-opt" onclick="setFont('Tahoma',this)" style="font-family:Tahoma">Tahoma</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">حجم الخطوط</div>
+      <div class="field">
+        <label>حجم النصوص العادية</label>
+        <div class="slider-row">
+          <input type="range" min="12" max="20" value="14" id="fs-body" oninput="document.getElementById('fv-body').textContent=this.value+'px'">
+          <span class="slider-val" id="fv-body">14px</span>
+        </div>
+      </div>
+      <div class="field">
+        <label>حجم العناوين</label>
+        <div class="slider-row">
+          <input type="range" min="24" max="80" value="48" id="fs-h1" oninput="document.getElementById('fv-h1').textContent=this.value+'px'">
+          <span class="slider-val" id="fv-h1">48px</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">زوايا الكروت</div>
+      <div class="field">
+        <label>مقدار الانحناء</label>
+        <div class="slider-row">
+          <input type="range" min="0" max="24" value="10" id="br-val" oninput="document.getElementById('bv-val').textContent=this.value+'px'">
+          <span class="slider-val" id="bv-val">10px</span>
+        </div>
+      </div>
+    </div>
+
+    <button class="btn btn-primary" onclick="toast('✅ تم حفظ إعدادات التصميم!')">حفظ التغييرات</button>
+  </div>
+
+  <!-- PORTFOLIO -->
+  <div class="section" id="sec-portfolio">
+    <div class="page-title">إدارة الأعمال</div>
+    <div class="page-sub">ارفع أعمالك الجديدة أو عدّل الموجودة.</div>
+
+    <div class="card">
+      <div class="card-title">رفع عمل جديد <button class="btn btn-primary" style="font-size:11px;padding:6px 12px" onclick="openModal()">+ إضافة</button></div>
+      <div class="upload-zone" id="dropZone" onclick="document.getElementById('fileInput').click()"
+        ondragover="event.preventDefault();this.classList.add('drag')"
+        ondragleave="this.classList.remove('drag')"
+        ondrop="handleDrop(event)">
+        <div class="upload-icon">📁</div>
+        <div class="upload-label">اسحب الصور هنا أو <span>اختار من جهازك</span></div>
+        <div style="font-size:11px;color:var(--muted);margin-top:6px">PNG, JPG, WebP — حد أقصى 5MB</div>
+        <input type="file" id="fileInput" accept="image/*" multiple style="display:none" onchange="handleFiles(this.files)">
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">الأعمال الحالية (<span id="portCount">6</span>)</div>
+      <div class="portfolio-grid" id="portGrid">
+        <!-- filled by JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="section" id="sec-content">
+    <div class="page-title">تعديل المحتوى</div>
+    <div class="page-sub">عدّل نصوص الموقع من هنا مباشرة.</div>
+    <div class="card">
+      <div class="card-title">قسم الـ Hero (الصفحة الرئيسية)</div>
+      <div class="field"><label>العنوان الرئيسي (عربي)</label><input type="text" value="نحوّل علامتك التجارية إلى قوة تسويقية" id="heroTitleAr" oninput="updatePreviewText()"></div>
+      <div class="field"><label>العنوان الرئيسي (إنجليزي)</label><input type="text" value="We Turn Your Brand Into a Marketing Force"></div>
+      <div class="field"><label>النص التفسيري (عربي)</label><textarea>استراتيجيات إعلانية مدروسة، إبداع بلا حدود، ونتائج حقيقية تقيسها بنفسك.</textarea></div>
+      <div class="field"><label>نص الزر الرئيسي</label><input type="text" value="ابدأ معنا"></div>
+    </div>
+    <div class="card">
+      <div class="card-title">الإحصائيات</div>
+      <div class="row2">
+        <div class="field"><label>عدد العملاء</label><input type="number" value="150"></div>
+        <div class="field"><label>عدد المشاريع</label><input type="number" value="400"></div>
+        <div class="field"><label>متوسط الـ ROI</label><input type="text" value="5x"></div>
+        <div class="field"><label>سنوات الخبرة</label><input type="number" value="3"></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">معلومات التواصل</div>
+      <div class="field"><label>رقم الهاتف</label><input type="text" value="+20 100 000 0000"></div>
+      <div class="field"><label>البريد الإلكتروني</label><input type="email" value="hello@apex-agency.com"></div>
+      <div class="field"><label>رابط واتساب</label><input type="text" value="https://wa.me/201000000000"></div>
+    </div>
+    <button class="btn btn-primary" onclick="toast('✅ تم حفظ المحتوى!')">حفظ التغييرات</button>
+  </div>
+
+  <!-- SERVICES -->
+  <div class="section" id="sec-services">
+    <div class="page-title">إدارة الخدمات</div>
+    <div class="page-sub">أضف أو عدّل خدمات الوكالة.</div>
+    <div id="servicesList"></div>
+    <button class="btn btn-ghost" style="width:100%;margin-top:4px" onclick="addService()">+ إضافة خدمة</button>
+    <button class="btn btn-primary" style="margin-top:12px" onclick="toast('✅ تم حفظ الخدمات!')">حفظ</button>
+  </div>
+
+  <!-- SETTINGS -->
+  <div class="section" id="sec-settings">
+    <div class="page-title">الإعدادات</div>
+    <div class="page-sub">إعدادات الموقع العامة والإعلانات.</div>
+    <div class="card">
+      <div class="card-title">بيانات الموقع</div>
+      <div class="field"><label>اسم الوكالة</label><input type="text" value="APEX Marketing Agency"></div>
+      <div class="field"><label>الشعار (النص)</label><input type="text" value="APEX"></div>
+      <div class="field"><label>اللغة الافتراضية</label>
+        <select><option>عربي (RTL)</option><option>English (LTR)</option><option>كلاهما</option></select>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">🎯 ربط الإعلانات</div>
+      <div class="field"><label>Meta Pixel ID</label><input type="text" placeholder="مثال: 1234567890123456"></div>
+      <div class="field"><label>Google Tag ID</label><input type="text" placeholder="مثال: G-XXXXXXXXXX"></div>
+      <div class="field"><label>TikTok Pixel ID</label><input type="text" placeholder="مثال: C4J5XXXXXXXXXXXX"></div>
+      <div style="background:#0a1a0a;border:0.5px solid #1a3a1a;border-radius:8px;padding:12px;font-size:12px;color:#3dd68c;margin-top:4px">
+        ✅ بمجرد إدخال الـ Pixel ID هيتضاف تلقائياً في كود الموقع
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">📱 روابط السوشيال ميديا</div>
+      <div class="row2">
+        <div class="field"><label>Facebook</label><input type="url" placeholder="https://facebook.com/..."></div>
+        <div class="field"><label>Instagram</label><input type="url" placeholder="https://instagram.com/..."></div>
+        <div class="field"><label>TikTok</label><input type="url" placeholder="https://tiktok.com/@..."></div>
+        <div class="field"><label>LinkedIn</label><input type="url" placeholder="https://linkedin.com/..."></div>
+      </div>
+    </div>
+    <button class="btn btn-primary" onclick="toast('✅ تم حفظ الإعدادات!')">حفظ الإعدادات</button>
+  </div>
+
+</div><!-- /main -->
+</div><!-- /shell -->
+
+<!-- MODAL -->
+<div class="overlay" id="modal" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <div class="modal-title">إضافة عمل جديد <button class="close-btn" onclick="closeModal()">✕</button></div>
+    <div class="field"><label>اسم المشروع (عربي)</label><input type="text" id="m-title" placeholder="مثال: حملة العيد 2025"></div>
+    <div class="field"><label>الوصف (عربي)</label><input type="text" id="m-desc" placeholder="مثال: زيادة المبيعات 300%"></div>
+    <div class="field"><label>التصنيف</label>
+      <select id="m-cat"><option>Meta Ads</option><option>Google Ads</option><option>Branding</option><option>Social Media</option><option>TikTok</option><option>SEO</option><option>Web Design</option></select>
+    </div>
+    <div class="field"><label>الإيموجي / أيقونة</label><input type="text" id="m-icon" placeholder="🚀" maxlength="4"></div>
+    <div class="field"><label>صورة المشروع (اختياري)</label>
+      <div class="upload-zone" style="padding:20px" onclick="document.getElementById('m-file').click()">
+        <div style="font-size:13px;color:var(--muted)">📁 اختار صورة</div>
+        <input type="file" id="m-file" accept="image/*" style="display:none" onchange="previewModalImg(this)">
+      </div>
+      <img id="m-preview" style="display:none;width:100%;border-radius:8px;margin-top:8px;max-height:140px;object-fit:cover">
+    </div>
+    <div style="display:flex;gap:10px;margin-top:8px">
+      <button class="btn btn-primary" style="flex:1" onclick="addPortItem()">إضافة للموقع</button>
+      <button class="btn btn-ghost" onclick="closeModal()">إلغاء</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toastEl"></div>
+
+<script>
+var ports=[
+  {title:'حملة العيد 2025',desc:'زيادة المبيعات 320%',cat:'Meta Ads',icon:'🛍️',bg:'#1a0508'},
+  {title:'إطلاق براند لياقة',desc:'10,000 متابع في 60 يوم',cat:'Branding',icon:'🏋️',bg:'#0a0a1a'},
+  {title:'توليد leads طبية',desc:'تخفيض تكلفة الـ lead 60%',cat:'Google Ads',icon:'🏥',bg:'#0a1a0a'},
+  {title:'سوشيال ميديا مطعم',desc:'مضاعفة الحجوزات',cat:'Social Media',icon:'🍕',bg:'#1a1a0a'},
+  {title:'إطلاق تطبيق موبايل',desc:'50,000 تنزيل أول شهر',cat:'TikTok',icon:'📱',bg:'#1a0a1a'},
+  {title:'تسويق عقارات',desc:'بيع 30 وحدة في 45 يوم',cat:'Meta + Google',icon:'🏗️',bg:'#0a1a1a'}
+];
+
+var services=[
+  {icon:'📣',title:'إعلانات مدفوعة',desc:'Meta · Google · TikTok'},
+  {icon:'✍️',title:'إنتاج المحتوى',desc:'Copy · Video · Design'},
+  {icon:'🎨',title:'الهوية البصرية',desc:'Logo · Branding · Guidelines'},
+  {icon:'📊',title:'إدارة السوشيال',desc:'Instagram · Facebook · TikTok'},
+  {icon:'🔍',title:'SEO',desc:'On-Page · Off-Page · Technical'},
+  {icon:'🌐',title:'تصميم مواقع',desc:'UI/UX · Conversion · Speed'}
+];
+
+function renderPorts(){
+  var g=document.getElementById('portGrid');
+  g.innerHTML='';
+  ports.forEach(function(p,i){
+    g.innerHTML+=`<div class="port-card">
+      <div class="port-thumb" style="background:${p.bg}">${p.img?`<img src="${p.img}" style="width:100%;height:100%;object-fit:cover">`:p.icon}</div>
+      <div class="port-info">
+        <div class="port-title">${p.title}</div>
+        <div class="port-cat">${p.cat}</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:3px">${p.desc}</div>
+        <div class="port-actions">
+          <button class="port-btn" onclick="editPort(${i})">تعديل</button>
+          <button class="port-btn del" onclick="delPort(${i})">حذف</button>
+        </div>
+      </div>
+    </div>`;
+  });
+  g.innerHTML+=`<div class="add-card" onclick="openModal()"><span style="font-size:24px">+</span><span>إضافة عمل</span></div>`;
+  document.getElementById('portCount').textContent=ports.length;
+}
+
+function renderServices(){
+  var c=document.getElementById('servicesList');
+  c.innerHTML='';
+  services.forEach(function(s,i){
+    c.innerHTML+=`<div class="card" style="margin-bottom:10px">
+      <div style="display:flex;gap:10px;align-items:flex-start">
+        <input type="text" value="${s.icon}" style="width:44px;text-align:center;background:#0a0a0a;border:0.5px solid var(--border);color:var(--text);padding:8px;border-radius:7px;font-size:16px;font-family:var(--font)">
+        <div style="flex:1;display:flex;flex-direction:column;gap:8px">
+          <input type="text" value="${s.title}" style="width:100%;background:#0a0a0a;border:0.5px solid var(--border);color:var(--text);padding:8px 12px;border-radius:7px;font-size:13px;font-family:var(--font)">
+          <input type="text" value="${s.desc}" style="width:100%;background:#0a0a0a;border:0.5px solid var(--border);color:var(--muted);padding:8px 12px;border-radius:7px;font-size:12px;font-family:var(--font)">
+        </div>
+        <button class="port-btn del" style="flex:none;padding:8px 10px" onclick="services.splice(${i},1);renderServices()">🗑</button>
+      </div>
+    </div>`;
+  });
+}
+
+function addService(){
+  services.push({icon:'⭐',title:'خدمة جديدة',desc:'وصف الخدمة'});
+  renderServices();
+}
+
+function go(id,el){
+  document.querySelectorAll('.section').forEach(function(s){s.classList.remove('active')});
+  document.querySelectorAll('.nav-item').forEach(function(n){n.classList.remove('active')});
+  document.getElementById('sec-'+id).classList.add('active');
+  if(el)el.classList.add('active');
+}
+
+function applyColor(v,val){
+  document.documentElement.style.setProperty(v,val);
+  var key=v.replace('--','cv-');
+  var el=document.getElementById(key);
+  if(el)el.textContent=val;
+}
+
+function updatePreview(){
+  var acc=document.getElementById('c-accent').value;
+  document.getElementById('pvDot').style.color=acc;
+  document.getElementById('pvAccentText').style.color=acc;
+  document.getElementById('pvBtn').style.background=acc;
+  var bg=document.getElementById('c-bg').value;
+  document.getElementById('pvHero').style.background='linear-gradient(135deg,'+bg+',#1a0508)';
+}
+
+function updatePreviewText(){
+  var t=document.getElementById('heroTitleAr').value;
+  document.getElementById('pvAccentText').textContent=t.split(' ').slice(-2).join(' ');
+}
+
+function setFont(f,el){
+  document.querySelectorAll('.font-opt').forEach(function(o){o.classList.remove('active')});
+  el.classList.add('active');
+  document.documentElement.style.setProperty('--font',f);
+  toast('✅ تم تغيير الخط إلى '+f);
+}
+
+function openModal(){document.getElementById('modal').classList.add('open')}
+function closeModal(){document.getElementById('modal').classList.remove('open')}
+
+function addPortItem(){
+  var t=document.getElementById('m-title').value;
+  var d=document.getElementById('m-desc').value;
+  var cat=document.getElementById('m-cat').value;
+  var icon=document.getElementById('m-icon').value||'🎯';
+  var img=document.getElementById('m-preview').src;
+  if(!t){alert('اكتب اسم المشروع');return}
+  var colors=['#1a0508','#0a0a1a','#0a1a0a','#1a1a0a','#1a0a1a','#0a1a1a'];
+  ports.push({title:t,desc:d||'',cat:cat,icon:icon,bg:colors[ports.length%colors.length],img:img&&img.startsWith('data')?img:null});
+  renderPorts();
+  closeModal();
+  document.getElementById('m-title').value='';
+  document.getElementById('m-desc').value='';
+  document.getElementById('m-icon').value='';
+  document.getElementById('m-preview').style.display='none';
+  toast('✅ تمت إضافة "'+t+'" للموقع!');
+}
+
+function delPort(i){
+  if(confirm('تأكد حذف "'+ports[i].title+'"؟')){ports.splice(i,1);renderPorts();toast('🗑 تم الحذف')}
+}
+function editPort(i){
+  document.getElementById('m-title').value=ports[i].title;
+  document.getElementById('m-desc').value=ports[i].desc;
+  document.getElementById('m-icon').value=ports[i].icon;
+  openModal();
+}
+
+function handleFiles(files){
+  Array.from(files).forEach(function(f){
+    var r=new FileReader();
+    r.onload=function(e){
+      var name=f.name.replace(/\.[^.]+$/,'');
+      ports.push({title:name,desc:'',cat:'Portfolio',icon:'🖼️',bg:'#0a0a0a',img:e.target.result});
+      renderPorts();
+      toast('✅ تمت إضافة الصورة!');
+    };
+    r.readAsDataURL(f);
+  });
+}
+
+function handleDrop(e){
+  e.preventDefault();
+  document.getElementById('dropZone').classList.remove('drag');
+  handleFiles(e.dataTransfer.files);
+}
+
+function previewModalImg(inp){
+  var r=new FileReader();
+  r.onload=function(e){
+    var p=document.getElementById('m-preview');
+    p.src=e.target.result;p.style.display='block';
+  };
+  r.readAsDataURL(inp.files[0]);
+}
+
+var toastTimer;
+function toast(msg){
+  var t=document.getElementById('toastEl');
+  t.textContent=msg;t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(function(){t.classList.remove('show')},2800);
+}
+
+renderPorts();
+renderServices();
+</script>
+</body>
+</html>

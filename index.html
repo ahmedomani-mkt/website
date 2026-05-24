@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>APEX Marketing Agency</title>
+
+<!-- ===== META PIXEL PLACEHOLDER ===== -->
+<!-- الصق كود Meta Pixel هنا -->
+<!-- <script>!function(f,b,e,v,n,t,s)...</script> -->
+
+<!-- ===== GOOGLE TAG PLACEHOLDER ===== -->
+<!-- الصق كود Google Tag هنا -->
+<!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXX"></script> -->
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--red:#E8192C;--red-dark:#B5101E;--black:#0A0A0A;--gray:#141414;--gray2:#1E1E1E;--white:#FFFFFF;--text-muted:#888}
+html{scroll-behavior:smooth}
+body{font-family:'Segoe UI',Arial,sans-serif;background:var(--black);color:var(--white);overflow-x:hidden}
+
+/* NAV */
+nav{position:fixed;top:0;width:100%;z-index:100;padding:18px 5%;display:flex;justify-content:space-between;align-items:center;background:rgba(10,10,10,0.85);backdrop-filter:blur(12px);border-bottom:1px solid #222}
+.logo{font-size:22px;font-weight:800;letter-spacing:1px}
+.logo span{color:var(--red)}
+.nav-links{display:flex;gap:28px;list-style:none}
+.nav-links a{color:#ccc;text-decoration:none;font-size:14px;transition:.2s}
+.nav-links a:hover{color:var(--red)}
+.lang-btn{background:transparent;border:1px solid #333;color:#ccc;padding:6px 14px;border-radius:4px;cursor:pointer;font-size:13px;transition:.2s}
+.lang-btn:hover{border-color:var(--red);color:var(--white)}
+.cta-nav{background:var(--red);color:#fff;padding:8px 20px;border-radius:4px;text-decoration:none;font-size:14px;font-weight:600;transition:.2s}
+.cta-nav:hover{background:var(--red-dark)}
+
+/* HERO */
+.hero{min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:120px 5% 80px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-40%;left:50%;transform:translateX(-50%);width:800px;height:800px;background:radial-gradient(circle,rgba(232,25,44,0.12) 0%,transparent 70%);pointer-events:none}
+.hero-badge{display:inline-block;background:#1a0508;border:1px solid #3a0a10;color:var(--red);padding:6px 16px;border-radius:20px;font-size:12px;font-weight:600;letter-spacing:2px;margin-bottom:24px;text-transform:uppercase}
+.hero h1{font-size:clamp(36px,6vw,72px);font-weight:900;line-height:1.1;margin-bottom:24px;max-width:800px}
+.hero h1 span{color:var(--red)}
+.hero p{font-size:18px;color:var(--text-muted);max-width:560px;margin:0 auto 40px;line-height:1.7}
+.hero-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+.btn-primary{background:var(--red);color:#fff;padding:14px 32px;border-radius:6px;text-decoration:none;font-weight:700;font-size:15px;transition:.2s;border:none;cursor:pointer}
+.btn-primary:hover{background:var(--red-dark);transform:translateY(-2px)}
+.btn-outline{background:transparent;color:#fff;padding:14px 32px;border-radius:6px;text-decoration:none;font-weight:600;font-size:15px;border:1px solid #333;transition:.2s}
+.btn-outline:hover{border-color:var(--red);color:var(--red)}
+.hero-stats{display:flex;gap:48px;justify-content:center;margin-top:64px;flex-wrap:wrap}
+.stat{text-align:center}
+.stat-num{font-size:36px;font-weight:900;color:var(--white)}
+.stat-num span{color:var(--red)}
+.stat-label{font-size:13px;color:var(--text-muted);margin-top:4px}
+
+/* SECTIONS */
+section{padding:90px 5%}
+.section-tag{font-size:12px;font-weight:700;color:var(--red);letter-spacing:3px;text-transform:uppercase;margin-bottom:14px}
+.section-title{font-size:clamp(28px,4vw,44px);font-weight:900;margin-bottom:16px;line-height:1.2}
+.section-sub{font-size:16px;color:var(--text-muted);max-width:520px;line-height:1.7}
+.section-header{margin-bottom:56px}
+
+/* SERVICES */
+.services{background:var(--gray)}
+.services-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px}
+.service-card{background:var(--gray2);border:1px solid #2a2a2a;border-radius:12px;padding:32px;transition:.3s;position:relative;overflow:hidden}
+.service-card::before{content:'';position:absolute;top:0;right:0;width:3px;height:0;background:var(--red);transition:.3s}
+.service-card:hover::before{height:100%}
+.service-card:hover{border-color:#333;transform:translateY(-4px)}
+.service-icon{width:48px;height:48px;background:#1a0508;border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:20px;font-size:22px}
+.service-card h3{font-size:18px;font-weight:700;margin-bottom:12px}
+.service-card p{font-size:14px;color:var(--text-muted);line-height:1.7}
+.service-card .tag{display:inline-block;margin-top:16px;font-size:11px;color:var(--red);font-weight:600;letter-spacing:1px}
+
+/* PORTFOLIO */
+.portfolio-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px}
+.portfolio-item{background:var(--gray2);border-radius:12px;overflow:hidden;border:1px solid #222;transition:.3s;cursor:pointer}
+.portfolio-item:hover{transform:translateY(-4px);border-color:#333}
+.portfolio-thumb{height:200px;display:flex;align-items:center;justify-content:center;font-size:48px;position:relative;overflow:hidden}
+.p1{background:linear-gradient(135deg,#1a0508,#3a0a10)}
+.p2{background:linear-gradient(135deg,#0a0a1a,#1a1a3a)}
+.p3{background:linear-gradient(135deg,#0a1a0a,#1a3a1a)}
+.p4{background:linear-gradient(135deg,#1a1a0a,#3a3a0a)}
+.p5{background:linear-gradient(135deg,#1a0a1a,#3a0a3a)}
+.p6{background:linear-gradient(135deg,#0a1a1a,#0a3a3a)}
+.portfolio-overlay{position:absolute;inset:0;background:rgba(232,25,44,0.85);display:flex;align-items:center;justify-content:center;opacity:0;transition:.3s}
+.portfolio-item:hover .portfolio-overlay{opacity:1}
+.portfolio-overlay span{color:#fff;font-weight:700;font-size:14px}
+.portfolio-info{padding:20px}
+.portfolio-info h3{font-size:16px;font-weight:700;margin-bottom:6px}
+.portfolio-info p{font-size:13px;color:var(--text-muted)}
+.portfolio-cat{display:inline-block;background:#1a0508;color:var(--red);padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;margin-top:10px}
+
+/* WHY US */
+.why{background:var(--gray)}
+.why-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center}
+.why-points{display:flex;flex-direction:column;gap:24px}
+.why-point{display:flex;gap:16px;align-items:flex-start}
+.why-icon{width:40px;height:40px;background:#1a0508;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:18px}
+.why-point h4{font-size:16px;font-weight:700;margin-bottom:6px}
+.why-point p{font-size:14px;color:var(--text-muted);line-height:1.6}
+.why-visual{background:var(--gray2);border-radius:16px;border:1px solid #2a2a2a;padding:40px;text-align:center}
+.big-num{font-size:80px;font-weight:900;color:var(--red);line-height:1}
+.big-label{font-size:15px;color:var(--text-muted);margin-top:8px}
+.divider{width:40px;height:2px;background:var(--red);margin:20px auto}
+
+/* CONTACT */
+.contact-wrap{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:start}
+.contact-info h2{font-size:36px;font-weight:900;margin-bottom:16px}
+.contact-info p{color:var(--text-muted);line-height:1.7;margin-bottom:32px}
+.contact-item{display:flex;gap:14px;align-items:center;margin-bottom:20px}
+.contact-icon{width:42px;height:42px;background:#1a0508;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px}
+.contact-item h4{font-size:13px;color:var(--text-muted);margin-bottom:2px}
+.contact-item p{font-size:15px;font-weight:600}
+.contact-form{background:var(--gray2);border:1px solid #2a2a2a;border-radius:16px;padding:36px}
+.form-group{margin-bottom:20px}
+.form-group label{display:block;font-size:13px;color:var(--text-muted);margin-bottom:8px;font-weight:500}
+.form-group input,.form-group textarea,.form-group select{width:100%;background:#0a0a0a;border:1px solid #2a2a2a;color:var(--white);padding:12px 16px;border-radius:8px;font-size:14px;font-family:inherit;transition:.2s;outline:none}
+.form-group input:focus,.form-group textarea:focus,.form-group select:focus{border-color:var(--red)}
+.form-group textarea{resize:vertical;min-height:110px}
+.form-group select option{background:#0a0a0a}
+.submit-btn{width:100%;background:var(--red);color:#fff;padding:14px;border-radius:8px;border:none;font-size:15px;font-weight:700;cursor:pointer;transition:.2s;font-family:inherit}
+.submit-btn:hover{background:var(--red-dark)}
+
+/* FOOTER */
+footer{background:var(--gray);border-top:1px solid #1e1e1e;padding:40px 5%;text-align:center}
+.footer-logo{font-size:24px;font-weight:900;margin-bottom:12px}
+.footer-logo span{color:var(--red)}
+.footer-links{display:flex;gap:24px;justify-content:center;margin:16px 0;flex-wrap:wrap}
+.footer-links a{color:var(--text-muted);text-decoration:none;font-size:13px;transition:.2s}
+.footer-links a:hover{color:var(--red)}
+.footer-copy{font-size:12px;color:#444;margin-top:16px}
+.social-links{display:flex;gap:12px;justify-content:center;margin:16px 0}
+.social-btn{width:38px;height:38px;background:#1e1e1e;border-radius:8px;display:flex;align-items:center;justify-content:center;text-decoration:none;font-size:16px;transition:.2s;border:1px solid #2a2a2a}
+.social-btn:hover{background:#1a0508;border-color:var(--red)}
+
+/* LANG TOGGLE */
+.en-text{display:none}
+.ar-text{display:block}
+body.en .en-text{display:block}
+body.en .ar-text{display:none}
+body.en{direction:ltr;text-align:left}
+body.en .section-sub{margin:0 0 0 0}
+
+/* TOAST */
+.toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(80px);background:#1a0508;border:1px solid var(--red);color:#fff;padding:14px 28px;border-radius:8px;font-size:14px;z-index:999;transition:.4s;opacity:0}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+
+@media(max-width:768px){
+.why-grid,.contact-wrap{grid-template-columns:1fr}
+.nav-links{display:none}
+.hero h1{font-size:36px}
+.hero-stats{gap:28px}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">APEX<span>.</span></div>
+  <ul class="nav-links">
+    <li><a href="#services" class="ar-text">خدماتنا</a><a href="#services" class="en-text">Services</a></li>
+    <li><a href="#portfolio" class="ar-text">أعمالنا</a><a href="#portfolio" class="en-text">Portfolio</a></li>
+    <li><a href="#contact" class="ar-text">تواصل</a><a href="#contact" class="en-text">Contact</a></li>
+  </ul>
+  <div style="display:flex;gap:10px;align-items:center">
+    <button class="lang-btn" onclick="toggleLang()">EN | عربي</button>
+    <a href="#contact" class="cta-nav ar-text">ابدأ معنا</a>
+    <a href="#contact" class="cta-nav en-text">Get Started</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div>
+    <div class="hero-badge ar-text">🚀 وكالة تسويق رقمي متكاملة</div>
+    <div class="hero-badge en-text">🚀 Full-Service Digital Marketing Agency</div>
+    <h1 class="ar-text">نحوّل علامتك التجارية<br>إلى <span>قوة تسويقية</span></h1>
+    <h1 class="en-text">We Turn Your Brand<br>Into a <span>Marketing Force</span></h1>
+    <p class="ar-text">استراتيجيات إعلانية مدروسة، إبداع بلا حدود، ونتائج حقيقية تقيسها بنفسك.</p>
+    <p class="en-text">Data-driven strategies, boundless creativity, and real results you can measure yourself.</p>
+    <div class="hero-btns">
+      <a href="#portfolio" class="btn-primary ar-text">شوف أعمالنا</a>
+      <a href="#portfolio" class="btn-primary en-text">View Our Work</a>
+      <a href="#contact" class="btn-outline ar-text">تواصل معنا</a>
+      <a href="#contact" class="btn-outline en-text">Contact Us</a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat"><div class="stat-num">+<span>150</span></div><div class="stat-label ar-text">عميل راضي</div><div class="stat-label en-text">Happy Clients</div></div>
+      <div class="stat"><div class="stat-num">+<span>400</span></div><div class="stat-label ar-text">مشروع منجز</div><div class="stat-label en-text">Projects Done</div></div>
+      <div class="stat"><div class="stat-num"><span>5</span>x</div><div class="stat-label ar-text">متوسط ROI للعملاء</div><div class="stat-label en-text">Avg. Client ROI</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section class="services" id="services">
+  <div class="section-header">
+    <div class="section-tag ar-text">خدماتنا</div>
+    <div class="section-tag en-text">Our Services</div>
+    <h2 class="section-title ar-text">كل ما تحتاجه<br>تحت سقف واحد</h2>
+    <h2 class="section-title en-text">Everything You Need<br>Under One Roof</h2>
+  </div>
+  <div class="services-grid">
+    <div class="service-card">
+      <div class="service-icon">📣</div>
+      <h3 class="ar-text">إعلانات مدفوعة</h3>
+      <h3 class="en-text">Paid Advertising</h3>
+      <p class="ar-text">حملات Meta وGoogle وTikTok مُحسّنة لتحقيق أعلى عائد على الإنفاق الإعلاني.</p>
+      <p class="en-text">Optimized Meta, Google & TikTok campaigns designed to maximize your ROAS.</p>
+      <div class="tag">Meta · Google · TikTok</div>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">✍️</div>
+      <h3 class="ar-text">إنتاج المحتوى</h3>
+      <h3 class="en-text">Content Production</h3>
+      <p class="ar-text">محتوى إبداعي يجذب جمهورك ويحوّله من متابع إلى عميل فعلي.</p>
+      <p class="en-text">Creative content that turns your audience from followers into actual customers.</p>
+      <div class="tag">Copy · Video · Design</div>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">🎨</div>
+      <h3 class="ar-text">الهوية البصرية</h3>
+      <h3 class="en-text">Brand Identity</h3>
+      <p class="ar-text">لوجو، ألوان، خطوط، وهوية كاملة تعكس قيمة علامتك وتميّزها في السوق.</p>
+      <p class="en-text">Logo, colors, fonts, and a full identity that reflects your brand's value in the market.</p>
+      <div class="tag">Logo · Branding · Guidelines</div>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">📊</div>
+      <h3 class="ar-text">إدارة السوشيال ميديا</h3>
+      <h3 class="en-text">Social Media Management</h3>
+      <p class="ar-text">إدارة احترافية كاملة لحساباتك مع تقارير شهرية وتحسين مستمر.</p>
+      <p class="en-text">Full professional management of your accounts with monthly reports and continuous improvement.</p>
+      <div class="tag">Instagram · Facebook · TikTok</div>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">🔍</div>
+      <h3 class="ar-text">SEO وتحسين محركات البحث</h3>
+      <h3 class="en-text">SEO & Search Optimization</h3>
+      <p class="ar-text">استراتيجيات SEO تجعل موقعك في أول نتائج البحث وتجلب ترافيك عضوي مستمر.</p>
+      <p class="en-text">SEO strategies that rank your site at the top and drive consistent organic traffic.</p>
+      <div class="tag">On-Page · Off-Page · Technical</div>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">🌐</div>
+      <h3 class="ar-text">تصميم المواقع واللاندينج بيج</h3>
+      <h3 class="en-text">Web Design & Landing Pages</h3>
+      <p class="ar-text">مواقع ولاندينج بيج عالية التحويل مُصمّمة لتحقيق هدفك التسويقي بدقة.</p>
+      <p class="en-text">High-converting websites and landing pages designed precisely for your marketing goals.</p>
+      <div class="tag">UI/UX · Conversion · Speed</div>
+    </div>
+  </div>
+</section>
+
+<!-- PORTFOLIO -->
+<section id="portfolio">
+  <div class="section-header">
+    <div class="section-tag ar-text">أعمالنا</div>
+    <div class="section-tag en-text">Portfolio</div>
+    <h2 class="section-title ar-text">مشاريع حققت نتائج<br><span style="color:var(--red)">حقيقية</span></h2>
+    <h2 class="section-title en-text">Projects That Delivered<br><span style="color:var(--red)">Real Results</span></h2>
+  </div>
+  <div class="portfolio-grid">
+    <div class="portfolio-item">
+      <div class="portfolio-thumb p1">🛍️<div class="portfolio-overlay"><span class="ar-text">عرض المشروع</span><span class="en-text">View Project</span></div></div>
+      <div class="portfolio-info">
+        <h3 class="ar-text">حملة تجارة إلكترونية — رمضان</h3>
+        <h3 class="en-text">E-Commerce Campaign — Ramadan</h3>
+        <p class="ar-text">زيادة المبيعات بنسبة 320% خلال شهر</p>
+        <p class="en-text">320% sales increase in one month</p>
+        <span class="portfolio-cat">Meta Ads</span>
+      </div>
+    </div>
+    <div class="portfolio-item">
+      <div class="portfolio-thumb p2">🏋️<div class="portfolio-overlay"><span class="ar-text">عرض المشروع</span><span class="en-text">View Project</span></div></div>
+      <div class="portfolio-info">
+        <h3 class="ar-text">إطلاق براند لياقة بدنية</h3>
+        <h3 class="en-text">Fitness Brand Launch</h3>
+        <p class="ar-text">هوية كاملة + 10,000 متابع في 60 يوم</p>
+        <p class="en-text">Full identity + 10K followers in 60 days</p>
+        <span class="portfolio-cat">Branding</span>
+      </div>
+    </div>
+    <div class="portfolio-item">
+      <div class="portfolio-thumb p3">🏥<div class="portfolio-overlay"><span class="ar-text">عرض المشروع</span><span class="en-text">View Project</span></div></div>
+      <div class="portfolio-info">
+        <h3 class="ar-text">توليد leads لعيادة طبية</h3>
+        <h3 class="en-text">Medical Clinic Lead Generation</h3>
+        <p class="ar-text">تخفيض تكلفة الـ lead بنسبة 60%</p>
+        <p class="en-text">Reduced cost per lead by 60%</p>
+        <span class="portfolio-cat">Google Ads</span>
+      </div>
+    </div>
+    <div class="portfolio-item">
+      <div class="portfolio-thumb p4">🍕<div class="portfolio-overlay"><span class="ar-text">عرض المشروع</span><span class="en-text">View Project</span></div></div>
+      <div class="portfolio-info">
+        <h3 class="ar-text">سوشيال ميديا مطعم</h3>
+        <h3 class="en-text">Restaurant Social Media</h3>
+        <p class="ar-text">مضاعفة الحجوزات خلال 3 أشهر</p>
+        <p class="en-text">Doubled reservations in 3 months</p>
+        <span class="portfolio-cat">Social Media</span>
+      </div>
+    </div>
+    <div class="portfolio-item">
+      <div class="portfolio-thumb p5">📱<div class="portfolio-overlay"><span class="ar-text">عرض المشروع</span><span class="en-text">View Project</span></div></div>
+      <div class="portfolio-info">
+        <h3 class="ar-text">إطلاق تطبيق موبايل</h3>
+        <h3 class="en-text">Mobile App Launch</h3>
+        <p class="ar-text">50,000 تنزيل في أول شهر</p>
+        <p class="en-text">50,000 downloads in the first month</p>
+        <span class="portfolio-cat">TikTok + Meta</span>
+      </div>
+    </div>
+    <div class="portfolio-item">
+      <div class="portfolio-thumb p6">🏗️<div class="portfolio-overlay"><span class="ar-text">عرض المشروع</span><span class="en-text">View Project</span></div></div>
+      <div class="portfolio-info">
+        <h3 class="ar-text">تسويق عقارات</h3>
+        <h3 class="en-text">Real Estate Marketing</h3>
+        <p class="ar-text">بيع 30 وحدة خلال حملة 45 يوم</p>
+        <p class="en-text">Sold 30 units during a 45-day campaign</p>
+        <span class="portfolio-cat">Google + Meta</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHY US -->
+<section class="why">
+  <div class="why-grid">
+    <div>
+      <div class="section-tag ar-text">ليه تختارنا؟</div>
+      <div class="section-tag en-text">Why Choose Us?</div>
+      <h2 class="section-title ar-text">مش بنبيع كلام،<br>بنحقق نتائج</h2>
+      <h2 class="section-title en-text">We Don't Sell Talk,<br>We Deliver Results</h2>
+      <div class="why-points" style="margin-top:32px">
+        <div class="why-point">
+          <div class="why-icon">🎯</div>
+          <div>
+            <h4 class="ar-text">استراتيجية مبنية على بيانات</h4>
+            <h4 class="en-text">Data-Driven Strategy</h4>
+            <p class="ar-text">كل قرار مبني على تحليل حقيقي، مش تخمين.</p>
+            <p class="en-text">Every decision is based on real analysis, not guesswork.</p>
+          </div>
+        </div>
+        <div class="why-point">
+          <div class="why-icon">⚡</div>
+          <div>
+            <h4 class="ar-text">تنفيذ سريع واحترافي</h4>
+            <h4 class="en-text">Fast & Professional Execution</h4>
+            <p class="ar-text">بنلتزم بالمواعيد ونسلّم شغل عالي الجودة في الوقت المحدد.</p>
+            <p class="en-text">We meet deadlines and deliver high-quality work on time.</p>
+          </div>
+        </div>
+        <div class="why-point">
+          <div class="why-icon">📈</div>
+          <div>
+            <h4 class="ar-text">تقارير شفافة</h4>
+            <h4 class="en-text">Transparent Reporting</h4>
+            <p class="ar-text">تقارير تفصيلية أسبوعية وشهرية تعرف منها بالظبط وين فلوسك رايحة.</p>
+            <p class="en-text">Weekly and monthly detailed reports so you know exactly where your money goes.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="why-visual">
+      <div class="big-num">5x</div>
+      <div class="big-label ar-text">متوسط عائد الاستثمار لعملائنا</div>
+      <div class="big-label en-text">Average ROI for our clients</div>
+      <div class="divider"></div>
+      <div style="font-size:14px;color:var(--text-muted);margin-top:16px" class="ar-text">بناءً على 150+ مشروع خلال 3 سنوات</div>
+      <div style="font-size:14px;color:var(--text-muted);margin-top:16px" class="en-text">Based on 150+ projects over 3 years</div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="contact-wrap">
+    <div class="contact-info">
+      <div class="section-tag ar-text">تواصل معنا</div>
+      <div class="section-tag en-text">Contact Us</div>
+      <h2 class="ar-text">خليك تاخد<br>الخطوة الأولى</h2>
+      <h2 class="en-text">Take The<br>First Step</h2>
+      <p class="ar-text">تواصل معنا دلوقتي واحصل على استشارة مجانية لمشروعك. فريقنا مستعد يساعدك.</p>
+      <p class="en-text">Contact us now and get a free consultation for your project. Our team is ready to help you.</p>
+      <div class="contact-item">
+        <div class="contact-icon">📞</div>
+        <div><h4 class="ar-text">اتصل بنا</h4><h4 class="en-text">Call Us</h4><p>+20 100 000 0000</p></div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-icon">📧</div>
+        <div><h4 class="ar-text">البريد الإلكتروني</h4><h4 class="en-text">Email</h4><p>hello@apex-agency.com</p></div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-icon">💬</div>
+        <div><h4>WhatsApp</h4><p>+20 100 000 0000</p></div>
+      </div>
+    </div>
+    <div class="contact-form">
+      <h3 style="font-size:20px;font-weight:700;margin-bottom:24px" class="ar-text">ابعت رسالة</h3>
+      <h3 style="font-size:20px;font-weight:700;margin-bottom:24px" class="en-text">Send a Message</h3>
+      <div class="form-group">
+        <label class="ar-text">الاسم</label>
+        <label class="en-text">Name</label>
+        <input type="text" id="name" placeholder="اسمك الكريم">
+      </div>
+      <div class="form-group">
+        <label class="ar-text">البريد الإلكتروني أو الواتساب</label>
+        <label class="en-text">Email or WhatsApp</label>
+        <input type="text" id="contact-field" placeholder="email@example.com">
+      </div>
+      <div class="form-group">
+        <label class="ar-text">الخدمة المطلوبة</label>
+        <label class="en-text">Required Service</label>
+        <select id="service">
+          <option value="" class="ar-text">اختار الخدمة</option>
+          <option class="ar-text">إعلانات مدفوعة</option>
+          <option class="ar-text">إنتاج محتوى</option>
+          <option class="ar-text">هوية بصرية</option>
+          <option class="ar-text">إدارة سوشيال ميديا</option>
+          <option class="ar-text">SEO</option>
+          <option class="ar-text">تصميم موقع</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="ar-text">رسالتك</label>
+        <label class="en-text">Message</label>
+        <textarea id="message" placeholder="اكتب تفاصيل مشروعك هنا..."></textarea>
+      </div>
+      <button class="submit-btn" onclick="submitForm()">
+        <span class="ar-text">ابعت الرسالة 🚀</span>
+        <span class="en-text">Send Message 🚀</span>
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">APEX<span>.</span></div>
+  <p style="font-size:13px;color:var(--text-muted);margin:8px 0" class="ar-text">وكالة تسويق رقمي متكاملة</p>
+  <p style="font-size:13px;color:var(--text-muted);margin:8px 0" class="en-text">Full-Service Digital Marketing Agency</p>
+  <div class="social-links">
+    <a class="social-btn" href="#">📘</a>
+    <a class="social-btn" href="#">📸</a>
+    <a class="social-btn" href="#">🎵</a>
+    <a class="social-btn" href="#">▶️</a>
+    <a class="social-btn" href="#">💼</a>
+  </div>
+  <div class="footer-links">
+    <a href="#services" class="ar-text">خدماتنا</a>
+    <a href="#services" class="en-text">Services</a>
+    <a href="#portfolio" class="ar-text">أعمالنا</a>
+    <a href="#portfolio" class="en-text">Portfolio</a>
+    <a href="#contact" class="ar-text">تواصل معنا</a>
+    <a href="#contact" class="en-text">Contact Us</a>
+  </div>
+  <div class="footer-copy">© 2025 APEX Marketing Agency. All rights reserved.</div>
+</footer>
+
+<div class="toast" id="toast">✅ تم إرسال رسالتك! سنتواصل معك قريباً.</div>
+
+<script>
+function toggleLang(){
+  document.body.classList.toggle('en');
+  var isEn=document.body.classList.contains('en');
+  document.documentElement.setAttribute('dir',isEn?'ltr':'rtl');
+  document.getElementById('toast').textContent=isEn?'✅ Message sent! We will contact you soon.':'✅ تم إرسال رسالتك! سنتواصل معك قريباً.';
+}
+function submitForm(){
+  var n=document.getElementById('name').value;
+  var c=document.getElementById('contact-field').value;
+  if(!n||!c){
+    alert(document.body.classList.contains('en')?'Please fill in your name and contact info.':'من فضلك اكتب اسمك وبيانات التواصل.');
+    return;
+  }
+  var t=document.getElementById('toast');
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3500);
+  document.getElementById('name').value='';
+  document.getElementById('contact-field').value='';
+  document.getElementById('message').value='';
+}
+</script>
+</body>
+</html>
