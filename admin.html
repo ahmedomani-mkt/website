@@ -162,7 +162,7 @@ a{text-decoration:none;color:inherit}
         </div>
       </div>
       <div class="info-box">
-        💡 <strong style="color:var(--red)">أول مرة؟</strong> شغّل ملف <code>setup.sql</code> في Supabase Dashboard → SQL Editor حتى تُنشأ الجداول وتُملأ بالبيانات الأولية.
+        ✅ <strong style="color:#3dd68c">قاعدة البيانات جاهزة</strong> — جميع الجداول منشأة ومرتبطة. يمكنك البدء في تعديل المحتوى مباشرةً من هنا.
       </div>
     </div>
 
@@ -424,7 +424,7 @@ async function loadAll(){
   }catch(e){
     document.getElementById('cdot').className='dot off';
     document.getElementById('clbl').textContent='غير متصل';
-    toast('⚠️ تعذر الاتصال — تأكد من تشغيل setup.sql أولًا');
+    toast('⚠️ تعذر الاتصال بقاعدة البيانات — تأكد من الاتصال بالإنترنت');
   }
 }
 function updateStats(){
