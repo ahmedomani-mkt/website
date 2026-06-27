@@ -4,259 +4,420 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="description" content="أحمد عماني — تسويق إلكتروني ودعاية وإعلان متخصصة لقطاع السيارات في مصر. حلول كاملة من الواجهة للكرت الشخصي.">
-<meta name="keywords" content="تسويق سيارات مصر, دعاية اعلان سيارات, مراكز صيانة تسويق, احمد عماني, auto marketing egypt">
 <meta property="og:title" content="Ahmed Omani — تسويق وإعلان لقطاع السيارات">
 <meta property="og:description" content="شريكك المتخصص في الأوتوموتيف — تسويق رقمي + دعاية وإعلان من الواجهة للكرت الشخصي">
 <meta property="og:type" content="website">
-<!-- META PIXEL: ضع Pixel ID هنا -->
-<!-- <script>!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('init','YOUR_PIXEL_ID');fbq('track','PageView');</script> -->
-<!-- GOOGLE TAG: ضع Tag ID هنا -->
-<!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXX"></script><script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-XXXXXXX');</script> -->
 <title>Ahmed Omani — تسويق وإعلان للسيارات</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <style>
-/* ── RESET & ROOT ─────────────────────────────── */
-*{margin:0;padding:0;box-sizing:border-box}
+/* ── ROOT ───────────────────────────────────────── */
 :root{
-  --red:#E8192C;
-  --red-d:#B5101E;
-  --red-glow:rgba(232,25,44,.12);
-  --red-dim:#150305;
-  --black:#080808;
-  --dk:#0f0f0f;
-  --card:#141414;
-  --card2:#1a1a1a;
-  --border:#1e1e1e;
-  --border2:#252525;
-  --white:#fff;
-  --gray:#888;
+  --red:#E8192C; --red-d:#C0111F; --red-a:rgba(232,25,44,.1);
+  --black:#0A0A0A; --dark:#111111; --dark2:#1A1A1A;
+  --bg:#F4F5FA; --white:#FFFFFF;
+  --text:#0D0D0D; --text2:#555555; --text3:#999999;
+  --bl:#E0E1EC; --bd:#1E1E1E;
+  --shadow:0 4px 24px rgba(0,0,0,.07);
+  --shadow-h:0 8px 40px rgba(0,0,0,.14);
   --font:'Noto Kufi Arabic','Segoe UI',Tahoma,Arial,sans-serif;
-  --r:12px;
-  --rsm:8px;
+  --r:16px; --rsm:10px; --sb:62px;
 }
+*{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{font-family:var(--font);background:var(--black);color:var(--white);overflow-x:hidden}
+body{font-family:var(--font);color:var(--text);overflow-x:hidden;background:var(--white);padding-left:var(--sb)}
 a{text-decoration:none;color:inherit}
 img{max-width:100%;display:block}
 
-/* ── UTILS ────────────────────────────────────── */
-.container{max-width:1180px;margin:0 auto;padding:0 5%}
-.sec-tag{font-size:11px;font-weight:700;color:var(--red);letter-spacing:3px;text-transform:uppercase;margin-bottom:10px}
-.sec-title{font-size:clamp(26px,4vw,44px);font-weight:900;line-height:1.2;margin-bottom:14px}
-.sec-sub{font-size:15px;color:var(--gray);line-height:1.8}
-.sec-head{margin-bottom:52px}
-.sec-head.center{text-align:center}
-.sec-head.center .sec-sub{margin:0 auto;max-width:480px}
-section{padding:90px 0}
-.btn-r{background:var(--red);color:#fff;padding:13px 28px;border-radius:var(--rsm);font-weight:700;font-size:14px;font-family:var(--font);border:none;cursor:pointer;transition:.2s;display:inline-block}
-.btn-r:hover{background:var(--red-d);transform:translateY(-2px)}
-.btn-o{background:transparent;color:#fff;padding:13px 28px;border-radius:var(--rsm);font-weight:600;font-size:14px;border:1px solid #333;transition:.2s;display:inline-block}
-.btn-o:hover{border-color:var(--red);color:var(--red)}
+/* ── SIDEBAR ────────────────────────────────────── */
+.sidebar{
+  position:fixed;left:0;top:0;height:100vh;width:var(--sb);
+  background:var(--white);border-right:1px solid var(--bl);
+  z-index:300;display:flex;flex-direction:column;align-items:center;
+  padding:18px 0;gap:4px;
+}
+.sb-brand{width:36px;height:36px;background:var(--red);border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;font-weight:900;letter-spacing:-1px;margin-bottom:16px;flex-shrink:0}
+.sb-link{
+  width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;
+  color:var(--text3);transition:.2s;cursor:pointer;border:none;background:transparent;
+}
+.sb-link:hover,.sb-link.active{background:var(--red-a);color:var(--red)}
+.sb-link svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.sb-wa{
+  margin-top:auto;width:42px;height:42px;border-radius:12px;
+  background:#25D366;display:flex;align-items:center;justify-content:center;
+  color:#fff;transition:.2s;
+}
+.sb-wa:hover{background:#1dba58;transform:scale(1.05)}
+.sb-wa svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 
-/* ── NAV ──────────────────────────────────────── */
-nav{position:fixed;top:0;width:100%;z-index:200;height:62px;padding:0 5%;display:flex;align-items:center;justify-content:space-between;background:rgba(8,8,8,.95);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
-.logo-wrap{display:flex;align-items:center;gap:12px}
-.logo-img{height:40px;width:40px;object-fit:contain}
-.logo-text .name{font-size:15px;font-weight:900;letter-spacing:.3px}
+/* ── TOP NAV ────────────────────────────────────── */
+nav{
+  position:fixed;top:0;right:var(--sb);left:0;
+  /* In RTL: right edge is the main content edge, but nav spans past sidebar */
+  position:fixed;top:0;left:var(--sb);right:0;
+  z-index:200;height:62px;padding:0 5%;
+  display:flex;align-items:center;justify-content:space-between;
+  background:rgba(255,255,255,.92);backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--bl);
+}
+.logo-wrap{display:flex;align-items:center;gap:10px}
+.logo-img{height:38px;width:38px;object-fit:contain}
+.logo-text .name{font-size:14px;font-weight:900;letter-spacing:.3px;color:var(--text)}
 .logo-text .sub{font-size:9px;color:var(--red);font-weight:700;letter-spacing:2.5px;text-transform:uppercase}
-.nav-links{display:flex;gap:26px;list-style:none}
-.nav-links a{color:#999;font-size:13px;font-weight:600;transition:.2s;padding:4px 0;border-bottom:2px solid transparent}
-.nav-links a:hover,.nav-links a.active{color:var(--white);border-bottom-color:var(--red)}
-.nav-cta{background:var(--red);color:#fff;padding:8px 20px;border-radius:var(--rsm);font-size:13px;font-weight:700;transition:.2s}
-.nav-cta:hover{background:var(--red-d)}
+.nav-links{display:flex;gap:24px;list-style:none}
+.nav-links a{color:var(--text2);font-size:13px;font-weight:600;transition:.2s;padding:4px 0;border-bottom:2px solid transparent}
+.nav-links a:hover,.nav-links a.active{color:var(--text);border-bottom-color:var(--red)}
+.nav-cta{background:var(--red);color:#fff;padding:9px 22px;border-radius:50px;font-size:13px;font-weight:700;transition:.2s;display:flex;align-items:center;gap:6px}
+.nav-cta:hover{background:var(--red-d);transform:translateY(-1px)}
+.nav-cta-arrow{background:rgba(255,255,255,.2);width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px}
 .burger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px;background:none;border:none}
-.burger span{width:22px;height:2px;background:#fff;border-radius:2px;transition:.3s;display:block}
+.burger span{width:22px;height:2px;background:var(--text);border-radius:2px;transition:.3s;display:block}
 .burger.open span:nth-child(1){transform:rotate(45deg) translate(5px,5px)}
 .burger.open span:nth-child(2){opacity:0}
 .burger.open span:nth-child(3){transform:rotate(-45deg) translate(5px,-5px)}
 
-/* ── MOBILE NAV ───────────────────────────────── */
-.mobile-nav{display:none;position:fixed;top:62px;inset-inline:0;background:rgba(8,8,8,.97);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);z-index:190;padding:20px 5% 28px}
+/* ── MOBILE NAV ─────────────────────────────────── */
+.mobile-nav{display:none;position:fixed;top:62px;left:var(--sb);right:0;background:rgba(255,255,255,.97);backdrop-filter:blur(20px);border-bottom:1px solid var(--bl);z-index:190;padding:16px 5% 24px}
 .mobile-nav.open{display:block}
-.mobile-nav ul{list-style:none;display:flex;flex-direction:column;gap:0}
-.mobile-nav ul li a{display:block;padding:13px 0;font-size:15px;font-weight:600;color:#bbb;border-bottom:1px solid #111;transition:.2s}
+.mobile-nav ul{list-style:none;display:flex;flex-direction:column}
+.mobile-nav ul li a{display:block;padding:12px 0;font-size:15px;font-weight:600;color:var(--text2);border-bottom:1px solid var(--bl);transition:.2s}
 .mobile-nav ul li a:hover{color:var(--red)}
-.m-cta{display:block;margin-top:18px;text-align:center;background:#25D366;color:#fff;padding:14px;border-radius:var(--rsm);font-weight:700;font-size:15px}
+.m-cta{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:16px;background:#25D366;color:#fff;padding:14px;border-radius:var(--rsm);font-weight:700;font-size:15px}
 
-/* ── HERO ─────────────────────────────────────── */
-.hero{min-height:100vh;display:flex;align-items:center;padding:100px 0 80px;position:relative;overflow:hidden}
-.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 80% 70% at 50% 40%,rgba(232,25,44,.08) 0%,transparent 70%)}
-.hero-lines{position:absolute;inset:0;background:repeating-linear-gradient(135deg,transparent,transparent 40px,rgba(255,255,255,.01) 40px,rgba(255,255,255,.01) 41px)}
-.hero-inner{position:relative;z-index:1;text-align:center;width:100%}
-.hero-logo{width:90px;height:90px;object-fit:contain;margin:0 auto 26px;filter:drop-shadow(0 0 24px rgba(232,25,44,.35))}
-.hero-badge{display:inline-flex;align-items:center;gap:8px;background:var(--red-dim);border:1px solid rgba(232,25,44,.25);color:var(--red);padding:7px 18px;border-radius:20px;font-size:11px;font-weight:700;letter-spacing:2px;margin-bottom:24px;text-transform:uppercase}
-.hero h1{font-size:clamp(32px,5.5vw,68px);font-weight:900;line-height:1.15;margin-bottom:20px}
+/* ── HERO ───────────────────────────────────────── */
+.hero{min-height:100vh;background:var(--bg);padding:62px 0 0;display:flex;align-items:center;overflow:hidden;position:relative}
+.hero-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center;width:100%;padding:60px 5%;max-width:1300px;margin:0 auto}
+/* RTL: first child = right side (text), second = left side (visual) */
+.hero-text{position:relative;z-index:1}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--white);border:1px solid var(--bl);
+  color:var(--text2);padding:7px 16px;border-radius:50px;
+  font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;
+  margin-bottom:24px;box-shadow:var(--shadow);
+}
+.hero-badge-dot{width:8px;height:8px;background:var(--red);border-radius:50%;display:inline-block}
+.hero h1{font-size:clamp(38px,5.5vw,72px);font-weight:900;line-height:1.15;margin-bottom:22px;color:var(--text)}
 .hero h1 .r{color:var(--red)}
-.hero-sub{font-size:16px;color:#999;max-width:540px;margin:0 auto 38px;line-height:1.9}
-.hero-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:66px}
-.hero-stats{display:flex;justify-content:center;border:1px solid var(--border);border-radius:var(--r);overflow:hidden;background:var(--card);max-width:600px;margin:0 auto}
-.hs{flex:1;padding:22px 14px;text-align:center;border-inline-start:1px solid var(--border)}
-.hs:last-child{border-inline-start:none}
-.hs-n{font-size:26px;font-weight:900;line-height:1}
-.hs-n span{color:var(--red)}
-.hs-l{font-size:10px;color:var(--gray);margin-top:6px;line-height:1.4}
+.hero-sub{font-size:15px;color:var(--text2);line-height:1.9;margin-bottom:36px;max-width:420px}
+.hero-btns{display:flex;gap:12px;flex-wrap:wrap}
+.btn-primary{
+  background:var(--red);color:#fff;padding:13px 28px;border-radius:50px;
+  font-weight:700;font-size:14px;transition:.2s;display:inline-flex;align-items:center;gap:10px;
+  box-shadow:0 4px 20px rgba(232,25,44,.35);
+}
+.btn-primary:hover{background:var(--red-d);transform:translateY(-2px);box-shadow:0 6px 28px rgba(232,25,44,.45)}
+.btn-primary-arrow{background:rgba(255,255,255,.2);width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px}
+.btn-secondary{
+  background:var(--white);color:var(--text);padding:13px 28px;border-radius:50px;
+  font-weight:700;font-size:14px;transition:.2s;border:1px solid var(--bl);
+  display:inline-flex;align-items:center;gap:8px;
+}
+.btn-secondary:hover{border-color:var(--text2);transform:translateY(-2px);box-shadow:var(--shadow)}
 
-/* ── SERVICES ─────────────────────────────────── */
-.services-sec{background:var(--dk)}
-.srv-pillars{display:grid;grid-template-columns:1fr 1fr;gap:20px}
-.pillar{background:var(--card);border:1px solid var(--border2);border-radius:var(--r);padding:32px;position:relative;overflow:hidden;transition:.3s;display:flex;flex-direction:column}
-.pillar::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 100% 0%,var(--red-glow),transparent 60%);pointer-events:none}
-.pillar:hover{border-color:#2a0a10}
-.pillar-header{display:flex;gap:16px;align-items:flex-start;margin-bottom:24px;padding-bottom:20px;border-bottom:1px solid var(--border)}
-.pillar-icon{font-size:28px;flex-shrink:0;width:54px;height:54px;background:var(--red-dim);border:1px solid rgba(232,25,44,.2);border-radius:var(--rsm);display:flex;align-items:center;justify-content:center}
-.pillar-header h3{font-size:20px;font-weight:800;margin-bottom:6px}
-.pillar-header p{font-size:13px;color:var(--gray);line-height:1.6}
-.srv-list{display:flex;flex-direction:column;gap:16px;margin-bottom:24px;flex:1}
+/* HERO VISUAL */
+.hero-visual{position:relative;height:480px;display:flex;align-items:center;justify-content:center}
+.hero-blob{
+  position:absolute;width:380px;height:380px;border-radius:50%;
+  background:radial-gradient(circle at 40% 40%,rgba(232,25,44,.18),rgba(232,25,44,.04) 60%,transparent 80%);
+  top:50%;left:50%;transform:translate(-50%,-50%);
+}
+.hero-blob-2{
+  position:absolute;width:280px;height:280px;border-radius:50%;
+  background:radial-gradient(circle,rgba(100,100,255,.07),transparent 70%);
+  top:20%;right:10%;
+}
+.hero-center{
+  position:relative;z-index:2;
+  background:var(--white);border-radius:20px;padding:28px 32px;
+  box-shadow:0 12px 50px rgba(0,0,0,.12);text-align:center;
+  width:200px;
+}
+.hero-center-icon{font-size:36px;margin-bottom:10px}
+.hero-center-brand{font-size:13px;font-weight:900;color:var(--text);letter-spacing:.3px}
+.hero-center-sub{font-size:10px;color:var(--red);font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-top:3px}
+.hero-center-line{height:1px;background:var(--bl);margin:12px 0}
+.hero-center-stats{display:flex;justify-content:space-between;gap:8px}
+.hcs{text-align:center}
+.hcs-n{font-size:16px;font-weight:900;color:var(--red)}
+.hcs-l{font-size:9px;color:var(--text3);font-weight:600}
+
+.metric-float{
+  position:absolute;z-index:3;
+  background:var(--white);border-radius:14px;padding:14px 18px;
+  box-shadow:0 6px 30px rgba(0,0,0,.1);
+}
+.mf-icon{font-size:20px;margin-bottom:4px}
+.mf-num{font-size:20px;font-weight:900;color:var(--text);line-height:1}
+.mf-label{font-size:10px;color:var(--text3);font-weight:600;margin-top:3px}
+.mf1{top:8%;right:2%;animation:floatY 3.5s ease-in-out infinite}
+.mf2{bottom:12%;right:0%;animation:floatY 4s ease-in-out infinite .8s}
+.mf3{top:38%;left:2%;animation:floatY 3.8s ease-in-out infinite 1.2s}
+.mf-badge{
+  position:absolute;z-index:3;top:5%;left:12%;
+  background:var(--red);color:#fff;border-radius:50px;
+  padding:6px 14px;font-size:11px;font-weight:800;
+  box-shadow:0 4px 16px rgba(232,25,44,.4);
+  animation:floatY 3.2s ease-in-out infinite .4s;
+}
+@keyframes floatY{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+
+/* ── FEATURES STRIP ─────────────────────────────── */
+.features-strip{background:var(--dark);padding:52px 0}
+.features-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--bd)}
+.feat-item{background:var(--dark);padding:36px 28px;transition:.2s}
+.feat-item:hover{background:var(--dark2)}
+.feat-icon{
+  width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;
+  font-size:20px;margin-bottom:18px;border:1px solid var(--bd);background:var(--dark2);
+}
+.feat-title{font-size:15px;font-weight:800;color:#fff;margin-bottom:8px;line-height:1.3}
+.feat-desc{font-size:12px;color:#666;line-height:1.7}
+.feat-label{font-size:10px;font-weight:700;color:var(--red);letter-spacing:2px;text-transform:uppercase;margin-bottom:6px}
+
+/* ── SERVICES ───────────────────────────────────── */
+.services-sec{background:var(--white);padding:90px 0}
+.sec-label{font-size:10px;font-weight:700;color:var(--red);letter-spacing:3px;text-transform:uppercase;margin-bottom:10px}
+.sec-title{font-size:clamp(26px,3.5vw,42px);font-weight:900;line-height:1.2;margin-bottom:14px;color:var(--text)}
+.sec-sub{font-size:14px;color:var(--text2);line-height:1.8}
+.sec-head{margin-bottom:52px}
+.sec-head.center{text-align:center}
+.sec-head.center .sec-sub{margin:0 auto;max-width:480px}
+.srv-pillars{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.pillar{
+  border:1px solid var(--bl);border-radius:var(--r);padding:36px;
+  transition:.3s;background:var(--white);position:relative;overflow:hidden;
+}
+.pillar::after{content:'';position:absolute;inset:0;background:radial-gradient(circle at 0% 100%,var(--red-a),transparent 60%);pointer-events:none;opacity:0;transition:.3s}
+.pillar:hover{border-color:rgba(232,25,44,.25);box-shadow:var(--shadow-h)}
+.pillar:hover::after{opacity:1}
+.pillar-header{display:flex;gap:16px;align-items:flex-start;margin-bottom:28px;padding-bottom:24px;border-bottom:1px solid var(--bl)}
+.pillar-icon{
+  width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;
+  font-size:24px;background:var(--bg);border:1px solid var(--bl);flex-shrink:0;
+}
+.pillar-header h3{font-size:19px;font-weight:800;margin-bottom:6px;color:var(--text)}
+.pillar-header p{font-size:13px;color:var(--text2);line-height:1.6}
+.srv-list{display:flex;flex-direction:column;gap:14px;margin-bottom:24px}
 .srv-item{display:flex;gap:12px;align-items:flex-start}
-.srv-check{width:22px;height:22px;background:var(--red-dim);border:1px solid rgba(232,25,44,.3);border-radius:5px;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--red);font-size:11px;font-weight:900;margin-top:2px}
-.srv-item h4{font-size:14px;font-weight:700;margin-bottom:4px}
-.srv-item p{font-size:12px;color:var(--gray);line-height:1.5}
-.srv-also{margin-bottom:22px}
-.srv-also-label{font-size:11px;color:var(--gray);margin-bottom:10px;font-weight:600;letter-spacing:.5px;text-transform:uppercase}
+.srv-check{
+  width:22px;height:22px;border-radius:6px;display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;background:var(--red-a);color:var(--red);font-size:11px;font-weight:900;margin-top:2px;
+}
+.srv-item h4{font-size:13px;font-weight:700;margin-bottom:3px;color:var(--text)}
+.srv-item p{font-size:12px;color:var(--text2);line-height:1.5}
+.srv-also{margin-bottom:24px}
+.srv-also-label{font-size:10px;color:var(--text3);margin-bottom:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase}
 .srv-tags{display:flex;gap:8px;flex-wrap:wrap}
-.stag{background:#111;border:1px solid var(--border2);color:#aaa;padding:5px 12px;border-radius:20px;font-size:11px;font-weight:600}
-.og-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px;flex:1}
-.og-item{background:var(--card2);border:1px solid var(--border);border-radius:var(--rsm);padding:14px 10px;display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;transition:.2s}
-.og-item:hover{border-color:rgba(232,25,44,.3);background:var(--red-dim)}
+.stag{background:var(--bg);border:1px solid var(--bl);color:var(--text2);padding:5px 12px;border-radius:50px;font-size:11px;font-weight:600;transition:.2s}
+.stag:hover{border-color:var(--red);color:var(--red);background:var(--red-a)}
+.og-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:24px}
+.og-item{
+  background:var(--bg);border:1px solid var(--bl);border-radius:var(--rsm);
+  padding:16px 8px;display:flex;flex-direction:column;align-items:center;gap:8px;
+  text-align:center;transition:.2s;cursor:default;
+}
+.og-item:hover{border-color:rgba(232,25,44,.3);background:var(--red-a)}
 .og-item .oi{font-size:22px}
-.og-item p{font-size:11px;font-weight:700;color:#ccc;line-height:1.3}
-.pillar-highlight{background:var(--red-dim);border:1px solid rgba(232,25,44,.18);border-radius:var(--rsm);padding:14px 16px;font-size:13px;color:#bbb;line-height:1.7;margin-bottom:20px;text-align:center}
+.og-item p{font-size:11px;font-weight:700;color:var(--text2);line-height:1.3}
+.pillar-highlight{
+  background:var(--bg);border:1px solid var(--bl);border-radius:var(--rsm);
+  padding:14px 16px;font-size:13px;color:var(--text2);line-height:1.7;margin-bottom:22px;
+}
 .pillar-highlight strong{color:var(--red)}
-.pillar-cta{display:block;text-align:center;background:var(--red);color:#fff;padding:13px;border-radius:var(--rsm);font-weight:700;font-size:14px;transition:.2s;margin-top:auto}
-.pillar-cta:hover{background:var(--red-d)}
+.pillar-cta{
+  display:flex;align-items:center;justify-content:space-between;
+  background:var(--red);color:#fff;padding:14px 20px;border-radius:var(--rsm);
+  font-weight:700;font-size:14px;transition:.2s;
+}
+.pillar-cta:hover{background:var(--red-d);transform:translateY(-1px)}
 
-/* ── PORTFOLIO ────────────────────────────────── */
-.portfolio-sec{background:var(--black)}
-.port-filter{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:32px}
-.pf-btn{background:var(--card);border:1px solid var(--border2);color:var(--gray);padding:8px 18px;border-radius:20px;font-size:12px;font-weight:700;cursor:pointer;font-family:var(--font);transition:.2s}
+/* ── PORTFOLIO ──────────────────────────────────── */
+.portfolio-sec{background:var(--bg);padding:90px 0}
+.port-head{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:28px;flex-wrap:wrap;gap:16px}
+.port-head-text .sec-sub{max-width:360px}
+.port-nav-btns{display:flex;gap:10px}
+.port-nav-btn{
+  width:44px;height:44px;border-radius:50%;border:1px solid var(--bl);
+  background:var(--white);color:var(--text);display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:.2s;font-size:16px;
+}
+.port-nav-btn:hover{background:var(--red);border-color:var(--red);color:#fff}
+.port-filter{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px}
+.pf-btn{
+  background:var(--white);border:1px solid var(--bl);color:var(--text2);
+  padding:8px 18px;border-radius:50px;font-size:12px;font-weight:700;
+  cursor:pointer;font-family:var(--font);transition:.2s;
+}
 .pf-btn.active,.pf-btn:hover{background:var(--red);border-color:var(--red);color:#fff}
-.port-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
-.port-card{background:var(--card);border:1px solid var(--border2);border-radius:var(--r);overflow:hidden;cursor:pointer;transition:.3s;position:relative}
-.port-card:hover{border-color:#3a0a10;transform:translateY(-4px)}
-.port-img{width:100%;height:220px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;background:linear-gradient(135deg,var(--red-dim),var(--dk))}
+.port-track-wrap{overflow:hidden}
+.port-track{display:flex;gap:20px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;scroll-behavior:smooth}
+.port-track::-webkit-scrollbar{display:none}
+.port-card{
+  flex-shrink:0;width:280px;scroll-snap-align:start;
+  background:var(--white);border:1px solid var(--bl);border-radius:var(--r);
+  overflow:hidden;transition:.3s;cursor:pointer;
+}
+.port-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-h);border-color:rgba(232,25,44,.2)}
+.port-img{width:100%;height:200px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--bg),#e8e9f0);position:relative}
 .port-img img{width:100%;height:100%;object-fit:cover}
-.port-img-ph{font-size:42px;opacity:.35}
-.port-type-badge{position:absolute;top:12px;right:12px;background:rgba(8,8,8,.82);border:1px solid var(--border2);color:#ccc;padding:4px 10px;border-radius:20px;font-size:10px;font-weight:700;backdrop-filter:blur(8px)}
-.port-stat{position:absolute;top:12px;left:12px;background:var(--red);color:#fff;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:800}
+.port-img-ph{font-size:40px;opacity:.3}
+.port-type-badge{
+  position:absolute;top:12px;right:12px;background:rgba(255,255,255,.9);
+  border:1px solid var(--bl);color:var(--text2);padding:4px 10px;
+  border-radius:50px;font-size:10px;font-weight:700;backdrop-filter:blur(8px);
+}
+.port-stat{position:absolute;top:12px;left:12px;background:var(--red);color:#fff;padding:4px 12px;border-radius:50px;font-size:11px;font-weight:800}
 .port-body{padding:18px}
-.port-title{font-size:14px;font-weight:700;margin-bottom:6px}
-.port-desc{font-size:12px;color:var(--gray);line-height:1.6;margin-bottom:12px}
+.port-title{font-size:14px;font-weight:700;margin-bottom:6px;color:var(--text)}
+.port-desc{font-size:12px;color:var(--text2);line-height:1.6;margin-bottom:12px}
 .port-meta{display:flex;gap:6px;flex-wrap:wrap}
-.ptag{background:var(--red-dim);color:var(--red);padding:3px 9px;border-radius:4px;font-size:10px;font-weight:700}
+.ptag{background:var(--red-a);color:var(--red);padding:3px 9px;border-radius:4px;font-size:10px;font-weight:700}
 
-/* ── NUMBERS ──────────────────────────────────── */
-.numbers-sec{background:var(--dk);position:relative;overflow:hidden}
-.numbers-sec::before{content:'';position:absolute;top:-150px;left:50%;transform:translateX(-50%);width:700px;height:700px;background:radial-gradient(circle,rgba(232,25,44,.06) 0%,transparent 70%);pointer-events:none}
-.num-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;position:relative;z-index:1}
-.num-item{background:var(--dk);padding:42px 24px;text-align:center;transition:.2s}
-.num-item:hover{background:var(--black)}
-.num-big{font-size:54px;font-weight:900;line-height:1;margin-bottom:8px}
-.num-big span{color:var(--red)}
-.num-label{font-size:13px;color:var(--gray);line-height:1.5}
+/* ── STATS BAR ──────────────────────────────────── */
+.stats-bar{background:var(--red);padding:52px 0}
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:rgba(255,255,255,.15)}
+.stat-item{padding:32px 24px;text-align:center;background:var(--red);transition:.2s}
+.stat-item:hover{background:var(--red-d)}
+.stat-icon{font-size:22px;margin-bottom:10px;opacity:.8}
+.stat-num{font-size:46px;font-weight:900;color:#fff;line-height:1;margin-bottom:6px}
+.stat-num span{color:rgba(255,255,255,.7);font-size:32px}
+.stat-label{font-size:12px;color:rgba(255,255,255,.75);line-height:1.5}
 
-/* ── CLIENTS ──────────────────────────────────── */
-.clients-sec{background:var(--black)}
-.clients-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(108px,1fr));gap:1px;background:var(--border);border:1px solid var(--border);border-radius:var(--r);overflow:hidden}
-.cl-item{background:var(--black);padding:18px 10px;display:flex;align-items:center;justify-content:center;transition:.2s;min-height:66px;cursor:default}
-.cl-item:hover{background:var(--card)}
-.cl-name{font-size:11px;font-weight:700;color:#555;text-align:center;transition:.2s;letter-spacing:.3px}
-.cl-item:hover .cl-name{color:var(--white)}
+/* ── CLIENTS ────────────────────────────────────── */
+.clients-sec{background:var(--white);padding:90px 0}
+.clients-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:1px;background:var(--bl);border:1px solid var(--bl);border-radius:var(--r);overflow:hidden}
+.cl-item{background:var(--white);padding:20px 10px;display:flex;align-items:center;justify-content:center;transition:.2s;min-height:68px}
+.cl-item:hover{background:var(--bg)}
+.cl-name{font-size:11px;font-weight:700;color:#bbb;text-align:center;transition:.2s;letter-spacing:.3px}
+.cl-item:hover .cl-name{color:var(--text)}
 
-/* ── FAQ ──────────────────────────────────────── */
-.faq-sec{background:var(--dk)}
+/* ── FAQ ────────────────────────────────────────── */
+.faq-sec{background:var(--dark);padding:90px 0}
+.faq-sec .sec-label{color:var(--red)}
+.faq-sec .sec-title{color:#fff}
+.faq-sec .sec-sub{color:#666}
 .faq-wrap{max-width:800px;margin:0 auto}
-.faq-item{border-bottom:1px solid var(--border)}
+.faq-item{border-bottom:1px solid var(--bd)}
 .faq-q{display:flex;align-items:center;justify-content:space-between;padding:20px 0;cursor:pointer;gap:16px;user-select:none}
-.faq-q-text{font-size:15px;font-weight:700;flex:1;line-height:1.5}
-.faq-icon{width:28px;height:28px;border:1px solid var(--border2);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:.3s;color:var(--red);font-size:16px;font-weight:700;line-height:1}
+.faq-q-text{font-size:15px;font-weight:700;flex:1;line-height:1.5;color:#ddd}
+.faq-icon{width:30px;height:30px;border:1px solid var(--bd);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--red);font-size:18px;font-weight:700;transition:.3s;line-height:1}
 .faq-item.open .faq-icon{background:var(--red);border-color:var(--red);color:#fff;transform:rotate(45deg)}
 .faq-a{max-height:0;overflow:hidden;transition:.35s ease}
-.faq-a-inner{padding-bottom:20px;font-size:14px;color:var(--gray);line-height:1.9}
+.faq-a-inner{padding-bottom:20px;font-size:14px;color:#666;line-height:1.9}
 .faq-item.open .faq-a{max-height:300px}
 
-/* ── CONTACT ──────────────────────────────────── */
-.contact-sec{background:var(--black)}
+/* ── CONTACT ────────────────────────────────────── */
+.contact-sec{background:var(--black);padding:90px 0}
 .contact-inner{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:start}
-.contact-info .sec-tag{margin-bottom:10px}
-.contact-info h2{font-size:clamp(22px,3.5vw,38px);font-weight:900;margin-bottom:14px;line-height:1.3}
-.contact-info p{color:var(--gray);line-height:1.8;margin-bottom:28px;font-size:14px}
-.c-items{display:flex;flex-direction:column;gap:14px;margin-bottom:20px}
+.contact-info .sec-label{color:var(--red)}
+.contact-info h2{font-size:clamp(22px,3.5vw,38px);font-weight:900;margin-bottom:14px;line-height:1.3;color:#fff}
+.contact-info p{color:#666;line-height:1.8;margin-bottom:28px;font-size:14px}
+.c-items{display:flex;flex-direction:column;gap:14px;margin-bottom:24px}
 .c-item{display:flex;gap:14px;align-items:center}
-.c-ic{width:42px;height:42px;background:var(--red-dim);border:1px solid rgba(232,25,44,.2);border-radius:var(--rsm);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
-.c-item h4{font-size:11px;color:var(--gray);margin-bottom:3px;font-weight:600;text-transform:uppercase;letter-spacing:.5px}
-.c-item p{font-size:14px;font-weight:700}
+.c-ic{width:44px;height:44px;background:#151515;border:1px solid var(--bd);border-radius:var(--rsm);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.c-item h4{font-size:10px;color:#555;margin-bottom:3px;font-weight:700;text-transform:uppercase;letter-spacing:.5px}
+.c-item p{font-size:14px;font-weight:700;color:#ccc}
 .wa-direct{display:flex;align-items:center;justify-content:center;gap:10px;background:#25D366;color:#fff;padding:14px 28px;border-radius:var(--rsm);font-weight:700;font-size:15px;transition:.2s}
 .wa-direct:hover{background:#1dba58;transform:translateY(-2px)}
-.wa-direct .wa-ic{font-size:22px}
-.cform{background:var(--card);border:1px solid var(--border2);border-radius:var(--r);padding:32px}
-.cform h3{font-size:17px;font-weight:800;margin-bottom:22px}
+.cform{background:#0f0f0f;border:1px solid var(--bd);border-radius:var(--r);padding:32px}
+.cform h3{font-size:17px;font-weight:800;margin-bottom:22px;color:#fff}
 .fg{margin-bottom:14px}
-.fg label{display:block;font-size:11px;color:var(--gray);margin-bottom:6px;font-weight:600;letter-spacing:.5px;text-transform:uppercase}
-.fg input,.fg textarea,.fg select{width:100%;background:#0a0a0a;border:1px solid #1e1e1e;color:var(--white);padding:10px 14px;border-radius:var(--rsm);font-size:13px;font-family:var(--font);outline:none;transition:.15s}
+.fg label{display:block;font-size:10px;color:#555;margin-bottom:6px;font-weight:700;letter-spacing:.5px;text-transform:uppercase}
+.fg input,.fg textarea,.fg select{width:100%;background:#0a0a0a;border:1px solid var(--bd);color:#fff;padding:10px 14px;border-radius:var(--rsm);font-size:13px;font-family:var(--font);outline:none;transition:.15s}
 .fg input:focus,.fg textarea:focus,.fg select:focus{border-color:var(--red)}
 .fg textarea{resize:vertical;min-height:88px}
 .fg select option{background:#0a0a0a}
 .sbtn{width:100%;background:var(--red);color:#fff;padding:13px;border-radius:var(--rsm);border:none;font-size:14px;font-weight:700;cursor:pointer;font-family:var(--font);transition:.2s}
 .sbtn:hover{background:var(--red-d)}
 
-/* ── FOOTER ───────────────────────────────────── */
-footer{background:var(--dk);border-top:1px solid var(--border);padding:36px 5%;text-align:center}
+/* ── FOOTER ─────────────────────────────────────── */
+footer{background:var(--dark);border-top:1px solid var(--bd);padding:32px 5%;text-align:center}
 .ft-logo{display:inline-flex;align-items:center;gap:10px;margin-bottom:10px}
-.ft-logo img{height:32px}
-.fn{font-size:16px;font-weight:900}
+.ft-logo img{height:30px}
+.fn{font-size:15px;font-weight:900;color:#fff}
 .fs{font-size:9px;color:var(--red);letter-spacing:2.5px;text-transform:uppercase}
 .ft-links{display:flex;gap:20px;justify-content:center;margin:14px 0;flex-wrap:wrap}
-.ft-links a{color:#444;font-size:12px;transition:.2s}
+.ft-links a{color:#333;font-size:12px;transition:.2s}
 .ft-links a:hover{color:var(--red)}
-.ft-copy{font-size:11px;color:#2a2a2a;margin-top:10px}
+.ft-copy{font-size:11px;color:#222;margin-top:8px}
 
-/* ── WHATSAPP FLOAT ───────────────────────────── */
-.wa-float{position:fixed;bottom:28px;left:28px;z-index:300;display:flex;flex-direction:column;align-items:center;gap:8px}
-.wa-float-bubble{width:56px;height:56px;background:#25D366;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 22px rgba(37,211,102,.4);transition:.2s;font-size:26px;cursor:pointer}
+/* ── WHATSAPP FLOAT ─────────────────────────────── */
+.wa-float{position:fixed;bottom:28px;left:calc(var(--sb) + 14px);z-index:300;display:flex;flex-direction:column;align-items:center;gap:8px}
+.wa-float-bubble{width:52px;height:52px;background:#25D366;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 22px rgba(37,211,102,.4);transition:.2s;font-size:24px;cursor:pointer}
 .wa-float-bubble:hover{transform:scale(1.1);box-shadow:0 6px 30px rgba(37,211,102,.5)}
-.wa-float-tip{background:var(--card);border:1px solid var(--border);color:#ccc;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:600;white-space:nowrap;opacity:0;transition:.2s;pointer-events:none}
+.wa-float-tip{background:var(--white);border:1px solid var(--bl);color:var(--text);padding:4px 12px;border-radius:50px;font-size:11px;font-weight:600;white-space:nowrap;opacity:0;transition:.2s;pointer-events:none;box-shadow:var(--shadow)}
 .wa-float:hover .wa-float-tip{opacity:1}
 
-/* ── TOAST ────────────────────────────────────── */
-.toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(60px);background:var(--card2);border:1px solid var(--border2);color:#fff;padding:10px 24px;border-radius:var(--rsm);font-size:13px;z-index:999;transition:.3s;opacity:0;pointer-events:none}
+/* ── TOAST ──────────────────────────────────────── */
+.toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(60px);background:var(--dark2);border:1px solid var(--bd);color:#fff;padding:10px 24px;border-radius:var(--rsm);font-size:13px;z-index:999;transition:.3s;opacity:0;pointer-events:none}
 .toast.show{transform:translateX(-50%) translateY(0);opacity:1}
 
-/* ── RESPONSIVE ───────────────────────────────── */
-@media(max-width:960px){
-  .srv-pillars{grid-template-columns:1fr}
-  .num-grid{grid-template-columns:1fr 1fr}
-  .contact-inner{grid-template-columns:1fr}
+/* ── RESPONSIVE ─────────────────────────────────── */
+@media(max-width:1024px){
+  .features-grid{grid-template-columns:1fr 1fr}
+  .stats-grid{grid-template-columns:1fr 1fr}
 }
-@media(max-width:700px){
+@media(max-width:768px){
+  :root{--sb:0px}
+  .sidebar{display:none}
+  nav{left:0}
+  .mobile-nav{left:0}
+  .wa-float{left:16px}
   .nav-links,.nav-cta{display:none}
   .burger{display:flex}
-  .hero h1{font-size:clamp(28px,8vw,42px)}
-  .hero-sub{font-size:14px}
-  .hero-stats{flex-wrap:wrap}
-  .hs{min-width:50%;border-inline-start:none;border-top:1px solid var(--border)}
-  .hs:nth-child(1),.hs:nth-child(2){border-top:none}
-  .hs:nth-child(2){border-inline-start:1px solid var(--border)}
-  section{padding:70px 0}
-  .wa-float{bottom:20px;left:20px}
+  .hero-grid{grid-template-columns:1fr;gap:40px;padding:80px 5% 40px}
+  .hero-visual{height:320px}
+  .hero-blob{width:280px;height:280px}
+  .srv-pillars{grid-template-columns:1fr}
+  .contact-inner{grid-template-columns:1fr}
+  .hero h1{font-size:clamp(32px,8vw,52px)}
+}
+@media(max-width:600px){
+  .features-grid{grid-template-columns:1fr 1fr}
+  .stats-grid{grid-template-columns:1fr 1fr}
   .og-grid{grid-template-columns:repeat(4,1fr)}
 }
-@media(max-width:480px){
+@media(max-width:420px){
   .og-grid{grid-template-columns:1fr 1fr}
-  .hero-stats{flex-direction:column}
-  .hs{border-inline-start:none;border-top:1px solid var(--border) !important}
-  .hs:first-child{border-top:none !important}
+  .features-grid{grid-template-columns:1fr}
+  .hero-visual{display:none}
+  .hero-grid{grid-template-columns:1fr}
 }
 </style>
 </head>
 <body>
 
-<!-- ── NAV ─────────────────────────────────────── -->
+<!-- ── SIDEBAR ───────────────────────────────────── -->
+<aside class="sidebar" id="sidebar">
+  <div class="sb-brand">AO</div>
+  <a href="#home" class="sb-link active" title="الرئيسية">
+    <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+  </a>
+  <a href="#services" class="sb-link" title="خدماتنا">
+    <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
+  </a>
+  <a href="#portfolio" class="sb-link" title="أعمالنا">
+    <svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/></svg>
+  </a>
+  <a href="#clients" class="sb-link" title="عملاؤنا">
+    <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+  </a>
+  <a href="#contact" class="sb-link" title="تواصل معنا">
+    <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+  </a>
+  <a href="https://wa.me/201000000000?text=مرحبا،%20أريد%20الاستفسار%20عن%20خدماتكم" class="sb-wa" target="_blank" rel="noopener" title="واتساب">
+    <svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
+  </a>
+</aside>
+
+<!-- ── TOP NAV ───────────────────────────────────── -->
 <nav id="mainNav">
   <div class="logo-wrap">
-    <img src="assets/logo.svg" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Ccircle cx=%2750%27 cy=%2750%27 r=%2748%27 fill=%27white%27/%3E%3Cpolygon points=%2750,20 80,70 20,70%27 fill=%27black%27/%3E%3Crect x=%2744%27 y=%2768%27 width=%2712%27 height=%2712%27 fill=%27%23E8192C%27/%3E%3C/svg%3E'" alt="Ahmed Omani Logo" class="logo-img">
+    <img src="assets/logo.svg" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Ccircle cx=%2750%27 cy=%2750%27 r=%2748%27 fill=%27%23E8192C%27/%3E%3Cpolygon points=%2750,20 80,70 20,70%27 fill=%27white%27/%3E%3C/svg%3E'" alt="Ahmed Omani" class="logo-img">
     <div class="logo-text">
       <div class="name">AHMED OMANI</div>
       <div class="sub">Auto Marketing</div>
@@ -269,13 +430,15 @@ footer{background:var(--dk);border-top:1px solid var(--border);padding:36px 5%;t
     <li><a href="#faq">أسئلة شائعة</a></li>
     <li><a href="#contact">تواصل</a></li>
   </ul>
-  <a href="https://wa.me/201000000000?text=مرحبا،%20أريد%20الاستفسار%20عن%20خدماتكم" class="nav-cta" target="_blank" rel="noopener">واتساب مباشر</a>
+  <a href="https://wa.me/201000000000?text=مرحبا،%20أريد%20الاستفسار%20عن%20خدماتكم" class="nav-cta" target="_blank" rel="noopener">
+    واتساب مباشر <div class="nav-cta-arrow">↗</div>
+  </a>
   <button class="burger" id="burger" onclick="toggleMenu()" aria-label="القائمة">
     <span></span><span></span><span></span>
   </button>
 </nav>
 
-<!-- ── MOBILE NAV ───────────────────────────────── -->
+<!-- ── MOBILE NAV ────────────────────────────────── -->
 <div class="mobile-nav" id="mobileNav">
   <ul>
     <li><a href="#services" onclick="closeMenu()">خدماتنا</a></li>
@@ -287,41 +450,105 @@ footer{background:var(--dk);border-top:1px solid var(--border);padding:36px 5%;t
   <a href="https://wa.me/201000000000?text=مرحبا،%20أريد%20الاستفسار%20عن%20خدماتكم" class="m-cta" target="_blank" rel="noopener">💬 واتساب مباشر</a>
 </div>
 
-<!-- ── HERO ─────────────────────────────────────── -->
-<section class="hero" id="home">
-  <div class="hero-bg"></div>
-  <div class="hero-lines"></div>
-  <div class="container">
-    <div class="hero-inner">
-      <img src="assets/logo.svg" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Ccircle cx=%2750%27 cy=%2750%27 r=%2748%27 fill=%27white%27/%3E%3Cpolygon points=%2750,20 80,70 20,70%27 fill=%27black%27/%3E%3Crect x=%2744%27 y=%2768%27 width=%2712%27 height=%2712%27 fill=%27%23E8192C%27/%3E%3C/svg%3E'" alt="Logo" class="hero-logo">
-      <div class="hero-badge" id="heroBadge">متخصصون في قطاع السيارات منذ 2015</div>
-      <h1 id="heroH1">شريكك في<br><span class="r">التسويق والدعاية</span><br>لعالم الأوتوموتيف</h1>
-      <p class="hero-sub" id="heroSub">تسويق إلكتروني متكامل + دعاية وإعلان أوفلاين<br>من يافطة مركزك لحد الكرت الشخصي</p>
-      <div class="hero-btns">
-        <a href="#services" class="btn-r" id="heroBtn1">اكتشف خدماتنا</a>
-        <a href="https://wa.me/201000000000?text=مرحبا،%20أريد%20الاستفسار%20عن%20خدماتكم" class="btn-o" id="heroBtn2" target="_blank" rel="noopener">💬 واتساب مباشر</a>
+<!-- ── HERO ──────────────────────────────────────── -->
+<section class="hero" id="home" style="margin-top:62px">
+  <div class="hero-grid">
+    <!-- TEXT (RTL: appears on RIGHT) -->
+    <div class="hero-text">
+      <div class="hero-badge" id="heroBadge">
+        <span class="hero-badge-dot"></span>
+        متخصصون في السيارات · منذ 2015
       </div>
-      <div class="hero-stats">
-        <div class="hs"><div class="hs-n"><span>10</span>+</div><div class="hs-l">سنوات خبرة في السوق المصري</div></div>
-        <div class="hs"><div class="hs-n"><span>30</span>+</div><div class="hs-l">عميل في قطاع السيارات</div></div>
-        <div class="hs"><div class="hs-n"><span>500</span>+</div><div class="hs-l">مشروع منجز</div></div>
-        <div class="hs"><div class="hs-n"><span>2</span></div><div class="hs-l">خدمة متكاملة رقمي + أوفلاين</div></div>
+      <h1 id="heroH1">شريكك في<br><span class="r">التسويق والدعاية</span><br>لعالم الأوتوموتيف</h1>
+      <p class="hero-sub" id="heroSub">تسويق إلكتروني متكامل + دعاية وإعلان أوفلاين من يافطة مركزك لحد الكرت الشخصي</p>
+      <div class="hero-btns">
+        <a href="#services" class="btn-primary" id="heroBtn1">
+          اكتشف خدماتنا <div class="btn-primary-arrow">←</div>
+        </a>
+        <a href="https://wa.me/201000000000?text=مرحبا،%20أريد%20الاستفسار%20عن%20خدماتكم" class="btn-secondary" id="heroBtn2" target="_blank" rel="noopener">
+          💬 واتساب مباشر
+        </a>
+      </div>
+    </div>
+    <!-- VISUAL (RTL: appears on LEFT) -->
+    <div class="hero-visual">
+      <div class="hero-blob"></div>
+      <div class="hero-blob-2"></div>
+      <!-- Floating metric cards -->
+      <div class="metric-float mf1">
+        <div class="mf-icon">📈</div>
+        <div class="mf-num">+320%</div>
+        <div class="mf-label">زيادة المبيعات</div>
+      </div>
+      <div class="metric-float mf2">
+        <div class="mf-icon">👥</div>
+        <div class="mf-num">50K</div>
+        <div class="mf-label">متابع جديد</div>
+      </div>
+      <div class="metric-float mf3">
+        <div class="mf-icon">🎯</div>
+        <div class="mf-num">1,200</div>
+        <div class="mf-label">ليد شهريًا</div>
+      </div>
+      <div class="mf-badge">5x ROI 🚀</div>
+      <!-- Center card -->
+      <div class="hero-center">
+        <div class="hero-center-icon">🚗</div>
+        <div class="hero-center-brand">AHMED OMANI</div>
+        <div class="hero-center-sub">Auto Marketing</div>
+        <div class="hero-center-line"></div>
+        <div class="hero-center-stats">
+          <div class="hcs"><div class="hcs-n">10+</div><div class="hcs-l">سنوات</div></div>
+          <div class="hcs"><div class="hcs-n">30+</div><div class="hcs-l">عميل</div></div>
+          <div class="hcs"><div class="hcs-n">500+</div><div class="hcs-l">مشروع</div></div>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ── SERVICES ──────────────────────────────────── -->
+<!-- ── FEATURES STRIP ─────────────────────────────── -->
+<div class="features-strip">
+  <div class="container">
+    <div class="features-grid">
+      <div class="feat-item">
+        <div class="feat-label">خدمة 01</div>
+        <div class="feat-icon">📱</div>
+        <div class="feat-title">التسويق الإلكتروني الكامل</div>
+        <div class="feat-desc">سوشيال + إعلانات Meta/Google + تقارير شهرية وأهداف قابلة للقياس</div>
+      </div>
+      <div class="feat-item">
+        <div class="feat-label">خدمة 02</div>
+        <div class="feat-icon">🏪</div>
+        <div class="feat-title">دعاية وإعلان أوفلاين</div>
+        <div class="feat-desc">يافطات + يوني فورم + كروت + Job Orders بهوية بصرية موحدة</div>
+      </div>
+      <div class="feat-item">
+        <div class="feat-label">خدمة 03</div>
+        <div class="feat-icon">📸</div>
+        <div class="feat-title">تصوير احترافي</div>
+        <div class="feat-desc">تصوير المراكز والسيارات والمنتجات والفريق لجميع منصات التسويق</div>
+      </div>
+      <div class="feat-item">
+        <div class="feat-label">خدمة 04</div>
+        <div class="feat-icon">🎨</div>
+        <div class="feat-title">هوية بصرية متكاملة</div>
+        <div class="feat-desc">لوجو + هوية + تطبيق على جميع المواد الرقمية والمطبوعة</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── SERVICES ───────────────────────────────────── -->
 <section id="services" class="services-sec">
   <div class="container">
     <div class="sec-head center">
-      <div class="sec-tag">خدماتنا</div>
+      <div class="sec-label">خدماتنا</div>
       <h2 class="sec-title">حلول متكاملة<br>لعالم الأوتوموتيف</h2>
       <p class="sec-sub">ركّزنا في قطاع واحد — عشان نقدم الأفضل فيه</p>
     </div>
     <div class="srv-pillars">
-
-      <!-- DIGITAL MARKETING -->
+      <!-- DIGITAL -->
       <div class="pillar">
         <div class="pillar-header">
           <div class="pillar-icon">📱</div>
@@ -361,10 +588,9 @@ footer{background:var(--dk);border-top:1px solid var(--border);padding:36px 5%;t
             <span class="stag">سوشيال فقط</span>
           </div>
         </div>
-        <a href="#contact" class="pillar-cta">ابدأ معنا ←</a>
+        <a href="#contact" class="pillar-cta">ابدأ معنا <span>←</span></a>
       </div>
-
-      <!-- OFFLINE ADVERTISING -->
+      <!-- OFFLINE -->
       <div class="pillar">
         <div class="pillar-header">
           <div class="pillar-icon">🏪</div>
@@ -386,9 +612,8 @@ footer{background:var(--dk);border-top:1px solid var(--border);padding:36px 5%;t
         <div class="pillar-highlight">
           <strong>حزمة المركز المتكاملة</strong> — كل حاجة مركزك محتاجها من الواجهة للكرت الشخصي في مكان واحد وبهوية موحدة
         </div>
-        <a href="#contact" class="pillar-cta">اعرف أكتر ←</a>
+        <a href="#contact" class="pillar-cta">اعرف أكتر <span>←</span></a>
       </div>
-
     </div>
   </div>
 </section>
@@ -396,10 +621,18 @@ footer{background:var(--dk);border-top:1px solid var(--border);padding:36px 5%;t
 <!-- ── PORTFOLIO ──────────────────────────────────── -->
 <section id="portfolio" class="portfolio-sec">
   <div class="container">
-    <div class="sec-head">
-      <div class="sec-tag">أعمالنا</div>
-      <h2 class="sec-title">شغلنا بيتكلم<br>عن نفسه</h2>
-      <p class="sec-sub">نماذج حقيقية من مشاريعنا في قطاع السيارات</p>
+    <div class="port-head">
+      <div class="port-head-text">
+        <div class="sec-label">أعمالنا</div>
+        <h2 class="sec-title">شغلنا بيتكلم<br>عن نفسه</h2>
+        <div style="width:40px;height:4px;background:var(--red);border-radius:2px;margin-top:12px"></div>
+      </div>
+      <div>
+        <div class="port-nav-btns">
+          <button class="port-nav-btn" onclick="slidePort(-1)">→</button>
+          <button class="port-nav-btn" onclick="slidePort(1)">←</button>
+        </div>
+      </div>
     </div>
     <div class="port-filter">
       <button class="pf-btn active" onclick="filterPort('all',this)">الكل</button>
@@ -407,96 +640,103 @@ footer{background:var(--dk);border-top:1px solid var(--border);padding:36px 5%;t
       <button class="pf-btn" onclick="filterPort('print',this)">دعاية وإعلان</button>
       <button class="pf-btn" onclick="filterPort('branding',this)">هوية بصرية</button>
     </div>
-    <div class="port-grid" id="portGrid">
-
-      <div class="port-card" data-cat="digital">
-        <div class="port-img"><div class="port-img-ph">📊</div></div>
-        <div class="port-type-badge">تسويق إلكتروني</div>
-        <div class="port-stat">+320% مبيعات</div>
-        <div class="port-body">
-          <div class="port-title">حملة Meta — مركز خدمة سيارات</div>
-          <div class="port-desc">زيادة الحجوزات 320% خلال 30 يوم بميزانية $2,000</div>
-          <div class="port-meta"><span class="ptag">Meta Ads</span><span class="ptag">Service Center</span></div>
+    <div class="port-track-wrap">
+      <div class="port-track" id="portGrid">
+        <div class="port-card" data-cat="digital">
+          <div class="port-img"><div class="port-img-ph">📊</div></div>
+          <div class="port-type-badge">تسويق إلكتروني</div>
+          <div class="port-stat">+320% مبيعات</div>
+          <div class="port-body">
+            <div class="port-title">حملة Meta — مركز خدمة سيارات</div>
+            <div class="port-desc">زيادة الحجوزات 320% خلال 30 يوم بميزانية $2,000</div>
+            <div class="port-meta"><span class="ptag">Meta Ads</span><span class="ptag">Service Center</span></div>
+          </div>
+        </div>
+        <div class="port-card" data-cat="digital">
+          <div class="port-img"><div class="port-img-ph">📈</div></div>
+          <div class="port-type-badge">تسويق إلكتروني</div>
+          <div class="port-stat">1,200 Lead</div>
+          <div class="port-body">
+            <div class="port-title">حملة Google — قطع غيار</div>
+            <div class="port-desc">1,200 ليد في شهر واحد بتكلفة $1.2 للـ lead</div>
+            <div class="port-meta"><span class="ptag">Google Ads</span><span class="ptag">Auto Parts</span></div>
+          </div>
+        </div>
+        <div class="port-card" data-cat="digital">
+          <div class="port-img"><div class="port-img-ph">📱</div></div>
+          <div class="port-type-badge">تسويق إلكتروني</div>
+          <div class="port-stat">50K متابع</div>
+          <div class="port-body">
+            <div class="port-title">سوشيال ميديا — معرض سيارات</div>
+            <div class="port-desc">نمو 50,000 متابع عضوي في 3 أشهر</div>
+            <div class="port-meta"><span class="ptag">Social Media</span><span class="ptag">Showroom</span></div>
+          </div>
+        </div>
+        <div class="port-card" data-cat="print">
+          <div class="port-img"><div class="port-img-ph">🏪</div></div>
+          <div class="port-type-badge">دعاية وإعلان</div>
+          <div class="port-body">
+            <div class="port-title">حزمة هوية كاملة — مركز صيانة</div>
+            <div class="port-desc">يافطات + يوني فورم + كروت + job orders بهوية موحدة</div>
+            <div class="port-meta"><span class="ptag">Print</span><span class="ptag">Branding</span></div>
+          </div>
+        </div>
+        <div class="port-card" data-cat="print">
+          <div class="port-img"><div class="port-img-ph">👔</div></div>
+          <div class="port-type-badge">دعاية وإعلان</div>
+          <div class="port-body">
+            <div class="port-title">يوني فورم ودواسات — سلسلة مراكز</div>
+            <div class="port-desc">تجهيز كامل لـ 3 فروع بهوية موحدة وتصميم احترافي</div>
+            <div class="port-meta"><span class="ptag">Uniform</span><span class="ptag">Floor Mats</span></div>
+          </div>
+        </div>
+        <div class="port-card" data-cat="branding">
+          <div class="port-img"><div class="port-img-ph">🎨</div></div>
+          <div class="port-type-badge">هوية بصرية</div>
+          <div class="port-body">
+            <div class="port-title">هوية كاملة — معرض سيارات</div>
+            <div class="port-desc">لوجو + هوية بصرية متكاملة + تطبيق على كل المواد</div>
+            <div class="port-meta"><span class="ptag">Logo</span><span class="ptag">Brand Identity</span></div>
+          </div>
         </div>
       </div>
-
-      <div class="port-card" data-cat="digital">
-        <div class="port-img"><div class="port-img-ph">📈</div></div>
-        <div class="port-type-badge">تسويق إلكتروني</div>
-        <div class="port-stat">1,200 Lead</div>
-        <div class="port-body">
-          <div class="port-title">حملة Google — قطع غيار</div>
-          <div class="port-desc">1,200 ليد في شهر واحد بتكلفة $1.2 للـ lead</div>
-          <div class="port-meta"><span class="ptag">Google Ads</span><span class="ptag">Auto Parts</span></div>
-        </div>
-      </div>
-
-      <div class="port-card" data-cat="digital">
-        <div class="port-img"><div class="port-img-ph">📱</div></div>
-        <div class="port-type-badge">تسويق إلكتروني</div>
-        <div class="port-stat">50K متابع</div>
-        <div class="port-body">
-          <div class="port-title">سوشيال ميديا — معرض سيارات</div>
-          <div class="port-desc">نمو 50,000 متابع عضوي في 3 أشهر</div>
-          <div class="port-meta"><span class="ptag">Social Media</span><span class="ptag">Showroom</span></div>
-        </div>
-      </div>
-
-      <div class="port-card" data-cat="print">
-        <div class="port-img"><div class="port-img-ph">🏪</div></div>
-        <div class="port-type-badge">دعاية وإعلان</div>
-        <div class="port-body">
-          <div class="port-title">حزمة هوية كاملة — مركز صيانة</div>
-          <div class="port-desc">يافطات + يوني فورم + كروت + job orders بهوية موحدة</div>
-          <div class="port-meta"><span class="ptag">Print</span><span class="ptag">Branding</span><span class="ptag">Uniform</span></div>
-        </div>
-      </div>
-
-      <div class="port-card" data-cat="print">
-        <div class="port-img"><div class="port-img-ph">👔</div></div>
-        <div class="port-type-badge">دعاية وإعلان</div>
-        <div class="port-body">
-          <div class="port-title">يوني فورم ودواسات — سلسلة مراكز</div>
-          <div class="port-desc">تجهيز كامل لـ 3 فروع بهوية موحدة وتصميم احترافي</div>
-          <div class="port-meta"><span class="ptag">Uniform</span><span class="ptag">Floor Mats</span></div>
-        </div>
-      </div>
-
-      <div class="port-card" data-cat="branding">
-        <div class="port-img"><div class="port-img-ph">🎨</div></div>
-        <div class="port-type-badge">هوية بصرية</div>
-        <div class="port-body">
-          <div class="port-title">هوية كاملة — معرض سيارات</div>
-          <div class="port-desc">لوجو + هوية بصرية متكاملة + تطبيق على كل المواد</div>
-          <div class="port-meta"><span class="ptag">Logo</span><span class="ptag">Brand Identity</span></div>
-        </div>
-      </div>
-
     </div>
   </div>
 </section>
 
-<!-- ── NUMBERS ────────────────────────────────────── -->
-<section class="numbers-sec">
+<!-- ── STATS BAR ──────────────────────────────────── -->
+<div class="stats-bar">
   <div class="container">
-    <div class="sec-head center">
-      <div class="sec-tag">بالأرقام</div>
-      <h2 class="sec-title">أرقامنا بتتكلم</h2>
-    </div>
-    <div class="num-grid">
-      <div class="num-item"><div class="num-big"><span>10</span>+</div><div class="num-label">سنوات في السوق المصري</div></div>
-      <div class="num-item"><div class="num-big"><span>30</span>+</div><div class="num-label">عميل في قطاع السيارات</div></div>
-      <div class="num-item"><div class="num-big"><span>500</span>+</div><div class="num-label">مشروع منجز</div></div>
-      <div class="num-item"><div class="num-big"><span>5</span>x</div><div class="num-label">متوسط عائد الاستثمار</div></div>
+    <div class="stats-grid">
+      <div class="stat-item">
+        <div class="stat-icon">🏆</div>
+        <div class="stat-num"><span>10</span>+</div>
+        <div class="stat-label">سنوات في السوق المصري</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-icon">🤝</div>
+        <div class="stat-num"><span>30</span>+</div>
+        <div class="stat-label">عميل في قطاع السيارات</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-icon">🚀</div>
+        <div class="stat-num"><span>500</span>+</div>
+        <div class="stat-label">مشروع منجز بنجاح</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-icon">💡</div>
+        <div class="stat-num"><span>5</span>x</div>
+        <div class="stat-label">متوسط عائد الاستثمار</div>
+      </div>
     </div>
   </div>
-</section>
+</div>
 
 <!-- ── CLIENTS ────────────────────────────────────── -->
 <section id="clients" class="clients-sec">
   <div class="container">
     <div class="sec-head center">
-      <div class="sec-tag">عملاؤنا</div>
+      <div class="sec-label">عملاؤنا</div>
       <h2 class="sec-title">ثقوا فينا</h2>
       <p class="sec-sub">أكثر من 30 علامة في قطاع السيارات المصري</p>
     </div>
@@ -543,94 +783,53 @@ footer{background:var(--dk);border-top:1px solid var(--border);padding:36px 5%;t
 <section id="faq" class="faq-sec">
   <div class="container">
     <div class="sec-head center">
-      <div class="sec-tag">أسئلة شائعة</div>
+      <div class="sec-label">أسئلة شائعة</div>
       <h2 class="sec-title">إجابات على<br>أسئلتك</h2>
       <p class="sec-sub">بنجاوب الأسئلة الأكتر تكرارًا عشان توفر وقتك</p>
     </div>
     <div class="faq-wrap" id="faqWrap">
-
       <div class="faq-item" onclick="toggleFaq(this)">
-        <div class="faq-q">
-          <div class="faq-q-text">هل تشتغلوا على مراكز الصيانة بس؟</div>
-          <div class="faq-icon">+</div>
-        </div>
-        <div class="faq-a"><div class="faq-a-inner">لأ. بنشتغل مع كل قطاعات السيارات — مراكز صيانة، معارض سيارات، تجار قطع غيار، محلات اكسسوارات، وأي نشاط تجاري في عالم الأوتوموتيف. التخصص بتاعنا في القطاع ده بالكامل مش في نوع واحد بس.</div></div>
+        <div class="faq-q"><div class="faq-q-text">هل تشتغلوا على مراكز الصيانة بس؟</div><div class="faq-icon">+</div></div>
+        <div class="faq-a"><div class="faq-a-inner">لأ. بنشتغل مع كل قطاعات السيارات — مراكز صيانة، معارض سيارات، تجار قطع غيار، محلات اكسسوارات، وأي نشاط تجاري في عالم الأوتوموتيف.</div></div>
       </div>
-
       <div class="faq-item" onclick="toggleFaq(this)">
-        <div class="faq-q">
-          <div class="faq-q-text">إيه الفرق بين الحزمة الكاملة والخدمة الفردية في التسويق الإلكتروني؟</div>
-          <div class="faq-icon">+</div>
-        </div>
-        <div class="faq-a"><div class="faq-a-inner">الحزمة الكاملة بتاخد فيها تسويق متكامل (سوشيال + إعلانات + تصميم + تصوير + تقارير) بسعر أفضل وتنسيق كامل بيننا. الخدمة الفردية للي محتاج حاجة بعينها — تصميم بس، أو إدارة إعلانات بس، أو تصوير بس. الاتنين متاحين حسب احتياجك.</div></div>
+        <div class="faq-q"><div class="faq-q-text">إيه الفرق بين الحزمة الكاملة والخدمة الفردية في التسويق الإلكتروني؟</div><div class="faq-icon">+</div></div>
+        <div class="faq-a"><div class="faq-a-inner">الحزمة الكاملة بتاخد فيها تسويق متكامل (سوشيال + إعلانات + تصميم + تصوير + تقارير) بسعر أفضل وتنسيق كامل. الخدمة الفردية للي محتاج حاجة بعينها.</div></div>
       </div>
-
       <div class="faq-item" onclick="toggleFaq(this)">
-        <div class="faq-q">
-          <div class="faq-q-text">إيه اللي بيشمله تجهيز الدعاية والإعلان الكامل للمركز؟</div>
-          <div class="faq-icon">+</div>
-        </div>
-        <div class="faq-a"><div class="faq-a-inner">الحزمة الكاملة بتشمل: تصميم وتنفيذ اليافطة والواجهة، كروت شخصية، نماذج Job Orders بهوية المركز، يوني فورم للفريق، أعلام وبنرات، دواسات، فواحات — وكلها بهوية بصرية موحدة تعكس مركزك. كمان بنقدر نساعدك في تجهيز سيستم إداري لتنظيم شغل المركز.</div></div>
+        <div class="faq-q"><div class="faq-q-text">إيه اللي بيشمله تجهيز الدعاية والإعلان الكامل للمركز؟</div><div class="faq-icon">+</div></div>
+        <div class="faq-a"><div class="faq-a-inner">الحزمة بتشمل: يافطة وواجهة، كروت شخصية، Job Orders، يوني فورم، أعلام وبنرات، دواسات، فواحات — وكلها بهوية بصرية موحدة. وكمان بنقدر نساعدك في السيستم الإداري.</div></div>
       </div>
-
       <div class="faq-item" onclick="toggleFaq(this)">
-        <div class="faq-q">
-          <div class="faq-q-text">هل ممكن آخد الدعاية الأوفلاين بس من غير تسويق إلكتروني؟</div>
-          <div class="faq-icon">+</div>
-        </div>
-        <div class="faq-a"><div class="faq-a-inner">أكيد. الخدمتين منفصلتين تمامًا. ممكن تاخد حزمة الدعاية والإعلان الأوفلاين بس، أو التسويق الإلكتروني بس، أو الاتنين مع بعض. إنت اللي بتحدد احتياجك وإحنا بنبني على كده.</div></div>
+        <div class="faq-q"><div class="faq-q-text">هل ممكن آخد الدعاية الأوفلاين بس من غير تسويق إلكتروني؟</div><div class="faq-icon">+</div></div>
+        <div class="faq-a"><div class="faq-a-inner">أكيد. الخدمتين منفصلتين تمامًا. ممكن تاخد أي منهم منفردًا.</div></div>
       </div>
-
       <div class="faq-item" onclick="toggleFaq(this)">
-        <div class="faq-q">
-          <div class="faq-q-text">كام بيستغرق تنفيذ حزمة الدعاية الكاملة؟</div>
-          <div class="faq-icon">+</div>
-        </div>
-        <div class="faq-a"><div class="faq-a-inner">الحزمة الكاملة (يافطة + مطبوعات + يوني فورم + آيتمز ترويجية) بتستغرق من 10 لـ 21 يوم عمل، حسب حجم الطلب ومراحل الموافقة على التصميم. بنحدد الجدول الزمني بالتفصيل قبل بدء التنفيذ.</div></div>
+        <div class="faq-q"><div class="faq-q-text">كام بيستغرق تنفيذ حزمة الدعاية الكاملة؟</div><div class="faq-icon">+</div></div>
+        <div class="faq-a"><div class="faq-a-inner">من 10 لـ 21 يوم عمل حسب حجم الطلب ومراحل الموافقة على التصميم.</div></div>
       </div>
-
       <div class="faq-item" onclick="toggleFaq(this)">
-        <div class="faq-q">
-          <div class="faq-q-text">إيه هو السيستم الإداري اللي بتقدموه للمراكز؟</div>
-          <div class="faq-icon">+</div>
-        </div>
-        <div class="faq-a"><div class="faq-a-inner">بنساعدك تنظم شغل المركز من خلال نماذج Job Order احترافية بهوية مركزك، جداول المواعيد، فواتير وإيصالات، ونظام بسيط لتتبع الطلبات. ده بيخلي مركزك يبان أكتر احترافية ويرفع ثقة العميل.</div></div>
+        <div class="faq-q"><div class="faq-q-text">هل بتشتغلوا برا القاهرة؟</div><div class="faq-icon">+</div></div>
+        <div class="faq-a"><div class="faq-a-inner">أيوه، بنشتغل مع عملاء في كل أنحاء مصر. التواصل والتصميم أونلاين والمطبوعات بنوصلها لأي محافظة.</div></div>
       </div>
-
       <div class="faq-item" onclick="toggleFaq(this)">
-        <div class="faq-q">
-          <div class="faq-q-text">هل بتشتغلوا برا القاهرة؟</div>
-          <div class="faq-icon">+</div>
-        </div>
-        <div class="faq-a"><div class="faq-a-inner">أيوه، بنشتغل مع عملاء في كل أنحاء مصر. التواصل والتصميم والتسويق بيتم أونلاين بالكامل، والمطبوعات بنوصلها لأي محافظة. عندنا عملاء في القاهرة والإسكندرية والمحافظات المختلفة.</div></div>
+        <div class="faq-q"><div class="faq-q-text">ليه أختارك بدل أي مكتب إعلانات عادي؟</div><div class="faq-icon">+</div></div>
+        <div class="faq-a"><div class="faq-a-inner">لأننا متخصصين في قطاع السيارات بس — مش وكالة عامة. 10 سنين في السوق ده عارفين فيه احتياجات العميل ومنافسيه.</div></div>
       </div>
-
       <div class="faq-item" onclick="toggleFaq(this)">
-        <div class="faq-q">
-          <div class="faq-q-text">ليه أختارك بدل أي مكتب إعلانات عادي؟</div>
-          <div class="faq-icon">+</div>
-        </div>
-        <div class="faq-a"><div class="faq-a-inner">لأننا متخصصين في قطاع السيارات بس — مش وكالة عامة تشتغل على أي حاجة. 10 سنين في السوق ده معناه عارفين فيه احتياجات العميل، طريقة تفكيره، ومنافسيه. كمان بنقدم الخدمتين مع بعض (رقمي + أوفلاين) بدل ما تتعامل مع مكانين مختلفين وتنسق بينهم.</div></div>
+        <div class="faq-q"><div class="faq-q-text">عايز أعرف الأسعار — بيبدأ من إيه؟</div><div class="faq-icon">+</div></div>
+        <div class="faq-a"><div class="faq-a-inner">الأسعار بتختلف حسب حجم المشروع والخدمات المطلوبة. تواصل معنا وهنعملك عرض سعر خلال 24 ساعة.</div></div>
       </div>
-
-      <div class="faq-item" onclick="toggleFaq(this)">
-        <div class="faq-q">
-          <div class="faq-q-text">عايز أعرف الأسعار — بيبدأ من إيه؟</div>
-          <div class="faq-icon">+</div>
-        </div>
-        <div class="faq-a"><div class="faq-a-inner">الأسعار بتختلف حسب حجم المشروع والخدمات المطلوبة. تواصل معنا على واتساب وهنعملك عرض سعر مخصص لاحتياجاتك خلال 24 ساعة من غير أي التزام.</div></div>
-      </div>
-
     </div>
   </div>
 </section>
 
-<!-- ── CONTACT ─────────────────────────────────────── -->
+<!-- ── CONTACT ────────────────────────────────────── -->
 <section id="contact" class="contact-sec">
   <div class="container">
     <div class="contact-inner">
       <div class="contact-info">
-        <div class="sec-tag">تواصل معنا</div>
+        <div class="sec-label">تواصل معنا</div>
         <h2>خلينا نشتغل<br>مع بعض</h2>
         <p>تواصل معنا دلوقتي واحصل على استشارة مجانية لتسويق أو تجهيز مشروعك في قطاع السيارات.</p>
         <div class="c-items">
@@ -644,7 +843,7 @@ footer{background:var(--dk);border-top:1px solid var(--border);padding:36px 5%;t
           </div>
         </div>
         <a href="https://wa.me/201000000000?text=مرحبا،%20أريد%20الاستفسار%20عن%20خدماتكم" class="wa-direct" target="_blank" rel="noopener">
-          <span class="wa-ic">💬</span> واتساب مباشر
+          <span>💬</span> واتساب مباشر
         </a>
       </div>
       <div class="cform">
@@ -684,7 +883,7 @@ footer{background:var(--dk);border-top:1px solid var(--border);padding:36px 5%;t
 <!-- ── FOOTER ─────────────────────────────────────── -->
 <footer>
   <div class="ft-logo">
-    <img src="assets/logo.svg" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Ccircle cx=%2750%27 cy=%2750%27 r=%2748%27 fill=%27white%27/%3E%3Cpolygon points=%2750,20 80,70 20,70%27 fill=%27black%27/%3E%3Crect x=%2744%27 y=%2768%27 width=%2712%27 height=%2712%27 fill=%27%23E8192C%27/%3E%3C/svg%3E'" alt="Logo">
+    <img src="assets/logo.svg" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Ccircle cx=%2750%27 cy=%2750%27 r=%2748%27 fill=%27%23E8192C%27/%3E%3Cpolygon points=%2750,20 80,70 20,70%27 fill=%27white%27/%3E%3C/svg%3E'" alt="Logo">
     <div><div class="fn">AHMED OMANI</div><div class="fs">Auto Marketing</div></div>
   </div>
   <div class="ft-links">
@@ -706,7 +905,7 @@ footer{background:var(--dk);border-top:1px solid var(--border);padding:36px 5%;t
 <div class="toast" id="toastEl"></div>
 
 <script>
-// ── NAV ─────────────────────────────────────────────
+// ── NAV ──────────────────────────────────────────────
 function toggleMenu(){
   document.getElementById('burger').classList.toggle('open');
   document.getElementById('mobileNav').classList.toggle('open');
@@ -716,37 +915,45 @@ function closeMenu(){
   document.getElementById('mobileNav').classList.remove('open');
 }
 
-// ── NAV SCROLL ACTIVE ────────────────────────────────
+// ── NAV SCROLL ACTIVE + SIDEBAR ──────────────────────
 var navSections=['home','services','portfolio','clients','faq','contact'];
+var sbLinks=document.querySelectorAll('.sb-link');
 window.addEventListener('scroll',function(){
-  var pos=window.scrollY+80;
+  var pos=window.scrollY+120;
+  var activeId='home';
   navSections.forEach(function(id){
     var el=document.getElementById(id);
-    if(!el)return;
-    if(pos>=el.offsetTop&&pos<el.offsetTop+el.offsetHeight){
-      document.querySelectorAll('.nav-links a').forEach(function(a){a.classList.remove('active')});
-      var link=document.querySelector('.nav-links a[href="#'+id+'"]');
-      if(link)link.classList.add('active');
-    }
+    if(el&&pos>=el.offsetTop)activeId=id;
   });
-  // hide mobile nav on scroll
-  closeMenu();
+  document.querySelectorAll('.nav-links a').forEach(function(a){
+    a.classList.toggle('active',a.getAttribute('href')==='#'+activeId);
+  });
+  sbLinks.forEach(function(a){
+    a.classList.toggle('active',a.getAttribute('href')==='#'+activeId);
+  });
+  if(window.scrollY>30)closeMenu();
 },{passive:true});
 
-// ── FAQ ACCORDION ────────────────────────────────────
+// ── FAQ ──────────────────────────────────────────────
 function toggleFaq(item){
-  var wasOpen=item.classList.contains('open');
+  var was=item.classList.contains('open');
   document.querySelectorAll('.faq-item.open').forEach(function(o){o.classList.remove('open')});
-  if(!wasOpen)item.classList.add('open');
+  if(!was)item.classList.add('open');
 }
 
 // ── PORTFOLIO FILTER ─────────────────────────────────
 function filterPort(cat,btn){
   document.querySelectorAll('.pf-btn').forEach(function(b){b.classList.remove('active')});
-  btn.classList.add('active');
+  if(btn)btn.classList.add('active');
   document.querySelectorAll('.port-card').forEach(function(c){
     c.style.display=(cat==='all'||c.dataset.cat===cat)?'':'none';
   });
+}
+
+// ── PORTFOLIO SLIDE ──────────────────────────────────
+function slidePort(dir){
+  var t=document.getElementById('portGrid');
+  t.scrollBy({left:dir*300,behavior:'smooth'});
 }
 
 // ── FORM → WHATSAPP ──────────────────────────────────
@@ -786,13 +993,10 @@ function showToast(msg){
 (function(){
 var SB_URL='https://knwnviglquxvvwknxbqa.supabase.co';
 var SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtud252aWdscXV4dnZ3a254YnFhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA5MzI2NDIsImV4cCI6MjA5NjUwODY0Mn0.VuxAC-J7it4m_wrSTBHCh7t_z_PL8CCGwhvtv6NiZmQ';
-
 var catLabel={'digital':'تسويق إلكتروني','print':'دعاية وإعلان','branding':'هوية بصرية'};
 var catIcon={'digital':'📊','print':'🏪','branding':'🎨'};
 
-function esc(s){
-  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
 
 function updateWaLinks(num){
   _waNum=num;
@@ -807,29 +1011,22 @@ function injectMetaPixel(id){
   s.innerHTML='!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version=\'2.0\';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,\'script\',\'https://connect.facebook.net/en_US/fbevents.js\');fbq(\'init\',\''+id+'\');fbq(\'track\',\'PageView\');';
   document.head.appendChild(s);
 }
-
 function injectGoogleTag(id){
   if(!id)return;
-  var s=document.createElement('script');
-  s.async=true;s.src='https://www.googletagmanager.com/gtag/js?id='+id;
-  document.head.appendChild(s);
-  var s2=document.createElement('script');
-  s2.innerHTML='window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag(\'js\',new Date());gtag(\'config\',\''+id+'\');';
-  document.head.appendChild(s2);
+  var s=document.createElement('script');s.async=true;s.src='https://www.googletagmanager.com/gtag/js?id='+id;document.head.appendChild(s);
+  var s2=document.createElement('script');s2.innerHTML='window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag(\'js\',new Date());gtag(\'config\',\''+id+'\');';document.head.appendChild(s2);
 }
-
 function injectTikTokPixel(id){
   if(!id)return;
   var s=document.createElement('script');
-  s.innerHTML='!function(w,d,t){w.TiktokAnalyticsObject=t;var ttq=w[t]=w[t]||[];ttq.methods=["page","track","identify","instances","debug","on","off","once","ready","alias","group","enableCookie","disableCookie"];ttq.setAndDefer=function(t,e){t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}};for(var i=0;i<ttq.methods.length;i++)ttq.setAndDefer(ttq,ttq.methods[i]);ttq.instance=function(t){for(var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n]);return e};ttq.load=function(e,n){var i="https://analytics.tiktok.com/i18n/pixel/events.js";ttq._i=ttq._i||{};ttq._i[e]=[];ttq._i[e]._u=i;ttq._t=ttq._t||{};ttq._t[e]=+new Date;ttq._o=ttq._o||{};ttq._o[e]=n||{};var o=document.createElement("script");o.type="text/javascript";o.async=!0;o.src=i+"?sdkid="+e+"&lib="+t;var a=document.getElementsByTagName("script")[0];a.parentNode.insertBefore(o,a)};ttq.load(\''+id+'\');ttq.page();}(window,document,\'ttq\');';
+  s.innerHTML='!function(w,d,t){w.TiktokAnalyticsObject=t;var ttq=w[t]=w[t]||[];ttq.methods=["page","track","identify","instances","debug","on","off","once","ready","alias","group","enableCookie","disableCookie"];ttq.setAndDefer=function(t,e){t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}};for(var i=0;i<ttq.methods.length;i++)ttq.setAndDefer(ttq,ttq.methods[i]);ttq.load=function(e){var i="https://analytics.tiktok.com/i18n/pixel/events.js";ttq._i=ttq._i||{};ttq._i[e]=[];var o=document.createElement("script");o.async=!0;o.src=i+"?sdkid="+e;var a=document.getElementsByTagName("script")[0];a.parentNode.insertBefore(o,a)};ttq.load(\''+id+'\');ttq.page();}(window,document,\'ttq\');';
   document.head.appendChild(s);
 }
 
 function renderPortfolio(list){
   var g=document.getElementById('portGrid');
   g.innerHTML=list.map(function(p){
-    var img=p.image_url
-      ?'<img src="'+esc(p.image_url)+'" alt="'+esc(p.title)+'">'
+    var img=p.image_url?'<img src="'+esc(p.image_url)+'" alt="'+esc(p.title)+'">'
       :'<div class="port-img-ph">'+esc(catIcon[p.category]||'🖼️')+'</div>';
     var badge=p.stat_badge?'<div class="port-stat">'+esc(p.stat_badge)+'</div>':'';
     var tags=(p.tags||[]).map(function(t){return'<span class="ptag">'+esc(t)+'</span>'}).join('');
@@ -837,25 +1034,20 @@ function renderPortfolio(list){
       +'<div class="port-img">'+img+'</div>'
       +'<div class="port-type-badge">'+esc(catLabel[p.category]||p.category)+'</div>'
       +badge
-      +'<div class="port-body">'
-      +'<div class="port-title">'+esc(p.title)+'</div>'
+      +'<div class="port-body"><div class="port-title">'+esc(p.title)+'</div>'
       +'<div class="port-desc">'+esc(p.description)+'</div>'
       +(tags?'<div class="port-meta">'+tags+'</div>':'')
       +'</div></div>';
   }).join('');
-  // re-apply active filter
   var active=document.querySelector('.pf-btn.active');
-  if(active){
-    var cat=active.getAttribute('onclick').match(/'([^']+)'/);
-    if(cat)filterPort(cat[1],active);
-  }
+  if(active){var m=active.getAttribute('onclick').match(/'([^']+)'/);if(m)filterPort(m[1],null);}
 }
 
 function renderClients(list){
   var g=document.getElementById('clientsGrid');
   g.innerHTML=list.map(function(c){
     return c.logo_url
-      ?'<div class="cl-item"><img src="'+esc(c.logo_url)+'" alt="'+esc(c.name)+'" style="max-height:36px;max-width:90px;object-fit:contain;filter:grayscale(1);opacity:.6;transition:.2s" onmouseover="this.style.filter=\'none\';this.style.opacity=1" onmouseout="this.style.filter=\'grayscale(1)\';this.style.opacity=.6"></div>'
+      ?'<div class="cl-item"><img src="'+esc(c.logo_url)+'" alt="'+esc(c.name)+'" style="max-height:34px;max-width:88px;object-fit:contain;filter:grayscale(1);opacity:.5;transition:.2s" onmouseover="this.style.filter=\'none\';this.style.opacity=1" onmouseout="this.style.filter=\'grayscale(1)\';this.style.opacity=.5"></div>'
       :'<div class="cl-item"><div class="cl-name">'+esc(c.name)+'</div></div>';
   }).join('');
 }
@@ -871,32 +1063,17 @@ function renderFaq(list){
 }
 
 function applyHero(h){
-  if(h.badge){var b=document.getElementById('heroBadge');if(b)b.textContent=h.badge;}
+  if(h.badge){var b=document.getElementById('heroBadge');if(b)b.innerHTML='<span class="hero-badge-dot"></span>'+esc(h.badge);}
   if(h.title){var t=document.getElementById('heroH1');if(t)t.innerHTML=h.title;}
   if(h.subtitle){var s=document.getElementById('heroSub');if(s)s.innerHTML=h.subtitle;}
-  if(h.btn1_text){var b1=document.getElementById('heroBtn1');if(b1)b1.textContent=h.btn1_text;}
-  if(h.btn2_text){var b2=document.getElementById('heroBtn2');if(b2)b2.innerHTML='💬 '+h.btn2_text;}
-  var stats=document.querySelectorAll('.hs');
-  var sd=[
-    {num:h.stat1_num,lbl:h.stat1_label},
-    {num:h.stat2_num,lbl:h.stat2_label},
-    {num:h.stat3_num,lbl:h.stat3_label},
-    {num:h.stat4_num,lbl:h.stat4_label}
-  ];
-  sd.forEach(function(d,i){
-    if(!stats[i]||!d.num)return;
-    var n=d.num.replace(/[+x]/g,'');
-    var sfx=d.num.replace(/\d/g,'');
-    stats[i].querySelector('.hs-n').innerHTML='<span>'+esc(n)+'</span>'+esc(sfx);
-    if(d.lbl)stats[i].querySelector('.hs-l').textContent=d.lbl;
-  });
+  if(h.btn1_text){var b1=document.getElementById('heroBtn1');if(b1)b1.innerHTML=esc(h.btn1_text)+' <div class="btn-primary-arrow">←</div>';}
+  if(h.btn2_text){var b2=document.getElementById('heroBtn2');if(b2)b2.innerHTML='💬 '+esc(h.btn2_text);}
 }
 
 async function loadSite(){
   if(typeof supabase==='undefined')return;
   try{
     var sb=supabase.createClient(SB_URL,SB_KEY);
-
     var cfg=(await sb.from('ao_settings').select('*').single()).data;
     if(cfg){
       if(cfg.whatsapp)updateWaLinks(cfg.whatsapp);
@@ -906,24 +1083,16 @@ async function loadSite(){
       if(cfg.google_tag_id)injectGoogleTag(cfg.google_tag_id);
       if(cfg.tiktok_pixel_id)injectTikTokPixel(cfg.tiktok_pixel_id);
     }
-
     var hero=(await sb.from('ao_hero').select('*').single()).data;
     if(hero)applyHero(hero);
-
     var port=(await sb.from('ao_portfolio').select('*').eq('is_active',true).order('sort_order')).data;
     if(port&&port.length)renderPortfolio(port);
-
     var clients=(await sb.from('ao_clients').select('*').eq('is_active',true).order('sort_order')).data;
     if(clients&&clients.length)renderClients(clients);
-
     var faq=(await sb.from('ao_faq').select('*').eq('is_active',true).order('sort_order')).data;
     if(faq&&faq.length)renderFaq(faq);
-
-  }catch(e){
-    console.log('Static fallback active');
-  }
+  }catch(e){console.log('Static fallback active')}
 }
-
 document.addEventListener('DOMContentLoaded',loadSite);
 })();
 </script>
