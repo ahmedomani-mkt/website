@@ -3,556 +3,728 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>لوحة التحكم — APEX</title>
+<title>لوحة التحكم — Ahmed Omani</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{
-  --accent:#E8192C;
-  --accent2:#E8192C;
-  --bg:#0d0d0d;
-  --surface:#161616;
-  --surface2:#1e1e1e;
-  --border:#2a2a2a;
-  --text:#ffffff;
-  --muted:#888;
-  --font:'Segoe UI',Arial,sans-serif;
-}
-body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column}
-/* LAYOUT */
-.shell{display:grid;grid-template-columns:220px 1fr;grid-template-rows:56px 1fr;min-height:100vh}
+:root{--red:#E8192C;--rd:#B5101E;--rdim:#150305;--black:#080808;--dk:#0f0f0f;--s:#141414;--s2:#1a1a1a;--b:#1e1e1e;--b2:#252525;--w:#fff;--g:#888;--font:'Noto Kufi Arabic','Segoe UI',Arial,sans-serif}
+html,body{height:100%;font-family:var(--font);background:var(--black);color:var(--w);overflow:hidden}
+a{text-decoration:none;color:inherit}
+/* LOGIN */
+.lw{min-height:100vh;display:flex;align-items:center;justify-content:center}
+.lc{background:var(--s);border:1px solid var(--b2);border-radius:16px;padding:48px 40px;width:340px;text-align:center}
+.lb{font-size:22px;font-weight:900;margin-bottom:4px}.lb span{color:var(--red)}
+.ls{font-size:11px;color:var(--g);margin-bottom:28px;letter-spacing:1.5px;text-transform:uppercase}
+.lf{margin-bottom:14px;text-align:right}
+.lf label{display:block;font-size:11px;color:var(--g);margin-bottom:5px;font-weight:600;letter-spacing:.5px;text-transform:uppercase}
+.lf input{width:100%;background:#0a0a0a;border:1px solid var(--b2);color:var(--w);padding:11px 14px;border-radius:8px;font-size:14px;font-family:var(--font);outline:none;transition:.15s}
+.lf input:focus{border-color:var(--red)}
+.lbtn{width:100%;background:var(--red);color:#fff;padding:13px;border-radius:8px;border:none;font-size:15px;font-weight:700;cursor:pointer;font-family:var(--font);margin-top:6px}
+.lbtn:hover{background:var(--rd)}
+.lerr{color:#ff6b6b;font-size:12px;margin-top:10px;min-height:18px}
+/* SHELL */
+.shell{display:grid;grid-template-columns:220px 1fr;grid-template-rows:54px 1fr;height:100vh;overflow:hidden}
 /* TOPBAR */
-.topbar{grid-column:1/-1;background:var(--surface);border-bottom:0.5px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 20px;gap:12px}
-.topbar-logo{font-size:18px;font-weight:900}
-.topbar-logo span{color:var(--accent)}
-.topbar-right{display:flex;align-items:center;gap:10px}
-.preview-btn{background:var(--accent);color:#fff;padding:6px 14px;border-radius:6px;font-size:12px;font-weight:700;border:none;cursor:pointer;font-family:var(--font)}
-.publish-btn{background:transparent;border:1px solid #2a2a2a;color:#ccc;padding:6px 14px;border-radius:6px;font-size:12px;cursor:pointer;font-family:var(--font)}
-.publish-btn:hover{border-color:var(--accent);color:var(--accent)}
+.topbar{grid-column:1/-1;background:var(--s);border-bottom:1px solid var(--b);display:flex;align-items:center;justify-content:space-between;padding:0 20px;gap:12px}
+.tb-brand{font-size:15px;font-weight:900}.tb-brand span{color:var(--red)}
+.tb-right{display:flex;align-items:center;gap:12px}
+.tb-status{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--g)}
+.dot{width:7px;height:7px;border-radius:50%;background:#3dd68c}
+.dot.off{background:#ff6b6b}
+.tb-btn{background:transparent;border:1px solid var(--b2);color:var(--g);padding:6px 14px;border-radius:6px;font-size:12px;cursor:pointer;font-family:var(--font);transition:.15s}
+.tb-btn:hover{border-color:var(--red);color:var(--red)}
+.tb-out{background:transparent;border:none;color:var(--g);font-size:12px;cursor:pointer;font-family:var(--font)}
+.tb-out:hover{color:var(--red)}
 /* SIDEBAR */
-.sidebar{background:var(--surface);border-left:0.5px solid var(--border);padding:16px 0}
-.nav-item{display:flex;align-items:center;gap:10px;padding:10px 18px;font-size:13px;color:var(--muted);cursor:pointer;transition:.15s;border-right:2px solid transparent}
-.nav-item:hover{color:var(--text);background:var(--surface2)}
-.nav-item.active{color:var(--accent);border-right-color:var(--accent);background:rgba(232,25,44,0.07)}
-.nav-icon{font-size:16px;width:20px;text-align:center}
-.nav-sep{height:0.5px;background:var(--border);margin:10px 14px}
+.sidebar{background:var(--s);border-inline-start:1px solid var(--b);padding:14px 0;overflow-y:auto}
+.ni{display:flex;align-items:center;gap:10px;padding:11px 18px;font-size:13px;color:var(--g);cursor:pointer;transition:.15s;border-inline-end:2px solid transparent;user-select:none}
+.ni:hover{color:var(--w);background:var(--s2)}
+.ni.active{color:var(--red);border-inline-end-color:var(--red);background:rgba(232,25,44,.07)}
+.ni-ic{font-size:15px;width:20px;text-align:center}
+.nsep{height:1px;background:var(--b);margin:10px 14px}
 /* MAIN */
-.main{background:var(--bg);padding:24px;overflow-y:auto}
-.section{display:none}
-.section.active{display:block}
-.page-title{font-size:18px;font-weight:700;margin-bottom:6px}
-.page-sub{font-size:13px;color:var(--muted);margin-bottom:24px}
-/* CARDS */
-.card{background:var(--surface);border:0.5px solid var(--border);border-radius:10px;padding:20px;margin-bottom:16px}
-.card-title{font-size:13px;font-weight:600;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center}
-/* FORM */
-.field{margin-bottom:14px}
-.field label{display:block;font-size:11px;color:var(--muted);margin-bottom:6px;font-weight:500;letter-spacing:.5px;text-transform:uppercase}
-.field input,.field textarea,.field select{width:100%;background:#0a0a0a;border:0.5px solid var(--border);color:var(--text);padding:9px 12px;border-radius:7px;font-size:13px;font-family:var(--font);outline:none;transition:.15s}
-.field input:focus,.field textarea:focus{border-color:var(--accent)}
-.field textarea{resize:vertical;min-height:80px}
-.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-/* COLOR GRID */
-.color-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}
-.color-item{background:#0a0a0a;border:0.5px solid var(--border);border-radius:8px;padding:12px;display:flex;align-items:center;gap:10px}
-.color-swatch{width:32px;height:32px;border-radius:6px;border:none;cursor:pointer;flex-shrink:0}
-.color-info{flex:1;min-width:0}
-.color-name{font-size:11px;color:var(--muted);margin-bottom:3px}
-.color-val{font-size:12px;font-family:monospace;color:var(--text)}
-/* FONT SELECT */
-.font-options{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
-.font-opt{padding:7px 14px;border-radius:6px;border:0.5px solid var(--border);font-size:12px;cursor:pointer;background:#0a0a0a;color:var(--muted);transition:.15s}
-.font-opt.active,.font-opt:hover{border-color:var(--accent);color:var(--accent)}
-/* PORTFOLIO GRID */
-.portfolio-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px}
-.port-card{background:#0a0a0a;border:0.5px solid var(--border);border-radius:10px;overflow:hidden;position:relative}
-.port-thumb{height:110px;display:flex;align-items:center;justify-content:center;font-size:36px;background:#1a0508}
-.port-info{padding:10px}
-.port-title{font-size:12px;font-weight:600;margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.port-cat{font-size:10px;color:var(--accent);font-weight:600}
-.port-actions{display:flex;gap:6px;margin-top:8px}
-.port-btn{flex:1;padding:5px;border-radius:5px;border:0.5px solid var(--border);background:transparent;color:var(--muted);font-size:11px;cursor:pointer;font-family:var(--font);transition:.15s}
-.port-btn:hover{border-color:var(--accent);color:var(--accent)}
-.port-btn.del:hover{border-color:#e84040;color:#e84040}
-.add-card{border:0.5px dashed var(--border);border-radius:10px;height:168px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;color:var(--muted);font-size:13px;gap:8px;transition:.15s;background:transparent}
-.add-card:hover{border-color:var(--accent);color:var(--accent)}
-/* UPLOAD */
-.upload-zone{border:1px dashed var(--border);border-radius:10px;padding:40px;text-align:center;cursor:pointer;transition:.2s;background:#0a0a0a}
-.upload-zone:hover,.upload-zone.drag{border-color:var(--accent);background:rgba(232,25,44,0.04)}
-.upload-icon{font-size:32px;margin-bottom:12px}
-.upload-label{font-size:13px;color:var(--muted)}
-.upload-label span{color:var(--accent);font-weight:600}
+.main{background:var(--dk);overflow-y:auto;padding:24px}
+.sec{display:none}.sec.active{display:block}
+.pt{font-size:19px;font-weight:800;margin-bottom:3px}
+.ps{font-size:13px;color:var(--g);margin-bottom:22px}
+/* CARD */
+.card{background:var(--s);border:1px solid var(--b2);border-radius:10px;padding:20px;margin-bottom:14px}
+.ct{font-size:13px;font-weight:700;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center}
 /* STATS */
-.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px}
-.stat-card{background:var(--surface);border:0.5px solid var(--border);border-radius:10px;padding:16px}
-.stat-num{font-size:26px;font-weight:800;margin-bottom:4px}
-.stat-lab{font-size:11px;color:var(--muted)}
-/* BTN */
-.btn{padding:9px 18px;border-radius:7px;font-size:13px;font-weight:600;cursor:pointer;font-family:var(--font);border:none;transition:.15s}
-.btn-primary{background:var(--accent);color:#fff}
-.btn-primary:hover{opacity:.9}
-.btn-ghost{background:transparent;border:0.5px solid var(--border);color:var(--muted)}
-.btn-ghost:hover{border-color:var(--accent);color:var(--accent)}
-/* LIVE PREVIEW MINI */
-.preview-strip{background:#0a0a0a;border:0.5px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:16px}
-.preview-bar{background:#1e1e1e;padding:8px 14px;font-size:11px;color:var(--muted);display:flex;align-items:center;gap:8px;border-bottom:0.5px solid var(--border)}
-.dot{width:8px;height:8px;border-radius:50%}
-.preview-frame{padding:20px;display:flex;flex-direction:column;align-items:center;gap:8px}
-.pv-nav{width:100%;height:32px;border-radius:5px;display:flex;align-items:center;padding:0 12px;font-size:11px;font-weight:800;justify-content:space-between;transition:.3s}
-.pv-hero{width:100%;height:56px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;transition:.3s}
-.pv-btn{padding:5px 14px;border-radius:4px;font-size:10px;font-weight:700;border:none;cursor:default;transition:.3s}
-/* TOAST */
-.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(60px);background:var(--surface2);border:0.5px solid var(--border);color:var(--text);padding:10px 22px;border-radius:8px;font-size:13px;z-index:999;transition:.3s;opacity:0;pointer-events:none}
-.toast.show{transform:translateX(-50%) translateY(0);opacity:1}
-/* MODAL */
-.overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:200;display:none;align-items:center;justify-content:center}
-.overlay.open{display:flex}
-.modal{background:var(--surface);border:0.5px solid var(--border);border-radius:14px;padding:28px;width:480px;max-width:95vw;max-height:90vh;overflow-y:auto}
-.modal-title{font-size:16px;font-weight:700;margin-bottom:20px;display:flex;justify-content:space-between;align-items:center}
-.close-btn{background:transparent;border:none;color:var(--muted);font-size:18px;cursor:pointer;line-height:1}
-.close-btn:hover{color:var(--text)}
-/* SLIDER */
-input[type=range]{accent-color:var(--accent)}
-.slider-row{display:flex;align-items:center;gap:12px}
-.slider-row input[type=range]{flex:1}
-.slider-val{font-size:12px;color:var(--accent);min-width:36px;text-align:left;font-family:monospace}
-/* BADGE */
+.sr{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:18px}
+.sc{background:var(--s);border:1px solid var(--b2);border-radius:10px;padding:16px}
+.sn{font-size:26px;font-weight:900;margin-bottom:4px}
+.sl{font-size:12px;color:var(--g)}
+/* FORM */
+.field{margin-bottom:13px}
+.field label{display:block;font-size:11px;color:var(--g);margin-bottom:5px;font-weight:600;letter-spacing:.5px;text-transform:uppercase}
+.field input,.field textarea,.field select{width:100%;background:#0a0a0a;border:1px solid var(--b2);color:var(--w);padding:9px 12px;border-radius:7px;font-size:13px;font-family:var(--font);outline:none;transition:.15s}
+.field input:focus,.field textarea:focus,.field select:focus{border-color:var(--red)}
+.field textarea{resize:vertical;min-height:78px}
+.field select option{background:#0a0a0a}
+.r2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.r3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+/* BTNS */
+.btn{padding:9px 18px;border-radius:7px;font-size:13px;font-weight:700;cursor:pointer;font-family:var(--font);border:none;transition:.15s}
+.btn-p{background:var(--red);color:#fff}.btn-p:hover{background:var(--rd)}
+.btn-g{background:transparent;border:1px solid var(--b2);color:var(--g)}.btn-g:hover{border-color:var(--red);color:var(--red)}
+.btn-d{background:transparent;border:1px solid #2a0808;color:#ff6b6b}.btn-d:hover{background:#100303}
+.bsm{padding:5px 11px;font-size:11px}
+/* LIST */
+.li{background:#0a0a0a;border:1px solid var(--b);border-radius:8px;padding:13px 14px;margin-bottom:8px;display:flex;align-items:center;gap:12px}
+.li-b{flex:1;min-width:0}
+.li-t{font-size:13px;font-weight:700;margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.li-s{font-size:11px;color:var(--g)}
+.li-ac{display:flex;gap:6px;flex-shrink:0}
 .badge{display:inline-block;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:700}
-.badge-live{background:#0a1a0a;color:#3dd68c;border:0.5px solid #1a3a1a}
-.badge-draft{background:#1a1a0a;color:#e4b84a;border:0.5px solid #3a3a0a}
+.bd{background:#0a0a1a;color:#7ba3ff;border:1px solid #1a1a3a}
+.bp{background:var(--rdim);color:var(--red);border:1px solid #2a0a10}
+.bb{background:#0a1a0a;color:#3dd68c;border:1px solid #1a3a1a}
+.bon{background:#0a1a0a;color:#3dd68c;border:1px solid #1a3a1a}
+.boff{background:#1a1a1a;color:#555;border:1px solid var(--b2)}
+/* MODAL */
+.ov{position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:500;display:none;align-items:center;justify-content:center}
+.ov.open{display:flex}
+.modal{background:var(--s);border:1px solid var(--b2);border-radius:14px;padding:28px;width:520px;max-width:95vw;max-height:90vh;overflow-y:auto}
+.mh{font-size:16px;font-weight:800;margin-bottom:18px;display:flex;justify-content:space-between;align-items:center}
+.mx{background:transparent;border:none;color:var(--g);font-size:20px;cursor:pointer;line-height:1}.mx:hover{color:var(--w)}
+.mf{display:flex;gap:10px;margin-top:14px;justify-content:flex-end}
+/* PAGE BUILDER */
+.psi{background:#0a0a0a;border:1px solid var(--b2);border-radius:8px;padding:13px;margin-bottom:10px}
+.psih{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;font-size:12px;font-weight:700;color:var(--g)}
+.fi{width:100%;background:#0a0a0a;border:1px solid var(--b2);color:var(--w);padding:8px 10px;border-radius:6px;font-size:12px;font-family:var(--font);outline:none}
+.fi:focus{border-color:var(--red)}
+/* TOAST */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(60px);background:var(--s2);border:1px solid var(--b2);color:#fff;padding:10px 24px;border-radius:8px;font-size:13px;z-index:999;transition:.3s;opacity:0;pointer-events:none;white-space:nowrap}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+.info-box{background:rgba(232,25,44,.06);border:1px solid rgba(232,25,44,.15);border-radius:8px;padding:12px 14px;font-size:13px;color:#bbb;line-height:1.7;margin-bottom:14px}
 </style>
 </head>
 <body>
-<div class="shell">
 
-<!-- TOPBAR -->
-<div class="topbar">
-  <div class="topbar-logo">APEX<span>.</span> <span style="font-size:11px;font-weight:400;color:var(--muted);margin-right:8px">لوحة التحكم</span></div>
-  <div class="topbar-right">
-    <span class="badge badge-live">● مباشر</span>
-    <button class="publish-btn" onclick="toast('جاري النشر...')">معاينة</button>
-    <button class="preview-btn" onclick="toast('✅ تم النشر بنجاح!')">نشر التغييرات</button>
+<!-- LOGIN -->
+<div class="lw" id="loginWrap">
+  <div class="lc">
+    <div class="lb">AHMED <span>OMANI</span></div>
+    <div class="ls">لوحة التحكم</div>
+    <div class="lf">
+      <label>كلمة المرور</label>
+      <input type="password" id="lpwd" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()">
+    </div>
+    <button class="lbtn" onclick="doLogin()">دخول ←</button>
+    <div class="lerr" id="lerr"></div>
   </div>
 </div>
 
-<!-- SIDEBAR -->
-<div class="sidebar">
-  <div class="nav-item active" onclick="go('overview',this)"><span class="nav-icon">📊</span>نظرة عامة</div>
-  <div class="nav-item" onclick="go('design',this)"><span class="nav-icon">🎨</span>التصميم والألوان</div>
-  <div class="nav-item" onclick="go('portfolio',this)"><span class="nav-icon">🖼️</span>الأعمال</div>
-  <div class="nav-item" onclick="go('content',this)"><span class="nav-icon">✍️</span>المحتوى</div>
-  <div class="nav-item" onclick="go('services',this)"><span class="nav-icon">⚡</span>الخدمات</div>
-  <div class="nav-sep"></div>
-  <div class="nav-item" onclick="go('settings',this)"><span class="nav-icon">⚙️</span>الإعدادات</div>
+<!-- SHELL -->
+<div class="shell" id="adminShell" style="display:none">
+
+  <div class="topbar">
+    <div class="tb-brand">AHMED <span>OMANI</span> <span style="font-size:11px;font-weight:400;color:var(--g);margin-right:6px">لوحة التحكم</span></div>
+    <div class="tb-right">
+      <div class="tb-status"><div class="dot" id="cdot"></div><span id="clbl">متصل</span></div>
+      <button class="tb-btn" onclick="window.open('index.html','_blank')">معاينة الموقع ↗</button>
+      <button class="tb-out" onclick="doLogout()">خروج</button>
+    </div>
+  </div>
+
+  <div class="sidebar">
+    <div class="ni active" data-s="dash" onclick="go('dash',this)"><span class="ni-ic">📊</span>الرئيسية</div>
+    <div class="ni" data-s="hero" onclick="go('hero',this)"><span class="ni-ic">🏠</span>محتوى Hero</div>
+    <div class="ni" data-s="port" onclick="go('port',this)"><span class="ni-ic">🖼️</span>الأعمال</div>
+    <div class="ni" data-s="clients" onclick="go('clients',this)"><span class="ni-ic">👥</span>العملاء</div>
+    <div class="ni" data-s="faq" onclick="go('faq',this)"><span class="ni-ic">❓</span>الأسئلة الشائعة</div>
+    <div class="ni" data-s="pages" onclick="go('pages',this)"><span class="ni-ic">📄</span>صفحات جديدة</div>
+    <div class="nsep"></div>
+    <div class="ni" data-s="settings" onclick="go('settings',this)"><span class="ni-ic">⚙️</span>الإعدادات</div>
+  </div>
+
+  <div class="main">
+
+    <!-- DASHBOARD -->
+    <div class="sec active" id="sec-dash">
+      <div class="pt">الرئيسية</div>
+      <div class="ps">ملخص سريع لموقعك</div>
+      <div class="sr">
+        <div class="sc"><div class="sn" id="st-p" style="color:var(--red)">—</div><div class="sl">أعمال منشورة</div></div>
+        <div class="sc"><div class="sn" id="st-c">—</div><div class="sl">عميل</div></div>
+        <div class="sc"><div class="sn" id="st-f">—</div><div class="sl">سؤال شائع</div></div>
+        <div class="sc"><div class="sn" id="st-pg" style="color:#3dd68c">—</div><div class="sl">صفحة إضافية</div></div>
+      </div>
+      <div class="card">
+        <div class="ct">روابط سريعة</div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <button class="btn btn-g" onclick="go('hero',qni('hero'))">🏠 تعديل Hero</button>
+          <button class="btn btn-g" onclick="go('port',qni('port'))">🖼️ إضافة عمل</button>
+          <button class="btn btn-g" onclick="go('clients',qni('clients'))">👥 إدارة العملاء</button>
+          <button class="btn btn-g" onclick="go('faq',qni('faq'))">❓ تعديل الأسئلة</button>
+          <button class="btn btn-g" onclick="go('pages',qni('pages'))">📄 صفحة جديدة</button>
+        </div>
+      </div>
+      <div class="info-box">
+        💡 <strong style="color:var(--red)">أول مرة؟</strong> شغّل ملف <code>setup.sql</code> في Supabase Dashboard → SQL Editor حتى تُنشأ الجداول وتُملأ بالبيانات الأولية.
+      </div>
+    </div>
+
+    <!-- HERO -->
+    <div class="sec" id="sec-hero">
+      <div class="pt">محتوى الصفحة الرئيسية</div>
+      <div class="ps">عدّل نصوص وأرقام الـ Hero</div>
+      <div class="card">
+        <div class="ct">النص الرئيسي</div>
+        <div class="field"><label>البادج (النص الصغير فوق العنوان)</label><input type="text" id="h-badge"></div>
+        <div class="field"><label>العنوان الرئيسي</label><textarea id="h-title" rows="3"></textarea></div>
+        <div class="field"><label>النص التفسيري</label><textarea id="h-sub" rows="2"></textarea></div>
+        <div class="r2">
+          <div class="field"><label>الزر الأول</label><input type="text" id="h-b1"></div>
+          <div class="field"><label>الزر الثاني</label><input type="text" id="h-b2"></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="ct">الإحصائيات (4 أرقام)</div>
+        <div class="r2">
+          <div class="field"><label>الرقم 1</label><input type="text" id="h-n1" placeholder="10+"></div>
+          <div class="field"><label>وصف الرقم 1</label><input type="text" id="h-l1"></div>
+          <div class="field"><label>الرقم 2</label><input type="text" id="h-n2" placeholder="30+"></div>
+          <div class="field"><label>وصف الرقم 2</label><input type="text" id="h-l2"></div>
+          <div class="field"><label>الرقم 3</label><input type="text" id="h-n3" placeholder="500+"></div>
+          <div class="field"><label>وصف الرقم 3</label><input type="text" id="h-l3"></div>
+          <div class="field"><label>الرقم 4</label><input type="text" id="h-n4" placeholder="2"></div>
+          <div class="field"><label>وصف الرقم 4</label><input type="text" id="h-l4"></div>
+        </div>
+      </div>
+      <button class="btn btn-p" onclick="saveHero()">💾 حفظ</button>
+    </div>
+
+    <!-- PORTFOLIO -->
+    <div class="sec" id="sec-port">
+      <div class="pt">الأعمال</div>
+      <div class="ps">إضافة وتعديل وحذف أعمالك</div>
+      <div class="card">
+        <div class="ct"><span>الأعمال (<span id="pc">0</span>)</span><button class="btn btn-p bsm" onclick="openPM()">+ إضافة</button></div>
+        <div id="pl"></div>
+      </div>
+    </div>
+
+    <!-- CLIENTS -->
+    <div class="sec" id="sec-clients">
+      <div class="pt">العملاء</div>
+      <div class="ps">إدارة قائمة عملائنا</div>
+      <div class="card">
+        <div class="ct"><span>العملاء (<span id="cc">0</span>)</span><button class="btn btn-p bsm" onclick="openCM()">+ إضافة</button></div>
+        <div id="cl"></div>
+      </div>
+    </div>
+
+    <!-- FAQ -->
+    <div class="sec" id="sec-faq">
+      <div class="pt">الأسئلة الشائعة</div>
+      <div class="ps">إدارة الأسئلة والأجوبة</div>
+      <div class="card">
+        <div class="ct"><span>الأسئلة (<span id="fc">0</span>)</span><button class="btn btn-p bsm" onclick="openFM()">+ إضافة</button></div>
+        <div id="fl"></div>
+      </div>
+    </div>
+
+    <!-- PAGES -->
+    <div class="sec" id="sec-pages">
+      <div class="pt">صفحات جديدة</div>
+      <div class="ps">أنشئ صفحات مثل صفحة خدمة أو صفحة عرض سعر</div>
+      <div class="info-box">📌 كل صفحة رابطها: <code style="color:var(--red)">yoursite.com/page.html?slug=اسم-الصفحة</code></div>
+      <div class="card">
+        <div class="ct"><span>الصفحات (<span id="pgc">0</span>)</span><button class="btn btn-p bsm" onclick="openPgM()">+ صفحة جديدة</button></div>
+        <div id="pgl"></div>
+      </div>
+    </div>
+
+    <!-- SETTINGS -->
+    <div class="sec" id="sec-settings">
+      <div class="pt">الإعدادات</div>
+      <div class="ps">بيانات التواصل وأدوات الإعلان</div>
+      <div class="card">
+        <div class="ct">بيانات التواصل</div>
+        <div class="r2">
+          <div class="field"><label>رقم الهاتف</label><input type="text" id="s-ph" placeholder="+20 100 000 0000"></div>
+          <div class="field"><label>رقم واتساب (أرقام فقط)</label><input type="text" id="s-wa" placeholder="201000000000"></div>
+        </div>
+        <div class="field"><label>الإيميل</label><input type="email" id="s-em"></div>
+      </div>
+      <div class="card">
+        <div class="ct">🎯 أدوات الإعلان</div>
+        <div class="r3">
+          <div class="field"><label>Meta Pixel ID</label><input type="text" id="s-px" placeholder="1234567890"></div>
+          <div class="field"><label>Google Tag ID</label><input type="text" id="s-gt" placeholder="G-XXXXXXX"></div>
+          <div class="field"><label>TikTok Pixel ID</label><input type="text" id="s-tt" placeholder="CXXXXXXXX"></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="ct">📱 السوشيال ميديا</div>
+        <div class="r3">
+          <div class="field"><label>Facebook</label><input type="url" id="s-fb" placeholder="https://facebook.com/..."></div>
+          <div class="field"><label>Instagram</label><input type="url" id="s-ig" placeholder="https://instagram.com/..."></div>
+          <div class="field"><label>TikTok</label><input type="url" id="s-tk" placeholder="https://tiktok.com/@..."></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="ct">🔑 تغيير كلمة المرور</div>
+        <div class="r2">
+          <div class="field"><label>كلمة المرور الجديدة</label><input type="password" id="s-p1" placeholder="••••••••"></div>
+          <div class="field"><label>تأكيد كلمة المرور</label><input type="password" id="s-p2" placeholder="••••••••"></div>
+        </div>
+      </div>
+      <button class="btn btn-p" onclick="saveSettings()">💾 حفظ الإعدادات</button>
+    </div>
+
+  </div>
 </div>
 
-<!-- MAIN -->
-<div class="main">
-
-  <!-- OVERVIEW -->
-  <div class="section active" id="sec-overview">
-    <div class="page-title">نظرة عامة</div>
-    <div class="page-sub">مرحبًا! إليك ملخص موقعك.</div>
-    <div class="stats-row">
-      <div class="stat-card"><div class="stat-num" style="color:var(--accent)">6</div><div class="stat-lab">أعمال منشورة</div></div>
-      <div class="stat-card"><div class="stat-num">6</div><div class="stat-lab">خدمات</div></div>
-      <div class="stat-card"><div class="stat-num" style="color:#3dd68c">مباشر</div><div class="stat-lab">حالة الموقع</div></div>
-      <div class="stat-card"><div class="stat-num">عربي</div><div class="stat-lab">اللغة الافتراضية</div></div>
-    </div>
-    <div class="card">
-      <div class="card-title">معاينة سريعة للموقع</div>
-      <div class="preview-strip">
-        <div class="preview-bar">
-          <div class="dot" style="background:#ff5f57"></div>
-          <div class="dot" style="background:#febc2e"></div>
-          <div class="dot" style="background:#28c840"></div>
-          <span style="flex:1;text-align:center">apex-agency.com</span>
-        </div>
-        <div class="preview-frame">
-          <div class="pv-nav" id="pvNav" style="background:#141414;color:#fff">
-            <span style="font-weight:900;font-size:12px">APEX<span id="pvDot" style="color:var(--accent)">.</span></span>
-            <div style="display:flex;gap:10px;font-size:10px;color:#888">خدماتنا · أعمالنا · تواصل</div>
-          </div>
-          <div class="pv-hero" id="pvHero" style="background:linear-gradient(135deg,#0d0d0d,#1a0508);color:#fff">
-            نحوّل علامتك التجارية إلى <span id="pvAccentText" style="color:var(--accent);margin-right:4px">قوة تسويقية</span>
-          </div>
-          <button class="pv-btn" id="pvBtn" style="background:var(--accent);color:#fff">ابدأ معنا</button>
-        </div>
-      </div>
-    </div>
-    <div class="card">
-      <div class="card-title">روابط سريعة</div>
-      <div style="display:flex;gap:10px;flex-wrap:wrap">
-        <button class="btn btn-ghost" onclick="go('design',document.querySelector('[onclick*=design]'))">🎨 تعديل التصميم</button>
-        <button class="btn btn-ghost" onclick="go('portfolio',document.querySelector('[onclick*=portfolio]'))">🖼️ رفع أعمال</button>
-        <button class="btn btn-ghost" onclick="go('content',document.querySelector('[onclick*=content]'))">✍️ تعديل المحتوى</button>
-        <button class="btn btn-ghost" onclick="go('services',document.querySelector('[onclick*=services]'))">⚡ إدارة الخدمات</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- DESIGN -->
-  <div class="section" id="sec-design">
-    <div class="page-title">التصميم والألوان</div>
-    <div class="page-sub">غيّر ألوان وخطوط الموقع وشوف التغيير مباشرة.</div>
-
-    <div class="card">
-      <div class="card-title">الألوان الرئيسية</div>
-      <div class="color-grid">
-        <div class="color-item">
-          <input type="color" class="color-swatch" value="#E8192C" id="c-accent" onchange="applyColor('--accent',this.value);applyColor('--accent2',this.value);updatePreview()">
-          <div class="color-info"><div class="color-name">اللون الرئيسي</div><div class="color-val" id="cv-accent">#E8192C</div></div>
-        </div>
-        <div class="color-item">
-          <input type="color" class="color-swatch" value="#0A0A0A" id="c-bg" onchange="applyColor('--bg',this.value);updatePreview()">
-          <div class="color-info"><div class="color-name">الخلفية</div><div class="color-val" id="cv-bg">#0A0A0A</div></div>
-        </div>
-        <div class="color-item">
-          <input type="color" class="color-swatch" value="#161616" id="c-surface" onchange="applyColor('--surface',this.value)">
-          <div class="color-info"><div class="color-name">الكروت</div><div class="color-val" id="cv-surface">#161616</div></div>
-        </div>
-        <div class="color-item">
-          <input type="color" class="color-swatch" value="#ffffff" id="c-text" onchange="applyColor('--text',this.value)">
-          <div class="color-info"><div class="color-name">النصوص</div><div class="color-val" id="cv-text">#ffffff</div></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-title">الخط</div>
-      <div style="font-size:12px;color:var(--muted);margin-bottom:8px">اختار خط الموقع</div>
-      <div class="font-options" id="fontOpts">
-        <div class="font-opt active" onclick="setFont('Segoe UI',this)" style="font-family:'Segoe UI'">Segoe UI</div>
-        <div class="font-opt" onclick="setFont('Georgia',this)" style="font-family:Georgia">Georgia</div>
-        <div class="font-opt" onclick="setFont('Courier New',this)" style="font-family:'Courier New'">Courier New</div>
-        <div class="font-opt" onclick="setFont('Arial',this)" style="font-family:Arial">Arial</div>
-        <div class="font-opt" onclick="setFont('Tahoma',this)" style="font-family:Tahoma">Tahoma</div>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-title">حجم الخطوط</div>
-      <div class="field">
-        <label>حجم النصوص العادية</label>
-        <div class="slider-row">
-          <input type="range" min="12" max="20" value="14" id="fs-body" oninput="document.getElementById('fv-body').textContent=this.value+'px'">
-          <span class="slider-val" id="fv-body">14px</span>
-        </div>
-      </div>
-      <div class="field">
-        <label>حجم العناوين</label>
-        <div class="slider-row">
-          <input type="range" min="24" max="80" value="48" id="fs-h1" oninput="document.getElementById('fv-h1').textContent=this.value+'px'">
-          <span class="slider-val" id="fv-h1">48px</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-title">زوايا الكروت</div>
-      <div class="field">
-        <label>مقدار الانحناء</label>
-        <div class="slider-row">
-          <input type="range" min="0" max="24" value="10" id="br-val" oninput="document.getElementById('bv-val').textContent=this.value+'px'">
-          <span class="slider-val" id="bv-val">10px</span>
-        </div>
-      </div>
-    </div>
-
-    <button class="btn btn-primary" onclick="toast('✅ تم حفظ إعدادات التصميم!')">حفظ التغييرات</button>
-  </div>
-
-  <!-- PORTFOLIO -->
-  <div class="section" id="sec-portfolio">
-    <div class="page-title">إدارة الأعمال</div>
-    <div class="page-sub">ارفع أعمالك الجديدة أو عدّل الموجودة.</div>
-
-    <div class="card">
-      <div class="card-title">رفع عمل جديد <button class="btn btn-primary" style="font-size:11px;padding:6px 12px" onclick="openModal()">+ إضافة</button></div>
-      <div class="upload-zone" id="dropZone" onclick="document.getElementById('fileInput').click()"
-        ondragover="event.preventDefault();this.classList.add('drag')"
-        ondragleave="this.classList.remove('drag')"
-        ondrop="handleDrop(event)">
-        <div class="upload-icon">📁</div>
-        <div class="upload-label">اسحب الصور هنا أو <span>اختار من جهازك</span></div>
-        <div style="font-size:11px;color:var(--muted);margin-top:6px">PNG, JPG, WebP — حد أقصى 5MB</div>
-        <input type="file" id="fileInput" accept="image/*" multiple style="display:none" onchange="handleFiles(this.files)">
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-title">الأعمال الحالية (<span id="portCount">6</span>)</div>
-      <div class="portfolio-grid" id="portGrid">
-        <!-- filled by JS -->
-      </div>
-    </div>
-  </div>
-
-  <!-- CONTENT -->
-  <div class="section" id="sec-content">
-    <div class="page-title">تعديل المحتوى</div>
-    <div class="page-sub">عدّل نصوص الموقع من هنا مباشرة.</div>
-    <div class="card">
-      <div class="card-title">قسم الـ Hero (الصفحة الرئيسية)</div>
-      <div class="field"><label>العنوان الرئيسي (عربي)</label><input type="text" value="نحوّل علامتك التجارية إلى قوة تسويقية" id="heroTitleAr" oninput="updatePreviewText()"></div>
-      <div class="field"><label>العنوان الرئيسي (إنجليزي)</label><input type="text" value="We Turn Your Brand Into a Marketing Force"></div>
-      <div class="field"><label>النص التفسيري (عربي)</label><textarea>استراتيجيات إعلانية مدروسة، إبداع بلا حدود، ونتائج حقيقية تقيسها بنفسك.</textarea></div>
-      <div class="field"><label>نص الزر الرئيسي</label><input type="text" value="ابدأ معنا"></div>
-    </div>
-    <div class="card">
-      <div class="card-title">الإحصائيات</div>
-      <div class="row2">
-        <div class="field"><label>عدد العملاء</label><input type="number" value="150"></div>
-        <div class="field"><label>عدد المشاريع</label><input type="number" value="400"></div>
-        <div class="field"><label>متوسط الـ ROI</label><input type="text" value="5x"></div>
-        <div class="field"><label>سنوات الخبرة</label><input type="number" value="3"></div>
-      </div>
-    </div>
-    <div class="card">
-      <div class="card-title">معلومات التواصل</div>
-      <div class="field"><label>رقم الهاتف</label><input type="text" value="+20 100 000 0000"></div>
-      <div class="field"><label>البريد الإلكتروني</label><input type="email" value="hello@apex-agency.com"></div>
-      <div class="field"><label>رابط واتساب</label><input type="text" value="https://wa.me/201000000000"></div>
-    </div>
-    <button class="btn btn-primary" onclick="toast('✅ تم حفظ المحتوى!')">حفظ التغييرات</button>
-  </div>
-
-  <!-- SERVICES -->
-  <div class="section" id="sec-services">
-    <div class="page-title">إدارة الخدمات</div>
-    <div class="page-sub">أضف أو عدّل خدمات الوكالة.</div>
-    <div id="servicesList"></div>
-    <button class="btn btn-ghost" style="width:100%;margin-top:4px" onclick="addService()">+ إضافة خدمة</button>
-    <button class="btn btn-primary" style="margin-top:12px" onclick="toast('✅ تم حفظ الخدمات!')">حفظ</button>
-  </div>
-
-  <!-- SETTINGS -->
-  <div class="section" id="sec-settings">
-    <div class="page-title">الإعدادات</div>
-    <div class="page-sub">إعدادات الموقع العامة والإعلانات.</div>
-    <div class="card">
-      <div class="card-title">بيانات الموقع</div>
-      <div class="field"><label>اسم الوكالة</label><input type="text" value="APEX Marketing Agency"></div>
-      <div class="field"><label>الشعار (النص)</label><input type="text" value="APEX"></div>
-      <div class="field"><label>اللغة الافتراضية</label>
-        <select><option>عربي (RTL)</option><option>English (LTR)</option><option>كلاهما</option></select>
-      </div>
-    </div>
-    <div class="card">
-      <div class="card-title">🎯 ربط الإعلانات</div>
-      <div class="field"><label>Meta Pixel ID</label><input type="text" placeholder="مثال: 1234567890123456"></div>
-      <div class="field"><label>Google Tag ID</label><input type="text" placeholder="مثال: G-XXXXXXXXXX"></div>
-      <div class="field"><label>TikTok Pixel ID</label><input type="text" placeholder="مثال: C4J5XXXXXXXXXXXX"></div>
-      <div style="background:#0a1a0a;border:0.5px solid #1a3a1a;border-radius:8px;padding:12px;font-size:12px;color:#3dd68c;margin-top:4px">
-        ✅ بمجرد إدخال الـ Pixel ID هيتضاف تلقائياً في كود الموقع
-      </div>
-    </div>
-    <div class="card">
-      <div class="card-title">📱 روابط السوشيال ميديا</div>
-      <div class="row2">
-        <div class="field"><label>Facebook</label><input type="url" placeholder="https://facebook.com/..."></div>
-        <div class="field"><label>Instagram</label><input type="url" placeholder="https://instagram.com/..."></div>
-        <div class="field"><label>TikTok</label><input type="url" placeholder="https://tiktok.com/@..."></div>
-        <div class="field"><label>LinkedIn</label><input type="url" placeholder="https://linkedin.com/..."></div>
-      </div>
-    </div>
-    <button class="btn btn-primary" onclick="toast('✅ تم حفظ الإعدادات!')">حفظ الإعدادات</button>
-  </div>
-
-</div><!-- /main -->
-</div><!-- /shell -->
-
-<!-- MODAL -->
-<div class="overlay" id="modal" onclick="if(event.target===this)closeModal()">
+<!-- PORTFOLIO MODAL -->
+<div class="ov" id="ov-port" onclick="if(event.target===this)closePM()">
   <div class="modal">
-    <div class="modal-title">إضافة عمل جديد <button class="close-btn" onclick="closeModal()">✕</button></div>
-    <div class="field"><label>اسم المشروع (عربي)</label><input type="text" id="m-title" placeholder="مثال: حملة العيد 2025"></div>
-    <div class="field"><label>الوصف (عربي)</label><input type="text" id="m-desc" placeholder="مثال: زيادة المبيعات 300%"></div>
-    <div class="field"><label>التصنيف</label>
-      <select id="m-cat"><option>Meta Ads</option><option>Google Ads</option><option>Branding</option><option>Social Media</option><option>TikTok</option><option>SEO</option><option>Web Design</option></select>
-    </div>
-    <div class="field"><label>الإيموجي / أيقونة</label><input type="text" id="m-icon" placeholder="🚀" maxlength="4"></div>
-    <div class="field"><label>صورة المشروع (اختياري)</label>
-      <div class="upload-zone" style="padding:20px" onclick="document.getElementById('m-file').click()">
-        <div style="font-size:13px;color:var(--muted)">📁 اختار صورة</div>
-        <input type="file" id="m-file" accept="image/*" style="display:none" onchange="previewModalImg(this)">
+    <div class="mh"><span id="pm-ttl">إضافة عمل</span><button class="mx" onclick="closePM()">✕</button></div>
+    <input type="hidden" id="pm-id">
+    <div class="field"><label>العنوان</label><input type="text" id="pm-t" placeholder="حملة Meta — مركز صيانة"></div>
+    <div class="field"><label>الوصف</label><textarea id="pm-d" rows="2"></textarea></div>
+    <div class="r2">
+      <div class="field"><label>التصنيف</label>
+        <select id="pm-c">
+          <option value="digital">تسويق إلكتروني</option>
+          <option value="print">دعاية وإعلان</option>
+          <option value="branding">هوية بصرية</option>
+        </select>
       </div>
-      <img id="m-preview" style="display:none;width:100%;border-radius:8px;margin-top:8px;max-height:140px;object-fit:cover">
+      <div class="field"><label>بادج النتيجة</label><input type="text" id="pm-s" placeholder="+320% مبيعات"></div>
     </div>
-    <div style="display:flex;gap:10px;margin-top:8px">
-      <button class="btn btn-primary" style="flex:1" onclick="addPortItem()">إضافة للموقع</button>
-      <button class="btn btn-ghost" onclick="closeModal()">إلغاء</button>
+    <div class="field"><label>رابط الصورة (URL)</label><input type="url" id="pm-i" placeholder="https://..."></div>
+    <div style="border:1px dashed var(--b2);border-radius:8px;padding:14px;text-align:center;cursor:pointer;background:#0a0a0a;font-size:12px;color:var(--g);margin-bottom:12px" onclick="document.getElementById('pm-f').click()">
+      📁 أو ارفع صورة من جهازك
+      <input type="file" id="pm-f" accept="image/*" style="display:none" onchange="upPortImg(this)">
+    </div>
+    <img id="pm-pv" style="display:none;width:100%;max-height:110px;object-fit:cover;border-radius:6px;margin-bottom:12px">
+    <div class="field"><label>تاجز (مفصولة بفاصلة)</label><input type="text" id="pm-tg" placeholder="Meta Ads, Service Center"></div>
+    <div class="mf">
+      <button class="btn btn-g" onclick="closePM()">إلغاء</button>
+      <button class="btn btn-p" onclick="savePM()">حفظ</button>
+    </div>
+  </div>
+</div>
+
+<!-- CLIENT MODAL -->
+<div class="ov" id="ov-cl" onclick="if(event.target===this)closeCM()">
+  <div class="modal" style="max-width:400px">
+    <div class="mh"><span id="cm-ttl">إضافة عميل</span><button class="mx" onclick="closeCM()">✕</button></div>
+    <input type="hidden" id="cm-id">
+    <div class="field"><label>اسم العميل</label><input type="text" id="cm-n" placeholder="CARBENZ"></div>
+    <div class="field"><label>رابط اللوجو (اختياري)</label><input type="url" id="cm-l" placeholder="https://..."></div>
+    <div class="mf">
+      <button class="btn btn-g" onclick="closeCM()">إلغاء</button>
+      <button class="btn btn-p" onclick="saveCM()">حفظ</button>
+    </div>
+  </div>
+</div>
+
+<!-- FAQ MODAL -->
+<div class="ov" id="ov-faq" onclick="if(event.target===this)closeFM()">
+  <div class="modal">
+    <div class="mh"><span id="fm-ttl">إضافة سؤال</span><button class="mx" onclick="closeFM()">✕</button></div>
+    <input type="hidden" id="fm-id">
+    <div class="field"><label>السؤال</label><input type="text" id="fm-q" placeholder="هل تشتغلوا على مراكز الصيانة بس؟"></div>
+    <div class="field"><label>الإجابة</label><textarea id="fm-a" rows="5"></textarea></div>
+    <div class="mf">
+      <button class="btn btn-g" onclick="closeFM()">إلغاء</button>
+      <button class="btn btn-p" onclick="saveFM()">حفظ</button>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE MODAL -->
+<div class="ov" id="ov-pg" onclick="if(event.target===this)closePgM()">
+  <div class="modal">
+    <div class="mh"><span id="pgm-ttl">صفحة جديدة</span><button class="mx" onclick="closePgM()">✕</button></div>
+    <input type="hidden" id="pgm-id">
+    <div class="r2">
+      <div class="field"><label>عنوان الصفحة</label><input type="text" id="pgm-t" placeholder="خدمة التصميم"></div>
+      <div class="field"><label>slug (إنجليزي للرابط)</label><input type="text" id="pgm-s" placeholder="design-service"></div>
+    </div>
+    <div class="field"><label>وصف SEO</label><input type="text" id="pgm-m" placeholder="وصف قصير..."></div>
+    <div style="margin-bottom:12px">
+      <div style="font-size:11px;font-weight:700;color:var(--g);margin-bottom:10px;display:flex;align-items:center;gap:8px;text-transform:uppercase;letter-spacing:.5px">
+        محتوى الصفحة
+        <button class="btn btn-g bsm" onclick="addSec('hero')">+ Hero</button>
+        <button class="btn btn-g bsm" onclick="addSec('text')">+ نص</button>
+        <button class="btn btn-g bsm" onclick="addSec('cta')">+ CTA</button>
+      </div>
+      <div id="pgm-secs"></div>
+    </div>
+    <div class="field">
+      <label style="display:flex;align-items:center;gap:8px;cursor:pointer;text-transform:none;letter-spacing:0;font-size:13px;font-weight:600">
+        <input type="checkbox" id="pgm-pub"> نشر الصفحة (مرئية للزوار)
+      </label>
+    </div>
+    <div class="mf">
+      <button class="btn btn-g" onclick="closePgM()">إلغاء</button>
+      <button class="btn btn-p" onclick="savePgM()">حفظ الصفحة</button>
     </div>
   </div>
 </div>
 
 <div class="toast" id="toastEl"></div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <script>
-var ports=[
-  {title:'حملة العيد 2025',desc:'زيادة المبيعات 320%',cat:'Meta Ads',icon:'🛍️',bg:'#1a0508'},
-  {title:'إطلاق براند لياقة',desc:'10,000 متابع في 60 يوم',cat:'Branding',icon:'🏋️',bg:'#0a0a1a'},
-  {title:'توليد leads طبية',desc:'تخفيض تكلفة الـ lead 60%',cat:'Google Ads',icon:'🏥',bg:'#0a1a0a'},
-  {title:'سوشيال ميديا مطعم',desc:'مضاعفة الحجوزات',cat:'Social Media',icon:'🍕',bg:'#1a1a0a'},
-  {title:'إطلاق تطبيق موبايل',desc:'50,000 تنزيل أول شهر',cat:'TikTok',icon:'📱',bg:'#1a0a1a'},
-  {title:'تسويق عقارات',desc:'بيع 30 وحدة في 45 يوم',cat:'Meta + Google',icon:'🏗️',bg:'#0a1a1a'}
-];
+const SB_URL='https://knwnviglquxvvwknxbqa.supabase.co';
+const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtud252aWdscXV4dnZ3a254YnFhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA5MzI2NDIsImV4cCI6MjA5NjUwODY0Mn0.VuxAC-J7it4m_wrSTBHCh7t_z_PL8CCGwhvtv6NiZmQ';
+const sb=supabase.createClient(SB_URL,SB_KEY);
 
-var services=[
-  {icon:'📣',title:'إعلانات مدفوعة',desc:'Meta · Google · TikTok'},
-  {icon:'✍️',title:'إنتاج المحتوى',desc:'Copy · Video · Design'},
-  {icon:'🎨',title:'الهوية البصرية',desc:'Logo · Branding · Guidelines'},
-  {icon:'📊',title:'إدارة السوشيال',desc:'Instagram · Facebook · TikTok'},
-  {icon:'🔍',title:'SEO',desc:'On-Page · Off-Page · Technical'},
-  {icon:'🌐',title:'تصميم مواقع',desc:'UI/UX · Conversion · Speed'}
-];
+var portfolio=[],clients=[],faqs=[],pages=[],pageSecs=[];
 
-function renderPorts(){
-  var g=document.getElementById('portGrid');
-  g.innerHTML='';
-  ports.forEach(function(p,i){
-    g.innerHTML+=`<div class="port-card">
-      <div class="port-thumb" style="background:${p.bg}">${p.img?`<img src="${p.img}" style="width:100%;height:100%;object-fit:cover">`:p.icon}</div>
-      <div class="port-info">
-        <div class="port-title">${p.title}</div>
-        <div class="port-cat">${p.cat}</div>
-        <div style="font-size:11px;color:var(--muted);margin-top:3px">${p.desc}</div>
-        <div class="port-actions">
-          <button class="port-btn" onclick="editPort(${i})">تعديل</button>
-          <button class="port-btn del" onclick="delPort(${i})">حذف</button>
-        </div>
-      </div>
-    </div>`;
-  });
-  g.innerHTML+=`<div class="add-card" onclick="openModal()"><span style="font-size:24px">+</span><span>إضافة عمل</span></div>`;
-  document.getElementById('portCount').textContent=ports.length;
+// ── LOGIN ──────────────────────────────────────────
+async function doLogin(){
+  var pwd=document.getElementById('lpwd').value;
+  if(!pwd){document.getElementById('lerr').textContent='ادخل كلمة المرور';return}
+  try{
+    var{data,error}=await sb.from('ao_settings').select('admin_password').eq('id',1).single();
+    var correct=data?data.admin_password:'omani2025';
+    if(pwd===correct){startAdmin();}
+    else{document.getElementById('lerr').textContent='كلمة المرور غلط';}
+  }catch(e){
+    if(pwd==='omani2025'){startAdmin();}
+    else{document.getElementById('lerr').textContent='كلمة المرور غلط';}
+  }
+}
+function startAdmin(){
+  sessionStorage.setItem('ao','1');
+  document.getElementById('loginWrap').style.display='none';
+  document.getElementById('adminShell').style.display='grid';
+  loadAll();
+}
+function doLogout(){sessionStorage.removeItem('ao');location.reload()}
+if(sessionStorage.getItem('ao')==='1'){
+  document.getElementById('loginWrap').style.display='none';
+  document.getElementById('adminShell').style.display='grid';
+  loadAll();
 }
 
-function renderServices(){
-  var c=document.getElementById('servicesList');
-  c.innerHTML='';
-  services.forEach(function(s,i){
-    c.innerHTML+=`<div class="card" style="margin-bottom:10px">
-      <div style="display:flex;gap:10px;align-items:flex-start">
-        <input type="text" value="${s.icon}" style="width:44px;text-align:center;background:#0a0a0a;border:0.5px solid var(--border);color:var(--text);padding:8px;border-radius:7px;font-size:16px;font-family:var(--font)">
-        <div style="flex:1;display:flex;flex-direction:column;gap:8px">
-          <input type="text" value="${s.title}" style="width:100%;background:#0a0a0a;border:0.5px solid var(--border);color:var(--text);padding:8px 12px;border-radius:7px;font-size:13px;font-family:var(--font)">
-          <input type="text" value="${s.desc}" style="width:100%;background:#0a0a0a;border:0.5px solid var(--border);color:var(--muted);padding:8px 12px;border-radius:7px;font-size:12px;font-family:var(--font)">
-        </div>
-        <button class="port-btn del" style="flex:none;padding:8px 10px" onclick="services.splice(${i},1);renderServices()">🗑</button>
-      </div>
-    </div>`;
-  });
-}
-
-function addService(){
-  services.push({icon:'⭐',title:'خدمة جديدة',desc:'وصف الخدمة'});
-  renderServices();
-}
-
+// ── NAV ───────────────────────────────────────────
 function go(id,el){
-  document.querySelectorAll('.section').forEach(function(s){s.classList.remove('active')});
-  document.querySelectorAll('.nav-item').forEach(function(n){n.classList.remove('active')});
+  document.querySelectorAll('.sec').forEach(function(s){s.classList.remove('active')});
+  document.querySelectorAll('.ni').forEach(function(n){n.classList.remove('active')});
   document.getElementById('sec-'+id).classList.add('active');
   if(el)el.classList.add('active');
 }
+function qni(s){return document.querySelector('[data-s='+s+']')}
 
-function applyColor(v,val){
-  document.documentElement.style.setProperty(v,val);
-  var key=v.replace('--','cv-');
-  var el=document.getElementById(key);
-  if(el)el.textContent=val;
+// ── LOAD ALL ──────────────────────────────────────
+async function loadAll(){
+  try{
+    await Promise.all([loadHero(),loadPort(),loadClients(),loadFaq(),loadPages(),loadSettings()]);
+    updateStats();
+    document.getElementById('cdot').className='dot';
+    document.getElementById('clbl').textContent='متصل';
+  }catch(e){
+    document.getElementById('cdot').className='dot off';
+    document.getElementById('clbl').textContent='غير متصل';
+    toast('⚠️ تعذر الاتصال — تأكد من تشغيل setup.sql أولًا');
+  }
+}
+function updateStats(){
+  document.getElementById('st-p').textContent=portfolio.filter(function(x){return x.is_active}).length;
+  document.getElementById('st-c').textContent=clients.filter(function(x){return x.is_active}).length;
+  document.getElementById('st-f').textContent=faqs.filter(function(x){return x.is_active}).length;
+  document.getElementById('st-pg').textContent=pages.filter(function(x){return x.is_published}).length;
 }
 
-function updatePreview(){
-  var acc=document.getElementById('c-accent').value;
-  document.getElementById('pvDot').style.color=acc;
-  document.getElementById('pvAccentText').style.color=acc;
-  document.getElementById('pvBtn').style.background=acc;
-  var bg=document.getElementById('c-bg').value;
-  document.getElementById('pvHero').style.background='linear-gradient(135deg,'+bg+',#1a0508)';
+// ── HERO ──────────────────────────────────────────
+async function loadHero(){
+  var{data}=await sb.from('ao_hero').select('*').eq('id',1).single();
+  if(!data)return;
+  v('h-badge',data.badge);v('h-title',data.title);v('h-sub',data.subtitle);
+  v('h-b1',data.btn1_text);v('h-b2',data.btn2_text);
+  v('h-n1',data.stat1_num);v('h-l1',data.stat1_label);
+  v('h-n2',data.stat2_num);v('h-l2',data.stat2_label);
+  v('h-n3',data.stat3_num);v('h-l3',data.stat3_label);
+  v('h-n4',data.stat4_num);v('h-l4',data.stat4_label);
 }
-
-function updatePreviewText(){
-  var t=document.getElementById('heroTitleAr').value;
-  document.getElementById('pvAccentText').textContent=t.split(' ').slice(-2).join(' ');
-}
-
-function setFont(f,el){
-  document.querySelectorAll('.font-opt').forEach(function(o){o.classList.remove('active')});
-  el.classList.add('active');
-  document.documentElement.style.setProperty('--font',f);
-  toast('✅ تم تغيير الخط إلى '+f);
-}
-
-function openModal(){document.getElementById('modal').classList.add('open')}
-function closeModal(){document.getElementById('modal').classList.remove('open')}
-
-function addPortItem(){
-  var t=document.getElementById('m-title').value;
-  var d=document.getElementById('m-desc').value;
-  var cat=document.getElementById('m-cat').value;
-  var icon=document.getElementById('m-icon').value||'🎯';
-  var img=document.getElementById('m-preview').src;
-  if(!t){alert('اكتب اسم المشروع');return}
-  var colors=['#1a0508','#0a0a1a','#0a1a0a','#1a1a0a','#1a0a1a','#0a1a1a'];
-  ports.push({title:t,desc:d||'',cat:cat,icon:icon,bg:colors[ports.length%colors.length],img:img&&img.startsWith('data')?img:null});
-  renderPorts();
-  closeModal();
-  document.getElementById('m-title').value='';
-  document.getElementById('m-desc').value='';
-  document.getElementById('m-icon').value='';
-  document.getElementById('m-preview').style.display='none';
-  toast('✅ تمت إضافة "'+t+'" للموقع!');
-}
-
-function delPort(i){
-  if(confirm('تأكد حذف "'+ports[i].title+'"؟')){ports.splice(i,1);renderPorts();toast('🗑 تم الحذف')}
-}
-function editPort(i){
-  document.getElementById('m-title').value=ports[i].title;
-  document.getElementById('m-desc').value=ports[i].desc;
-  document.getElementById('m-icon').value=ports[i].icon;
-  openModal();
-}
-
-function handleFiles(files){
-  Array.from(files).forEach(function(f){
-    var r=new FileReader();
-    r.onload=function(e){
-      var name=f.name.replace(/\.[^.]+$/,'');
-      ports.push({title:name,desc:'',cat:'Portfolio',icon:'🖼️',bg:'#0a0a0a',img:e.target.result});
-      renderPorts();
-      toast('✅ تمت إضافة الصورة!');
-    };
-    r.readAsDataURL(f);
+async function saveHero(){
+  var{error}=await sb.from('ao_hero').upsert({id:1,
+    badge:g('h-badge'),title:g('h-title'),subtitle:g('h-sub'),
+    btn1_text:g('h-b1'),btn2_text:g('h-b2'),
+    stat1_num:g('h-n1'),stat1_label:g('h-l1'),
+    stat2_num:g('h-n2'),stat2_label:g('h-l2'),
+    stat3_num:g('h-n3'),stat3_label:g('h-l3'),
+    stat4_num:g('h-n4'),stat4_label:g('h-l4'),
+    updated_at:new Date().toISOString()
   });
+  if(error){toast('❌ '+error.message);return}
+  toast('✅ تم حفظ Hero!');
 }
 
-function handleDrop(e){
-  e.preventDefault();
-  document.getElementById('dropZone').classList.remove('drag');
-  handleFiles(e.dataTransfer.files);
+// ── PORTFOLIO ─────────────────────────────────────
+async function loadPort(){
+  var{data}=await sb.from('ao_portfolio').select('*').order('sort_order');
+  portfolio=data||[];renderPort();
+}
+function renderPort(){
+  document.getElementById('pc').textContent=portfolio.length;
+  var el=document.getElementById('pl');
+  if(!portfolio.length){el.innerHTML=empty('لا توجد أعمال بعد');return}
+  var cm={digital:'bd',print:'bp',branding:'bb'};
+  var cn={digital:'تسويق رقمي',print:'دعاية وإعلان',branding:'هوية بصرية'};
+  el.innerHTML=portfolio.map(function(p){
+    return '<div class="li">'
+      +(p.image_url?'<img src="'+h(p.image_url)+'" style="width:48px;height:40px;object-fit:cover;border-radius:5px;flex-shrink:0">':'<div style="width:48px;height:40px;background:var(--rdim);border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">🖼</div>')
+      +'<div class="li-b"><div class="li-t">'+h(p.title)+'</div>'
+        +'<div class="li-s"><span class="badge '+(cm[p.category]||'bd')+'">'+cn[p.category]+'</span> '
+        +(p.stat_badge?'<span class="badge bp">'+h(p.stat_badge)+'</span> ':'')+' <span class="badge '+(p.is_active?'bon':'boff')+'">'+(p.is_active?'ظاهر':'مخفي')+'</span></div></div>'
+      +'<div class="li-ac">'
+        +'<button class="btn btn-g bsm" onclick="editPort(\''+p.id+'\')">تعديل</button>'
+        +'<button class="btn btn-g bsm" onclick="togglePort(\''+p.id+'\','+(!p.is_active)+')">'+( p.is_active?'إخفاء':'إظهار')+'</button>'
+        +'<button class="btn btn-d bsm" onclick="delPort(\''+p.id+'\')">حذف</button>'
+      +'</div></div>';
+  }).join('');
+}
+function openPM(item){
+  document.getElementById('pm-ttl').textContent=item?'تعديل العمل':'إضافة عمل';
+  document.getElementById('pm-id').value=item?item.id:'';
+  v('pm-t',item?item.title:'');v('pm-d',item?item.description:'');
+  document.getElementById('pm-c').value=item?item.category:'digital';
+  v('pm-s',item?item.stat_badge||'':'');v('pm-i',item?item.image_url||'':'');
+  v('pm-tg',item?(item.tags||[]).join(', '):'');
+  document.getElementById('pm-pv').style.display='none';
+  document.getElementById('ov-port').classList.add('open');
+}
+function closePM(){document.getElementById('ov-port').classList.remove('open')}
+function editPort(id){openPM(portfolio.find(function(p){return p.id===id}))}
+async function upPortImg(inp){
+  var file=inp.files[0];if(!file)return;
+  toast('⏳ جاري رفع الصورة...');
+  var path='portfolio/'+Date.now()+'.'+file.name.split('.').pop();
+  var{error}=await sb.storage.from('ao-images').upload(path,file,{upsert:true});
+  if(error){toast('❌ خطأ في الرفع');return}
+  var{data}=sb.storage.from('ao-images').getPublicUrl(path);
+  document.getElementById('pm-i').value=data.publicUrl;
+  var pv=document.getElementById('pm-pv');
+  pv.src=data.publicUrl;pv.style.display='block';
+  toast('✅ تم رفع الصورة!');
+}
+async function savePM(){
+  var id=document.getElementById('pm-id').value;
+  var title=g('pm-t').trim();if(!title){toast('اكتب عنوان العمل');return}
+  var tags=g('pm-tg').split(',').map(function(t){return t.trim()}).filter(Boolean);
+  var payload={title:title,description:g('pm-d'),category:document.getElementById('pm-c').value,
+    stat_badge:g('pm-s'),image_url:g('pm-i'),tags:tags,is_active:true};
+  var err;
+  if(id){err=(await sb.from('ao_portfolio').update(payload).eq('id',id)).error}
+  else{payload.sort_order=portfolio.length;err=(await sb.from('ao_portfolio').insert(payload)).error}
+  if(err){toast('❌ '+err.message);return}
+  closePM();await loadPort();updateStats();toast('✅ تم حفظ العمل!');
+}
+async function togglePort(id,val){await sb.from('ao_portfolio').update({is_active:val}).eq('id',id);await loadPort()}
+async function delPort(id){
+  if(!confirm('تأكيد حذف هذا العمل؟'))return;
+  await sb.from('ao_portfolio').delete().eq('id',id);
+  await loadPort();updateStats();toast('🗑 تم الحذف');
 }
 
-function previewModalImg(inp){
-  var r=new FileReader();
-  r.onload=function(e){
-    var p=document.getElementById('m-preview');
-    p.src=e.target.result;p.style.display='block';
-  };
-  r.readAsDataURL(inp.files[0]);
+// ── CLIENTS ───────────────────────────────────────
+async function loadClients(){
+  var{data}=await sb.from('ao_clients').select('*').order('sort_order');
+  clients=data||[];renderClients();
+}
+function renderClients(){
+  document.getElementById('cc').textContent=clients.length;
+  var el=document.getElementById('cl');
+  if(!clients.length){el.innerHTML=empty('لا يوجد عملاء بعد');return}
+  el.innerHTML=clients.map(function(c){
+    return '<div class="li">'
+      +(c.logo_url?'<img src="'+h(c.logo_url)+'" style="width:36px;height:36px;object-fit:contain;border-radius:4px;background:#111;flex-shrink:0">':'<div style="width:36px;height:36px;background:var(--s2);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">🏢</div>')
+      +'<div class="li-b"><div class="li-t">'+h(c.name)+'</div>'
+        +'<div class="li-s"><span class="badge '+(c.is_active?'bon':'boff')+'">'+(c.is_active?'ظاهر':'مخفي')+'</span></div></div>'
+      +'<div class="li-ac">'
+        +'<button class="btn btn-g bsm" onclick="editClient(\''+c.id+'\')">تعديل</button>'
+        +'<button class="btn btn-g bsm" onclick="toggleClient(\''+c.id+'\','+(!c.is_active)+')">'+( c.is_active?'إخفاء':'إظهار')+'</button>'
+        +'<button class="btn btn-d bsm" onclick="delClient(\''+c.id+'\')">حذف</button>'
+      +'</div></div>';
+  }).join('');
+}
+function openCM(item){
+  document.getElementById('cm-ttl').textContent=item?'تعديل العميل':'إضافة عميل';
+  document.getElementById('cm-id').value=item?item.id:'';
+  v('cm-n',item?item.name:'');v('cm-l',item?item.logo_url||'':'');
+  document.getElementById('ov-cl').classList.add('open');
+}
+function closeCM(){document.getElementById('ov-cl').classList.remove('open')}
+function editClient(id){openCM(clients.find(function(c){return c.id===id}))}
+async function saveCM(){
+  var id=document.getElementById('cm-id').value;
+  var name=g('cm-n').trim();if(!name){toast('اكتب اسم العميل');return}
+  var payload={name:name,logo_url:g('cm-l'),is_active:true};
+  var err;
+  if(id){err=(await sb.from('ao_clients').update(payload).eq('id',id)).error}
+  else{payload.sort_order=clients.length;err=(await sb.from('ao_clients').insert(payload)).error}
+  if(err){toast('❌ '+err.message);return}
+  closeCM();await loadClients();updateStats();toast('✅ تم حفظ العميل!');
+}
+async function toggleClient(id,val){await sb.from('ao_clients').update({is_active:val}).eq('id',id);await loadClients()}
+async function delClient(id){
+  if(!confirm('تأكيد حذف؟'))return;
+  await sb.from('ao_clients').delete().eq('id',id);
+  await loadClients();updateStats();toast('🗑 تم الحذف');
 }
 
-var toastTimer;
+// ── FAQ ───────────────────────────────────────────
+async function loadFaq(){
+  var{data}=await sb.from('ao_faq').select('*').order('sort_order');
+  faqs=data||[];renderFaq();
+}
+function renderFaq(){
+  document.getElementById('fc').textContent=faqs.length;
+  var el=document.getElementById('fl');
+  if(!faqs.length){el.innerHTML=empty('لا توجد أسئلة بعد');return}
+  el.innerHTML=faqs.map(function(f){
+    return '<div class="li">'
+      +'<div class="li-b"><div class="li-t">'+h(f.question)+'</div>'
+        +'<div class="li-s">'+h(f.answer.substring(0,70))+(f.answer.length>70?'...':'')+'</div></div>'
+      +'<div class="li-ac">'
+        +'<button class="btn btn-g bsm" onclick="editFaq(\''+f.id+'\')">تعديل</button>'
+        +'<button class="btn btn-g bsm" onclick="toggleFaq(\''+f.id+'\','+(!f.is_active)+')">'+( f.is_active?'إخفاء':'إظهار')+'</button>'
+        +'<button class="btn btn-d bsm" onclick="delFaq(\''+f.id+'\')">حذف</button>'
+      +'</div></div>';
+  }).join('');
+}
+function openFM(item){
+  document.getElementById('fm-ttl').textContent=item?'تعديل السؤال':'إضافة سؤال';
+  document.getElementById('fm-id').value=item?item.id:'';
+  v('fm-q',item?item.question:'');v('fm-a',item?item.answer:'');
+  document.getElementById('ov-faq').classList.add('open');
+}
+function closeFM(){document.getElementById('ov-faq').classList.remove('open')}
+function editFaq(id){openFM(faqs.find(function(f){return f.id===id}))}
+async function saveFM(){
+  var id=document.getElementById('fm-id').value;
+  var q=g('fm-q').trim(),a=g('fm-a').trim();
+  if(!q||!a){toast('اكتب السؤال والإجابة');return}
+  var payload={question:q,answer:a,is_active:true};
+  var err;
+  if(id){err=(await sb.from('ao_faq').update(payload).eq('id',id)).error}
+  else{payload.sort_order=faqs.length;err=(await sb.from('ao_faq').insert(payload)).error}
+  if(err){toast('❌ '+err.message);return}
+  closeFM();await loadFaq();updateStats();toast('✅ تم حفظ السؤال!');
+}
+async function toggleFaq(id,val){await sb.from('ao_faq').update({is_active:val}).eq('id',id);await loadFaq()}
+async function delFaq(id){
+  if(!confirm('تأكيد حذف؟'))return;
+  await sb.from('ao_faq').delete().eq('id',id);
+  await loadFaq();updateStats();toast('🗑 تم الحذف');
+}
+
+// ── PAGES ─────────────────────────────────────────
+async function loadPages(){
+  var{data}=await sb.from('ao_pages').select('*').order('created_at',{ascending:false});
+  pages=data||[];renderPages();
+}
+function renderPages(){
+  document.getElementById('pgc').textContent=pages.length;
+  var el=document.getElementById('pgl');
+  if(!pages.length){el.innerHTML=empty('لا توجد صفحات بعد');return}
+  el.innerHTML=pages.map(function(p){
+    return '<div class="li"><div class="li-b"><div class="li-t">'+h(p.title)+'</div>'
+      +'<div class="li-s"><span class="badge '+(p.is_published?'bon':'boff')+'">'+(p.is_published?'منشور':'مسودة')+'</span>'
+      +' <a href="page.html?slug='+h(p.slug)+'" target="_blank" style="color:var(--g);font-size:11px">🔗 /'+h(p.slug)+'</a></div></div>'
+      +'<div class="li-ac">'
+        +'<button class="btn btn-g bsm" onclick="editPage(\''+p.id+'\')">تعديل</button>'
+        +'<button class="btn btn-d bsm" onclick="delPage(\''+p.id+'\')">حذف</button>'
+      +'</div></div>';
+  }).join('');
+}
+function openPgM(item){
+  pageSecs=item?(JSON.parse(JSON.stringify(item.sections||[]))):[];
+  document.getElementById('pgm-ttl').textContent=item?'تعديل الصفحة':'صفحة جديدة';
+  document.getElementById('pgm-id').value=item?item.id:'';
+  v('pgm-t',item?item.title:'');v('pgm-s',item?item.slug:'');v('pgm-m',item?item.meta_description||'':'');
+  document.getElementById('pgm-pub').checked=item?item.is_published:false;
+  renderSecs();document.getElementById('ov-pg').classList.add('open');
+}
+function closePgM(){document.getElementById('ov-pg').classList.remove('open')}
+function editPage(id){openPgM(pages.find(function(p){return p.id===id}))}
+function addSec(type){
+  var d={hero:{title:'عنوان القسم',subtitle:'',btn_text:'',btn_link:''},text:{content:''},cta:{title:'',btn_text:'تواصل معنا',btn_link:'#contact'}};
+  pageSecs.push({type:type,data:JSON.parse(JSON.stringify(d[type]||{}))});
+  renderSecs();
+}
+function renderSecs(){
+  var el=document.getElementById('pgm-secs');
+  if(!pageSecs.length){el.innerHTML='<div style="text-align:center;padding:16px;color:#555;font-size:12px">لم تضف أقسام بعد</div>';return}
+  el.innerHTML=pageSecs.map(function(s,i){
+    var lbl={hero:'Hero',text:'نص',cta:'CTA'}[s.type];
+    var flds='';
+    if(s.type==='hero'){
+      flds=fi(i,'title','العنوان',s.data.title)+fi(i,'subtitle','النص الفرعي',s.data.subtitle)+fi(i,'btn_text','نص الزر',s.data.btn_text)+fi(i,'btn_link','رابط الزر',s.data.btn_link);
+    }else if(s.type==='text'){
+      flds='<div style="margin-bottom:8px"><div style="font-size:10px;color:var(--g);margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px">المحتوى</div><textarea rows="3" class="fi" oninput="upSec('+i+',\'content\',this.value)">'+h(s.data.content||'')+'</textarea></div>';
+    }else if(s.type==='cta'){
+      flds=fi(i,'title','العنوان',s.data.title)+fi(i,'btn_text','نص الزر',s.data.btn_text)+fi(i,'btn_link','رابط الزر',s.data.btn_link);
+    }
+    return '<div class="psi"><div class="psih"><span>📦 '+lbl+'</span><button class="btn btn-d bsm" onclick="rmSec('+i+')">حذف</button></div>'+flds+'</div>';
+  }).join('');
+}
+function fi(i,k,lbl,val){
+  return '<div style="margin-bottom:8px"><div style="font-size:10px;color:var(--g);margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px">'+lbl+'</div>'
+    +'<input type="text" class="fi" value="'+h(val||'')+'" oninput="upSec('+i+',\''+k+'\',this.value)"></div>';
+}
+function upSec(i,k,val){if(pageSecs[i])pageSecs[i].data[k]=val}
+function rmSec(i){pageSecs.splice(i,1);renderSecs()}
+async function savePgM(){
+  var id=document.getElementById('pgm-id').value;
+  var title=g('pgm-t').trim(),slug=g('pgm-s').trim().replace(/[^a-z0-9-]/gi,'-').toLowerCase();
+  if(!title||!slug){toast('اكتب العنوان والـ slug');return}
+  var payload={title:title,slug:slug,meta_description:g('pgm-m'),sections:pageSecs,
+    is_published:document.getElementById('pgm-pub').checked,updated_at:new Date().toISOString()};
+  var err;
+  if(id){err=(await sb.from('ao_pages').update(payload).eq('id',id)).error}
+  else{err=(await sb.from('ao_pages').insert(payload)).error}
+  if(err){toast('❌ '+(err.message||'slug مكرر؟'));return}
+  closePgM();await loadPages();updateStats();toast('✅ تم حفظ الصفحة!');
+}
+async function delPage(id){
+  if(!confirm('تأكيد حذف؟'))return;
+  await sb.from('ao_pages').delete().eq('id',id);
+  await loadPages();updateStats();toast('🗑 تم الحذف');
+}
+
+// ── SETTINGS ──────────────────────────────────────
+async function loadSettings(){
+  var{data}=await sb.from('ao_settings').select('*').eq('id',1).single();
+  if(!data)return;
+  v('s-ph',data.phone);v('s-wa',data.whatsapp);v('s-em',data.email);
+  v('s-px',data.meta_pixel_id);v('s-gt',data.google_tag_id);v('s-tt',data.tiktok_pixel_id);
+  v('s-fb',data.facebook_url);v('s-ig',data.instagram_url);v('s-tk',data.tiktok_url);
+}
+async function saveSettings(){
+  var p1=g('s-p1'),p2=g('s-p2');
+  if(p1&&p1!==p2){toast('❌ كلمات المرور مش متطابقة');return}
+  var payload={phone:g('s-ph'),whatsapp:g('s-wa'),email:g('s-em'),
+    meta_pixel_id:g('s-px'),google_tag_id:g('s-gt'),tiktok_pixel_id:g('s-tt'),
+    facebook_url:g('s-fb'),instagram_url:g('s-ig'),tiktok_url:g('s-tk'),
+    updated_at:new Date().toISOString()};
+  if(p1)payload.admin_password=p1;
+  var{error}=await sb.from('ao_settings').upsert({id:1,...payload});
+  if(error){toast('❌ '+error.message);return}
+  if(p1){v('s-p1','');v('s-p2','');}
+  toast('✅ تم حفظ الإعدادات!');
+}
+
+// ── UTILS ──────────────────────────────────────────
+function g(id){return document.getElementById(id).value}
+function v(id,val){var el=document.getElementById(id);if(el)el.value=val||''}
+function h(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+function empty(msg){return '<div style="text-align:center;padding:24px;color:#444;font-size:13px">'+msg+'</div>'}
+var tt;
 function toast(msg){
   var t=document.getElementById('toastEl');
   t.textContent=msg;t.classList.add('show');
-  clearTimeout(toastTimer);
-  toastTimer=setTimeout(function(){t.classList.remove('show')},2800);
+  clearTimeout(tt);tt=setTimeout(function(){t.classList.remove('show')},3200);
 }
-
-renderPorts();
-renderServices();
 </script>
 </body>
 </html>

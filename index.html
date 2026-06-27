@@ -16,6 +16,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <style>
 /* ── RESET & ROOT ─────────────────────────────── */
 *{margin:0;padding:0;box-sizing:border-box}
@@ -293,12 +294,12 @@ footer{background:var(--dk);border-top:1px solid var(--border);padding:36px 5%;t
   <div class="container">
     <div class="hero-inner">
       <img src="assets/logo.svg" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Ccircle cx=%2750%27 cy=%2750%27 r=%2748%27 fill=%27white%27/%3E%3Cpolygon points=%2750,20 80,70 20,70%27 fill=%27black%27/%3E%3Crect x=%2744%27 y=%2768%27 width=%2712%27 height=%2712%27 fill=%27%23E8192C%27/%3E%3C/svg%3E'" alt="Logo" class="hero-logo">
-      <div class="hero-badge">متخصصون في قطاع السيارات منذ 2015</div>
-      <h1>شريكك في<br><span class="r">التسويق والدعاية</span><br>لعالم الأوتوموتيف</h1>
-      <p class="hero-sub">تسويق إلكتروني متكامل + دعاية وإعلان أوفلاين<br>من يافطة مركزك لحد الكرت الشخصي</p>
+      <div class="hero-badge" id="heroBadge">متخصصون في قطاع السيارات منذ 2015</div>
+      <h1 id="heroH1">شريكك في<br><span class="r">التسويق والدعاية</span><br>لعالم الأوتوموتيف</h1>
+      <p class="hero-sub" id="heroSub">تسويق إلكتروني متكامل + دعاية وإعلان أوفلاين<br>من يافطة مركزك لحد الكرت الشخصي</p>
       <div class="hero-btns">
-        <a href="#services" class="btn-r">اكتشف خدماتنا</a>
-        <a href="https://wa.me/201000000000?text=مرحبا،%20أريد%20الاستفسار%20عن%20خدماتكم" class="btn-o" target="_blank" rel="noopener">💬 واتساب مباشر</a>
+        <a href="#services" class="btn-r" id="heroBtn1">اكتشف خدماتنا</a>
+        <a href="https://wa.me/201000000000?text=مرحبا،%20أريد%20الاستفسار%20عن%20خدماتكم" class="btn-o" id="heroBtn2" target="_blank" rel="noopener">💬 واتساب مباشر</a>
       </div>
       <div class="hero-stats">
         <div class="hs"><div class="hs-n"><span>10</span>+</div><div class="hs-l">سنوات خبرة في السوق المصري</div></div>
@@ -406,7 +407,7 @@ footer{background:var(--dk);border-top:1px solid var(--border);padding:36px 5%;t
       <button class="pf-btn" onclick="filterPort('print',this)">دعاية وإعلان</button>
       <button class="pf-btn" onclick="filterPort('branding',this)">هوية بصرية</button>
     </div>
-    <div class="port-grid">
+    <div class="port-grid" id="portGrid">
 
       <div class="port-card" data-cat="digital">
         <div class="port-img"><div class="port-img-ph">📊</div></div>
@@ -499,7 +500,7 @@ footer{background:var(--dk);border-top:1px solid var(--border);padding:36px 5%;t
       <h2 class="sec-title">ثقوا فينا</h2>
       <p class="sec-sub">أكثر من 30 علامة في قطاع السيارات المصري</p>
     </div>
-    <div class="clients-grid">
+    <div class="clients-grid" id="clientsGrid">
       <div class="cl-item"><div class="cl-name">KSH</div></div>
       <div class="cl-item"><div class="cl-name">Nakamichi</div></div>
       <div class="cl-item"><div class="cl-name">CARiMUSiC</div></div>
@@ -546,7 +547,7 @@ footer{background:var(--dk);border-top:1px solid var(--border);padding:36px 5%;t
       <h2 class="sec-title">إجابات على<br>أسئلتك</h2>
       <p class="sec-sub">بنجاوب الأسئلة الأكتر تكرارًا عشان توفر وقتك</p>
     </div>
-    <div class="faq-wrap">
+    <div class="faq-wrap" id="faqWrap">
 
       <div class="faq-item" onclick="toggleFaq(this)">
         <div class="faq-q">
@@ -635,11 +636,11 @@ footer{background:var(--dk);border-top:1px solid var(--border);padding:36px 5%;t
         <div class="c-items">
           <div class="c-item">
             <div class="c-ic">📞</div>
-            <div><h4>اتصل بنا</h4><p>+20 100 000 0000</p></div>
+            <div><h4>اتصل بنا</h4><p id="contactPhone">+20 100 000 0000</p></div>
           </div>
           <div class="c-item">
             <div class="c-ic">📧</div>
-            <div><h4>إيميل</h4><p>info@ahmedomani.com</p></div>
+            <div><h4>إيميل</h4><p id="contactEmail">info@ahmedomani.com</p></div>
           </div>
         </div>
         <a href="https://wa.me/201000000000?text=مرحبا،%20أريد%20الاستفسار%20عن%20خدماتكم" class="wa-direct" target="_blank" rel="noopener">
@@ -749,6 +750,7 @@ function filterPort(cat,btn){
 }
 
 // ── FORM → WHATSAPP ──────────────────────────────────
+var _waNum='201000000000';
 function submitForm(){
   var n=document.getElementById('fname').value.trim();
   var p=document.getElementById('fphone').value.trim();
@@ -762,7 +764,7 @@ function submitForm(){
   if(s)msg+='%0Aالخدمة المطلوبة: '+encodeURIComponent(s);
   var m=document.getElementById('fmsg').value.trim();
   if(m)msg+='%0Aرسالة: '+encodeURIComponent(m);
-  window.open('https://wa.me/201000000000?text='+msg,'_blank');
+  window.open('https://wa.me/'+_waNum+'?text='+msg,'_blank');
   showToast('✅ جاري الفتح على واتساب...');
   ['fname','fphone','fmsg'].forEach(function(id){document.getElementById(id).value=''});
   document.getElementById('ftype').value='';
@@ -777,6 +779,153 @@ function showToast(msg){
   clearTimeout(toastTimer);
   toastTimer=setTimeout(function(){t.classList.remove('show')},3000);
 }
+</script>
+
+<script>
+// ── SUPABASE DYNAMIC LOADING ─────────────────────────
+(function(){
+var SB_URL='https://knwnviglquxvvwknxbqa.supabase.co';
+var SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtud252aWdscXV4dnZ3a254YnFhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA5MzI2NDIsImV4cCI6MjA5NjUwODY0Mn0.VuxAC-J7it4m_wrSTBHCh7t_z_PL8CCGwhvtv6NiZmQ';
+
+var catLabel={'digital':'تسويق إلكتروني','print':'دعاية وإعلان','branding':'هوية بصرية'};
+var catIcon={'digital':'📊','print':'🏪','branding':'🎨'};
+
+function esc(s){
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function updateWaLinks(num){
+  _waNum=num;
+  document.querySelectorAll('a[href*="wa.me/"]').forEach(function(a){
+    a.href=a.href.replace(/wa\.me\/\d+/,'wa.me/'+num);
+  });
+}
+
+function injectMetaPixel(id){
+  if(!id)return;
+  var s=document.createElement('script');
+  s.innerHTML='!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version=\'2.0\';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,\'script\',\'https://connect.facebook.net/en_US/fbevents.js\');fbq(\'init\',\''+id+'\');fbq(\'track\',\'PageView\');';
+  document.head.appendChild(s);
+}
+
+function injectGoogleTag(id){
+  if(!id)return;
+  var s=document.createElement('script');
+  s.async=true;s.src='https://www.googletagmanager.com/gtag/js?id='+id;
+  document.head.appendChild(s);
+  var s2=document.createElement('script');
+  s2.innerHTML='window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag(\'js\',new Date());gtag(\'config\',\''+id+'\');';
+  document.head.appendChild(s2);
+}
+
+function injectTikTokPixel(id){
+  if(!id)return;
+  var s=document.createElement('script');
+  s.innerHTML='!function(w,d,t){w.TiktokAnalyticsObject=t;var ttq=w[t]=w[t]||[];ttq.methods=["page","track","identify","instances","debug","on","off","once","ready","alias","group","enableCookie","disableCookie"];ttq.setAndDefer=function(t,e){t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}};for(var i=0;i<ttq.methods.length;i++)ttq.setAndDefer(ttq,ttq.methods[i]);ttq.instance=function(t){for(var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n]);return e};ttq.load=function(e,n){var i="https://analytics.tiktok.com/i18n/pixel/events.js";ttq._i=ttq._i||{};ttq._i[e]=[];ttq._i[e]._u=i;ttq._t=ttq._t||{};ttq._t[e]=+new Date;ttq._o=ttq._o||{};ttq._o[e]=n||{};var o=document.createElement("script");o.type="text/javascript";o.async=!0;o.src=i+"?sdkid="+e+"&lib="+t;var a=document.getElementsByTagName("script")[0];a.parentNode.insertBefore(o,a)};ttq.load(\''+id+'\');ttq.page();}(window,document,\'ttq\');';
+  document.head.appendChild(s);
+}
+
+function renderPortfolio(list){
+  var g=document.getElementById('portGrid');
+  g.innerHTML=list.map(function(p){
+    var img=p.image_url
+      ?'<img src="'+esc(p.image_url)+'" alt="'+esc(p.title)+'">'
+      :'<div class="port-img-ph">'+esc(catIcon[p.category]||'🖼️')+'</div>';
+    var badge=p.stat_badge?'<div class="port-stat">'+esc(p.stat_badge)+'</div>':'';
+    var tags=(p.tags||[]).map(function(t){return'<span class="ptag">'+esc(t)+'</span>'}).join('');
+    return'<div class="port-card" data-cat="'+esc(p.category)+'">'
+      +'<div class="port-img">'+img+'</div>'
+      +'<div class="port-type-badge">'+esc(catLabel[p.category]||p.category)+'</div>'
+      +badge
+      +'<div class="port-body">'
+      +'<div class="port-title">'+esc(p.title)+'</div>'
+      +'<div class="port-desc">'+esc(p.description)+'</div>'
+      +(tags?'<div class="port-meta">'+tags+'</div>':'')
+      +'</div></div>';
+  }).join('');
+  // re-apply active filter
+  var active=document.querySelector('.pf-btn.active');
+  if(active){
+    var cat=active.getAttribute('onclick').match(/'([^']+)'/);
+    if(cat)filterPort(cat[1],active);
+  }
+}
+
+function renderClients(list){
+  var g=document.getElementById('clientsGrid');
+  g.innerHTML=list.map(function(c){
+    return c.logo_url
+      ?'<div class="cl-item"><img src="'+esc(c.logo_url)+'" alt="'+esc(c.name)+'" style="max-height:36px;max-width:90px;object-fit:contain;filter:grayscale(1);opacity:.6;transition:.2s" onmouseover="this.style.filter=\'none\';this.style.opacity=1" onmouseout="this.style.filter=\'grayscale(1)\';this.style.opacity=.6"></div>'
+      :'<div class="cl-item"><div class="cl-name">'+esc(c.name)+'</div></div>';
+  }).join('');
+}
+
+function renderFaq(list){
+  var w=document.getElementById('faqWrap');
+  w.innerHTML=list.map(function(f){
+    return'<div class="faq-item" onclick="toggleFaq(this)">'
+      +'<div class="faq-q"><div class="faq-q-text">'+esc(f.question)+'</div><div class="faq-icon">+</div></div>'
+      +'<div class="faq-a"><div class="faq-a-inner">'+esc(f.answer)+'</div></div>'
+      +'</div>';
+  }).join('');
+}
+
+function applyHero(h){
+  if(h.badge){var b=document.getElementById('heroBadge');if(b)b.textContent=h.badge;}
+  if(h.title){var t=document.getElementById('heroH1');if(t)t.innerHTML=h.title;}
+  if(h.subtitle){var s=document.getElementById('heroSub');if(s)s.innerHTML=h.subtitle;}
+  if(h.btn1_text){var b1=document.getElementById('heroBtn1');if(b1)b1.textContent=h.btn1_text;}
+  if(h.btn2_text){var b2=document.getElementById('heroBtn2');if(b2)b2.innerHTML='💬 '+h.btn2_text;}
+  var stats=document.querySelectorAll('.hs');
+  var sd=[
+    {num:h.stat1_num,lbl:h.stat1_label},
+    {num:h.stat2_num,lbl:h.stat2_label},
+    {num:h.stat3_num,lbl:h.stat3_label},
+    {num:h.stat4_num,lbl:h.stat4_label}
+  ];
+  sd.forEach(function(d,i){
+    if(!stats[i]||!d.num)return;
+    var n=d.num.replace(/[+x]/g,'');
+    var sfx=d.num.replace(/\d/g,'');
+    stats[i].querySelector('.hs-n').innerHTML='<span>'+esc(n)+'</span>'+esc(sfx);
+    if(d.lbl)stats[i].querySelector('.hs-l').textContent=d.lbl;
+  });
+}
+
+async function loadSite(){
+  if(typeof supabase==='undefined')return;
+  try{
+    var sb=supabase.createClient(SB_URL,SB_KEY);
+
+    var cfg=(await sb.from('ao_settings').select('*').single()).data;
+    if(cfg){
+      if(cfg.whatsapp)updateWaLinks(cfg.whatsapp);
+      if(cfg.phone){var ph=document.getElementById('contactPhone');if(ph)ph.textContent=cfg.phone;}
+      if(cfg.email){var em=document.getElementById('contactEmail');if(em)em.textContent=cfg.email;}
+      if(cfg.meta_pixel_id)injectMetaPixel(cfg.meta_pixel_id);
+      if(cfg.google_tag_id)injectGoogleTag(cfg.google_tag_id);
+      if(cfg.tiktok_pixel_id)injectTikTokPixel(cfg.tiktok_pixel_id);
+    }
+
+    var hero=(await sb.from('ao_hero').select('*').single()).data;
+    if(hero)applyHero(hero);
+
+    var port=(await sb.from('ao_portfolio').select('*').eq('is_active',true).order('sort_order')).data;
+    if(port&&port.length)renderPortfolio(port);
+
+    var clients=(await sb.from('ao_clients').select('*').eq('is_active',true).order('sort_order')).data;
+    if(clients&&clients.length)renderClients(clients);
+
+    var faq=(await sb.from('ao_faq').select('*').eq('is_active',true).order('sort_order')).data;
+    if(faq&&faq.length)renderFaq(faq);
+
+  }catch(e){
+    console.log('Static fallback active');
+  }
+}
+
+document.addEventListener('DOMContentLoaded',loadSite);
+})();
 </script>
 </body>
 </html>
