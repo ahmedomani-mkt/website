@@ -346,46 +346,82 @@ footer{background:var(--dark);border-top:1px solid var(--bd);padding:32px 5%;tex
 .ft-copy{font-size:11px;color:#222;margin-top:8px}
 
 /* ── WHATSAPP FLOAT ─────────────────────────────── */
-.wa-float{position:fixed;bottom:28px;left:calc(var(--sb) + 14px);z-index:300;display:flex;flex-direction:column;align-items:center;gap:8px}
-.wa-float-bubble{width:52px;height:52px;background:#25D366;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 22px rgba(37,211,102,.4);transition:.2s;font-size:24px;cursor:pointer}
-.wa-float-bubble:hover{transform:scale(1.1);box-shadow:0 6px 30px rgba(37,211,102,.5)}
-.wa-float-tip{background:var(--white);border:1px solid var(--bl);color:var(--text);padding:4px 12px;border-radius:50px;font-size:11px;font-weight:600;white-space:nowrap;opacity:0;transition:.2s;pointer-events:none;box-shadow:var(--shadow)}
-.wa-float:hover .wa-float-tip{opacity:1}
+.wa-float{position:fixed;bottom:28px;left:calc(var(--sb) + 16px);z-index:300}
+.wa-btn{
+  display:flex;align-items:center;gap:10px;
+  background:#25D366;color:#fff;
+  padding:13px 22px;border-radius:14px;
+  font-weight:700;font-size:14px;font-family:var(--font);
+  box-shadow:0 6px 24px rgba(37,211,102,.45);
+  transition:.25s;text-decoration:none;white-space:nowrap;
+  animation:waPulse 2.8s ease-in-out infinite;
+}
+.wa-btn:hover{background:#1dba58;transform:translateY(-3px);box-shadow:0 10px 36px rgba(37,211,102,.6);animation:none}
+.wa-btn-logo{width:22px;height:22px;flex-shrink:0}
+@keyframes waPulse{
+  0%,70%,100%{box-shadow:0 6px 24px rgba(37,211,102,.45)}
+  35%{box-shadow:0 6px 24px rgba(37,211,102,.45),0 0 0 10px rgba(37,211,102,.12)}
+}
 
 /* ── TOAST ──────────────────────────────────────── */
 .toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(60px);background:var(--dark2);border:1px solid var(--bd);color:#fff;padding:10px 24px;border-radius:var(--rsm);font-size:13px;z-index:999;transition:.3s;opacity:0;pointer-events:none}
 .toast.show{transform:translateX(-50%) translateY(0);opacity:1}
 
-/* ── RESPONSIVE ─────────────────────────────────── */
-@media(max-width:1024px){
-  .features-grid{grid-template-columns:1fr 1fr}
-  .stats-grid{grid-template-columns:1fr 1fr}
+/* ── RESPONSIVE · MOBILE FIRST ──────────────────── */
+
+/* ─ Mobile base (default for all screens) ─ */
+:root{--sb:0px}
+.sidebar{display:none}
+.nav-links,.nav-cta{display:none}
+.burger{display:flex}
+.hero-grid{grid-template-columns:1fr;padding:70px 5% 48px;gap:0}
+.hero-visual{display:none}
+.hero h1{font-size:clamp(32px,9vw,52px)}
+.hero-sub{font-size:14px}
+.hero-btns{flex-direction:column;align-items:flex-start;gap:10px}
+.btn-primary,.btn-secondary{width:100%;justify-content:center}
+.srv-pillars{grid-template-columns:1fr}
+.features-grid{grid-template-columns:1fr 1fr}
+.stats-grid{grid-template-columns:1fr 1fr}
+.contact-inner{grid-template-columns:1fr}
+section{padding:64px 0}
+.features-strip{padding:40px 0}
+.port-card{width:260px}
+.wa-float{bottom:20px}
+
+/* ─ Phablet ≥480px ─ */
+@media(min-width:480px){
+  .hero-btns{flex-direction:row;align-items:center}
+  .btn-primary,.btn-secondary{width:auto}
+  .port-card{width:280px}
 }
-@media(max-width:768px){
-  :root{--sb:0px}
-  .sidebar{display:none}
-  nav{left:0}
-  .mobile-nav{left:0}
-  .wa-float{left:16px}
-  .nav-links,.nav-cta{display:none}
-  .burger{display:flex}
-  .hero-grid{grid-template-columns:1fr;gap:40px;padding:80px 5% 40px}
-  .hero-visual{height:320px}
-  .hero-blob{width:280px;height:280px}
-  .srv-pillars{grid-template-columns:1fr}
-  .contact-inner{grid-template-columns:1fr}
-  .hero h1{font-size:clamp(32px,8vw,52px)}
-}
-@media(max-width:600px){
-  .features-grid{grid-template-columns:1fr 1fr}
-  .stats-grid{grid-template-columns:1fr 1fr}
+
+/* ─ Tablet ≥600px ─ */
+@media(min-width:600px){
   .og-grid{grid-template-columns:repeat(4,1fr)}
 }
-@media(max-width:420px){
-  .og-grid{grid-template-columns:1fr 1fr}
-  .features-grid{grid-template-columns:1fr}
-  .hero-visual{display:none}
-  .hero-grid{grid-template-columns:1fr}
+
+/* ─ Desktop ≥768px ─ */
+@media(min-width:768px){
+  :root{--sb:62px}
+  .sidebar{display:flex}
+  .nav-links{display:flex}
+  .nav-cta{display:flex}
+  .burger{display:none}
+  .hero-grid{grid-template-columns:1fr 1fr;gap:40px;padding:60px 5%}
+  .hero-visual{display:flex;height:480px}
+  .hero-blob{width:380px;height:380px}
+  .srv-pillars{grid-template-columns:1fr 1fr}
+  .contact-inner{grid-template-columns:1fr 1fr;gap:60px}
+  section{padding:90px 0}
+  .features-strip{padding:52px 0}
+  .wa-float{bottom:28px}
+}
+
+/* ─ Wide ≥1024px ─ */
+@media(min-width:1024px){
+  .features-grid{grid-template-columns:repeat(4,1fr)}
+  .stats-grid{grid-template-columns:repeat(4,1fr)}
 }
 </style>
 </head>
@@ -898,8 +934,13 @@ footer{background:var(--dark);border-top:1px solid var(--bd);padding:32px 5%;tex
 
 <!-- ── WHATSAPP FLOAT ─────────────────────────────── -->
 <div class="wa-float">
-  <div class="wa-float-tip">واتساب مباشر</div>
-  <a class="wa-float-bubble" href="https://wa.me/201000000000?text=مرحبا،%20أريد%20الاستفسار%20عن%20خدماتكم" target="_blank" rel="noopener" aria-label="WhatsApp">💬</a>
+  <a class="wa-btn" href="https://wa.me/201000000000?text=مرحبا،%20أريد%20الاستفسار%20عن%20خدماتكم" target="_blank" rel="noopener" aria-label="تواصل عبر واتساب">
+    <svg class="wa-btn-logo" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
+      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+      <path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0012.04 2zm.01 1.67c2.2 0 4.26.86 5.82 2.42a8.22 8.22 0 012.41 5.83c0 4.54-3.7 8.23-8.24 8.23-1.48 0-2.93-.39-4.19-1.15l-.3-.17-3.12.82.83-3.04-.2-.32a8.188 8.188 0 01-1.26-4.38c.01-4.54 3.7-8.24 8.25-8.24z"/>
+    </svg>
+    واتساب مباشر
+  </a>
 </div>
 
 <div class="toast" id="toastEl"></div>
