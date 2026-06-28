@@ -33,6 +33,9 @@ body{font-family:var(--font);color:var(--text);overflow-x:hidden;background:var(
 a{text-decoration:none;color:inherit}
 img{max-width:100%;display:block}
 
+/* ── CONTAINER ──────────────────────────────────── */
+.container{max-width:1200px;margin:0 auto;padding:0 5%}
+
 /* ── SIDEBAR ────────────────────────────────────── */
 .sidebar{
   position:fixed;left:0;top:0;height:100vh;width:var(--sb);
@@ -400,6 +403,33 @@ footer{background:var(--dark);border-top:1px solid var(--bd);padding:32px 5%;tex
 .tst-name{font-size:13px;font-weight:800;color:var(--text)}
 .tst-role{font-size:11px;color:var(--text3);margin-top:2px}
 
+/* ── ENTRANCE ANIMATIONS ─────────────────────────── */
+.fade-up{opacity:0;transform:translateY(28px);transition:opacity .6s ease,transform .6s ease}
+.fade-up.visible{opacity:1;transform:translateY(0)}
+.fade-up-d1{transition-delay:.1s}
+.fade-up-d2{transition-delay:.2s}
+.fade-up-d3{transition-delay:.3s}
+.fade-up-d4{transition-delay:.4s}
+
+/* ── MOBILE HERO STATS ───────────────────────────── */
+.hero-stats-mobile{display:flex;gap:0;background:var(--white);border:1px solid var(--bl);border-radius:var(--r);overflow:hidden;margin-top:28px;box-shadow:var(--shadow)}
+.hsm-item{flex:1;padding:14px 8px;text-align:center;border-right:1px solid var(--bl)}
+.hsm-item:last-child{border-right:none}
+.hsm-n{font-size:20px;font-weight:900;color:var(--red);line-height:1}
+.hsm-l{font-size:9px;color:var(--text3);font-weight:700;margin-top:3px}
+
+/* ── SCROLL TO TOP ───────────────────────────────── */
+.stt{
+  position:fixed;bottom:90px;left:calc(var(--sb)+16px);z-index:299;
+  width:40px;height:40px;border-radius:12px;border:1px solid var(--bl);
+  background:var(--white);color:var(--text2);font-size:16px;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:.25s;opacity:0;pointer-events:none;
+  box-shadow:var(--shadow);
+}
+.stt.show{opacity:1;pointer-events:all}
+.stt:hover{background:var(--red);color:#fff;border-color:var(--red);transform:translateY(-2px)}
+
 /* ── FOOTER SOCIAL ────────────────────────────────── */
 .ft-social{display:flex;gap:10px;justify-content:center;margin:14px 0 4px}
 .ft-soc{width:36px;height:36px;border-radius:10px;background:var(--dark2);border:1px solid var(--bd);display:flex;align-items:center;justify-content:center;font-size:15px;transition:.2s}
@@ -428,6 +458,7 @@ section{padding:64px 0}
 .wa-float{bottom:20px}
 .proc-grid{grid-template-columns:1fr 1fr}
 .tst-grid{grid-template-columns:1fr}
+.stt{bottom:76px;left:16px}
 
 /* ─ Phablet ≥480px ─ */
 @media(min-width:480px){
@@ -457,9 +488,9 @@ section{padding:64px 0}
   .features-strip{padding:52px 0}
   .wa-float{bottom:28px}
   .tst-grid{grid-template-columns:repeat(3,1fr)}
+  .hero-stats-mobile{display:none}
+  .stt{bottom:90px;left:calc(var(--sb)+16px)}
 }
-
-/* ─ Wide ≥1024px (already exists below) ─ */
 
 /* ─ Wide ≥1024px (already exists below) ─ */
 
@@ -551,6 +582,12 @@ section{padding:64px 0}
           💬 واتساب مباشر
         </a>
       </div>
+      <div class="hero-stats-mobile" id="heroStatsMobile">
+        <div class="hsm-item"><div class="hsm-n">10+</div><div class="hsm-l">سنوات</div></div>
+        <div class="hsm-item"><div class="hsm-n">30+</div><div class="hsm-l">عميل</div></div>
+        <div class="hsm-item"><div class="hsm-n">500+</div><div class="hsm-l">مشروع</div></div>
+        <div class="hsm-item"><div class="hsm-n">5x</div><div class="hsm-l">ROI</div></div>
+      </div>
     </div>
     <!-- VISUAL (RTL: appears on LEFT) -->
     <div class="hero-visual">
@@ -629,7 +666,7 @@ section{padding:64px 0}
       <h2 class="sec-title" id="srvTitle">حلول متكاملة<br>لعالم الأوتوموتيف</h2>
       <p class="sec-sub" id="srvSub">ركّزنا في قطاع واحد — عشان نقدم الأفضل فيه</p>
     </div>
-    <div class="srv-pillars">
+    <div class="srv-pillars fade-up">
       <!-- DIGITAL -->
       <div class="pillar">
         <div class="pillar-header">
@@ -708,7 +745,7 @@ section{padding:64px 0}
       <h2 class="sec-title">4 خطوات<br>للنتيجة</h2>
       <p class="sec-sub">من أول كلام لحد ما تشوف الفرق في أرقامك</p>
     </div>
-    <div class="proc-grid">
+    <div class="proc-grid fade-up">
       <div class="proc-item">
         <div class="proc-num">01</div>
         <div class="proc-icon">📞</div>
@@ -864,7 +901,7 @@ section{padding:64px 0}
       <h2 class="sec-title">بيتكلموا<br>عنا</h2>
       <p class="sec-sub">تجارب حقيقية من عملاء في قطاع الأوتوموتيف</p>
     </div>
-    <div class="tst-grid" id="tstGrid">
+    <div class="tst-grid fade-up" id="tstGrid">
       <div class="tst-card">
         <div class="tst-q">❝</div>
         <p class="tst-text">تعاملنا مع أحمد عماني زادت مبيعاتنا أكتر من 200% في 3 أشهر. أفضل قرار اتخذناه في التسويق.</p>
@@ -901,7 +938,7 @@ section{padding:64px 0}
       <h2 class="sec-title" id="clTitle">ثقوا فينا</h2>
       <p class="sec-sub" id="clSub">أكثر من 30 علامة في قطاع السيارات المصري</p>
     </div>
-    <div class="clients-grid" id="clientsGrid">
+    <div class="clients-grid fade-up" id="clientsGrid">
       <div class="cl-item"><div class="cl-name">KSH</div></div>
       <div class="cl-item"><div class="cl-name">Nakamichi</div></div>
       <div class="cl-item"><div class="cl-name">CARiMUSiC</div></div>
@@ -1062,6 +1099,7 @@ section{padding:64px 0}
 </div>
 
 <div class="toast" id="toastEl"></div>
+<button class="stt" id="sttBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="للأعلى">↑</button>
 
 <script>
 // ── NAV ──────────────────────────────────────────────
@@ -1118,6 +1156,19 @@ function slidePort(dir){
 // ── WHATSAPP NUMBER ───────────────────────────────────
 var _waNum='201152501056';
 
+// ── SCROLL TO TOP ────────────────────────────────────
+window.addEventListener('scroll',function(){
+  document.getElementById('sttBtn').classList.toggle('show',window.scrollY>400);
+},{passive:true});
+
+// ── ENTRANCE ANIMATIONS ──────────────────────────────
+(function(){
+  var obs=new IntersectionObserver(function(entries){
+    entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible')});
+  },{threshold:.12});
+  document.querySelectorAll('.fade-up').forEach(function(el){obs.observe(el)});
+})();
+
 // ── TOAST ────────────────────────────────────────────
 var toastTimer;
 function showToast(msg){
@@ -1155,6 +1206,12 @@ function renderStats(list){
       +'<div class="stat-label">'+esc(s.label||'')+'</div>'
       +'</div>';
   }).join('');
+  var m=document.getElementById('heroStatsMobile');
+  if(m&&list.length>=4){
+    m.innerHTML=list.slice(0,4).map(function(s){
+      return'<div class="hsm-item"><div class="hsm-n">'+esc(s.num||'')+'</div><div class="hsm-l">'+esc((s.label||'').split(' ')[0])+'</div></div>';
+    }).join('');
+  }
 }
 
 function renderFeatures(list){
@@ -1315,6 +1372,16 @@ async function loadSite(){
   }catch(e){console.log('Static fallback active')}
 }
 document.addEventListener('DOMContentLoaded',loadSite);
+document.addEventListener('DOMContentLoaded',function(){
+  setTimeout(function(){
+    var obs=new IntersectionObserver(function(entries){
+      entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible')});
+    },{threshold:.08});
+    document.querySelectorAll('.sec-head,.pillar,.port-card,.proc-item,.tst-card,.stat-item,.feat-item,.faq-item').forEach(function(el){
+      el.classList.add('fade-up');obs.observe(el);
+    });
+  },300);
+});
 })();
 </script>
 </body>
