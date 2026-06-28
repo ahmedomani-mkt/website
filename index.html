@@ -7,6 +7,8 @@
 <meta property="og:title" content="Ahmed Omani — تسويق وإعلان لقطاع السيارات">
 <meta property="og:description" content="شريكك المتخصص في الأوتوموتيف — تسويق رقمي + دعاية وإعلان من الواجهة للكرت الشخصي">
 <meta property="og:type" content="website">
+<meta property="og:image" content="assets/og.png">
+<link rel="icon" href="assets/logo.svg" type="image/svg+xml">
 <title>Ahmed Omani — تسويق وإعلان للسيارات</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -371,6 +373,38 @@ footer{background:var(--dark);border-top:1px solid var(--bd);padding:32px 5%;tex
 .toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(60px);background:var(--dark2);border:1px solid var(--bd);color:#fff;padding:10px 24px;border-radius:var(--rsm);font-size:13px;z-index:999;transition:.3s;opacity:0;pointer-events:none}
 .toast.show{transform:translateX(-50%) translateY(0);opacity:1}
 
+/* ── PROCESS ─────────────────────────────────────── */
+.process-sec{background:var(--dark);padding:90px 0}
+.process-sec .sec-title{color:#fff}
+.process-sec .sec-sub{color:#555}
+.proc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border:1px solid var(--bd);border-radius:var(--r);overflow:hidden;margin-top:52px}
+.proc-item{background:var(--dark2);padding:32px 24px;border-right:1px solid var(--bd);transition:.2s;position:relative}
+.proc-item:last-child{border-right:none}
+.proc-item:hover{background:#1c1c1c}
+.proc-num{font-size:46px;font-weight:900;color:var(--bd);line-height:1;margin-bottom:14px}
+.proc-icon{font-size:26px;margin-bottom:12px}
+.proc-title{font-size:15px;font-weight:800;color:#fff;margin-bottom:8px}
+.proc-desc{font-size:12px;color:#555;line-height:1.7}
+.proc-cta{text-align:center;margin-top:40px}
+
+/* ── TESTIMONIALS ─────────────────────────────────── */
+.tst-sec{background:var(--white);padding:90px 0}
+.tst-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:52px}
+.tst-card{background:var(--bg);border:1px solid var(--bl);border-radius:var(--r);padding:28px;transition:.3s;display:flex;flex-direction:column}
+.tst-card:hover{border-color:rgba(232,25,44,.2);box-shadow:var(--shadow-h);transform:translateY(-3px)}
+.tst-q{font-size:48px;color:var(--red);opacity:.18;line-height:.7;margin-bottom:14px;font-family:Georgia,serif;font-weight:900}
+.tst-text{font-size:14px;color:var(--text2);line-height:1.9;flex:1;margin-bottom:20px}
+.tst-author{display:flex;align-items:center;gap:12px;border-top:1px solid var(--bl);padding-top:16px}
+.tst-av{width:40px;height:40px;border-radius:50%;background:var(--red);color:#fff;font-size:16px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden}
+.tst-av img{width:100%;height:100%;object-fit:cover}
+.tst-name{font-size:13px;font-weight:800;color:var(--text)}
+.tst-role{font-size:11px;color:var(--text3);margin-top:2px}
+
+/* ── FOOTER SOCIAL ────────────────────────────────── */
+.ft-social{display:flex;gap:10px;justify-content:center;margin:14px 0 4px}
+.ft-soc{width:36px;height:36px;border-radius:10px;background:var(--dark2);border:1px solid var(--bd);display:flex;align-items:center;justify-content:center;font-size:15px;transition:.2s}
+.ft-soc:hover{background:var(--red);border-color:var(--red);transform:translateY(-2px)}
+
 /* ── RESPONSIVE · MOBILE FIRST ──────────────────── */
 
 /* ─ Mobile base (default for all screens) ─ */
@@ -392,6 +426,8 @@ section{padding:64px 0}
 .features-strip{padding:40px 0}
 .port-card{width:260px}
 .wa-float{bottom:20px}
+.proc-grid{grid-template-columns:1fr 1fr}
+.tst-grid{grid-template-columns:1fr}
 
 /* ─ Phablet ≥480px ─ */
 @media(min-width:480px){
@@ -420,12 +456,18 @@ section{padding:64px 0}
   section{padding:90px 0}
   .features-strip{padding:52px 0}
   .wa-float{bottom:28px}
+  .tst-grid{grid-template-columns:repeat(3,1fr)}
 }
+
+/* ─ Wide ≥1024px (already exists below) ─ */
+
+/* ─ Wide ≥1024px (already exists below) ─ */
 
 /* ─ Wide ≥1024px ─ */
 @media(min-width:1024px){
   .features-grid{grid-template-columns:repeat(4,1fr)}
   .stats-grid{grid-template-columns:repeat(4,1fr)}
+  .proc-grid{grid-template-columns:repeat(4,1fr)}
 }
 </style>
 </head>
@@ -658,6 +700,48 @@ section{padding:64px 0}
   </div>
 </section>
 
+<!-- ── PROCESS ───────────────────────────────────── -->
+<section class="process-sec">
+  <div class="container">
+    <div class="sec-head center">
+      <div class="sec-label" style="color:var(--red)">كيف نعمل</div>
+      <h2 class="sec-title">4 خطوات<br>للنتيجة</h2>
+      <p class="sec-sub">من أول كلام لحد ما تشوف الفرق في أرقامك</p>
+    </div>
+    <div class="proc-grid">
+      <div class="proc-item">
+        <div class="proc-num">01</div>
+        <div class="proc-icon">📞</div>
+        <h3 class="proc-title">استشارة مجانية</h3>
+        <p class="proc-desc">بنتكلم معاك ونفهم احتياجات مشروعك وأهدافك التجارية بشكل كامل</p>
+      </div>
+      <div class="proc-item">
+        <div class="proc-num">02</div>
+        <div class="proc-icon">🔍</div>
+        <h3 class="proc-title">دراسة وتخطيط</h3>
+        <p class="proc-desc">بندرس السوق والمنافسين ونعمل استراتيجية مخصوصة لمشروعك</p>
+      </div>
+      <div class="proc-item">
+        <div class="proc-num">03</div>
+        <div class="proc-icon">🎨</div>
+        <h3 class="proc-title">التصميم والتنفيذ</h3>
+        <p class="proc-desc">بننفذ بسرعة واحترافية — رقمي أو أوفلاين أو الاتنين مع بعض</p>
+      </div>
+      <div class="proc-item">
+        <div class="proc-num">04</div>
+        <div class="proc-icon">📈</div>
+        <h3 class="proc-title">متابعة النتائج</h3>
+        <p class="proc-desc">تقارير شهرية بأرقام حقيقية وتعديل مستمر لتحقيق أفضل نتيجة</p>
+      </div>
+    </div>
+    <div class="proc-cta">
+      <a href="https://wa.me/201152501056?text=مرحبا،%20أريد%20استشارة%20مجانية%20لمشروعي" class="btn-primary" target="_blank" rel="noopener">
+        ابدأ الاستشارة مجانًا <div class="btn-primary-arrow">←</div>
+      </a>
+    </div>
+  </div>
+</section>
+
 <!-- ── PORTFOLIO ──────────────────────────────────── -->
 <section id="portfolio" class="portfolio-sec">
   <div class="container">
@@ -771,6 +855,43 @@ section{padding:64px 0}
     </div>
   </div>
 </div>
+
+<!-- ── TESTIMONIALS ──────────────────────────────── -->
+<section class="tst-sec">
+  <div class="container">
+    <div class="sec-head center">
+      <div class="sec-label">آراء العملاء</div>
+      <h2 class="sec-title">بيتكلموا<br>عنا</h2>
+      <p class="sec-sub">تجارب حقيقية من عملاء في قطاع الأوتوموتيف</p>
+    </div>
+    <div class="tst-grid" id="tstGrid">
+      <div class="tst-card">
+        <div class="tst-q">❝</div>
+        <p class="tst-text">تعاملنا مع أحمد عماني زادت مبيعاتنا أكتر من 200% في 3 أشهر. أفضل قرار اتخذناه في التسويق.</p>
+        <div class="tst-author">
+          <div class="tst-av">م</div>
+          <div><div class="tst-name">محمد أحمد</div><div class="tst-role">مركز خدمة سيارات</div></div>
+        </div>
+      </div>
+      <div class="tst-card">
+        <div class="tst-q">❝</div>
+        <p class="tst-text">الهوية البصرية اللي صمموها لمركزنا غيرت شكل المكان تمامًا. عملاء جدد بدأوا يجوا بسبب الواجهة.</p>
+        <div class="tst-author">
+          <div class="tst-av">ك</div>
+          <div><div class="tst-name">كريم سامي</div><div class="tst-role">مركز صيانة</div></div>
+        </div>
+      </div>
+      <div class="tst-card">
+        <div class="tst-q">❝</div>
+        <p class="tst-text">اشتغلنا مع ناس كتير قبل — مش لاقيين حد متخصص في الأوتوموتيف بالشكل ده. ناس محترفين.</p>
+        <div class="tst-author">
+          <div class="tst-av">أ</div>
+          <div><div class="tst-name">أسامة رضا</div><div class="tst-role">معرض سيارات</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
 <!-- ── CLIENTS ────────────────────────────────────── -->
 <section id="clients" class="clients-sec">
@@ -925,6 +1046,7 @@ section{padding:64px 0}
     <a href="#faq">أسئلة شائعة</a>
     <a href="#contact">تواصل</a>
   </div>
+  <div class="ft-social" id="ftSocial"></div>
   <div class="ft-copy" id="ftCopy">© 2025 Ahmed Omani Auto Marketing. جميع الحقوق محفوظة.</div>
 </footer>
 
@@ -1048,6 +1170,34 @@ function renderFeatures(list){
   }).join('');
 }
 
+function renderTestimonials(list){
+  var g=document.getElementById('tstGrid');
+  if(!g||!list||!list.length)return;
+  g.innerHTML=list.map(function(t){
+    var av=t.avatar
+      ?'<div class="tst-av"><img src="'+esc(t.avatar)+'" alt=""></div>'
+      :'<div class="tst-av">'+esc((t.name||'؟')[0])+'</div>';
+    return'<div class="tst-card">'
+      +'<div class="tst-q">❝</div>'
+      +'<p class="tst-text">'+esc(t.quote||'')+'</p>'
+      +'<div class="tst-author">'+av
+        +'<div><div class="tst-name">'+esc(t.name||'')+'</div>'
+        +'<div class="tst-role">'+esc(t.title||'')+'</div></div>'
+      +'</div></div>';
+  }).join('');
+}
+
+function renderSocial(cfg){
+  var s=document.getElementById('ftSocial');
+  if(!s)return;
+  var links=[];
+  if(cfg.facebook_url)links.push('<a href="'+esc(cfg.facebook_url)+'" class="ft-soc" target="_blank" rel="noopener" title="Facebook">𝑓</a>');
+  if(cfg.instagram_url)links.push('<a href="'+esc(cfg.instagram_url)+'" class="ft-soc" target="_blank" rel="noopener" title="Instagram"><svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>');
+  if(cfg.tiktok_url)links.push('<a href="'+esc(cfg.tiktok_url)+'" class="ft-soc" target="_blank" rel="noopener" title="TikTok"><svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.32 6.32 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.16 8.16 0 004.77 1.52V6.76a4.85 4.85 0 01-1-.07z"/></svg></a>');
+  if(cfg.whatsapp)links.push('<a href="https://wa.me/'+esc(cfg.whatsapp)+'" class="ft-soc" target="_blank" rel="noopener" title="WhatsApp" style="background:#25D366;border-color:#25D366;color:#fff"><svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347zM12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0012.04 2z"/></svg></a>');
+  s.innerHTML=links.join('');
+}
+
 function applyPageTexts(t){
   function set(id,val){if(val&&val.trim()){var el=document.getElementById(id);if(el)el.innerHTML=val.replace(/\n/g,'<br>');}}
   set('srvTitle',t.srv_title);set('srvSub',t.srv_sub);
@@ -1151,6 +1301,8 @@ async function loadSite(){
       if(cfg.site_title){document.title=cfg.site_title;}
       if(cfg.site_description){var md=document.querySelector('meta[name="description"]');if(md)md.content=cfg.site_description;}
       if(cfg.page_texts)applyPageTexts(cfg.page_texts);
+      if(cfg.testimonials_data&&cfg.testimonials_data.length)renderTestimonials(cfg.testimonials_data);
+      renderSocial(cfg);
     }
     var hero=(await sb.from('ao_hero').select('*').single()).data;
     if(hero)applyHero(hero);
