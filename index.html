@@ -550,7 +550,7 @@ section{padding:64px 0}
 <!-- ── FEATURES STRIP ─────────────────────────────── -->
 <div class="features-strip">
   <div class="container">
-    <div class="features-grid">
+    <div class="features-grid" id="featGrid">
       <div class="feat-item">
         <div class="feat-label">خدمة 01</div>
         <div class="feat-icon">📱</div>
@@ -747,7 +747,7 @@ section{padding:64px 0}
 <!-- ── STATS BAR ──────────────────────────────────── -->
 <div class="stats-bar">
   <div class="container">
-    <div class="stats-grid">
+    <div class="stats-grid" id="statsGrid">
       <div class="stat-item">
         <div class="stat-icon">🏆</div>
         <div class="stat-num"><span>10</span>+</div>
@@ -891,17 +891,17 @@ section{padding:64px 0}
         <h3 class="wa-cta-title">تواصل مباشر على واتساب</h3>
         <p class="wa-cta-sub">ردنا في خلال دقائق — اختار الخدمة اللي تناسبك وابعت</p>
         <div class="wa-cta-options">
-          <a href="https://wa.me/201152501056?text=مرحبا،%20أريد%20الاستفسار%20عن%20خدمة%20التسويق%20الإلكتروني" class="wa-opt" target="_blank" rel="noopener">
+          <a href="https://wa.me/201152501056?text=مرحبا،%20أريد%20الاستفسار%20عن%20خدمة%20التسويق%20الإلكتروني" class="wa-opt" id="waOptDigital" target="_blank" rel="noopener">
             <span class="wa-opt-icon">📱</span>
             <div><div class="wa-opt-title">تسويق إلكتروني</div><div class="wa-opt-sub">سوشيال + إعلانات + تصميم + تصوير</div></div>
             <span class="wa-opt-arr">←</span>
           </a>
-          <a href="https://wa.me/201152501056?text=مرحبا،%20أريد%20الاستفسار%20عن%20خدمة%20الدعاية%20والإعلان%20الأوفلاين" class="wa-opt" target="_blank" rel="noopener">
+          <a href="https://wa.me/201152501056?text=مرحبا،%20أريد%20الاستفسار%20عن%20خدمة%20الدعاية%20والإعلان%20الأوفلاين" class="wa-opt" id="waOptOffline" target="_blank" rel="noopener">
             <span class="wa-opt-icon">🏪</span>
             <div><div class="wa-opt-title">دعاية وإعلان</div><div class="wa-opt-sub">يافطات + يوني فورم + كروت + هوية</div></div>
             <span class="wa-opt-arr">←</span>
           </a>
-          <a href="https://wa.me/201152501056?text=مرحبا،%20أريد%20الحزمة%20الكاملة%20%28تسويق%20رقمي%20%2B%20دعاية%20وإعلان%29" class="wa-opt wa-opt-full" target="_blank" rel="noopener">
+          <a href="https://wa.me/201152501056?text=مرحبا،%20أريد%20الحزمة%20الكاملة%20%28تسويق%20رقمي%20%2B%20دعاية%20وإعلان%29" class="wa-opt wa-opt-full" id="waOptFull" target="_blank" rel="noopener">
             <span class="wa-opt-icon">🚀</span>
             <div><div class="wa-opt-title">الحزمة الكاملة</div><div class="wa-opt-sub">التسويق الإلكتروني + الدعاية الأوفلاين</div></div>
             <span class="wa-opt-arr">←</span>
@@ -925,7 +925,7 @@ section{padding:64px 0}
     <a href="#faq">أسئلة شائعة</a>
     <a href="#contact">تواصل</a>
   </div>
-  <div class="ft-copy">© 2025 Ahmed Omani Auto Marketing. جميع الحقوق محفوظة.</div>
+  <div class="ft-copy" id="ftCopy">© 2025 Ahmed Omani Auto Marketing. جميع الحقوق محفوظة.</div>
 </footer>
 
 <!-- ── WHATSAPP FLOAT ─────────────────────────────── -->
@@ -1023,6 +1023,41 @@ function updateWaLinks(num){
   });
 }
 
+function renderStats(list){
+  var g=document.getElementById('statsGrid');
+  if(!g||!list||!list.length)return;
+  g.innerHTML=list.map(function(s){
+    return'<div class="stat-item">'
+      +'<div class="stat-icon">'+esc(s.icon||'')+'</div>'
+      +'<div class="stat-num">'+esc(s.num||'')+'</div>'
+      +'<div class="stat-label">'+esc(s.label||'')+'</div>'
+      +'</div>';
+  }).join('');
+}
+
+function renderFeatures(list){
+  var g=document.getElementById('featGrid');
+  if(!g||!list||!list.length)return;
+  g.innerHTML=list.map(function(f){
+    return'<div class="feat-item">'
+      +'<div class="feat-label">'+esc(f.label||'')+'</div>'
+      +'<div class="feat-icon">'+esc(f.icon||'')+'</div>'
+      +'<div class="feat-title">'+esc(f.title||'')+'</div>'
+      +'<div class="feat-desc">'+esc(f.desc||'')+'</div>'
+      +'</div>';
+  }).join('');
+}
+
+function applyWaMessages(cfg){
+  function setWaHref(id,msg){
+    var el=document.getElementById(id);
+    if(el&&msg)el.href='https://wa.me/'+_waNum+'?text='+encodeURIComponent(msg);
+  }
+  if(cfg.wa_digital)setWaHref('waOptDigital',cfg.wa_digital);
+  if(cfg.wa_offline)setWaHref('waOptOffline',cfg.wa_offline);
+  if(cfg.wa_full)setWaHref('waOptFull',cfg.wa_full);
+}
+
 function injectMetaPixel(id){
   if(!id)return;
   var s=document.createElement('script');
@@ -1100,6 +1135,12 @@ async function loadSite(){
       if(cfg.meta_pixel_id)injectMetaPixel(cfg.meta_pixel_id);
       if(cfg.google_tag_id)injectGoogleTag(cfg.google_tag_id);
       if(cfg.tiktok_pixel_id)injectTikTokPixel(cfg.tiktok_pixel_id);
+      if(cfg.stats_data)renderStats(cfg.stats_data);
+      if(cfg.features_data)renderFeatures(cfg.features_data);
+      applyWaMessages(cfg);
+      if(cfg.footer_text){var fc=document.getElementById('ftCopy');if(fc)fc.textContent=cfg.footer_text;}
+      if(cfg.site_title){document.title=cfg.site_title;}
+      if(cfg.site_description){var md=document.querySelector('meta[name="description"]');if(md)md.content=cfg.site_description;}
     }
     var hero=(await sb.from('ao_hero').select('*').single()).data;
     if(hero)applyHero(hero);
