@@ -185,7 +185,6 @@ function renderCtaSec(s){
 }
 
 function parseBody(body){
-  // Convert plain text with \n to paragraphs; allow raw HTML passthrough if starts with <
   if(!body)return'';
   if(body.trim().startsWith('<'))return body;
   return body.split(/\n\n+/).map(function(p){
