@@ -137,44 +137,49 @@ function renderSection(sec){
 }
 
 function renderHeroSec(s){
-  var badge=s.badge?'<div class="sec-hero-badge">'+esc(s.badge)+'</div>':'';
-  var subtitle=s.subtitle?'<p>'+esc(s.subtitle)+'</p>':'';
+  var d=s.data||s;
+  var btnHref=d.btn_href||d.btn_link||'';
+  var badge=d.badge?'<div class="sec-hero-badge">'+esc(d.badge)+'</div>':'';
+  var subtitle=d.subtitle?'<p>'+esc(d.subtitle)+'</p>':'';
   var btnHtml='';
-  if(s.btn_text&&s.btn_href){
-    var href=esc(s.btn_href==='whatsapp'?'https://wa.me/'+_waNum+'?text='+encodeURIComponent('مرحبا، أريد الاستفسار'):s.btn_href);
-    btnHtml='<a href="'+href+'" class="btn-r"'+(s.btn_href.startsWith('http')?' target="_blank" rel="noopener"':'')+'>'
-      +esc(s.btn_text)+'</a>';
+  if(d.btn_text&&btnHref){
+    var href=esc(btnHref==='whatsapp'?'https://wa.me/'+_waNum+'?text='+encodeURIComponent('مرحبا، أريد الاستفسار'):btnHref);
+    btnHtml='<a href="'+href+'" class="btn-r"'+(btnHref.startsWith('http')?' target="_blank" rel="noopener"':'')+'>'
+      +esc(d.btn_text)+'</a>';
   }
   return'<section class="sec-hero">'
     +'<div class="sec-hero-bg"></div>'
     +'<div class="container"><div class="sec-hero-content">'
     +badge
-    +'<h1>'+esc(s.title||'')+'</h1>'
+    +'<h1>'+esc(d.title||'')+'</h1>'
     +subtitle
     +btnHtml
     +'</div></div></section>';
 }
 
 function renderTextSec(s){
+  var d=s.data||s;
   return'<section class="sec-text">'
     +'<div class="container"><div class="sec-text-inner">'
-    +(s.title?'<h2>'+esc(s.title)+'</h2>':'')
-    +'<div class="body-content">'+parseBody(s.body||'')+'</div>'
+    +(d.title?'<h2>'+esc(d.title)+'</h2>':'')
+    +'<div class="body-content">'+parseBody(d.body||d.content||'')+'</div>'
     +'</div></div></section>';
 }
 
 function renderCtaSec(s){
+  var d=s.data||s;
+  var btnHref=d.btn_href||d.btn_link||'';
   var waBtn='<a href="https://wa.me/'+_waNum+'?text='+encodeURIComponent('مرحبا، أريد الاستفسار')+'" class="btn-wa" target="_blank" rel="noopener">💬 واتساب مباشر</a>';
   var mainBtn='';
-  if(s.btn_text&&s.btn_href){
-    var href=esc(s.btn_href==='whatsapp'?'https://wa.me/'+_waNum+'?text='+encodeURIComponent('مرحبا، أريد الاستفسار'):s.btn_href);
-    mainBtn='<a href="'+href+'" class="btn-r"'+(s.btn_href.startsWith('http')?' target="_blank" rel="noopener"':'')+'>'
-      +esc(s.btn_text)+'</a>';
+  if(d.btn_text&&btnHref){
+    var href=esc(btnHref==='whatsapp'?'https://wa.me/'+_waNum+'?text='+encodeURIComponent('مرحبا، أريد الاستفسار'):btnHref);
+    mainBtn='<a href="'+href+'" class="btn-r"'+(btnHref.startsWith('http')?' target="_blank" rel="noopener"':'')+'>'
+      +esc(d.btn_text)+'</a>';
   }
   return'<section class="sec-cta">'
     +'<div class="container"><div class="sec-cta-inner">'
-    +(s.title?'<h2>'+esc(s.title)+'</h2>':'')
-    +(s.subtitle?'<p>'+esc(s.subtitle)+'</p>':'')
+    +(d.title?'<h2>'+esc(d.title)+'</h2>':'')
+    +(d.subtitle?'<p>'+esc(d.subtitle)+'</p>':'')
     +'<div class="sec-cta-btns">'+(mainBtn||'<a href="/" class="btn-r">اكتشف خدماتنا</a>')+waBtn+'</div>'
     +'</div></div></section>';
 }

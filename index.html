@@ -536,7 +536,7 @@ section{padding:64px 0}
       <div class="sub">Auto Marketing</div>
     </div>
   </div>
-  <ul class="nav-links">
+  <ul class="nav-links" id="navLinks">
     <li><a href="#services">خدماتنا</a></li>
     <li><a href="#portfolio">أعمالنا</a></li>
     <li><a href="#clients">عملاؤنا</a></li>
@@ -553,7 +553,7 @@ section{padding:64px 0}
 
 <!-- ── MOBILE NAV ────────────────────────────────── -->
 <div class="mobile-nav" id="mobileNav">
-  <ul>
+  <ul id="mobileNavList">
     <li><a href="#services" onclick="closeMenu()">خدماتنا</a></li>
     <li><a href="#portfolio" onclick="closeMenu()">أعمالنا</a></li>
     <li><a href="#clients" onclick="closeMenu()">عملاؤنا</a></li>
@@ -1247,15 +1247,33 @@ function renderTestimonials(list){
 function renderPagesLinks(list){
   if(!list||!list.length)return;
   var ft=document.getElementById('ftLinks');
-  if(!ft)return;
-  var sep=document.createElement('span');
-  sep.style.cssText='width:1px;height:14px;background:var(--bd);display:inline-block;margin:0 4px';
-  ft.appendChild(sep);
+  var nl=document.getElementById('navLinks');
+  var mn=document.getElementById('mobileNavList');
+  if(ft){
+    var sep=document.createElement('span');
+    sep.style.cssText='width:1px;height:14px;background:var(--bd);display:inline-block;margin:0 4px';
+    ft.appendChild(sep);
+  }
   list.forEach(function(p){
-    var a=document.createElement('a');
-    a.href='page.html?slug='+encodeURIComponent(p.slug);
-    a.textContent=p.title;
-    ft.appendChild(a);
+    var href='page.html?slug='+encodeURIComponent(p.slug);
+    if(ft){
+      var a=document.createElement('a');
+      a.href=href;a.textContent=p.title;
+      ft.appendChild(a);
+    }
+    if(nl){
+      var li=document.createElement('li');
+      var a=document.createElement('a');
+      a.href=href;a.textContent=p.title;
+      li.appendChild(a);nl.appendChild(li);
+    }
+    if(mn){
+      var li=document.createElement('li');
+      var a=document.createElement('a');
+      a.href=href;a.textContent=p.title;
+      a.onclick=function(){closeMenu();};
+      li.appendChild(a);mn.appendChild(li);
+    }
   });
 }
 
