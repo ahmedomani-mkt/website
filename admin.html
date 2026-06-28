@@ -530,8 +530,13 @@ button,select,input,textarea{font-family:var(--font)}
         <div class="sec-title">صفحات جديدة</div>
         <div class="sec-sub">أنشئ صفحات مخصصة مثل صفحة خدمة أو عرض سعر</div>
       </div>
-      <div class="info-box">
-        📌 رابط كل صفحة: <code style="color:var(--red);background:var(--rdim);padding:2px 6px;border-radius:4px">yoursite.com/page.html?slug=اسم-الصفحة</code>
+      <div class="info-box" style="background:rgba(59,130,246,.08);border-color:rgba(59,130,246,.25)">
+        <div style="font-weight:700;color:#3b82f6;margin-bottom:8px">📌 كيف تشتغل الصفحات؟</div>
+        <div style="font-size:12px;color:var(--g);line-height:1.8">
+          • كل صفحة ليها رابط خاص: <code style="color:var(--red);background:var(--rdim);padding:2px 6px;border-radius:4px">yoursite.com/page.html?slug=اسم-الصفحة</code><br>
+          • الصفحات المنشورة <strong style="color:var(--white)">بتظهر تلقائياً في فوتر الموقع الرئيسي</strong> ضمن قسم "صفحات إضافية"<br>
+          • لازم تضغط <strong style="color:#22c55e">نشر الآن</strong> عشان تظهر على الموقع — المسودات مش بتظهر
+        </div>
       </div>
       <div class="card">
         <div class="card-header">
@@ -1136,24 +1141,44 @@ async function loadPages(){
 function renderPages(){
   document.getElementById('pgc').textContent=pages.length;
   var el=document.getElementById('pgl');
-  if(!pages.length){el.innerHTML=empty('لا توجد صفحات بعد');return}
+  if(!pages.length){el.innerHTML=empty('لا توجد صفحات بعد — اضغط "صفحة جديدة" لإنشاء أول صفحة');return}
+  var origin=window.location.origin;
   el.innerHTML=pages.map(function(p){
-    return'<div class="li"><div class="li-b"><div class="li-t">'+h(p.title)+'</div>'
-      +'<div class="li-s"><span class="badge '+(p.is_published?'b-green':'b-off')+'">'+(p.is_published?'منشور':'مسودة')+'</span>'
-      +' <a href="page.html?slug='+h(p.slug)+'" target="_blank" style="color:var(--g);font-size:11px">🔗 /'+h(p.slug)+'</a></div></div>'
-      +'<div class="li-ac">'
-        +'<button class="btn btn-g bsm" onclick="editPage(\''+p.id+'\')">تعديل</button>'
-        +'<button class="btn '+(p.is_published?'btn-g':'btn-success')+' bsm" onclick="togglePage(\''+p.id+'\','+(!p.is_published)+')">'+(p.is_published?'إلغاء النشر':'نشر الآن')+'</button>'
-        +'<button class="btn btn-d bsm" onclick="delPage(\''+p.id+'\')">حذف</button>'
-      +'</div></div>';
+    var pageUrl=origin+'/page.html?slug='+encodeURIComponent(p.slug);
+    return'<div class="li" style="flex-direction:column;gap:10px;align-items:stretch">'
+      +'<div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">'
+        +'<div class="li-b" style="flex:1">'
+          +'<div class="li-t">'+h(p.title)+'</div>'
+          +'<div class="li-s">'
+            +'<span class="badge '+(p.is_published?'b-green':'b-off')+'">'+(p.is_published?'✅ منشور':'⏸ مسودة')+'</span>'
+          +'</div>'
+        +'</div>'
+        +'<div class="li-ac">'
+          +'<button class="btn btn-g bsm" onclick="editPage(\''+p.id+'\')">تعديل</button>'
+          +'<button class="btn '+(p.is_published?'btn-g':'btn-success')+' bsm" onclick="togglePage(\''+p.id+'\','+(!p.is_published)+')">'+(p.is_published?'إلغاء النشر':'نشر الآن 🚀')+'</button>'
+          +'<button class="btn btn-d bsm" onclick="delPage(\''+p.id+'\')">حذف</button>'
+        +'</div>'
+      +'</div>'
+      +(p.is_published
+        ?'<div style="background:var(--s2);border:1px solid var(--b2);border-radius:var(--rsm);padding:10px 12px;display:flex;align-items:center;gap:8px;flex-wrap:wrap">'
+          +'<span style="font-size:11px;color:var(--g);flex:1;word-break:break-all;font-family:monospace">🔗 '+h(pageUrl)+'</span>'
+          +'<button class="btn btn-g bsm" onclick="copyUrl(\''+h(pageUrl)+'\')">📋 نسخ الرابط</button>'
+          +'<a href="'+h(pageUrl)+'" target="_blank" class="btn btn-p bsm">🔗 فتح الصفحة</a>'
+        +'</div>'
+        :'<div style="background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.2);border-radius:var(--rsm);padding:8px 12px;font-size:11px;color:#f59e0b">⚠️ الصفحة غير منشورة — اضغط "نشر الآن" لتظهر على الموقع</div>'
+      )
+    +'</div>';
   }).join('');
+}
+function copyUrl(url){
+  navigator.clipboard.writeText(url).then(function(){toast('✅ تم نسخ الرابط!')}).catch(function(){toast('الرابط: '+url)});
 }
 function openPgM(item){
   pageSecs=item?JSON.parse(JSON.stringify(item.sections||[])):[];
   document.getElementById('pgm-ttl').textContent=item?'تعديل الصفحة':'صفحة جديدة';
   document.getElementById('pgm-id').value=item?item.id:'';
   v('pgm-t',item?item.title:'');v('pgm-s',item?item.slug:'');v('pgm-m',item?item.meta_description||'':'');
-  document.getElementById('pgm-pub').checked=item?item.is_published:false;
+  document.getElementById('pgm-pub').checked=item?item.is_published:true;
   renderSecs();document.getElementById('ov-pg').classList.add('open');
 }
 function closePgM(){document.getElementById('ov-pg').classList.remove('open')}

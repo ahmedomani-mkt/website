@@ -1076,7 +1076,7 @@ section{padding:64px 0}
     <img src="assets/logo.svg" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Ccircle cx=%2750%27 cy=%2750%27 r=%2748%27 fill=%27%23E8192C%27/%3E%3Cpolygon points=%2750,20 80,70 20,70%27 fill=%27white%27/%3E%3C/svg%3E'" alt="Logo">
     <div><div class="fn">AHMED OMANI</div><div class="fs">Auto Marketing</div></div>
   </div>
-  <div class="ft-links">
+  <div class="ft-links" id="ftLinks">
     <a href="#services">خدماتنا</a>
     <a href="#portfolio">أعمالنا</a>
     <a href="#clients">عملاؤنا</a>
@@ -1244,6 +1244,21 @@ function renderTestimonials(list){
   }).join('');
 }
 
+function renderPagesLinks(list){
+  if(!list||!list.length)return;
+  var ft=document.getElementById('ftLinks');
+  if(!ft)return;
+  var sep=document.createElement('span');
+  sep.style.cssText='width:1px;height:14px;background:var(--bd);display:inline-block;margin:0 4px';
+  ft.appendChild(sep);
+  list.forEach(function(p){
+    var a=document.createElement('a');
+    a.href='page.html?slug='+encodeURIComponent(p.slug);
+    a.textContent=p.title;
+    ft.appendChild(a);
+  });
+}
+
 function renderSocial(cfg){
   var s=document.getElementById('ftSocial');
   if(!s)return;
@@ -1369,6 +1384,8 @@ async function loadSite(){
     if(clients&&clients.length)renderClients(clients);
     var faq=(await sb.from('ao_faq').select('*').eq('is_active',true).order('sort_order')).data;
     if(faq&&faq.length)renderFaq(faq);
+    var pglist=(await sb.from('ao_pages').select('title,slug').eq('is_published',true).order('created_at')).data;
+    if(pglist&&pglist.length)renderPagesLinks(pglist);
   }catch(e){console.log('Static fallback active')}
 }
 document.addEventListener('DOMContentLoaded',loadSite);
