@@ -584,8 +584,8 @@ section{padding:64px 0}
   <div class="container">
     <div class="sec-head center">
       <div class="sec-label">خدماتنا</div>
-      <h2 class="sec-title">حلول متكاملة<br>لعالم الأوتوموتيف</h2>
-      <p class="sec-sub">ركّزنا في قطاع واحد — عشان نقدم الأفضل فيه</p>
+      <h2 class="sec-title" id="srvTitle">حلول متكاملة<br>لعالم الأوتوموتيف</h2>
+      <p class="sec-sub" id="srvSub">ركّزنا في قطاع واحد — عشان نقدم الأفضل فيه</p>
     </div>
     <div class="srv-pillars">
       <!-- DIGITAL -->
@@ -664,7 +664,7 @@ section{padding:64px 0}
     <div class="port-head">
       <div class="port-head-text">
         <div class="sec-label">أعمالنا</div>
-        <h2 class="sec-title">شغلنا بيتكلم<br>عن نفسه</h2>
+        <h2 class="sec-title" id="portTitle">شغلنا بيتكلم<br>عن نفسه</h2>
         <div style="width:40px;height:4px;background:var(--red);border-radius:2px;margin-top:12px"></div>
       </div>
       <div>
@@ -777,8 +777,8 @@ section{padding:64px 0}
   <div class="container">
     <div class="sec-head center">
       <div class="sec-label">عملاؤنا</div>
-      <h2 class="sec-title">ثقوا فينا</h2>
-      <p class="sec-sub">أكثر من 30 علامة في قطاع السيارات المصري</p>
+      <h2 class="sec-title" id="clTitle">ثقوا فينا</h2>
+      <p class="sec-sub" id="clSub">أكثر من 30 علامة في قطاع السيارات المصري</p>
     </div>
     <div class="clients-grid" id="clientsGrid">
       <div class="cl-item"><div class="cl-name">KSH</div></div>
@@ -824,8 +824,8 @@ section{padding:64px 0}
   <div class="container">
     <div class="sec-head center">
       <div class="sec-label">أسئلة شائعة</div>
-      <h2 class="sec-title">إجابات على<br>أسئلتك</h2>
-      <p class="sec-sub">بنجاوب الأسئلة الأكتر تكرارًا عشان توفر وقتك</p>
+      <h2 class="sec-title" id="faqTitle">إجابات على<br>أسئلتك</h2>
+      <p class="sec-sub" id="faqSub">بنجاوب الأسئلة الأكتر تكرارًا عشان توفر وقتك</p>
     </div>
     <div class="faq-wrap" id="faqWrap">
       <div class="faq-item" onclick="toggleFaq(this)">
@@ -870,8 +870,8 @@ section{padding:64px 0}
     <div class="contact-inner">
       <div class="contact-info">
         <div class="sec-label">تواصل معنا</div>
-        <h2>خلينا نشتغل<br>مع بعض</h2>
-        <p>تواصل معنا دلوقتي واحصل على استشارة مجانية لتسويق أو تجهيز مشروعك في قطاع السيارات.</p>
+        <h2 id="ctTitle">خلينا نشتغل<br>مع بعض</h2>
+        <p id="ctDesc">تواصل معنا دلوقتي واحصل على استشارة مجانية لتسويق أو تجهيز مشروعك في قطاع السيارات.</p>
         <div class="c-items">
           <div class="c-item">
             <div class="c-ic">📞</div>
@@ -1048,6 +1048,15 @@ function renderFeatures(list){
   }).join('');
 }
 
+function applyPageTexts(t){
+  function set(id,val){if(val&&val.trim()){var el=document.getElementById(id);if(el)el.innerHTML=val.replace(/\n/g,'<br>');}}
+  set('srvTitle',t.srv_title);set('srvSub',t.srv_sub);
+  set('portTitle',t.port_title);
+  set('clTitle',t.cl_title);set('clSub',t.cl_sub);
+  set('faqTitle',t.faq_title);set('faqSub',t.faq_sub);
+  set('ctTitle',t.ct_title);set('ctDesc',t.ct_desc);
+}
+
 function applyWaMessages(cfg){
   function setWaHref(id,msg){
     var el=document.getElementById(id);
@@ -1141,6 +1150,7 @@ async function loadSite(){
       if(cfg.footer_text){var fc=document.getElementById('ftCopy');if(fc)fc.textContent=cfg.footer_text;}
       if(cfg.site_title){document.title=cfg.site_title;}
       if(cfg.site_description){var md=document.querySelector('meta[name="description"]');if(md)md.content=cfg.site_description;}
+      if(cfg.page_texts)applyPageTexts(cfg.page_texts);
     }
     var hero=(await sb.from('ao_hero').select('*').single()).data;
     if(hero)applyHero(hero);

@@ -274,6 +274,10 @@ button,select,input,textarea{font-family:var(--font)}
       <div class="ni-ic"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></div>
       صفحات جديدة
     </div>
+    <div class="ni" data-s="texts" onclick="go('texts',this)">
+      <div class="ni-ic"><svg viewBox="0 0 24 24"><line x1="17" y1="10" x2="3" y2="10"/><line x1="21" y1="6" x2="3" y2="6"/><line x1="21" y1="14" x2="3" y2="14"/><line x1="17" y1="18" x2="3" y2="18"/></svg></div>
+      نصوص الأقسام
+    </div>
     <div class="nsep"></div>
     <div class="ni" data-s="settings" onclick="go('settings',this)">
       <div class="ni-ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg></div>
@@ -341,6 +345,10 @@ button,select,input,textarea{font-family:var(--font)}
         <div class="dq-btn" onclick="go('wa',qni('wa'))">
           <div class="dq-ic"><svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg></div>
           <div><div class="dq-title">رسائل واتساب</div><div class="dq-sub">تخصيص النصوص</div></div>
+        </div>
+        <div class="dq-btn" onclick="go('texts',qni('texts'))">
+          <div class="dq-ic"><svg viewBox="0 0 24 24"><line x1="17" y1="10" x2="3" y2="10"/><line x1="21" y1="6" x2="3" y2="6"/><line x1="21" y1="14" x2="3" y2="14"/><line x1="17" y1="18" x2="3" y2="18"/></svg></div>
+          <div><div class="dq-title">نصوص الأقسام</div><div class="dq-sub">عناوين وأوصاف كاملة</div></div>
         </div>
         <div class="dq-btn" onclick="go('settings',qni('settings'))">
           <div class="dq-ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg></div>
@@ -529,6 +537,46 @@ button,select,input,textarea{font-family:var(--font)}
       </div>
     </div>
 
+    <!-- TEXTS -->
+    <div class="sec" id="sec-texts">
+      <div class="sec-header">
+        <div class="sec-title">نصوص الأقسام</div>
+        <div class="sec-sub">تحكم في عناوين وأوصاف كل قسم داخل الموقع</div>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-title"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>قسم الخدمات</div></div>
+        <div class="field"><label>العنوان الرئيسي</label><textarea id="txt-srv-title" rows="2" placeholder="حلول متكاملة&#10;لعالم الأوتوموتيف"></textarea><div class="field-hint">يمكن استخدام &lt;br&gt; لفصل السطور</div></div>
+        <div class="field"><label>الوصف الفرعي</label><input type="text" id="txt-srv-sub" placeholder="ركّزنا في قطاع واحد — عشان نقدم الأفضل فيه"></div>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-title"><svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/></svg>قسم الأعمال (Portfolio)</div></div>
+        <div class="field"><label>العنوان</label><textarea id="txt-port-title" rows="2" placeholder="شغلنا بيتكلم&#10;عن نفسه"></textarea></div>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-title"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>قسم العملاء</div></div>
+        <div class="r2">
+          <div class="field"><label>العنوان</label><input type="text" id="txt-cl-title" placeholder="ثقوا فينا"></div>
+          <div class="field"><label>الوصف الفرعي</label><input type="text" id="txt-cl-sub" placeholder="أكثر من 30 علامة في قطاع السيارات المصري"></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-title"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>قسم الأسئلة الشائعة</div></div>
+        <div class="r2">
+          <div class="field"><label>العنوان</label><input type="text" id="txt-faq-title" placeholder="إجابات على أسئلتك"></div>
+          <div class="field"><label>الوصف الفرعي</label><input type="text" id="txt-faq-sub" placeholder="بنجاوب الأسئلة الأكتر تكرارًا عشان توفر وقتك"></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-title"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>قسم التواصل</div></div>
+        <div class="field"><label>العنوان</label><textarea id="txt-ct-title" rows="2" placeholder="خلينا نشتغل&#10;مع بعض"></textarea></div>
+        <div class="field"><label>الوصف</label><textarea id="txt-ct-desc" rows="3" placeholder="تواصل معنا دلوقتي واحصل على استشارة مجانية..."></textarea></div>
+      </div>
+      <button class="btn btn-p" onclick="saveTexts()">
+        <svg viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+        حفظ النصوص
+      </button>
+    </div>
+
     <!-- SETTINGS -->
     <div class="sec" id="sec-settings">
       <div class="sec-header">
@@ -623,7 +671,12 @@ button,select,input,textarea{font-family:var(--font)}
     <div class="mh"><span id="cm-ttl">إضافة عميل</span><button class="mx" onclick="closeCM()">✕</button></div>
     <input type="hidden" id="cm-id">
     <div class="field"><label>اسم العميل</label><input type="text" id="cm-n" placeholder="CARBENZ"></div>
-    <div class="field"><label>رابط اللوجو (اختياري)</label><input type="url" id="cm-l" placeholder="https://..."></div>
+    <div class="field"><label>رابط اللوجو</label><input type="url" id="cm-l" placeholder="https://..." oninput="prevCLogo(this.value)"></div>
+    <div class="upload-zone" onclick="document.getElementById('cm-f').click()">
+      📁 أو ارفع اللوجو من جهازك (PNG/SVG/JPG)
+      <input type="file" id="cm-f" accept="image/*" style="display:none" onchange="upClientLogo(this)">
+    </div>
+    <img id="cm-pv" class="port-preview" style="max-height:70px;object-fit:contain;background:var(--s2);padding:8px">
     <div class="mf">
       <button class="btn btn-g" onclick="closeCM()">إلغاء</button>
       <button class="btn btn-p" onclick="saveCM()">حفظ</button>
@@ -685,10 +738,10 @@ const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZ
 const sb=supabase.createClient(SB_URL,SB_KEY);
 
 var portfolio=[],clients=[],faqs=[],pages=[],pageSecs=[];
-var statsData=[],featData=[];
+var statsData=[],featData=[],textsData={};
 
 // ── BREADCRUMB MAP ────────────────────────────────────
-var secNames={dash:'الرئيسية',hero:'الصفحة الرئيسية',stats:'الشريط الإحصائي',features:'شريط المميزات',wa:'رسائل واتساب',port:'الأعمال',clients:'العملاء',faq:'الأسئلة',pages:'الصفحات',settings:'الإعدادات'};
+var secNames={dash:'الرئيسية',hero:'الصفحة الرئيسية',stats:'الشريط الإحصائي',features:'شريط المميزات',wa:'رسائل واتساب',port:'الأعمال',clients:'العملاء',faq:'الأسئلة',pages:'الصفحات',texts:'نصوص الأقسام',settings:'الإعدادات'};
 
 // ── LOGIN ──────────────────────────────────────────────
 async function doLogin(){
@@ -781,8 +834,10 @@ async function loadSettings(){
   v('wa-digital',data.wa_digital);v('wa-offline',data.wa_offline);v('wa-full',data.wa_full);
   statsData=data.stats_data||defaultStats();
   featData=data.features_data||defaultFeatures();
+  textsData=data.page_texts||{};
   renderStatsEditor();
   renderFeatEditor();
+  loadTextsEditor();
 }
 
 function defaultStats(){
@@ -973,6 +1028,9 @@ function openCM(item){
   document.getElementById('cm-ttl').textContent=item?'تعديل عميل':'إضافة عميل';
   document.getElementById('cm-id').value=item?item.id:'';
   v('cm-n',item?item.name:'');v('cm-l',item?item.logo_url||'':'');
+  var pv=document.getElementById('cm-pv');
+  if(item&&item.logo_url){pv.src=item.logo_url;pv.style.display='block'}else{pv.src='';pv.style.display='none'}
+  document.getElementById('cm-f').value='';
   document.getElementById('ov-cl').classList.add('open');
 }
 function closeCM(){document.getElementById('ov-cl').classList.remove('open')}
@@ -1056,6 +1114,7 @@ function renderPages(){
       +' <a href="page.html?slug='+h(p.slug)+'" target="_blank" style="color:var(--g);font-size:11px">🔗 /'+h(p.slug)+'</a></div></div>'
       +'<div class="li-ac">'
         +'<button class="btn btn-g bsm" onclick="editPage(\''+p.id+'\')">تعديل</button>'
+        +'<button class="btn '+(p.is_published?'btn-g':'btn-success')+' bsm" onclick="togglePage(\''+p.id+'\','+(!p.is_published)+')">'+(p.is_published?'إلغاء النشر':'نشر الآن')+'</button>'
         +'<button class="btn btn-d bsm" onclick="delPage(\''+p.id+'\')">حذف</button>'
       +'</div></div>';
   }).join('');
@@ -1113,6 +1172,56 @@ async function delPage(id){
   if(!confirm('تأكيد الحذف؟'))return;
   await sb.from('ao_pages').delete().eq('id',id);
   await loadPages();updateStats();toast('🗑 تم الحذف');
+}
+
+// ── PAGE TEXTS ─────────────────────────────────────────
+function loadTextsEditor(){
+  v('txt-srv-title',textsData.srv_title||'');
+  v('txt-srv-sub',textsData.srv_sub||'');
+  v('txt-port-title',textsData.port_title||'');
+  v('txt-cl-title',textsData.cl_title||'');
+  v('txt-cl-sub',textsData.cl_sub||'');
+  v('txt-faq-title',textsData.faq_title||'');
+  v('txt-faq-sub',textsData.faq_sub||'');
+  v('txt-ct-title',textsData.ct_title||'');
+  v('txt-ct-desc',textsData.ct_desc||'');
+}
+async function saveTexts(){
+  textsData={
+    srv_title:g('txt-srv-title'),srv_sub:g('txt-srv-sub'),
+    port_title:g('txt-port-title'),
+    cl_title:g('txt-cl-title'),cl_sub:g('txt-cl-sub'),
+    faq_title:g('txt-faq-title'),faq_sub:g('txt-faq-sub'),
+    ct_title:g('txt-ct-title'),ct_desc:g('txt-ct-desc')
+  };
+  var{error}=await sb.from('ao_settings').upsert({id:1,page_texts:textsData,updated_at:new Date().toISOString()});
+  if(error){toast('❌ '+error.message);return}
+  toast('✅ تم حفظ النصوص!');
+}
+
+// ── CLIENT LOGO UPLOAD ─────────────────────────────────
+function prevCLogo(url){
+  var pv=document.getElementById('cm-pv');
+  if(url){pv.src=url;pv.style.display='block'}else{pv.style.display='none'}
+}
+async function upClientLogo(inp){
+  if(!inp.files[0])return;
+  toast('⏳ جاري الرفع...');
+  var f=inp.files[0];var ext=f.name.split('.').pop();
+  var nm='clients/'+Date.now()+'.'+ext;
+  var{error}=await sb.storage.from('ao-images').upload(nm,f,{upsert:true});
+  if(error){toast('❌ '+error.message);return}
+  var url=sb.storage.from('ao-images').getPublicUrl(nm).data.publicUrl;
+  v('cm-l',url);prevCLogo(url);
+  toast('✅ تم رفع اللوجو!');
+}
+
+// ── PAGE PUBLISH TOGGLE ────────────────────────────────
+async function togglePage(id,val){
+  var{error}=await sb.from('ao_pages').update({is_published:val,updated_at:new Date().toISOString()}).eq('id',id);
+  if(error){toast('❌ '+error.message);return}
+  await loadPages();updateStats();
+  toast(val?'✅ تم نشر الصفحة!':'تم إلغاء النشر');
 }
 
 // ── UTILS ─────────────────────────────────────────────
