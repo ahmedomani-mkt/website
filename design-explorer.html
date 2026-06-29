@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Ahmed Omani — Design Explorer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{font-family:'Noto Kufi Arabic','Segoe UI',sans-serif;background:#f5f5f5;color:#333;overflow-x:hidden}
+
+    .explorer-wrapper{display:grid;grid-template-columns:280px 1fr;gap:0;min-height:100vh}
+
+    /* SIDEBAR */
+    .explorer-sidebar{background:#fff;border-right:1px solid #e0e0e0;padding:20px;overflow-y:auto;position:sticky;top:0;height:100vh}
+    .explorer-title{font-size:16px;font-weight:900;margin-bottom:20px;color:#111}
+    .design-list{display:flex;flex-direction:column;gap:8px}
+    .design-btn{padding:12px 14px;border:2px solid transparent;border-radius:8px;background:#f5f5f5;color:#555;font-family:inherit;font-size:14px;font-weight:600;cursor:pointer;transition:.2s;text-align:right}
+    .design-btn:hover{background:#efefef;color:#333}
+    .design-btn.active{border-color:#E8192C;background:#fff3f3;color:#E8192C}
+    .design-desc{font-size:12px;color:#888;margin-top:16px;line-height:1.6;padding:12px;background:#f9f9f9;border-radius:6px}
+
+    /* PREVIEW */
+    .explorer-preview{padding:0;background:#fff;overflow-y:auto}
+    .preview-frame{min-height:100vh;display:flex;flex-direction:column}
+
+    /* HEADER */
+    .preview-header{background:#fff;padding:16px 24px;border-bottom:1px solid #e0e0e0;display:flex;justify-content:space-between;align-items:center}
+    .preview-title{font-size:18px;font-weight:700}
+    .copy-btn{padding:8px 16px;background:#E8192C;color:#fff;border:none;border-radius:6px;font-weight:600;cursor:pointer;font-size:12px;transition:.2s}
+    .copy-btn:hover{background:#C0111F}
+    .copy-btn.copied{background:#10B981}
+
+    /* DESIGN CONTENT */
+    .design-content{flex:1;padding:0;background:#fff}
+
+    /* ========== DESIGN 1: MODERN RED ========== */
+    .modern-red{--red:#E8192C;--red-d:#C0111F;--black:#0A0A0A;--white:#FFFFFF;--text:#0D0D0D;--text2:#555;--bg:#F4F5FA;--border:#E0E1EC}
+    .modern-red .hero{background:var(--bg);padding:60px 40px;text-align:center;background:linear-gradient(135deg,var(--bg) 0%,#eaeef5 100%)}
+    .modern-red .hero h1{font-size:48px;font-weight:900;margin-bottom:16px;color:var(--text)}
+    .modern-red .hero h1 span{color:var(--red)}
+    .modern-red .hero p{font-size:16px;color:var(--text2);max-width:500px;margin:0 auto 28px;line-height:1.8}
+    .modern-red .hero-btn{display:inline-flex;gap:8px;align-items:center;padding:13px 28px;background:var(--red);color:#fff;border-radius:8px;font-weight:700;font-size:14px;transition:.2s}
+    .modern-red .hero-btn:hover{background:var(--red-d);transform:translateY(-2px)}
+    .modern-red .services{padding:60px 40px;background:#fff}
+    .modern-red .service-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;max-width:900px;margin:0 auto}
+    .modern-red .service-card{background:var(--bg);border:1px solid var(--border);padding:24px;border-radius:12px;text-align:right;transition:.3s}
+    .modern-red .service-card:hover{border-color:var(--red);box-shadow:0 8px 24px rgba(232,25,44,.1)}
+    .modern-red .service-card h3{font-size:16px;font-weight:700;margin-bottom:8px;color:var(--text)}
+    .modern-red .service-card p{font-size:13px;color:var(--text2);line-height:1.6}
+    .modern-red .portfolio{padding:60px 40px;background:var(--bg)}
+    .modern-red .port-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;max-width:900px;margin:0 auto}
+    .modern-red .port-card{background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+    .modern-red .port-img{height:180px;background:linear-gradient(135deg,#ddd,#eee);display:flex;align-items:center;justify-content:center;font-size:48px}
+    .modern-red .port-body{padding:16px}
+    .modern-red .port-title{font-size:14px;font-weight:700;margin-bottom:4px}
+    .modern-red .port-desc{font-size:12px;color:var(--text2)}
+    .modern-red .footer{background:var(--text);color:#fff;padding:40px;text-align:center}
+
+    /* ========== DESIGN 2: CORPORATE BLUE ========== */
+    .corporate-blue{--blue:#1E40AF;--blue-d:#1E3A8A;--light:#F8FAFC;--white:#FFFFFF;--text:#0F172A;--text2:#64748B}
+    .corporate-blue .hero{background:linear-gradient(135deg,#1e40af 0%,#1e3a8a 100%);padding:80px 40px;text-align:center;color:#fff}
+    .corporate-blue .hero h1{font-size:52px;font-weight:900;margin-bottom:16px}
+    .corporate-blue .hero p{font-size:18px;color:#e2e8f0;max-width:500px;margin:0 auto 32px;line-height:1.8}
+    .corporate-blue .hero-btn{display:inline-flex;gap:8px;padding:14px 32px;background:#fff;color:#1e40af;border-radius:6px;font-weight:700;font-size:14px}
+    .corporate-blue .services{padding:60px 40px;background:#fff}
+    .corporate-blue .service-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;max-width:900px;margin:0 auto}
+    .corporate-blue .service-card{border:1px solid #cbd5e1;padding:28px;border-radius:6px;text-align:right}
+    .corporate-blue .service-card h3{font-size:16px;font-weight:700;margin-bottom:12px;color:var(--blue)}
+    .corporate-blue .service-card p{font-size:13px;color:var(--text2);line-height:1.7}
+    .corporate-blue .portfolio{padding:60px 40px;background:var(--light)}
+    .corporate-blue .port-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;max-width:900px;margin:0 auto}
+    .corporate-blue .port-card{background:#fff;border-radius:6px;overflow:hidden;border:1px solid #e2e8f0}
+    .corporate-blue .port-img{height:180px;background:#e2e8f0}
+    .corporate-blue .port-body{padding:20px}
+    .corporate-blue .port-title{font-size:14px;font-weight:700;margin-bottom:6px;color:var(--blue)}
+    .corporate-blue .port-desc{font-size:12px;color:var(--text2)}
+    .corporate-blue .footer{background:#0f172a;color:#fff;padding:40px;text-align:center}
+
+    /* ========== DESIGN 3: LUXURY GOLD ========== */
+    .luxury-gold{--gold:#D4AF37;--dark:#1a1a1a;--darker:#0f0f0f;--text:#f5f5f5}
+    .luxury-gold .hero{background:#1a1a1a;padding:80px 40px;text-align:center;border-bottom:2px solid var(--gold);color:#fff}
+    .luxury-gold .hero h1{font-size:54px;font-weight:900;margin-bottom:16px;letter-spacing:2px}
+    .luxury-gold .hero h1 span{color:var(--gold)}
+    .luxury-gold .hero p{font-size:16px;color:#ccc;max-width:500px;margin:0 auto 32px;line-height:2}
+    .luxury-gold .hero-btn{display:inline-flex;gap:8px;padding:14px 40px;border:2px solid var(--gold);color:var(--gold);border-radius:2px;font-weight:700;font-size:14px;letter-spacing:1px}
+    .luxury-gold .services{padding:80px 40px;background:#0f0f0f;color:#fff}
+    .luxury-gold .service-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px;max-width:900px;margin:0 auto}
+    .luxury-gold .service-card{padding:32px;border-right:2px solid var(--gold);text-align:right}
+    .luxury-gold .service-card:nth-child(2n){border-right:none;border-left:2px solid var(--gold)}
+    .luxury-gold .service-card h3{font-size:18px;font-weight:700;margin-bottom:12px;color:var(--gold);letter-spacing:1px}
+    .luxury-gold .service-card p{font-size:14px;color:#bbb;line-height:1.9}
+    .luxury-gold .portfolio{padding:80px 40px;background:#1a1a1a;color:#fff}
+    .luxury-gold .port-grid{display:grid;grid-template-columns:1fr 1fr;gap:32px;max-width:900px;margin:0 auto}
+    .luxury-gold .port-card{border:1px solid var(--gold);overflow:hidden;background:#0f0f0f}
+    .luxury-gold .port-img{height:180px;background:#2a2a2a}
+    .luxury-gold .port-body{padding:24px;border-top:1px solid var(--gold)}
+    .luxury-gold .port-title{font-size:14px;font-weight:700;margin-bottom:6px;color:var(--gold);letter-spacing:.5px}
+    .luxury-gold .port-desc{font-size:12px;color:#aaa}
+    .luxury-gold .footer{background:#0a0a0a;color:var(--gold);padding:40px;text-align:center;border-top:2px solid var(--gold)}
+
+    /* ========== DESIGN 4: VIBRANT GRADIENT ========== */
+    .vibrant-gradient{--neon-pink:#FF1493;--neon-cyan:#00FFFF;--neon-purple:#9D4EDD;--dark:#0a0a1a;--text:#fff}
+    .vibrant-gradient .hero{background:linear-gradient(135deg,#0a0a1a 0%,#1a0a2e 50%,#16213e 100%);padding:80px 40px;text-align:center;color:#fff;position:relative;overflow:hidden}
+    .vibrant-gradient .hero::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 20% 50%,rgba(255,20,147,.15) 0%,transparent 50%),radial-gradient(circle at 80% 80%,rgba(157,78,221,.15) 0%,transparent 50%);pointer-events:none}
+    .vibrant-gradient .hero-content{position:relative;z-index:1}
+    .vibrant-gradient .hero h1{font-size:54px;font-weight:900;margin-bottom:16px;background:linear-gradient(90deg,#FF1493,#00FFFF,#9D4EDD);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+    .vibrant-gradient .hero p{font-size:16px;color:#aaa;max-width:500px;margin:0 auto 32px;line-height:1.9}
+    .vibrant-gradient .hero-btn{display:inline-flex;gap:8px;padding:14px 32px;background:linear-gradient(90deg,#FF1493,#9D4EDD);color:#fff;border-radius:10px;font-weight:700;font-size:14px;box-shadow:0 0 20px rgba(255,20,147,.4)}
+    .vibrant-gradient .services{padding:60px 40px;background:#0a0a1a}
+    .vibrant-gradient .service-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;max-width:900px;margin:0 auto}
+    .vibrant-gradient .service-card{background:linear-gradient(135deg,rgba(255,20,147,.1) 0%,rgba(157,78,221,.1) 100%);border:1px solid rgba(0,255,255,.2);padding:24px;border-radius:12px;text-align:right;transition:.3s}
+    .vibrant-gradient .service-card:hover{border-color:#00FFFF;box-shadow:0 0 20px rgba(0,255,255,.2)}
+    .vibrant-gradient .service-card h3{font-size:16px;font-weight:700;margin-bottom:8px;color:#00FFFF}
+    .vibrant-gradient .service-card p{font-size:13px;color:#aaa;line-height:1.6}
+    .vibrant-gradient .portfolio{padding:60px 40px;background:#1a1a2e}
+    .vibrant-gradient .port-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;max-width:900px;margin:0 auto}
+    .vibrant-gradient .port-card{background:#0a0a1a;border:1px solid rgba(0,255,255,.2);border-radius:12px;overflow:hidden}
+    .vibrant-gradient .port-img{height:180px;background:linear-gradient(135deg,rgba(255,20,147,.2),rgba(157,78,221,.2))}
+    .vibrant-gradient .port-body{padding:16px}
+    .vibrant-gradient .port-title{font-size:14px;font-weight:700;margin-bottom:4px;color:#00FFFF}
+    .vibrant-gradient .port-desc{font-size:12px;color:#aaa}
+    .vibrant-gradient .footer{background:#0a0a0a;color:#00FFFF;padding:40px;text-align:center;border-top:1px solid rgba(0,255,255,.2)}
+
+    /* COMMON STYLES */
+    .design-content .section-title{font-size:18px;font-weight:700;margin-bottom:32px;text-align:center;padding:0 40px;padding-top:40px}
+
+    @media (max-width:768px){
+      .explorer-wrapper{grid-template-columns:1fr}
+      .explorer-sidebar{position:fixed;top:0;left:0;right:0;height:auto;border-right:none;border-bottom:1px solid #e0e0e0;z-index:100;overflow-x:auto;overflow-y:visible;max-width:100%;padding:12px}
+      .explorer-preview{margin-top:60px}
+      .design-list{flex-direction:row;gap:6px;overflow-x:auto}
+      .design-btn{white-space:nowrap;flex-shrink:0}
+    }
+  </style>
+</head>
+<body>
+
+<div class="explorer-wrapper">
+  <!-- SIDEBAR -->
+  <div class="explorer-sidebar">
+    <div class="explorer-title">تصاميم الموقع</div>
+    <div class="design-list">
+      <button class="design-btn active" onclick="switchDesign('modern-red')">🔴 Modern Red</button>
+      <button class="design-btn" onclick="switchDesign('corporate-blue')">🔵 Corporate Blue</button>
+      <button class="design-btn" onclick="switchDesign('luxury-gold')">✨ Luxury Gold</button>
+      <button class="design-btn" onclick="switchDesign('vibrant-gradient')">🌈 Vibrant Gradient</button>
+    </div>
+    <div class="design-desc" id="designDesc">
+      <strong>Modern Red</strong><br>
+      تصميم بسيط وحديث بألوان حمراء وسوداء. يركز على النظافة والتركيز على المحتوى. مناسب للمتخصصين والشركات الموثوقة.
+    </div>
+  </div>
+
+  <!-- PREVIEW -->
+  <div class="explorer-preview">
+    <div class="preview-header">
+      <button class="copy-btn" onclick="copyDesignChoice()">نسخ الاختيار</button>
+      <span class="preview-title" id="previewTitle">Modern Red</span>
+    </div>
+    <div class="design-content modern-red" id="designContent">
+      <div class="hero">
+        <div class="hero-content">
+          <h1>شريكك في <span>التسويق والدعاية</span></h1>
+          <p>تسويق إلكتروني متكامل + دعاية وإعلان أوفلاين</p>
+          <button class="hero-btn">ابدأ معنا ←</button>
+        </div>
+      </div>
+
+      <div class="services">
+        <div class="section-title">خدماتنا</div>
+        <div class="service-grid">
+          <div class="service-card">
+            <h3>📱 التسويق الإلكتروني</h3>
+            <p>إدارة السوشيال ميديا + إعلانات Meta/Google + تصميم + تصوير</p>
+          </div>
+          <div class="service-card">
+            <h3>🏪 الدعاية والإعلان</h3>
+            <p>يافطات + يوني فورم + كروت + هوية بصرية موحدة</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="portfolio">
+        <div class="section-title">أعمالنا</div>
+        <div class="port-grid">
+          <div class="port-card">
+            <div class="port-img">📊</div>
+            <div class="port-body">
+              <div class="port-title">حملة Meta — مركز خدمة</div>
+              <div class="port-desc">زيادة الحجوزات 320% في 30 يوم</div>
+            </div>
+          </div>
+          <div class="port-card">
+            <div class="port-img">📈</div>
+            <div class="port-body">
+              <div class="port-title">حملة Google — قطع غيار</div>
+              <div class="port-desc">1,200 ليد بتكلفة منخفضة</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="padding:60px 40px;text-align:center;color:#666;font-size:12px;border-top:1px solid #e0e0e0">
+        © 2025 Ahmed Omani Auto Marketing
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const designs = {
+  'modern-red': {
+    title: 'Modern Red',
+    desc: '<strong>Modern Red</strong><br>تصميم بسيط وحديث بألوان حمراء وسوداء. يركز على النظافة والتركيز على المحتوى. مناسب للمتخصصين والشركات الموثوقة.'
+  },
+  'corporate-blue': {
+    title: 'Corporate Blue',
+    desc: '<strong>Corporate Blue</strong><br>تصميم احترافي وموثوق بألوان زرقاء. يعطي انطباع احترافي وتقليدي. مناسب للشركات الكبرى والخدمات المؤسسية.'
+  },
+  'luxury-gold': {
+    title: 'Luxury Gold',
+    desc: '<strong>Luxury Gold</strong><br>تصميم فاخر بألوان ذهبية على خلفية سوداء. يعطي شعور برعاية واهتمام. مناسب للخدمات المميزة والعلامات الفاخرة.'
+  },
+  'vibrant-gradient': {
+    title: 'Vibrant Gradient',
+    desc: '<strong>Vibrant Gradient</strong><br>تصميم حديث جداً بألوان نيون وتدرجات. يعطي طاقة وحيوية. مناسب للشركات الناشئة والعلامات الجريئة.'
+  }
+};
+
+function switchDesign(designKey) {
+  const content = document.getElementById('designContent');
+  const title = document.getElementById('previewTitle');
+  const desc = document.getElementById('designDesc');
+
+  // Remove all design classes
+  Object.keys(designs).forEach(k => content.classList.remove(k));
+
+  // Add selected design class
+  content.classList.add(designKey);
+
+  // Update title and description
+  title.textContent = designs[designKey].title;
+  desc.innerHTML = designs[designKey].desc;
+
+  // Update active button
+  document.querySelectorAll('.design-btn').forEach(btn => btn.classList.remove('active'));
+  event.target.classList.add('active');
+}
+
+function copyDesignChoice() {
+  const choice = document.querySelector('.design-btn.active').textContent;
+  navigator.clipboard.writeText(`اخترت تصميم: ${choice}\n\nلتطبيق هذا التصميم على الموقع، نحتاج إلى:\n1. تحديث ألوان CSS في index.html\n2. تعديل البنية الهيكلية للأقسام\n3. تحديث typography والـ spacing\n4. إعادة اختبار responsive design`);
+
+  const btn = event.target;
+  btn.textContent = '✓ تم النسخ';
+  btn.classList.add('copied');
+  setTimeout(() => {
+    btn.textContent = 'نسخ الاختيار';
+    btn.classList.remove('copied');
+  }, 2000);
+}
+</script>
+
+</body>
+</html>
