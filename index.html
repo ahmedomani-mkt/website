@@ -165,6 +165,9 @@ section{padding:clamp(72px,10vw,128px) 0}
 .pillar-cta{display:flex;align-items:center;justify-content:space-between;border:1px solid var(--line2);color:var(--txt);padding:16px 22px;font-weight:800;font-size:14px;transition:.25s}
 .pillar-cta span{font-family:var(--mono);transition:.25s}
 .pillar-cta:hover{background:var(--red);border-color:var(--red)}
+.pillar-ctas{display:flex;flex-direction:column;gap:10px}
+.pillar-cta-alt{border-color:transparent;background:var(--bg2);color:var(--txt2)}
+.pillar-cta-alt:hover{background:var(--bg3);border-color:var(--line2);color:var(--txt)}
 .pillar-cta:hover span{transform:translateX(-6px)}
 
 /* ══ PROCESS ══════════════════════════════════════ */
@@ -389,6 +392,7 @@ footer{background:var(--bg);border-top:1px solid var(--line);padding:clamp(40px,
   <ul class="nav-links" id="navLinks">
     <li><a href="#services">خدماتنا</a></li>
     <li><a href="#portfolio">أعمالنا</a></li>
+    <li><a href="catalog.html">الكتالوج</a></li>
     <li><a href="#clients">عملاؤنا</a></li>
     <li><a href="#faq">أسئلة شائعة</a></li>
     <li><a href="#contact">تواصل</a></li>
@@ -406,6 +410,7 @@ footer{background:var(--bg);border-top:1px solid var(--line);padding:clamp(40px,
   <ul id="mobileNavList">
     <li><a href="#services" onclick="closeMenu()">خدماتنا</a></li>
     <li><a href="#portfolio" onclick="closeMenu()">أعمالنا</a></li>
+    <li><a href="catalog.html" onclick="closeMenu()">الكتالوج</a></li>
     <li><a href="#clients" onclick="closeMenu()">عملاؤنا</a></li>
     <li><a href="#faq" onclick="closeMenu()">أسئلة شائعة</a></li>
     <li><a href="#contact" onclick="closeMenu()">تواصل معنا</a></li>
@@ -572,7 +577,10 @@ footer{background:var(--bg);border-top:1px solid var(--line);padding:clamp(40px,
         <div class="pillar-highlight">
           <strong>حزمة المركز المتكاملة</strong> — كل حاجة مركزك محتاجها من الواجهة للكرت الشخصي في مكان واحد وبهوية موحدة
         </div>
-        <a href="https://wa.me/201152501056?text=مرحبا،%20أريد%20الاستفسار%20عن%20خدمة%20الدعاية%20والإعلان%20الأوفلاين" class="pillar-cta" target="_blank" rel="noopener">اعرف أكتر <span>←</span></a>
+        <div class="pillar-ctas">
+          <a href="https://wa.me/201152501056?text=مرحبا،%20أريد%20الاستفسار%20عن%20خدمة%20الدعاية%20والإعلان%20الأوفلاين" class="pillar-cta" target="_blank" rel="noopener">اعرف أكتر <span>←</span></a>
+          <a href="catalog.html" class="pillar-cta pillar-cta-alt">تصفح الكتالوج واطلب مباشرة <span>←</span></a>
+        </div>
       </div>
     </div>
   </div>
@@ -961,6 +969,7 @@ footer{background:var(--bg);border-top:1px solid var(--line);padding:clamp(40px,
       <div class="ft-links" id="ftLinks">
         <a href="#services">خدماتنا</a>
         <a href="#portfolio">أعمالنا</a>
+        <a href="catalog.html">الكتالوج</a>
         <a href="#clients">عملاؤنا</a>
         <a href="#faq">أسئلة شائعة</a>
         <a href="#contact">تواصل</a>

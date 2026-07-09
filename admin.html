@@ -262,6 +262,10 @@ button,select,input,textarea{font-family:var(--font)}
       <div class="ni-ic"><svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/></svg></div>
       الأعمال
     </div>
+    <div class="ni" data-s="products" onclick="go('products',this)">
+      <div class="ni-ic"><svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg></div>
+      الكتالوج
+    </div>
     <div class="ni" data-s="clients" onclick="go('clients',this)">
       <div class="ni-ic"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg></div>
       العملاء
@@ -341,6 +345,10 @@ button,select,input,textarea{font-family:var(--font)}
         <div class="dq-btn" onclick="go('port',qni('port'));openPM()">
           <div class="dq-ic"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
           <div><div class="dq-title">إضافة عمل جديد</div><div class="dq-sub">صور البورتفوليو</div></div>
+        </div>
+        <div class="dq-btn" onclick="go('products',qni('products'));openPrM()">
+          <div class="dq-ic"><svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg></div>
+          <div><div class="dq-title">إضافة منتج للكتالوج</div><div class="dq-sub">يظهر في catalog.html</div></div>
         </div>
         <div class="dq-btn" onclick="go('clients',qni('clients'))">
           <div class="dq-ic"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg></div>
@@ -485,6 +493,28 @@ button,select,input,textarea{font-family:var(--font)}
           </button>
         </div>
         <div id="pl"></div>
+      </div>
+    </div>
+
+    <!-- PRODUCTS / CATALOG -->
+    <div class="sec" id="sec-products">
+      <div class="sec-header">
+        <div class="sec-title">الكتالوج</div>
+        <div class="sec-sub">منتجات صفحة الكتالوج (catalog.html) — العميل يضيفها للسلة ويبعت الطلب واتساب</div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>المنتجات (<span id="prc">0</span>)</div>
+          <button class="btn btn-p bsm" onclick="openPrM()">
+            <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            إضافة منتج
+          </button>
+        </div>
+        <div id="prl"></div>
+      </div>
+      <div class="info-box" style="background:rgba(34,197,94,.08);border-color:rgba(34,197,94,.25)">
+        <div style="font-weight:700;color:var(--green);margin-bottom:8px">🛒 رابط الكتالوج</div>
+        اطلب من عملائك زيارة <strong>catalog.html</strong> — يقدروا يختاروا منتجات ويحطوها في السلة ويبعتوا الطلب كامل على واتساب برسالة جاهزة فيها كل التفاصيل.
       </div>
     </div>
 
@@ -697,6 +727,46 @@ button,select,input,textarea{font-family:var(--font)}
   </div>
 </div>
 
+<!-- PRODUCT MODAL -->
+<div class="ov" id="ov-prod" onclick="if(event.target===this)closePrM()">
+  <div class="modal modal-lg">
+    <div class="mh"><span id="prm-ttl">إضافة منتج</span><button class="mx" onclick="closePrM()">✕</button></div>
+    <input type="hidden" id="prm-id">
+    <div class="r2">
+      <div class="field"><label>اسم المنتج</label><input type="text" id="prm-t" placeholder="يافطة واجهة — تصميم وتنفيذ"></div>
+      <div class="field"><label>التصنيف</label>
+        <select id="prm-c">
+          <option value="signage">يافطات وواجهات</option>
+          <option value="print">مطبوعات</option>
+          <option value="uniform">يوني فورم</option>
+          <option value="accessories">اكسسوارات</option>
+          <option value="digital">خدمات رقمية</option>
+          <option value="branding">هوية بصرية</option>
+          <option value="general">عام</option>
+        </select>
+      </div>
+    </div>
+    <div class="field"><label>الوصف</label><textarea id="prm-d" rows="2" placeholder="وصف مختصر للمنتج..."></textarea></div>
+    <div class="r2">
+      <div class="field"><label>السعر (اتركه فاضي = "السعر عند التواصل")</label><input type="number" id="prm-p" placeholder="1500" min="0" step="0.01"></div>
+      <div class="field"><label>ملاحظة السعر (اختياري)</label><input type="text" id="prm-pn" placeholder="/ للقطعة، حسب المقاس..."></div>
+    </div>
+    <div class="field"><label>رابط الصورة (URL)</label><input type="url" id="prm-i" placeholder="https://..." oninput="prevPrImg(this.value)"></div>
+    <div class="upload-zone" onclick="document.getElementById('prm-f').click()">
+      📁 أو ارفع صورة من جهازك
+      <input type="file" id="prm-f" accept="image/*" style="display:none" onchange="upPrImg(this)">
+    </div>
+    <img id="prm-pv" class="port-preview">
+    <div class="mf">
+      <button class="btn btn-g" onclick="closePrM()">إلغاء</button>
+      <button class="btn btn-p" onclick="savePrM()">
+        <svg viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/></svg>
+        حفظ
+      </button>
+    </div>
+  </div>
+</div>
+
 <!-- CLIENT MODAL -->
 <div class="ov" id="ov-cl" onclick="if(event.target===this)closeCM()">
   <div class="modal" style="max-width:420px">
@@ -769,11 +839,11 @@ const SB_URL='https://knwnviglquxvvwknxbqa.supabase.co';
 const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtud252aWdscXV4dnZ3a254YnFhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA5MzI2NDIsImV4cCI6MjA5NjUwODY0Mn0.VuxAC-J7it4m_wrSTBHCh7t_z_PL8CCGwhvtv6NiZmQ';
 const sb=supabase.createClient(SB_URL,SB_KEY);
 
-var portfolio=[],clients=[],faqs=[],pages=[],pageSecs=[];
+var portfolio=[],clients=[],faqs=[],pages=[],pageSecs=[],products=[];
 var statsData=[],featData=[],textsData={},tstData=[];
 
 // ── BREADCRUMB MAP ────────────────────────────────────
-var secNames={dash:'الرئيسية',hero:'الصفحة الرئيسية',stats:'الشريط الإحصائي',features:'شريط المميزات',wa:'رسائل واتساب',port:'الأعمال',clients:'العملاء',tst:'آراء العملاء',faq:'الأسئلة',pages:'الصفحات',texts:'نصوص الأقسام',settings:'الإعدادات'};
+var secNames={dash:'الرئيسية',hero:'الصفحة الرئيسية',stats:'الشريط الإحصائي',features:'شريط المميزات',wa:'رسائل واتساب',port:'الأعمال',products:'الكتالوج',clients:'العملاء',tst:'آراء العملاء',faq:'الأسئلة',pages:'الصفحات',texts:'نصوص الأقسام',settings:'الإعدادات'};
 
 // ── LOGIN ──────────────────────────────────────────────
 async function doLogin(){
@@ -815,7 +885,7 @@ function qni(s){return document.querySelector('[data-s='+s+']')}
 // ── LOAD ALL ────────────────────────────────────────────
 async function loadAll(){
   try{
-    await Promise.all([loadHero(),loadPort(),loadClients(),loadFaq(),loadPages(),loadSettings()]);
+    await Promise.all([loadHero(),loadPort(),loadProducts(),loadClients(),loadFaq(),loadPages(),loadSettings()]);
     updateStats();
     document.getElementById('cdot').className='dot';
     document.getElementById('clbl').textContent='متصل';
@@ -1035,6 +1105,80 @@ async function delPort(id){
   if(!confirm('تأكيد الحذف؟'))return;
   await sb.from('ao_portfolio').delete().eq('id',id);
   await loadPort();updateStats();toast('🗑 تم الحذف');
+}
+
+// ── PRODUCTS / CATALOG ──────────────────────────────────
+var prodCatNames={general:'عام',signage:'يافطات وواجهات',print:'مطبوعات',uniform:'يوني فورم',accessories:'اكسسوارات',digital:'خدمات رقمية',branding:'هوية بصرية'};
+async function loadProducts(){
+  var{data}=await sb.from('ao_products').select('*').order('sort_order');
+  products=data||[];renderProducts();
+}
+function renderProducts(){
+  document.getElementById('prc').textContent=products.length;
+  var el=document.getElementById('prl');
+  if(!products.length){el.innerHTML=empty('لا توجد منتجات بعد — اضغط إضافة منتج لبدء الكتالوج');return}
+  el.innerHTML=products.map(function(p){
+    var thumb=p.image_url
+      ?'<img class="li-thumb" src="'+h(p.image_url)+'" alt="">'
+      :'<div class="li-thumb" style="font-size:20px">🛍️</div>';
+    var price=p.price?parseFloat(p.price).toLocaleString('en-US')+' EGP':'عند التواصل';
+    return'<div class="li">'+thumb
+      +'<div class="li-b"><div class="li-t">'+h(p.title)+'</div>'
+        +'<div class="li-s">'
+          +'<span class="badge b-blue">'+h(prodCatNames[p.category]||p.category)+'</span>'
+          +'<span class="badge b-red">'+h(price)+'</span>'
+          +'<span class="badge '+(p.is_active?'b-green':'b-off')+'">'+(p.is_active?'ظاهر':'مخفي')+'</span>'
+        +'</div></div>'
+      +'<div class="li-ac">'
+        +'<button class="btn btn-g bsm" onclick="editProd(\''+p.id+'\')">تعديل</button>'
+        +'<button class="btn btn-g bsm" onclick="toggleProd(\''+p.id+'\','+(!p.is_active)+')">'+(p.is_active?'إخفاء':'إظهار')+'</button>'
+        +'<button class="btn btn-d bsm" onclick="delProd(\''+p.id+'\')">حذف</button>'
+      +'</div></div>';
+  }).join('');
+}
+function openPrM(item){
+  document.getElementById('prm-ttl').textContent=item?'تعديل المنتج':'إضافة منتج';
+  document.getElementById('prm-id').value=item?item.id:'';
+  v('prm-t',item?item.title:'');v('prm-d',item?item.description:'');
+  document.getElementById('prm-c').value=item?item.category:'signage';
+  v('prm-p',item&&item.price?item.price:'');v('prm-pn',item?item.price_note||'':'');
+  v('prm-i',item?item.image_url||'':'');
+  var pv=document.getElementById('prm-pv');
+  pv.src=item&&item.image_url?item.image_url:'';
+  pv.style.display=(item&&item.image_url)?'block':'none';
+  document.getElementById('ov-prod').classList.add('open');
+}
+function closePrM(){document.getElementById('ov-prod').classList.remove('open')}
+function editProd(id){openPrM(products.find(function(p){return p.id===id}))}
+function prevPrImg(url){var pv=document.getElementById('prm-pv');if(url){pv.src=url;pv.style.display='block'}else{pv.style.display='none'}}
+async function upPrImg(inp){
+  if(!inp.files[0])return;
+  var f=inp.files[0];var ext=f.name.split('.').pop();
+  var nm='products/'+Date.now()+'.'+ext;
+  var{data,error}=await sb.storage.from('ao-images').upload(nm,f,{upsert:true});
+  if(error){toast('❌ '+error.message);return}
+  var url=sb.storage.from('ao-images').getPublicUrl(nm).data.publicUrl;
+  v('prm-i',url);prevPrImg(url);toast('✅ تم رفع الصورة');
+}
+async function savePrM(){
+  var id=document.getElementById('prm-id').value;
+  var title=g('prm-t').trim();
+  if(!title){toast('اكتب اسم المنتج');return}
+  var priceRaw=g('prm-p').trim();
+  var payload={title:title,description:g('prm-d'),category:document.getElementById('prm-c').value,
+    price:priceRaw?parseFloat(priceRaw):null,price_note:g('prm-pn')||null,
+    image_url:g('prm-i')||null,is_active:true};
+  var err;
+  if(id){err=(await sb.from('ao_products').update(payload).eq('id',id)).error}
+  else{payload.sort_order=products.length;err=(await sb.from('ao_products').insert(payload)).error}
+  if(err){toast('❌ '+err.message);return}
+  closePrM();await loadProducts();toast('✅ تم حفظ المنتج!');
+}
+async function toggleProd(id,val){await sb.from('ao_products').update({is_active:val}).eq('id',id);await loadProducts()}
+async function delProd(id){
+  if(!confirm('تأكيد الحذف؟'))return;
+  await sb.from('ao_products').delete().eq('id',id);
+  await loadProducts();toast('🗑 تم الحذف');
 }
 
 // ── CLIENTS ────────────────────────────────────────────
