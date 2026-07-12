@@ -12,311 +12,310 @@
 <title>Ahmed Omani — تسويق وإعلان للسيارات</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;500;600;700;800;900&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <style>
 /* ══ TOKENS ═══════════════════════════════════════ */
 :root{
-  --bg:#0A0A0C; --surface:#131316; --surface2:#1A1A1F;
-  --border:#222227; --border2:#2C2C33;
-  --red:#E8192C; --red-d:#C4101F; --red-soft:rgba(232,25,44,.12);
-  --txt:#F5F5F7; --txt2:#9B9BA6; --txt3:#65656F;
-  --wa:#25D366; --wa-d:#1dba58;
-  --font:'Noto Kufi Arabic','Segoe UI',Tahoma,Arial,sans-serif;
-  --mono:'IBM Plex Mono',ui-monospace,monospace;
+  --k1:#0A0A0C; --k2:#171516; --k3:#1D1719;
+  --r1:#2A0F14; --r2:#E8192C; --r2-d:#C4101F;
+  --w1:#F6F3EF;
+  --red:#E8192C; --red-soft:rgba(232,25,44,.13);
+  --ink:#161413; --wa:#25D366; --wa-d:#1dba58;
+  --txt:#F5F5F7;
+  --font:'Rubik','Segoe UI',Tahoma,Arial,sans-serif;
   --r:18px; --rs:12px; --rp:999px;
   --pad:clamp(20px,4vw,56px);
-  --shadow:0 4px 24px rgba(0,0,0,.25);
+  --card:rgba(255,255,255,.045); --card-h:rgba(255,255,255,.08);
+  --cb:rgba(255,255,255,.1); --cb2:rgba(255,255,255,.17);
 }
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{font-family:var(--font);background:var(--bg);color:var(--txt);overflow-x:hidden;line-height:1.5}
+body{font-family:var(--font);background:var(--k1);color:var(--txt);overflow-x:hidden;font-weight:400;line-height:1.5}
 a{text-decoration:none;color:inherit}
 img{max-width:100%;display:block}
 ::selection{background:var(--red);color:#fff}
 .container{max-width:1180px;margin:0 auto;padding:0 var(--pad)}
+h1,h2,h3{font-weight:700}
+.sub{opacity:.64}
+.sub2{opacity:.42}
+
+/* tone wrappers: swap card-surface variables per section background */
+.tone-k1{background:var(--k1)}
+.tone-k2{background:var(--k2)}
+.tone-k3{background:var(--k3)}
+.tone-r1{background:var(--r1)}
+.tone-r2{background:var(--r2);color:#fff}
+.tone-w1{background:var(--w1);color:var(--ink);--card:rgba(10,10,10,.035);--card-h:rgba(10,10,10,.06);--cb:rgba(10,10,10,.1);--cb2:rgba(10,10,10,.2)}
 
 /* ══ SCROLL PROGRESS ══════════════════════════════ */
 .progress{position:fixed;top:0;right:0;height:2px;background:var(--red);z-index:500;width:0;transition:width .1s linear}
 
 /* ══ NAV ══════════════════════════════════════════ */
 nav{position:fixed;top:0;left:0;right:0;z-index:400;height:72px;display:flex;align-items:center;justify-content:space-between;padding:0 var(--pad);transition:.3s}
-nav.solid{background:rgba(10,10,12,.85);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+nav.solid{background:rgba(10,10,12,.85);backdrop-filter:blur(16px);border-bottom:1px solid rgba(255,255,255,.08)}
 .logo-wrap{display:flex;align-items:center;gap:11px}
 .logo-img{height:34px;width:34px;object-fit:contain}
-.logo-text .name{font-size:14px;font-weight:900;letter-spacing:.2px;line-height:1.2}
-.logo-text .sub{font-size:10px;color:var(--red);font-weight:700;letter-spacing:1.5px}
-.nav-links{display:flex;gap:6px;list-style:none}
-.nav-links a{display:block;color:var(--txt2);font-size:14px;font-weight:600;transition:.2s;padding:9px 16px;border-radius:var(--rp)}
-.nav-links a:hover{color:var(--txt);background:var(--surface)}
-.nav-links a.active{color:var(--txt);background:var(--surface2)}
-.nav-cta{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700;color:#fff;background:var(--wa);padding:11px 22px;border-radius:var(--rp);transition:.2s}
+.logo-text .name{font-size:14px;font-weight:700;letter-spacing:.2px;line-height:1.2;color:#fff}
+.logo-text .sub-b{font-size:10px;color:var(--red);font-weight:600;letter-spacing:1.5px;opacity:1}
+.nav-links{display:flex;gap:4px;list-style:none}
+.nav-links a{display:block;color:rgba(255,255,255,.68);font-size:14px;font-weight:500;transition:.2s;padding:9px 15px;border-radius:var(--rp)}
+.nav-links a:hover{color:#fff;background:rgba(255,255,255,.08)}
+.nav-links a.active{color:#fff;background:rgba(255,255,255,.13)}
+.nav-cta{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:#fff;background:var(--wa);padding:11px 22px;border-radius:var(--rp);transition:.2s}
 .nav-cta:hover{background:var(--wa-d);transform:translateY(-1px)}
 .burger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:6px;background:none;border:none;z-index:460}
-.burger span{width:22px;height:2px;background:var(--txt);border-radius:2px;transition:.3s;display:block}
+.burger span{width:22px;height:2px;background:#fff;border-radius:2px;transition:.3s;display:block}
 .burger.open span:nth-child(1){transform:rotate(45deg) translate(5px,5px)}
 .burger.open span:nth-child(2){opacity:0}
 .burger.open span:nth-child(3){transform:rotate(-45deg) translate(6px,-6px)}
 
 /* ══ MOBILE OVERLAY MENU ══════════════════════════ */
-.mobile-nav{position:fixed;inset:0;background:var(--bg);z-index:450;display:flex;flex-direction:column;justify-content:center;padding:80px var(--pad) 40px;opacity:0;pointer-events:none;transition:opacity .3s}
+.mobile-nav{position:fixed;inset:0;background:var(--k1);z-index:450;display:flex;flex-direction:column;justify-content:center;padding:80px var(--pad) 40px;opacity:0;pointer-events:none;transition:opacity .3s}
 .mobile-nav.open{opacity:1;pointer-events:all}
 .mobile-nav ul{list-style:none}
-.mobile-nav ul li a{display:block;padding:16px 4px;font-size:24px;font-weight:800;color:var(--txt);border-bottom:1px solid var(--border);transition:.2s}
+.mobile-nav ul li a{display:block;padding:15px 4px;font-size:23px;font-weight:600;color:#fff;border-bottom:1px solid rgba(255,255,255,.1);transition:.2s}
 .mobile-nav ul li a:active,.mobile-nav ul li a:hover{color:var(--red)}
-.m-cta{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:28px;background:var(--wa);color:#fff;padding:16px;border-radius:var(--rs);font-weight:800;font-size:15px}
+.m-cta{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:28px;background:var(--wa);color:#fff;padding:16px;border-radius:var(--rs);font-weight:600;font-size:15px}
 
 /* ══ HERO ═════════════════════════════════════════ */
-.hero{padding:172px 0 88px;position:relative;overflow:hidden;text-align:center}
-.hero-glow{position:absolute;top:-10%;left:50%;transform:translateX(-50%);width:900px;height:600px;background:radial-gradient(ellipse at center,rgba(232,25,44,.14),transparent 65%);pointer-events:none}
-.hero-inner{position:relative;z-index:1;max-width:820px;margin:0 auto}
-.hero-badge{display:inline-flex;align-items:center;gap:9px;background:var(--surface);border:1px solid var(--border2);color:var(--txt2);padding:8px 18px;border-radius:var(--rp);font-size:12px;font-weight:600;margin-bottom:26px}
+.hero{padding:168px 0 76px;position:relative;overflow:hidden;text-align:center}
+.hero-glow{position:absolute;top:-10%;left:50%;transform:translateX(-50%);width:820px;height:560px;background:radial-gradient(ellipse at center,rgba(232,25,44,.16),transparent 65%);pointer-events:none}
+.hero-inner{position:relative;z-index:1;max-width:760px;margin:0 auto}
+.hero-badge{display:inline-flex;align-items:center;gap:9px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.75);padding:8px 18px;border-radius:var(--rp);font-size:12px;font-weight:500;margin-bottom:24px}
 .hero-badge-dot{width:7px;height:7px;background:var(--red);border-radius:50%;display:inline-block;flex-shrink:0}
-.hero h1{font-size:clamp(34px,6vw,60px);font-weight:900;line-height:1.25;letter-spacing:-.01em;margin-bottom:22px}
+.hero h1{font-size:clamp(32px,5.6vw,54px);font-weight:700;line-height:1.28;letter-spacing:-.01em;margin-bottom:18px;color:#fff}
 .hero h1 .r{color:var(--red)}
-.hero-sub{font-size:16px;color:var(--txt2);line-height:1.9;max-width:560px;margin:0 auto 36px}
+.hero-sub{font-size:16px;color:rgba(255,255,255,.68);line-height:1.8;max-width:480px;margin:0 auto 32px;font-weight:400}
 .hero-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
-.btn-primary{background:var(--red);color:#fff;padding:15px 30px;border-radius:var(--rp);font-weight:800;font-size:14px;transition:.2s;display:inline-flex;align-items:center;gap:10px;box-shadow:0 6px 24px rgba(232,25,44,.3)}
-.btn-primary:hover{background:var(--red-d);transform:translateY(-2px)}
+.btn-primary{background:var(--red);color:#fff;padding:15px 30px;border-radius:var(--rp);font-weight:600;font-size:14px;transition:.2s;display:inline-flex;align-items:center;gap:9px;box-shadow:0 6px 22px rgba(232,25,44,.32)}
+.btn-primary:hover{background:var(--r2-d);transform:translateY(-2px)}
 .btn-primary-arrow{transition:.25s}
 .btn-primary:hover .btn-primary-arrow{transform:translateX(-4px)}
-.btn-secondary{background:var(--surface);color:var(--txt);padding:15px 30px;border-radius:var(--rp);font-weight:700;font-size:14px;transition:.2s;border:1px solid var(--border2);display:inline-flex;align-items:center;gap:8px}
-.btn-secondary:hover{background:var(--surface2);border-color:var(--txt3)}
+.btn-secondary{background:rgba(255,255,255,.06);color:#fff;padding:15px 30px;border-radius:var(--rp);font-weight:600;font-size:14px;transition:.2s;border:1px solid rgba(255,255,255,.14);display:inline-flex;align-items:center;gap:8px}
+.btn-secondary:hover{background:rgba(255,255,255,.11)}
 
-/* hero stats strip */
-.hero-stats-mobile{position:relative;z-index:1;max-width:760px;margin:56px auto 0;display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:var(--r);overflow:hidden}
-.hsm-item{padding:20px 12px;text-align:center;background:var(--bg)}
-.hsm-n{font-size:clamp(20px,3vw,28px);font-weight:900;color:var(--txt);line-height:1}
-.hsm-l{font-size:11px;color:var(--txt3);font-weight:600;margin-top:6px}
+/* ══ TRUST STATS · RED ════════════════════════════ */
+.stats-bar{padding:0}
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr)}
+.stat-item{padding:clamp(30px,4.2vw,48px) 20px;text-align:center}
+.stat-icon{font-size:22px;margin-bottom:8px;opacity:.85}
+.stat-num{font-size:clamp(28px,4vw,44px);font-weight:700;color:#fff;line-height:1;margin-bottom:6px}
+.stat-num span{color:rgba(255,255,255,.8)}
+.stat-label{font-size:12px;color:rgba(255,255,255,.82);line-height:1.5;font-weight:500}
 
 /* ══ SECTION HEAD ═════════════════════════════════ */
-section{padding:clamp(64px,9vw,104px) 0}
-.sec-head{text-align:center;max-width:640px;margin:0 auto clamp(40px,6vw,64px)}
-.sec-label{display:inline-block;font-size:12px;font-weight:700;color:var(--red);letter-spacing:.5px;margin-bottom:12px;background:var(--red-soft);padding:6px 16px;border-radius:var(--rp)}
-.sec-title{font-size:clamp(28px,4vw,42px);font-weight:900;line-height:1.25;letter-spacing:-.01em}
-.sec-sub{font-size:15px;color:var(--txt2);line-height:1.8;margin-top:14px}
+section{padding:clamp(56px,8vw,92px) 0}
+.sec-head{text-align:center;max-width:600px;margin:0 auto clamp(36px,5vw,56px)}
+.sec-label{display:inline-block;font-size:12px;font-weight:600;color:var(--red);letter-spacing:.3px;margin-bottom:12px;background:var(--red-soft);padding:6px 16px;border-radius:var(--rp)}
+.sec-title{font-size:clamp(26px,3.6vw,38px);font-weight:700;line-height:1.3;letter-spacing:-.01em}
+.sec-sub{font-size:14px;opacity:.62;line-height:1.7;margin-top:12px;font-weight:400}
 
 /* ══ FEATURES STRIP ═══════════════════════════════ */
-.features-strip{background:var(--surface);padding:clamp(56px,8vw,88px) 0}
-.features-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
-.feat-item{background:var(--bg);border:1px solid var(--border);border-radius:var(--r);padding:28px 24px;transition:.25s}
-.feat-item:hover{border-color:var(--border2);transform:translateY(-3px)}
-.feat-icon{width:46px;height:46px;border-radius:var(--rs);background:var(--red-soft);display:flex;align-items:center;justify-content:center;font-size:21px;margin-bottom:18px}
+.features-strip{padding:clamp(48px,7vw,76px) 0}
+.features-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+.feat-item{background:var(--card);border:1px solid var(--cb);border-radius:var(--r);padding:24px 20px;transition:.2s}
+.feat-item:hover{background:var(--card-h);transform:translateY(-2px)}
+.feat-icon{width:44px;height:44px;border-radius:var(--rs);background:var(--red-soft);display:flex;align-items:center;justify-content:center;font-size:20px;margin-bottom:16px}
 .feat-label{display:none}
-.feat-title{font-size:15px;font-weight:800;color:var(--txt);margin-bottom:8px;line-height:1.4}
-.feat-desc{font-size:12.5px;color:var(--txt3);line-height:1.8}
+.feat-title{font-size:14.5px;font-weight:600;margin-bottom:6px;line-height:1.4}
+.feat-desc{font-size:12px;opacity:.6;line-height:1.7;font-weight:400}
 
 /* ══ SERVICES ═════════════════════════════════════ */
-.services-sec{background:var(--bg)}
-.srv-pillars{display:grid;grid-template-columns:1fr 1fr;gap:24px}
-.pillar{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:clamp(28px,3.5vw,40px);transition:.25s}
-.pillar:hover{border-color:var(--border2)}
+.srv-pillars{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.pillar{background:var(--card);border:1px solid var(--cb);border-radius:var(--r);padding:clamp(26px,3.2vw,36px);transition:.2s}
+.pillar:hover{border-color:var(--cb2)}
 .pillar-tag{display:none}
-.pillar-icon{width:52px;height:52px;border-radius:var(--rs);background:var(--red-soft);display:flex;align-items:center;justify-content:center;font-size:24px;margin-bottom:18px}
-.pillar-header{margin-bottom:26px;padding-bottom:24px;border-bottom:1px solid var(--border)}
-.pillar-header h3{font-size:20px;font-weight:900;margin-bottom:8px}
-.pillar-header p{font-size:13px;color:var(--txt2);line-height:1.7}
-.srv-list{display:flex;flex-direction:column;gap:14px;margin-bottom:26px}
-.srv-item{display:flex;gap:12px;align-items:flex-start}
-.srv-check{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:var(--red-soft);color:var(--red);font-size:11px;font-weight:900;margin-top:1px}
-.srv-item h4{font-size:13.5px;font-weight:700;margin-bottom:3px}
-.srv-item p{font-size:12px;color:var(--txt3);line-height:1.6}
-.srv-also{margin-bottom:26px}
-.srv-also-label{font-size:11px;color:var(--txt3);margin-bottom:10px;font-weight:600}
-.srv-tags{display:flex;gap:8px;flex-wrap:wrap}
-.stag{background:var(--surface2);color:var(--txt2);padding:6px 14px;border-radius:var(--rp);font-size:11.5px;font-weight:600;transition:.2s}
-.stag:hover{background:var(--red-soft);color:var(--red)}
-.og-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:26px}
-.og-item{display:flex;align-items:center;gap:10px;background:var(--surface2);border-radius:var(--rs);padding:12px 14px;transition:.2s}
-.og-item:hover{background:var(--red-soft)}
-.og-item .oi{font-size:16px;flex-shrink:0}
-.og-item p{font-size:12px;font-weight:700;color:var(--txt2)}
-.pillar-highlight{background:var(--red-soft);border-radius:var(--rs);padding:16px 18px;font-size:13px;color:var(--txt2);line-height:1.8;margin-bottom:26px}
-.pillar-highlight strong{color:var(--txt)}
-.pillar-ctas{display:flex;flex-direction:column;gap:10px}
-.pillar-cta{display:flex;align-items:center;justify-content:space-between;background:var(--red);color:#fff;padding:15px 22px;border-radius:var(--rp);font-weight:800;font-size:13.5px;transition:.2s}
+.pillar-icon{width:48px;height:48px;border-radius:var(--rs);background:var(--red-soft);display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:16px}
+.pillar-header{margin-bottom:22px;padding-bottom:20px;border-bottom:1px solid var(--cb)}
+.pillar-header h3{font-size:19px;font-weight:600;margin-bottom:6px}
+.pillar-header p{font-size:12.5px;opacity:.62;line-height:1.6;font-weight:400}
+.srv-list{display:flex;flex-direction:column;gap:11px;margin-bottom:22px}
+.srv-item{display:flex;gap:11px;align-items:center}
+.srv-check{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:var(--red-soft);color:var(--red);font-size:10px;font-weight:700}
+.srv-item h4{font-size:13px;font-weight:500}
+.srv-also{margin-bottom:22px}
+.srv-also-label{font-size:11px;opacity:.55;margin-bottom:9px;font-weight:500}
+.srv-tags{display:flex;gap:7px;flex-wrap:wrap}
+.stag{background:var(--card);border:1px solid var(--cb);padding:6px 13px;border-radius:var(--rp);font-size:11.5px;font-weight:500;transition:.2s}
+.stag:hover{background:var(--red-soft);color:var(--red);border-color:transparent}
+.og-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:22px}
+.og-item{display:flex;align-items:center;gap:9px;background:var(--card);border:1px solid var(--cb);border-radius:var(--rs);padding:11px 13px;transition:.2s}
+.og-item:hover{background:var(--card-h)}
+.og-item .oi{font-size:15px;flex-shrink:0}
+.og-item p{font-size:12px;font-weight:500}
+.pillar-highlight{background:var(--red-soft);border-radius:var(--rs);padding:14px 16px;font-size:12.5px;opacity:.9;line-height:1.7;margin-bottom:22px;font-weight:400}
+.pillar-highlight strong{font-weight:600;opacity:1}
+.pillar-ctas{display:flex;flex-direction:column;gap:9px}
+.pillar-cta{display:flex;align-items:center;justify-content:space-between;background:var(--red);color:#fff;padding:14px 20px;border-radius:var(--rp);font-weight:600;font-size:13px;transition:.2s}
 .pillar-cta span{transition:.25s}
-.pillar-cta:hover{background:var(--red-d)}
+.pillar-cta:hover{background:var(--r2-d)}
 .pillar-cta:hover span{transform:translateX(-4px)}
-.pillar-cta-alt{background:var(--surface2);color:var(--txt2)}
-.pillar-cta-alt:hover{background:var(--border2);color:var(--txt)}
+.pillar-cta-alt{background:var(--card);border:1px solid var(--cb);color:inherit;opacity:.85}
+.pillar-cta-alt:hover{background:var(--card-h);opacity:1}
 
-/* ══ PROCESS ══════════════════════════════════════ */
-.process-sec{background:var(--surface)}
-.proc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
-.proc-item{background:var(--bg);border:1px solid var(--border);border-radius:var(--r);padding:26px 22px;transition:.25s}
-.proc-item:hover{border-color:var(--border2);transform:translateY(-3px)}
-.proc-num{width:38px;height:38px;border-radius:50%;background:var(--red);color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;margin-bottom:18px}
-.proc-icon{display:none}
-.proc-title{font-size:15px;font-weight:800;margin-bottom:8px}
-.proc-desc{font-size:12.5px;color:var(--txt3);line-height:1.8}
-.proc-cta{margin-top:40px;display:flex;justify-content:center}
-
-/* ══ PORTFOLIO ═════════════════════════════════════ */
-.portfolio-sec{background:var(--bg)}
-.port-head{display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:20px;margin-bottom:28px}
+/* ══ PORTFOLIO · WHITE ════════════════════════════ */
+.port-head{display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:18px;margin-bottom:26px}
 .port-head-text{text-align:right}
 .port-nav-btns{display:flex;gap:8px}
-.port-nav-btn{width:44px;height:44px;border-radius:50%;border:1px solid var(--border2);background:var(--surface);color:var(--txt);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:.2s;font-size:16px}
+.port-nav-btn{width:42px;height:42px;border-radius:50%;border:1px solid var(--cb);background:var(--card);color:inherit;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:.2s;font-size:15px}
 .port-nav-btn:hover{background:var(--red);border-color:var(--red);color:#fff}
-.port-filter{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:28px}
-.pf-btn{background:var(--surface);border:1px solid var(--border);color:var(--txt2);padding:9px 18px;border-radius:var(--rp);font-size:12.5px;font-weight:700;cursor:pointer;font-family:var(--font);transition:.2s}
-.pf-btn.active,.pf-btn:hover{background:var(--red);border-color:var(--red);color:#fff}
+.port-filter{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:26px}
+.pf-btn{background:var(--card);border:1px solid var(--cb);color:inherit;opacity:.7;padding:9px 17px;border-radius:var(--rp);font-size:12.5px;font-weight:500;cursor:pointer;font-family:var(--font);transition:.2s}
+.pf-btn.active,.pf-btn:hover{background:var(--red);border-color:var(--red);color:#fff;opacity:1}
 .port-track-wrap{overflow:hidden;margin:0 calc(var(--pad) * -1);padding:0 var(--pad)}
-.port-track{display:flex;gap:20px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;scroll-behavior:smooth;padding-bottom:4px}
+.port-track{display:flex;gap:18px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;scroll-behavior:smooth;padding-bottom:4px}
 .port-track::-webkit-scrollbar{display:none}
-.port-card{flex-shrink:0;width:min(300px,80vw);scroll-snap-align:start;background:var(--surface);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;transition:.25s;cursor:pointer}
-.port-card:hover{border-color:var(--border2);transform:translateY(-3px)}
-.port-img{width:100%;height:190px;display:flex;align-items:center;justify-content:center;background:var(--surface2);position:relative;overflow:hidden}
+.port-card{flex-shrink:0;width:min(290px,80vw);scroll-snap-align:start;background:var(--card);border:1px solid var(--cb);border-radius:var(--r);overflow:hidden;transition:.2s;cursor:pointer}
+.port-card:hover{border-color:var(--cb2);transform:translateY(-3px)}
+.port-img{width:100%;height:180px;display:flex;align-items:center;justify-content:center;background:rgba(10,10,10,.05);position:relative;overflow:hidden}
 .port-img img{width:100%;height:100%;object-fit:cover;transition:.4s}
 .port-card:hover .port-img img{transform:scale(1.04)}
-.port-img-ph{font-size:32px;opacity:.3}
-.port-type-badge{position:absolute;top:12px;right:12px;background:rgba(10,10,12,.75);backdrop-filter:blur(6px);color:var(--txt);padding:5px 12px;border-radius:var(--rp);font-size:10px;font-weight:700}
-.port-stat{position:absolute;top:12px;left:12px;background:var(--red);color:#fff;padding:5px 12px;border-radius:var(--rp);font-size:10.5px;font-weight:800}
-.port-body{padding:18px}
-.port-title{font-size:14px;font-weight:800;margin-bottom:6px}
-.port-desc{font-size:12px;color:var(--txt3);line-height:1.7;margin-bottom:12px}
+.port-img-ph{font-size:12px;font-weight:500;opacity:.35}
+.port-type-badge{position:absolute;top:12px;right:12px;background:rgba(10,10,12,.72);backdrop-filter:blur(6px);color:#fff;padding:5px 12px;border-radius:var(--rp);font-size:10px;font-weight:600}
+.port-stat{position:absolute;top:12px;left:12px;background:var(--red);color:#fff;padding:5px 12px;border-radius:var(--rp);font-size:10.5px;font-weight:600}
+.port-body{padding:17px}
+.port-title{font-size:13.5px;font-weight:600;margin-bottom:5px}
+.port-desc{font-size:11.5px;opacity:.6;line-height:1.6;margin-bottom:10px;font-weight:400}
 .port-meta{display:flex;gap:6px;flex-wrap:wrap}
-.ptag{background:var(--red-soft);color:var(--red);padding:3px 10px;border-radius:6px;font-size:10px;font-weight:700}
-
-/* ══ STATS · RED ══════════════════════════════════ */
-.stats-bar{background:var(--red);padding:0}
-.stats-grid{display:grid;grid-template-columns:repeat(4,1fr)}
-.stat-item{padding:clamp(32px,4.5vw,52px) 20px;text-align:center}
-.stat-icon{font-size:24px;margin-bottom:10px;opacity:.85}
-.stat-num{font-size:clamp(32px,4.5vw,52px);font-weight:900;color:#fff;line-height:1;margin-bottom:8px}
-.stat-num span{color:rgba(255,255,255,.8)}
-.stat-label{font-size:12px;color:rgba(255,255,255,.8);line-height:1.6;font-weight:600}
+.ptag{background:var(--red-soft);color:var(--red);padding:3px 9px;border-radius:6px;font-size:10px;font-weight:600}
 
 /* ══ TESTIMONIALS ═════════════════════════════════ */
-.tst-sec{background:var(--surface)}
-.tst-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
-.tst-card{background:var(--bg);border:1px solid var(--border);border-radius:var(--r);padding:26px;display:flex;flex-direction:column;transition:.25s}
-.tst-card:hover{border-color:var(--border2)}
-.tst-q{font-size:34px;color:var(--red);line-height:1;margin-bottom:14px;font-family:Georgia,serif;font-weight:900;opacity:.5}
-.tst-text{font-size:13.5px;color:var(--txt2);line-height:1.9;flex:1;margin-bottom:22px}
-.tst-author{display:flex;align-items:center;gap:12px;border-top:1px solid var(--border);padding-top:18px}
-.tst-av{width:38px;height:38px;border-radius:50%;background:var(--red-soft);color:var(--red);font-size:14px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden}
+.tst-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.tst-card{background:var(--card);border:1px solid var(--cb);border-radius:var(--r);padding:24px;display:flex;flex-direction:column;transition:.2s}
+.tst-card:hover{border-color:var(--cb2)}
+.tst-q{font-size:30px;color:var(--red);line-height:1;margin-bottom:12px;font-family:Georgia,serif;font-weight:700;opacity:.55}
+.tst-text{font-size:13px;opacity:.78;line-height:1.8;flex:1;margin-bottom:18px;font-weight:400}
+.tst-author{display:flex;align-items:center;gap:11px;border-top:1px solid var(--cb);padding-top:16px}
+.tst-av{width:36px;height:36px;border-radius:50%;background:var(--red-soft);color:var(--red);font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden}
 .tst-av img{width:100%;height:100%;object-fit:cover}
-.tst-name{font-size:13px;font-weight:800}
-.tst-role{font-size:11px;color:var(--txt3);margin-top:2px}
+.tst-name{font-size:12.5px;font-weight:600}
+.tst-role{font-size:10.5px;opacity:.55;margin-top:2px;font-weight:400}
 
 /* ══ CLIENTS · MARQUEE ════════════════════════════ */
-.clients-sec{background:var(--bg)}
+.clients-sec{overflow:hidden}
 .cl-marquee{overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}
 .cl-track{display:flex;width:max-content;animation:tick 42s linear infinite}
 .cl-marquee:hover .cl-track{animation-play-state:paused}
 @keyframes tick{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 .cl-group{display:flex;align-items:center;flex-shrink:0}
-.cl-item{display:flex;align-items:center;justify-content:center;padding:0 28px}
-.cl-name{font-size:14px;font-weight:700;color:var(--txt3);white-space:nowrap;transition:.2s}
-.cl-item:hover .cl-name{color:var(--txt)}
-.clients-note{font-size:12px;color:var(--txt3);text-align:center;margin-top:24px}
+.cl-item{display:flex;align-items:center;justify-content:center;padding:0 26px}
+.cl-name{font-size:13.5px;font-weight:600;opacity:.4;white-space:nowrap;transition:.2s}
+.cl-item:hover .cl-name{opacity:1}
+.clients-note{font-size:12px;opacity:.5;text-align:center;margin-top:22px;font-weight:400}
+
+/* ══ PROCESS ══════════════════════════════════════ */
+.proc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+.proc-item{background:var(--card);border:1px solid var(--cb);border-radius:var(--r);padding:24px 20px;transition:.2s}
+.proc-item:hover{background:var(--card-h)}
+.proc-num{width:34px;height:34px;border-radius:50%;background:var(--red);color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;margin-bottom:16px}
+.proc-icon{display:none}
+.proc-title{font-size:14px;font-weight:600;margin-bottom:6px}
+.proc-desc{font-size:12px;opacity:.6;line-height:1.7;font-weight:400}
+.proc-cta{margin-top:36px;display:flex;justify-content:center}
 
 /* ══ FAQ ══════════════════════════════════════════ */
-.faq-sec{background:var(--surface)}
-.faq-wrap{max-width:760px;margin:0 auto;display:flex;flex-direction:column;gap:10px}
-.faq-item{background:var(--bg);border:1px solid var(--border);border-radius:var(--rs);transition:.2s}
-.faq-item:hover{border-color:var(--border2)}
+.faq-wrap{max-width:720px;margin:0 auto;display:flex;flex-direction:column;gap:9px}
+.faq-item{background:var(--card);border:1px solid var(--cb);border-radius:var(--rs);transition:.2s}
+.faq-item:hover{border-color:var(--cb2)}
 .faq-item.open{border-color:var(--red)}
-.faq-q{display:flex;align-items:center;padding:18px 20px;cursor:pointer;gap:16px;user-select:none}
-.faq-q-text{font-size:14px;font-weight:700;flex:1;line-height:1.6;color:var(--txt)}
-.faq-icon{width:28px;height:28px;border-radius:50%;background:var(--surface2);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--txt2);font-size:15px;font-weight:400;transition:.3s;line-height:1}
-.faq-item.open .faq-icon{background:var(--red);color:#fff;transform:rotate(45deg)}
+.faq-q{display:flex;align-items:center;padding:17px 19px;cursor:pointer;gap:15px;user-select:none}
+.faq-q-text{font-size:13.5px;font-weight:500;flex:1;line-height:1.6}
+.faq-icon{width:26px;height:26px;border-radius:50%;background:var(--card);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:15px;font-weight:400;transition:.3s;line-height:1;opacity:.7}
+.faq-item.open .faq-icon{background:var(--red);color:#fff;transform:rotate(45deg);opacity:1}
 .faq-a{max-height:0;overflow:hidden;transition:.3s ease}
-.faq-a-inner{padding:0 20px 20px;font-size:13.5px;color:var(--txt3);line-height:1.9}
-.faq-item.open .faq-a{max-height:320px}
+.faq-a-inner{padding:0 19px 19px;font-size:12.5px;opacity:.65;line-height:1.8;font-weight:400}
+.faq-item.open .faq-a{max-height:260px}
 
 /* ══ CONTACT ══════════════════════════════════════ */
-.contact-sec{background:var(--bg)}
-.contact-inner{display:grid;grid-template-columns:1fr 1fr;gap:32px;align-items:stretch}
-.contact-info{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:clamp(28px,3.5vw,40px);display:flex;flex-direction:column}
-.contact-info h2{font-size:clamp(24px,3vw,32px);font-weight:900;margin-bottom:14px;line-height:1.3}
-.contact-info>p{color:var(--txt2);line-height:1.8;margin-bottom:28px;font-size:13.5px}
-.c-items{display:flex;flex-direction:column;gap:12px;margin-bottom:26px}
-.c-item{display:flex;gap:14px;align-items:center}
-.c-ic{width:38px;height:38px;border-radius:var(--rs);background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
-.c-item h4{font-size:10px;color:var(--txt3);margin-bottom:2px;font-weight:600}
-.c-item p{font-size:13.5px;font-weight:700;color:var(--txt)}
-.wa-direct{display:inline-flex;align-items:center;justify-content:center;gap:10px;background:var(--wa);color:#fff;padding:15px 28px;border-radius:var(--rp);font-weight:800;font-size:14px;transition:.2s;margin-top:auto}
+.contact-inner{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:stretch}
+.contact-info{background:var(--card);border:1px solid var(--cb);border-radius:var(--r);padding:clamp(26px,3.2vw,36px);display:flex;flex-direction:column}
+.contact-info h2{font-size:clamp(22px,2.6vw,28px);font-weight:700;margin-bottom:12px;line-height:1.3}
+.contact-info>p{opacity:.62;line-height:1.7;margin-bottom:24px;font-size:13px;font-weight:400}
+.c-items{display:flex;flex-direction:column;gap:11px;margin-bottom:24px}
+.c-item{display:flex;gap:12px;align-items:center}
+.c-ic{width:36px;height:36px;border-radius:var(--rs);background:var(--card);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.c-item h4{font-size:10px;opacity:.5;margin-bottom:2px;font-weight:500}
+.c-item p{font-size:13px;font-weight:600}
+.wa-direct{display:inline-flex;align-items:center;justify-content:center;gap:9px;background:var(--wa);color:#fff;padding:15px 26px;border-radius:var(--rp);font-weight:600;font-size:13.5px;transition:.2s;margin-top:auto}
 .wa-direct:hover{background:var(--wa-d)}
-.wa-cta-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:clamp(28px,3.5vw,40px);display:flex;flex-direction:column}
-.wa-cta-icon{font-size:30px;margin-bottom:14px}
+.wa-cta-card{background:var(--card);border:1px solid var(--cb);border-radius:var(--r);padding:clamp(26px,3.2vw,36px);display:flex;flex-direction:column}
+.wa-cta-icon{font-size:28px;margin-bottom:12px}
 .wa-cta-kicker{display:none}
-.wa-cta-title{font-size:18px;font-weight:900;margin-bottom:8px}
-.wa-cta-sub{font-size:12.5px;color:var(--txt3);line-height:1.7;margin-bottom:22px}
+.wa-cta-title{font-size:17px;font-weight:600;margin-bottom:6px}
+.wa-cta-sub{font-size:12px;opacity:.6;line-height:1.6;margin-bottom:20px;font-weight:400}
 .wa-cta-options{display:flex;flex-direction:column;gap:8px}
-.wa-opt{display:flex;align-items:center;gap:12px;background:var(--bg);border:1px solid var(--border);border-radius:var(--rs);padding:14px 16px;color:var(--txt2);transition:.2s}
-.wa-opt:hover{border-color:var(--wa);background:rgba(37,211,102,.06)}
-.wa-opt-icon{font-size:18px;flex-shrink:0}
-.wa-opt-title{font-size:13px;font-weight:800;color:var(--txt);margin-bottom:2px}
-.wa-opt-sub{font-size:10.5px;color:var(--txt3)}
-.wa-opt-arr{margin-inline-start:auto;color:var(--txt3);font-size:15px;flex-shrink:0;transition:.2s}
-.wa-opt:hover .wa-opt-arr{color:var(--wa);transform:translateX(-4px)}
-.wa-opt-full{border-color:rgba(37,211,102,.3);background:rgba(37,211,102,.05)}
+.wa-opt{display:flex;align-items:center;gap:11px;background:var(--card);border:1px solid var(--cb);border-radius:var(--rs);padding:13px 15px;transition:.2s}
+.wa-opt:hover{border-color:var(--wa);background:rgba(37,211,102,.07)}
+.wa-opt-icon{font-size:17px;flex-shrink:0}
+.wa-opt-title{font-size:12.5px;font-weight:600;margin-bottom:2px}
+.wa-opt-sub{font-size:10px;opacity:.55}
+.wa-opt-arr{margin-inline-start:auto;opacity:.4;font-size:14px;flex-shrink:0;transition:.2s}
+.wa-opt:hover .wa-opt-arr{color:var(--wa);opacity:1;transform:translateX(-4px)}
+.wa-opt-full{border-color:rgba(37,211,102,.35);background:rgba(37,211,102,.06)}
 
 /* ══ CTA BAND ═════════════════════════════════════ */
-.cta-band{background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
-.cta-band-inner{text-align:center;max-width:600px;margin:0 auto}
-.cta-band h2{font-size:clamp(24px,3.5vw,36px);font-weight:900;margin-bottom:12px;line-height:1.3}
-.cta-band p{font-size:14px;color:var(--txt2);margin-bottom:30px}
+.cta-band-inner{text-align:center;max-width:560px;margin:0 auto}
+.cta-band h2{font-size:clamp(22px,3.2vw,32px);font-weight:700;margin-bottom:10px;line-height:1.3;color:#fff}
+.cta-band p{font-size:13.5px;color:rgba(255,255,255,.82);margin-bottom:26px;font-weight:400}
 .cta-band-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.cta-band .btn-primary{background:#fff;color:var(--red);box-shadow:0 6px 22px rgba(0,0,0,.2)}
+.cta-band .btn-primary:hover{background:#f2f2f2}
+.cta-band .btn-secondary{border-color:rgba(255,255,255,.4)}
+.cta-band .btn-secondary:hover{background:rgba(255,255,255,.14)}
 
 /* ══ FOOTER ═══════════════════════════════════════ */
-footer{background:var(--bg);border-top:1px solid var(--border);padding:clamp(40px,6vw,64px) var(--pad) 0}
-.ft-grid{max-width:1180px;margin:0 auto;display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:40px;padding-bottom:40px}
-.ft-logo{display:flex;align-items:center;gap:11px;margin-bottom:16px}
-.ft-logo img{height:32px}
-.fn{font-size:14px;font-weight:900}
-.fs{font-size:10px;color:var(--red);font-weight:700;letter-spacing:1.5px}
-.ft-desc{font-size:12.5px;color:var(--txt3);line-height:1.9;max-width:290px}
-.ft-col-title{font-size:11px;color:var(--txt3);font-weight:600;margin-bottom:16px}
-.ft-links{display:flex;flex-direction:column;gap:11px;align-items:flex-start}
-.ft-links a{color:var(--txt2);font-size:13px;font-weight:600;transition:.2s}
+footer{padding:clamp(36px,5.5vw,56px) var(--pad) 0}
+.ft-grid{max-width:1180px;margin:0 auto;display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:36px;padding-bottom:36px}
+.ft-logo{display:flex;align-items:center;gap:11px;margin-bottom:14px}
+.ft-logo img{height:30px}
+.fn{font-size:14px;font-weight:700;color:#fff}
+.fs{font-size:10px;color:var(--red);font-weight:600;letter-spacing:1.5px}
+.ft-desc{font-size:12px;opacity:.5;line-height:1.8;max-width:280px;font-weight:400}
+.ft-col-title{font-size:11px;opacity:.5;font-weight:500;margin-bottom:14px}
+.ft-links{display:flex;flex-direction:column;gap:10px;align-items:flex-start}
+.ft-links a{color:rgba(255,255,255,.7);font-size:13px;font-weight:500;transition:.2s}
 .ft-links a:hover{color:var(--red)}
 .ft-social{display:flex;gap:8px}
-.ft-soc{width:38px;height:38px;border-radius:50%;background:var(--surface);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:14px;transition:.2s;color:var(--txt2)}
+.ft-soc{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;font-size:13px;transition:.2s}
 .ft-soc:hover{background:var(--red);border-color:var(--red);color:#fff}
-.ft-bottom{max-width:1180px;margin:0 auto;border-top:1px solid var(--border);padding:20px 0;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
-.ft-copy{font-size:12px;color:var(--txt3)}
-.ft-mark{font-size:12px;color:var(--txt3)}
+.ft-bottom{max-width:1180px;margin:0 auto;border-top:1px solid rgba(255,255,255,.08);padding:18px 0;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
+.ft-copy{font-size:11.5px;opacity:.45;font-weight:400}
+.ft-mark{font-size:11.5px;opacity:.45;font-weight:400}
 
 /* ══ WA FLOAT ═════════════════════════════════════ */
 .wa-float{position:fixed;bottom:24px;left:24px;z-index:390}
-.wa-btn{display:flex;align-items:center;gap:10px;background:var(--wa);color:#fff;padding:14px 22px;border-radius:var(--rp);font-weight:800;font-size:13px;box-shadow:0 8px 28px rgba(37,211,102,.35);transition:.2s;white-space:nowrap}
+.wa-btn{display:flex;align-items:center;gap:10px;background:var(--wa);color:#fff;padding:14px 22px;border-radius:var(--rp);font-weight:600;font-size:13px;box-shadow:0 8px 26px rgba(37,211,102,.35);transition:.2s;white-space:nowrap}
 .wa-btn:hover{background:var(--wa-d);transform:translateY(-2px)}
-.wa-btn-logo{width:20px;height:20px;flex-shrink:0}
+.wa-btn-logo{width:19px;height:19px;flex-shrink:0}
 
 /* ══ MISC ═════════════════════════════════════════ */
-.toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(60px);background:var(--surface2);border:1px solid var(--border2);color:#fff;padding:12px 24px;border-radius:var(--rp);font-size:13px;z-index:999;transition:.3s;opacity:0;pointer-events:none}
+.toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(60px);background:#1a1a1e;border:1px solid rgba(255,255,255,.14);color:#fff;padding:12px 24px;border-radius:var(--rp);font-size:13px;font-weight:500;z-index:999;transition:.3s;opacity:0;pointer-events:none}
 .toast.show{transform:translateX(-50%) translateY(0);opacity:1}
-.stt{position:fixed;bottom:88px;left:24px;z-index:389;width:44px;height:44px;border-radius:50%;border:1px solid var(--border2);background:var(--surface);color:var(--txt2);font-size:16px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:.2s;opacity:0;pointer-events:none}
+.stt{position:fixed;bottom:88px;left:24px;z-index:389;width:42px;height:42px;border-radius:50%;border:1px solid rgba(255,255,255,.14);background:#17171a;color:rgba(255,255,255,.7);font-size:15px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:.2s;opacity:0;pointer-events:none}
 .stt.show{opacity:1;pointer-events:all}
 .stt:hover{background:var(--red);color:#fff;border-color:var(--red)}
-.fade-up{opacity:0;transform:translateY(18px);transition:opacity .5s ease,transform .5s ease}
+.fade-up{opacity:0;transform:translateY(16px);transition:opacity .5s ease,transform .5s ease}
 .fade-up.visible{opacity:1;transform:translateY(0)}
 
 /* ══ RESPONSIVE ═══════════════════════════════════ */
 @media(max-width:1023px){
   .features-grid{grid-template-columns:1fr 1fr}
   .proc-grid{grid-template-columns:1fr 1fr}
-  .stats-grid{grid-template-columns:1fr 1fr;gap:1px;background:rgba(255,255,255,.15)}
-  .stat-item{background:var(--red)}
+  .stats-grid{grid-template-columns:1fr 1fr}
   .tst-grid{grid-template-columns:1fr}
 }
 @media(max-width:767px){
   .nav-links,.nav-cta{display:none}
   .burger{display:flex}
-  .hero{padding:120px 0 64px}
-  .hero-sub{font-size:14.5px}
+  .hero{padding:116px 0 60px}
   .btn-primary,.btn-secondary{width:100%;justify-content:center}
   .hero-btns{flex-direction:column}
-  .hero-stats-mobile{grid-template-columns:1fr 1fr;gap:1px}
   .srv-pillars{grid-template-columns:1fr}
   .contact-inner{grid-template-columns:1fr}
-  .ft-grid{grid-template-columns:1fr;gap:32px}
+  .ft-grid{grid-template-columns:1fr;gap:28px}
   .wa-float{bottom:16px;left:16px}
-  .stt{bottom:76px;left:16px}
+  .stt{bottom:74px;left:16px}
   .og-grid{grid-template-columns:1fr}
   .port-head{flex-direction:column;align-items:flex-start}
 }
@@ -332,7 +331,7 @@ footer{background:var(--bg);border-top:1px solid var(--border);padding:clamp(40p
     <img src="assets/logo.svg" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Crect width=%27100%27 height=%27100%27 fill=%27%23E8192C%27/%3E%3Cpolygon points=%2750,22 78,68 22,68%27 fill=%27white%27/%3E%3C/svg%3E'" alt="Ahmed Omani" class="logo-img">
     <div class="logo-text">
       <div class="name">AHMED OMANI</div>
-      <div class="sub">Auto Marketing</div>
+      <div class="sub-b">Auto Marketing</div>
     </div>
   </div>
   <ul class="nav-links" id="navLinks">
@@ -362,16 +361,16 @@ footer{background:var(--bg);border-top:1px solid var(--border);padding:clamp(40p
   <a href="https://wa.me/201152501056?text=مرحبا،%20أريد%20الاستفسار%20عن%20خدماتكم" class="m-cta" target="_blank" rel="noopener">واتساب مباشر</a>
 </div>
 
-<!-- ══ HERO ═════════════════════════════════════════ -->
-<section class="hero" id="home">
+<!-- ══ 1 · HERO — tone K1 (black) ═══════════════════ -->
+<section class="hero tone-k1" id="home">
   <div class="hero-glow"></div>
   <div class="container hero-inner">
     <div class="hero-badge" id="heroBadge">
       <span class="hero-badge-dot"></span>
       متخصصون في السيارات · منذ 2015
     </div>
-    <h1 id="heroH1">شريكك في <span class="r">التسويق والدعاية</span><br>لعالم الأوتوموتيف</h1>
-    <p class="hero-sub" id="heroSub">تسويق إلكتروني متكامل + دعاية وإعلان أوفلاين من يافطة مركزك لحد الكرت الشخصي</p>
+    <h1 id="heroH1">التسويق <span class="r">والدعاية</span> لمراكز السيارات</h1>
+    <p class="hero-sub" id="heroSub">تسويق إلكتروني ودعاية أوفلاين لمركزك في مكان واحد.</p>
     <div class="hero-btns">
       <a href="#services" class="btn-primary" id="heroBtn1">
         اكتشف خدماتنا <span class="btn-primary-arrow">←</span>
@@ -380,252 +379,11 @@ footer{background:var(--bg);border-top:1px solid var(--border);padding:clamp(40p
         واتساب مباشر
       </a>
     </div>
-    <div class="hero-stats-mobile" id="heroStatsMobile">
-      <div class="hsm-item"><div class="hsm-n" data-count>10+</div><div class="hsm-l">سنوات خبرة</div></div>
-      <div class="hsm-item"><div class="hsm-n" data-count>30+</div><div class="hsm-l">عميل في القطاع</div></div>
-      <div class="hsm-item"><div class="hsm-n" data-count>500+</div><div class="hsm-l">مشروع منجز</div></div>
-      <div class="hsm-item"><div class="hsm-n" data-count>5x</div><div class="hsm-l">متوسط ROI</div></div>
-    </div>
   </div>
 </section>
 
-<!-- ══ FEATURES STRIP ═══════════════════════════════ -->
-<div class="features-strip">
-  <div class="container">
-    <div class="features-grid" id="featGrid">
-      <div class="feat-item">
-        <div class="feat-icon">📱</div>
-        <div class="feat-label">خدمة 01</div>
-        <div class="feat-title">التسويق الإلكتروني الكامل</div>
-        <div class="feat-desc">سوشيال + إعلانات Meta/Google + تقارير شهرية وأهداف قابلة للقياس</div>
-      </div>
-      <div class="feat-item">
-        <div class="feat-icon">🏪</div>
-        <div class="feat-label">خدمة 02</div>
-        <div class="feat-title">دعاية وإعلان أوفلاين</div>
-        <div class="feat-desc">يافطات + يوني فورم + كروت + Job Orders بهوية بصرية موحدة</div>
-      </div>
-      <div class="feat-item">
-        <div class="feat-icon">📸</div>
-        <div class="feat-label">خدمة 03</div>
-        <div class="feat-title">تصوير احترافي</div>
-        <div class="feat-desc">تصوير المراكز والسيارات والمنتجات والفريق لجميع منصات التسويق</div>
-      </div>
-      <div class="feat-item">
-        <div class="feat-icon">🎨</div>
-        <div class="feat-label">خدمة 04</div>
-        <div class="feat-title">هوية بصرية متكاملة</div>
-        <div class="feat-desc">لوجو + هوية + تطبيق على جميع المواد الرقمية والمطبوعة</div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ══ SERVICES ═════════════════════════════════════ -->
-<section id="services" class="services-sec">
-  <div class="container">
-    <div class="sec-head">
-      <div class="sec-label">خدماتنا</div>
-      <h2 class="sec-title" id="srvTitle">حلول متكاملة لعالم الأوتوموتيف</h2>
-      <p class="sec-sub" id="srvSub">ركّزنا في قطاع واحد — عشان نقدم الأفضل فيه</p>
-    </div>
-    <div class="srv-pillars fade-up">
-      <!-- DIGITAL -->
-      <div class="pillar">
-        <div class="pillar-icon">📱</div>
-        <div class="pillar-header">
-          <h3>التسويق الإلكتروني</h3>
-          <p>حضور رقمي قوي يجلب عملاء حقيقيين لمركزك</p>
-        </div>
-        <div class="srv-list">
-          <div class="srv-item">
-            <div class="srv-check">✓</div>
-            <div><h4>إدارة السوشيال ميديا</h4><p>محتوى يومي متخصص في السيارات على كل المنصات</p></div>
-          </div>
-          <div class="srv-item">
-            <div class="srv-check">✓</div>
-            <div><h4>إعلانات مدفوعة</h4><p>Meta Ads · Google Ads · TikTok Ads</p></div>
-          </div>
-          <div class="srv-item">
-            <div class="srv-check">✓</div>
-            <div><h4>تصميم بصري احترافي</h4><p>بوستات، ستوريز، فيديو موشن، بانرات إعلانية</p></div>
-          </div>
-          <div class="srv-item">
-            <div class="srv-check">✓</div>
-            <div><h4>تصوير احترافي</h4><p>تصوير المركز والسيارات والمنتجات والفريق</p></div>
-          </div>
-          <div class="srv-item">
-            <div class="srv-check">✓</div>
-            <div><h4>تقارير شهرية</h4><p>أرقام حقيقية وموثقة لأداء كل حملة</p></div>
-          </div>
-        </div>
-        <div class="srv-also">
-          <div class="srv-also-label">أو اختار خدمة منفردة</div>
-          <div class="srv-tags">
-            <span class="stag">تصميم فقط</span>
-            <span class="stag">إعلانات فقط</span>
-            <span class="stag">تصوير فقط</span>
-            <span class="stag">سوشيال فقط</span>
-          </div>
-        </div>
-        <a href="https://wa.me/201152501056?text=مرحبا،%20أريد%20الاستفسار%20عن%20خدمة%20التسويق%20الإلكتروني" class="pillar-cta" target="_blank" rel="noopener">ابدأ معنا <span>←</span></a>
-      </div>
-      <!-- OFFLINE -->
-      <div class="pillar">
-        <div class="pillar-icon">🏪</div>
-        <div class="pillar-header">
-          <h3>الدعاية والإعلان</h3>
-          <p>هوية بصرية متكاملة لمركزك من الواجهة للتفاصيل</p>
-        </div>
-        <div class="og-grid">
-          <div class="og-item"><span class="oi">🏠</span><p>يافطات وواجهات</p></div>
-          <div class="og-item"><span class="oi">🪪</span><p>كروت شخصية</p></div>
-          <div class="og-item"><span class="oi">📋</span><p>Job Orders</p></div>
-          <div class="og-item"><span class="oi">👔</span><p>يوني فورم</p></div>
-          <div class="og-item"><span class="oi">🚩</span><p>أعلام وبنرات</p></div>
-          <div class="og-item"><span class="oi">🔲</span><p>دواسات</p></div>
-          <div class="og-item"><span class="oi">🌸</span><p>فواحات</p></div>
-          <div class="og-item"><span class="oi">⚙️</span><p>سيستم إداري</p></div>
-        </div>
-        <div class="pillar-highlight">
-          <strong>حزمة المركز المتكاملة</strong> — كل حاجة مركزك محتاجها من الواجهة للكرت الشخصي في مكان واحد وبهوية موحدة
-        </div>
-        <div class="pillar-ctas">
-          <a href="https://wa.me/201152501056?text=مرحبا،%20أريد%20الاستفسار%20عن%20خدمة%20الدعاية%20والإعلان%20الأوفلاين" class="pillar-cta" target="_blank" rel="noopener">اعرف أكتر <span>←</span></a>
-          <a href="catalog.html" class="pillar-cta pillar-cta-alt">تصفح الكتالوج واطلب مباشرة <span>←</span></a>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ══ PROCESS ══════════════════════════════════════ -->
-<section class="process-sec">
-  <div class="container">
-    <div class="sec-head">
-      <div class="sec-label">كيف نعمل</div>
-      <h2 class="sec-title">4 خطوات للنتيجة</h2>
-      <p class="sec-sub">من أول كلام لحد ما تشوف الفرق في أرقامك</p>
-    </div>
-    <div class="proc-grid fade-up">
-      <div class="proc-item">
-        <div class="proc-num">1</div>
-        <div class="proc-icon">📞</div>
-        <h3 class="proc-title">استشارة مجانية</h3>
-        <p class="proc-desc">بنتكلم معاك ونفهم احتياجات مشروعك وأهدافك التجارية بشكل كامل</p>
-      </div>
-      <div class="proc-item">
-        <div class="proc-num">2</div>
-        <div class="proc-icon">🔍</div>
-        <h3 class="proc-title">دراسة وتخطيط</h3>
-        <p class="proc-desc">بندرس السوق والمنافسين ونعمل استراتيجية مخصوصة لمشروعك</p>
-      </div>
-      <div class="proc-item">
-        <div class="proc-num">3</div>
-        <div class="proc-icon">🎨</div>
-        <h3 class="proc-title">التصميم والتنفيذ</h3>
-        <p class="proc-desc">بننفذ بسرعة واحترافية — رقمي أو أوفلاين أو الاتنين مع بعض</p>
-      </div>
-      <div class="proc-item">
-        <div class="proc-num">4</div>
-        <div class="proc-icon">📈</div>
-        <h3 class="proc-title">متابعة النتائج</h3>
-        <p class="proc-desc">تقارير شهرية بأرقام حقيقية وتعديل مستمر لتحقيق أفضل نتيجة</p>
-      </div>
-    </div>
-    <div class="proc-cta">
-      <a href="https://wa.me/201152501056?text=مرحبا،%20أريد%20استشارة%20مجانية%20لمشروعي" class="btn-primary" target="_blank" rel="noopener">
-        ابدأ الاستشارة مجانًا <span class="btn-primary-arrow">←</span>
-      </a>
-    </div>
-  </div>
-</section>
-
-<!-- ══ PORTFOLIO ═════════════════════════════════════ -->
-<section id="portfolio" class="portfolio-sec">
-  <div class="container">
-    <div class="port-head">
-      <div class="port-head-text sec-head" style="margin:0;text-align:right">
-        <div class="sec-label">أعمالنا</div>
-        <h2 class="sec-title" id="portTitle">شغلنا بيتكلم عن نفسه</h2>
-      </div>
-      <div class="port-nav-btns">
-        <button class="port-nav-btn" onclick="slidePort(-1)">→</button>
-        <button class="port-nav-btn" onclick="slidePort(1)">←</button>
-      </div>
-    </div>
-    <div class="port-filter">
-      <button class="pf-btn active" onclick="filterPort('all',this)">الكل</button>
-      <button class="pf-btn" onclick="filterPort('digital',this)">تسويق إلكتروني</button>
-      <button class="pf-btn" onclick="filterPort('print',this)">دعاية وإعلان</button>
-      <button class="pf-btn" onclick="filterPort('branding',this)">هوية بصرية</button>
-    </div>
-    <div class="port-track-wrap">
-      <div class="port-track" id="portGrid">
-        <div class="port-card" data-cat="digital">
-          <div class="port-img"><div class="port-img-ph">📊</div></div>
-          <div class="port-type-badge">تسويق إلكتروني</div>
-          <div class="port-stat">+320% مبيعات</div>
-          <div class="port-body">
-            <div class="port-title">حملة Meta — مركز خدمة سيارات</div>
-            <div class="port-desc">زيادة الحجوزات 320% خلال 30 يوم بميزانية $2,000</div>
-            <div class="port-meta"><span class="ptag">Meta Ads</span><span class="ptag">Service Center</span></div>
-          </div>
-        </div>
-        <div class="port-card" data-cat="digital">
-          <div class="port-img"><div class="port-img-ph">📈</div></div>
-          <div class="port-type-badge">تسويق إلكتروني</div>
-          <div class="port-stat">1,200 Lead</div>
-          <div class="port-body">
-            <div class="port-title">حملة Google — قطع غيار</div>
-            <div class="port-desc">1,200 ليد في شهر واحد بتكلفة $1.2 للـ lead</div>
-            <div class="port-meta"><span class="ptag">Google Ads</span><span class="ptag">Auto Parts</span></div>
-          </div>
-        </div>
-        <div class="port-card" data-cat="digital">
-          <div class="port-img"><div class="port-img-ph">📱</div></div>
-          <div class="port-type-badge">تسويق إلكتروني</div>
-          <div class="port-stat">50K متابع</div>
-          <div class="port-body">
-            <div class="port-title">سوشيال ميديا — معرض سيارات</div>
-            <div class="port-desc">نمو 50,000 متابع عضوي في 3 أشهر</div>
-            <div class="port-meta"><span class="ptag">Social Media</span><span class="ptag">Showroom</span></div>
-          </div>
-        </div>
-        <div class="port-card" data-cat="print">
-          <div class="port-img"><div class="port-img-ph">🏪</div></div>
-          <div class="port-type-badge">دعاية وإعلان</div>
-          <div class="port-body">
-            <div class="port-title">حزمة هوية كاملة — مركز صيانة</div>
-            <div class="port-desc">يافطات + يوني فورم + كروت + job orders بهوية موحدة</div>
-            <div class="port-meta"><span class="ptag">Print</span><span class="ptag">Branding</span></div>
-          </div>
-        </div>
-        <div class="port-card" data-cat="print">
-          <div class="port-img"><div class="port-img-ph">👔</div></div>
-          <div class="port-type-badge">دعاية وإعلان</div>
-          <div class="port-body">
-            <div class="port-title">يوني فورم ودواسات — سلسلة مراكز</div>
-            <div class="port-desc">تجهيز كامل لـ 3 فروع بهوية موحدة وتصميم احترافي</div>
-            <div class="port-meta"><span class="ptag">Uniform</span><span class="ptag">Floor Mats</span></div>
-          </div>
-        </div>
-        <div class="port-card" data-cat="branding">
-          <div class="port-img"><div class="port-img-ph">🎨</div></div>
-          <div class="port-type-badge">هوية بصرية</div>
-          <div class="port-body">
-            <div class="port-title">هوية كاملة — معرض سيارات</div>
-            <div class="port-desc">لوجو + هوية بصرية متكاملة + تطبيق على كل المواد</div>
-            <div class="port-meta"><span class="ptag">Logo</span><span class="ptag">Brand Identity</span></div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ══ STATS · RED ══════════════════════════════════ -->
-<div class="stats-bar">
+<!-- ══ 2 · TRUST STATS — tone R2 (red) ══════════════ -->
+<div class="stats-bar tone-r2">
   <div class="container">
     <div class="stats-grid" id="statsGrid">
       <div class="stat-item">
@@ -652,18 +410,198 @@ footer{background:var(--bg);border-top:1px solid var(--border);padding:clamp(40p
   </div>
 </div>
 
-<!-- ══ TESTIMONIALS ═════════════════════════════════ -->
-<section class="tst-sec">
+<!-- ══ 3 · FEATURES — tone K2 (charcoal) ═══════════ -->
+<div class="features-strip tone-k2">
+  <div class="container">
+    <div class="sec-head">
+      <div class="sec-label">إيه اللي بنقدمه</div>
+      <h2 class="sec-title">كل حاجة مركزك محتاجها</h2>
+    </div>
+    <div class="features-grid" id="featGrid">
+      <div class="feat-item">
+        <div class="feat-icon">📱</div>
+        <div class="feat-label">خدمة 01</div>
+        <div class="feat-title">تسويق إلكتروني</div>
+        <div class="feat-desc">سوشيال ميديا وإعلانات ممولة وتقارير شهرية</div>
+      </div>
+      <div class="feat-item">
+        <div class="feat-icon">🏪</div>
+        <div class="feat-label">خدمة 02</div>
+        <div class="feat-title">دعاية وإعلان</div>
+        <div class="feat-desc">يافطات ويوني فورم وكروت بهوية موحدة</div>
+      </div>
+      <div class="feat-item">
+        <div class="feat-icon">📸</div>
+        <div class="feat-label">خدمة 03</div>
+        <div class="feat-title">تصوير احترافي</div>
+        <div class="feat-desc">تصوير للمركز والسيارات والمنتجات</div>
+      </div>
+      <div class="feat-item">
+        <div class="feat-icon">🎨</div>
+        <div class="feat-label">خدمة 04</div>
+        <div class="feat-title">هوية بصرية</div>
+        <div class="feat-desc">لوجو وهوية متكاملة على كل موادك</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 4 · SERVICES — tone R1 (burgundy) ════════════ -->
+<section id="services" class="tone-r1">
+  <div class="container">
+    <div class="sec-head">
+      <div class="sec-label">خدماتنا</div>
+      <h2 class="sec-title" id="srvTitle">حلول متكاملة لعالم الأوتوموتيف</h2>
+      <p class="sec-sub" id="srvSub">ركّزنا في قطاع واحد — عشان نقدم الأفضل فيه</p>
+    </div>
+    <div class="srv-pillars fade-up">
+      <!-- DIGITAL -->
+      <div class="pillar">
+        <div class="pillar-icon">📱</div>
+        <div class="pillar-header">
+          <h3>التسويق الإلكتروني</h3>
+          <p>حضور رقمي يجيبلك عملاء حقيقيين</p>
+        </div>
+        <div class="srv-list">
+          <div class="srv-item"><div class="srv-check">✓</div><h4>إدارة السوشيال ميديا</h4></div>
+          <div class="srv-item"><div class="srv-check">✓</div><h4>إعلانات Meta وGoogle وTikTok</h4></div>
+          <div class="srv-item"><div class="srv-check">✓</div><h4>تصميم وتصوير احترافي</h4></div>
+          <div class="srv-item"><div class="srv-check">✓</div><h4>تقارير أداء شهرية</h4></div>
+        </div>
+        <div class="srv-also">
+          <div class="srv-also-label">أو اختار خدمة منفردة</div>
+          <div class="srv-tags">
+            <span class="stag">تصميم فقط</span>
+            <span class="stag">إعلانات فقط</span>
+            <span class="stag">تصوير فقط</span>
+            <span class="stag">سوشيال فقط</span>
+          </div>
+        </div>
+        <a href="https://wa.me/201152501056?text=مرحبا،%20أريد%20الاستفسار%20عن%20خدمة%20التسويق%20الإلكتروني" class="pillar-cta" target="_blank" rel="noopener">ابدأ معنا <span>←</span></a>
+      </div>
+      <!-- OFFLINE -->
+      <div class="pillar">
+        <div class="pillar-icon">🏪</div>
+        <div class="pillar-header">
+          <h3>الدعاية والإعلان</h3>
+          <p>هوية بصرية متكاملة لمركزك</p>
+        </div>
+        <div class="og-grid">
+          <div class="og-item"><span class="oi">🏠</span><p>يافطات وواجهات</p></div>
+          <div class="og-item"><span class="oi">🪪</span><p>كروت شخصية</p></div>
+          <div class="og-item"><span class="oi">📋</span><p>Job Orders</p></div>
+          <div class="og-item"><span class="oi">👔</span><p>يوني فورم</p></div>
+          <div class="og-item"><span class="oi">🚩</span><p>أعلام وبنرات</p></div>
+          <div class="og-item"><span class="oi">🔲</span><p>دواسات</p></div>
+          <div class="og-item"><span class="oi">🌸</span><p>فواحات</p></div>
+          <div class="og-item"><span class="oi">⚙️</span><p>سيستم إداري</p></div>
+        </div>
+        <div class="pillar-highlight">
+          <strong>حزمة المركز المتكاملة</strong> — كل حاجة محتاجها في مكان واحد وبهوية موحدة
+        </div>
+        <div class="pillar-ctas">
+          <a href="https://wa.me/201152501056?text=مرحبا،%20أريد%20الاستفسار%20عن%20خدمة%20الدعاية%20والإعلان%20الأوفلاين" class="pillar-cta" target="_blank" rel="noopener">اعرف أكتر <span>←</span></a>
+          <a href="catalog.html" class="pillar-cta pillar-cta-alt">تصفح الكتالوج <span>←</span></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 5 · PORTFOLIO — tone W1 (white) ══════════════ -->
+<section id="portfolio" class="tone-w1">
+  <div class="container">
+    <div class="port-head">
+      <div class="port-head-text sec-head" style="margin:0;text-align:right">
+        <div class="sec-label">أعمالنا</div>
+        <h2 class="sec-title" id="portTitle">شغلنا بيتكلم عن نفسه</h2>
+      </div>
+      <div class="port-nav-btns">
+        <button class="port-nav-btn" onclick="slidePort(-1)">→</button>
+        <button class="port-nav-btn" onclick="slidePort(1)">←</button>
+      </div>
+    </div>
+    <div class="port-filter">
+      <button class="pf-btn active" onclick="filterPort('all',this)">الكل</button>
+      <button class="pf-btn" onclick="filterPort('digital',this)">تسويق إلكتروني</button>
+      <button class="pf-btn" onclick="filterPort('print',this)">دعاية وإعلان</button>
+      <button class="pf-btn" onclick="filterPort('branding',this)">هوية بصرية</button>
+    </div>
+    <div class="port-track-wrap">
+      <div class="port-track" id="portGrid">
+        <div class="port-card" data-cat="digital">
+          <div class="port-img"><div class="port-img-ph">📊</div></div>
+          <div class="port-type-badge">تسويق إلكتروني</div>
+          <div class="port-stat">+320% مبيعات</div>
+          <div class="port-body">
+            <div class="port-title">حملة Meta — مركز خدمة سيارات</div>
+            <div class="port-desc">زيادة الحجوزات 320% خلال 30 يوم</div>
+            <div class="port-meta"><span class="ptag">Meta Ads</span><span class="ptag">Service Center</span></div>
+          </div>
+        </div>
+        <div class="port-card" data-cat="digital">
+          <div class="port-img"><div class="port-img-ph">📈</div></div>
+          <div class="port-type-badge">تسويق إلكتروني</div>
+          <div class="port-stat">1,200 Lead</div>
+          <div class="port-body">
+            <div class="port-title">حملة Google — قطع غيار</div>
+            <div class="port-desc">1,200 ليد في شهر واحد</div>
+            <div class="port-meta"><span class="ptag">Google Ads</span><span class="ptag">Auto Parts</span></div>
+          </div>
+        </div>
+        <div class="port-card" data-cat="digital">
+          <div class="port-img"><div class="port-img-ph">📱</div></div>
+          <div class="port-type-badge">تسويق إلكتروني</div>
+          <div class="port-stat">50K متابع</div>
+          <div class="port-body">
+            <div class="port-title">سوشيال ميديا — معرض سيارات</div>
+            <div class="port-desc">نمو 50,000 متابع في 3 أشهر</div>
+            <div class="port-meta"><span class="ptag">Social Media</span><span class="ptag">Showroom</span></div>
+          </div>
+        </div>
+        <div class="port-card" data-cat="print">
+          <div class="port-img"><div class="port-img-ph">🏪</div></div>
+          <div class="port-type-badge">دعاية وإعلان</div>
+          <div class="port-body">
+            <div class="port-title">حزمة هوية كاملة — مركز صيانة</div>
+            <div class="port-desc">يافطات ويوني فورم وكروت بهوية موحدة</div>
+            <div class="port-meta"><span class="ptag">Print</span><span class="ptag">Branding</span></div>
+          </div>
+        </div>
+        <div class="port-card" data-cat="print">
+          <div class="port-img"><div class="port-img-ph">👔</div></div>
+          <div class="port-type-badge">دعاية وإعلان</div>
+          <div class="port-body">
+            <div class="port-title">يوني فورم ودواسات — سلسلة مراكز</div>
+            <div class="port-desc">تجهيز كامل لـ 3 فروع بهوية موحدة</div>
+            <div class="port-meta"><span class="ptag">Uniform</span><span class="ptag">Floor Mats</span></div>
+          </div>
+        </div>
+        <div class="port-card" data-cat="branding">
+          <div class="port-img"><div class="port-img-ph">🎨</div></div>
+          <div class="port-type-badge">هوية بصرية</div>
+          <div class="port-body">
+            <div class="port-title">هوية كاملة — معرض سيارات</div>
+            <div class="port-desc">لوجو وهوية بصرية متكاملة</div>
+            <div class="port-meta"><span class="ptag">Logo</span><span class="ptag">Brand Identity</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 6 · TESTIMONIALS — tone K3 ═══════════════════ -->
+<section class="tone-k3">
   <div class="container">
     <div class="sec-head">
       <div class="sec-label">آراء العملاء</div>
       <h2 class="sec-title">بيتكلموا عنا</h2>
-      <p class="sec-sub">تجارب حقيقية من عملاء في قطاع الأوتوموتيف</p>
     </div>
     <div class="tst-grid fade-up" id="tstGrid">
       <div class="tst-card">
         <div class="tst-q">"</div>
-        <p class="tst-text">تعاملنا مع أحمد عماني زادت مبيعاتنا أكتر من 200% في 3 أشهر. أفضل قرار اتخذناه في التسويق.</p>
+        <p class="tst-text">زادت مبيعاتنا أكتر من 200% في 3 أشهر — أفضل قرار في التسويق.</p>
         <div class="tst-author">
           <div class="tst-av">م</div>
           <div><div class="tst-name">محمد أحمد</div><div class="tst-role">مركز خدمة سيارات</div></div>
@@ -671,7 +609,7 @@ footer{background:var(--bg);border-top:1px solid var(--border);padding:clamp(40p
       </div>
       <div class="tst-card">
         <div class="tst-q">"</div>
-        <p class="tst-text">الهوية البصرية اللي صمموها لمركزنا غيرت شكل المكان تمامًا. عملاء جدد بدأوا يجوا بسبب الواجهة.</p>
+        <p class="tst-text">الهوية البصرية غيرت شكل المكان تمامًا — عملاء جدد بدأوا يجوا بسبب الواجهة.</p>
         <div class="tst-author">
           <div class="tst-av">ك</div>
           <div><div class="tst-name">كريم سامي</div><div class="tst-role">مركز صيانة</div></div>
@@ -679,7 +617,7 @@ footer{background:var(--bg);border-top:1px solid var(--border);padding:clamp(40p
       </div>
       <div class="tst-card">
         <div class="tst-q">"</div>
-        <p class="tst-text">اشتغلنا مع ناس كتير قبل — مش لاقيين حد متخصص في الأوتوموتيف بالشكل ده. ناس محترفين.</p>
+        <p class="tst-text">متخصصين فعلاً في الأوتوموتيف — ناس محترفين مش بتشتغل بالعافية.</p>
         <div class="tst-author">
           <div class="tst-av">أ</div>
           <div><div class="tst-name">أسامة رضا</div><div class="tst-role">معرض سيارات</div></div>
@@ -689,8 +627,8 @@ footer{background:var(--bg);border-top:1px solid var(--border);padding:clamp(40p
   </div>
 </section>
 
-<!-- ══ CLIENTS · MARQUEE ════════════════════════════ -->
-<section id="clients" class="clients-sec">
+<!-- ══ 7 · CLIENTS — tone K1 ═════════════════════════ -->
+<section id="clients" class="clients-sec tone-k1">
   <div class="container">
     <div class="sec-head">
       <div class="sec-label">عملاؤنا</div>
@@ -736,56 +674,88 @@ footer{background:var(--bg);border-top:1px solid var(--border);padding:clamp(40p
       <div class="cl-group" id="clientsGridDup" aria-hidden="true"></div>
     </div>
   </div>
-  <div class="clients-note">+30 علامة تجارية في قطاع السيارات بمصر</div>
+  <div class="clients-note">+30 علامة تجارية بمصر</div>
 </section>
 
-<!-- ══ FAQ ══════════════════════════════════════════ -->
-<section id="faq" class="faq-sec">
+<!-- ══ 8 · PROCESS — tone K3 ═════════════════════════ -->
+<section class="tone-k3">
+  <div class="container">
+    <div class="sec-head">
+      <div class="sec-label">كيف نعمل</div>
+      <h2 class="sec-title">4 خطوات للنتيجة</h2>
+    </div>
+    <div class="proc-grid fade-up">
+      <div class="proc-item">
+        <div class="proc-num">1</div>
+        <div class="proc-icon">📞</div>
+        <h3 class="proc-title">استشارة مجانية</h3>
+        <p class="proc-desc">نفهم احتياجات مشروعك</p>
+      </div>
+      <div class="proc-item">
+        <div class="proc-num">2</div>
+        <div class="proc-icon">🔍</div>
+        <h3 class="proc-title">دراسة وتخطيط</h3>
+        <p class="proc-desc">نحلل السوق ونضع الخطة</p>
+      </div>
+      <div class="proc-item">
+        <div class="proc-num">3</div>
+        <div class="proc-icon">🎨</div>
+        <h3 class="proc-title">التصميم والتنفيذ</h3>
+        <p class="proc-desc">ننفذ بسرعة واحترافية</p>
+      </div>
+      <div class="proc-item">
+        <div class="proc-num">4</div>
+        <div class="proc-icon">📈</div>
+        <h3 class="proc-title">متابعة النتائج</h3>
+        <p class="proc-desc">تقارير شهرية وتحسين مستمر</p>
+      </div>
+    </div>
+    <div class="proc-cta">
+      <a href="https://wa.me/201152501056?text=مرحبا،%20أريد%20استشارة%20مجانية%20لمشروعي" class="btn-primary" target="_blank" rel="noopener">
+        ابدأ الاستشارة مجانًا <span class="btn-primary-arrow">←</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 9 · FAQ — tone K2 ═════════════════════════════ -->
+<section id="faq" class="tone-k2">
   <div class="container">
     <div class="sec-head">
       <div class="sec-label">أسئلة شائعة</div>
       <h2 class="sec-title" id="faqTitle">إجابات على أسئلتك</h2>
-      <p class="sec-sub" id="faqSub">بنجاوب الأسئلة الأكتر تكرارًا عشان توفر وقتك</p>
     </div>
     <div class="faq-wrap" id="faqWrap">
       <div class="faq-item" onclick="toggleFaq(this)">
         <div class="faq-q"><div class="faq-q-text">هل تشتغلوا على مراكز الصيانة بس؟</div><div class="faq-icon">+</div></div>
-        <div class="faq-a"><div class="faq-a-inner">لأ. بنشتغل مع كل قطاعات السيارات — مراكز صيانة، معارض سيارات، تجار قطع غيار، محلات اكسسوارات، وأي نشاط تجاري في عالم الأوتوموتيف.</div></div>
+        <div class="faq-a"><div class="faq-a-inner">لأ، بنشتغل مع كل قطاعات السيارات — صيانة، معارض، قطع غيار، وأكتر.</div></div>
       </div>
       <div class="faq-item" onclick="toggleFaq(this)">
-        <div class="faq-q"><div class="faq-q-text">إيه الفرق بين الحزمة الكاملة والخدمة الفردية في التسويق الإلكتروني؟</div><div class="faq-icon">+</div></div>
-        <div class="faq-a"><div class="faq-a-inner">الحزمة الكاملة بتاخد فيها تسويق متكامل (سوشيال + إعلانات + تصميم + تصوير + تقارير) بسعر أفضل وتنسيق كامل. الخدمة الفردية للي محتاج حاجة بعينها.</div></div>
+        <div class="faq-q"><div class="faq-q-text">ممكن آخد خدمة واحدة بس؟</div><div class="faq-icon">+</div></div>
+        <div class="faq-a"><div class="faq-a-inner">أكيد، تقدر تختار خدمة منفردة أو الحزمة الكاملة.</div></div>
       </div>
       <div class="faq-item" onclick="toggleFaq(this)">
-        <div class="faq-q"><div class="faq-q-text">إيه اللي بيشمله تجهيز الدعاية والإعلان الكامل للمركز؟</div><div class="faq-icon">+</div></div>
-        <div class="faq-a"><div class="faq-a-inner">الحزمة بتشمل: يافطة وواجهة، كروت شخصية، Job Orders، يوني فورم، أعلام وبنرات، دواسات، فواحات — وكلها بهوية بصرية موحدة. وكمان بنقدر نساعدك في السيستم الإداري.</div></div>
-      </div>
-      <div class="faq-item" onclick="toggleFaq(this)">
-        <div class="faq-q"><div class="faq-q-text">هل ممكن آخد الدعاية الأوفلاين بس من غير تسويق إلكتروني؟</div><div class="faq-icon">+</div></div>
-        <div class="faq-a"><div class="faq-a-inner">أكيد. الخدمتين منفصلتين تمامًا. ممكن تاخد أي منهم منفردًا.</div></div>
-      </div>
-      <div class="faq-item" onclick="toggleFaq(this)">
-        <div class="faq-q"><div class="faq-q-text">كام بيستغرق تنفيذ حزمة الدعاية الكاملة؟</div><div class="faq-icon">+</div></div>
-        <div class="faq-a"><div class="faq-a-inner">من 10 لـ 21 يوم عمل حسب حجم الطلب ومراحل الموافقة على التصميم.</div></div>
+        <div class="faq-q"><div class="faq-q-text">كام بيستغرق تنفيذ حزمة الدعاية؟</div><div class="faq-icon">+</div></div>
+        <div class="faq-a"><div class="faq-a-inner">من 10 لـ 21 يوم عمل حسب حجم الطلب.</div></div>
       </div>
       <div class="faq-item" onclick="toggleFaq(this)">
         <div class="faq-q"><div class="faq-q-text">هل بتشتغلوا برا القاهرة؟</div><div class="faq-icon">+</div></div>
-        <div class="faq-a"><div class="faq-a-inner">أيوه، بنشتغل مع عملاء في كل أنحاء مصر. التواصل والتصميم أونلاين والمطبوعات بنوصلها لأي محافظة.</div></div>
+        <div class="faq-a"><div class="faq-a-inner">أيوه، في كل محافظات مصر — تصميم أونلاين وتوصيل للمطبوعات أينما كنت.</div></div>
       </div>
       <div class="faq-item" onclick="toggleFaq(this)">
-        <div class="faq-q"><div class="faq-q-text">ليه أختارك بدل أي مكتب إعلانات عادي؟</div><div class="faq-icon">+</div></div>
-        <div class="faq-a"><div class="faq-a-inner">لأننا متخصصين في قطاع السيارات بس — مش وكالة عامة. 10 سنين في السوق ده عارفين فيه احتياجات العميل ومنافسيه.</div></div>
+        <div class="faq-q"><div class="faq-q-text">ليه أختاركم بدل مكتب إعلانات عادي؟</div><div class="faq-icon">+</div></div>
+        <div class="faq-a"><div class="faq-a-inner">متخصصين في قطاع السيارات بس من 2015 — مش وكالة عامة.</div></div>
       </div>
       <div class="faq-item" onclick="toggleFaq(this)">
-        <div class="faq-q"><div class="faq-q-text">عايز أعرف الأسعار — بيبدأ من إيه؟</div><div class="faq-icon">+</div></div>
-        <div class="faq-a"><div class="faq-a-inner">الأسعار بتختلف حسب حجم المشروع والخدمات المطلوبة. تواصل معنا وهنعملك عرض سعر خلال 24 ساعة.</div></div>
+        <div class="faq-q"><div class="faq-q-text">الأسعار بتبدأ من إيه؟</div><div class="faq-icon">+</div></div>
+        <div class="faq-a"><div class="faq-a-inner">بتختلف حسب المشروع — كلمنا وهنعملك عرض سعر خلال 24 ساعة.</div></div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ══ CONTACT ══════════════════════════════════════ -->
-<section id="contact" class="contact-sec">
+<!-- ══ 10 · CONTACT — tone R1 (final push) ══════════ -->
+<section id="contact" class="tone-r1">
   <div class="container">
     <div class="sec-head">
       <div class="sec-label">تواصل معنا</div>
@@ -793,7 +763,7 @@ footer{background:var(--bg);border-top:1px solid var(--border);padding:clamp(40p
     <div class="contact-inner">
       <div class="contact-info">
         <h2 id="ctTitle">خلينا نشتغل مع بعض</h2>
-        <p id="ctDesc">تواصل معنا دلوقتي واحصل على استشارة مجانية لتسويق أو تجهيز مشروعك في قطاع السيارات.</p>
+        <p id="ctDesc">احصل على استشارة مجانية دلوقتي.</p>
         <div class="c-items">
           <div class="c-item">
             <div class="c-ic">📞</div>
@@ -811,21 +781,21 @@ footer{background:var(--bg);border-top:1px solid var(--border);padding:clamp(40p
       <div class="wa-cta-card">
         <div class="wa-cta-icon">💬</div>
         <h3 class="wa-cta-title">تواصل مباشر على واتساب</h3>
-        <p class="wa-cta-sub">ردنا في خلال دقائق — اختار الخدمة اللي تناسبك وابعت</p>
+        <p class="wa-cta-sub">ردنا خلال دقائق — اختار الخدمة وابعت</p>
         <div class="wa-cta-options">
           <a href="https://wa.me/201152501056?text=مرحبا،%20أريد%20الاستفسار%20عن%20خدمة%20التسويق%20الإلكتروني" class="wa-opt" id="waOptDigital" target="_blank" rel="noopener">
             <span class="wa-opt-icon">📱</span>
-            <div><div class="wa-opt-title">تسويق إلكتروني</div><div class="wa-opt-sub">سوشيال + إعلانات + تصميم + تصوير</div></div>
+            <div><div class="wa-opt-title">تسويق إلكتروني</div><div class="wa-opt-sub">سوشيال + إعلانات + تصميم</div></div>
             <span class="wa-opt-arr">←</span>
           </a>
           <a href="https://wa.me/201152501056?text=مرحبا،%20أريد%20الاستفسار%20عن%20خدمة%20الدعاية%20والإعلان%20الأوفلاين" class="wa-opt" id="waOptOffline" target="_blank" rel="noopener">
             <span class="wa-opt-icon">🏪</span>
-            <div><div class="wa-opt-title">دعاية وإعلان</div><div class="wa-opt-sub">يافطات + يوني فورم + كروت + هوية</div></div>
+            <div><div class="wa-opt-title">دعاية وإعلان</div><div class="wa-opt-sub">يافطات + كروت + هوية</div></div>
             <span class="wa-opt-arr">←</span>
           </a>
           <a href="https://wa.me/201152501056?text=مرحبا،%20أريد%20الحزمة%20الكاملة%20%28تسويق%20رقمي%20%2B%20دعاية%20وإعلان%29" class="wa-opt wa-opt-full" id="waOptFull" target="_blank" rel="noopener">
             <span class="wa-opt-icon">🚀</span>
-            <div><div class="wa-opt-title">الحزمة الكاملة</div><div class="wa-opt-sub">التسويق الإلكتروني + الدعاية الأوفلاين</div></div>
+            <div><div class="wa-opt-title">الحزمة الكاملة</div><div class="wa-opt-sub">تسويق + دعاية أوفلاين</div></div>
             <span class="wa-opt-arr">←</span>
           </a>
         </div>
@@ -834,11 +804,11 @@ footer{background:var(--bg);border-top:1px solid var(--border);padding:clamp(40p
   </div>
 </section>
 
-<!-- ══ CTA BAND ═════════════════════════════════════ -->
-<div class="cta-band">
+<!-- ══ 11 · CTA BAND — tone R2 (final red push) ═════ -->
+<div class="cta-band tone-r2">
   <div class="container cta-band-inner">
     <h2>جاهز تبدأ مشروعك؟</h2>
-    <p>كلمنا دلوقتي واحصل على استشارة مجانية خلال 24 ساعة</p>
+    <p>كلمنا دلوقتي واحصل على استشارة مجانية</p>
     <div class="cta-band-btns">
       <a href="https://wa.me/201152501056?text=مرحبا،%20أريد%20بدء%20مشروع%20جديد" class="btn-primary" target="_blank" rel="noopener">واتساب مباشر <span class="btn-primary-arrow">←</span></a>
       <a href="catalog.html" class="btn-secondary">تصفح الكتالوج</a>
@@ -846,15 +816,15 @@ footer{background:var(--bg);border-top:1px solid var(--border);padding:clamp(40p
   </div>
 </div>
 
-<!-- ══ FOOTER ═══════════════════════════════════════ -->
-<footer>
+<!-- ══ 12 · FOOTER — tone K1 ═════════════════════════ -->
+<footer class="tone-k1">
   <div class="ft-grid">
     <div>
       <div class="ft-logo">
         <img src="assets/logo.svg" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Crect width=%27100%27 height=%27100%27 fill=%27%23E8192C%27/%3E%3Cpolygon points=%2750,22 78,68 22,68%27 fill=%27white%27/%3E%3C/svg%3E'" alt="Logo">
         <div><div class="fn">AHMED OMANI</div><div class="fs">Auto Marketing</div></div>
       </div>
-      <p class="ft-desc">تسويق إلكتروني ودعاية وإعلان متخصصة لقطاع السيارات في مصر — من الواجهة للكرت الشخصي.</p>
+      <p class="ft-desc">تسويق إلكتروني ودعاية وإعلان متخصصة لقطاع السيارات في مصر.</p>
     </div>
     <div>
       <div class="ft-col-title">تصفح</div>
@@ -942,7 +912,7 @@ function filterPort(cat,btn){
 // ── PORTFOLIO SLIDE ──────────────────────────────────
 function slidePort(dir){
   var t=document.getElementById('portGrid');
-  t.scrollBy({left:dir*320,behavior:'smooth'});
+  t.scrollBy({left:dir*310,behavior:'smooth'});
 }
 
 // ── WHATSAPP NUMBER ──────────────────────────────────
@@ -1031,12 +1001,6 @@ function renderStats(list){
       +'<div class="stat-label">'+esc(s.label||'')+'</div>'
       +'</div>';
   }).join('');
-  var m=document.getElementById('heroStatsMobile');
-  if(m&&list.length>=4){
-    m.innerHTML=list.slice(0,4).map(function(s){
-      return'<div class="hsm-item"><div class="hsm-n" data-count>'+esc(s.num||'')+'</div><div class="hsm-l">'+esc(s.label||'')+'</div></div>';
-    }).join('');
-  }
   animateCounters();
 }
 
