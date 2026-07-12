@@ -411,6 +411,17 @@ button,select,input,textarea{font-family:var(--font)}
         <svg viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
         حفظ الصفحة الرئيسية
       </button>
+      <div class="card" style="margin-top:20px">
+        <div class="card-header">
+          <div class="card-title"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>صور البانر (مركز صيانة / معرض / مغسلة / قطع غيار)</div>
+        </div>
+        <div class="field-hint" style="margin-bottom:12px">ارفع صور حقيقية من نشاط العميل لتظهر أسفل العنوان الرئيسي مباشرةً. لو مفيش صورة، هتظهر أيقونة بديلة بدل الصورة.</div>
+        <div class="edit-grid" id="heroGalEditor"></div>
+      </div>
+      <button class="btn btn-p" onclick="saveHeroGallery()">
+        <svg viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+        حفظ صور البانر
+      </button>
     </div>
 
     <!-- STATS BAR -->
@@ -842,7 +853,7 @@ const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZ
 const sb=supabase.createClient(SB_URL,SB_KEY);
 
 var portfolio=[],clients=[],faqs=[],pages=[],pageSecs=[],products=[];
-var statsData=[],featData=[],textsData={},tstData=[];
+var statsData=[],featData=[],textsData={},tstData=[],heroGalData=[];
 
 // ── BREADCRUMB MAP ────────────────────────────────────
 var secNames={dash:'الرئيسية',hero:'الصفحة الرئيسية',stats:'الشريط الإحصائي',features:'شريط المميزات',wa:'رسائل واتساب',port:'الأعمال',products:'الكتالوج',clients:'العملاء',tst:'آراء العملاء',faq:'الأسئلة',pages:'الصفحات',texts:'نصوص الأقسام',settings:'الإعدادات'};
@@ -940,10 +951,58 @@ async function loadSettings(){
   featData=data.features_data||defaultFeatures();
   textsData=data.page_texts||{};
   tstData=data.testimonials_data||[];
+  heroGalData=data.hero_gallery||defaultHeroGallery();
   renderStatsEditor();
   renderFeatEditor();
   loadTextsEditor();
   renderTstsEditor();
+  renderHeroGalEditor();
+}
+
+function defaultHeroGallery(){
+  return[
+    {icon:'wrench-adjustable',label:'مركز صيانة',image_url:null},
+    {icon:'building',label:'معرض سيارات',image_url:null},
+    {icon:'droplet',label:'مغسلة سيارات',image_url:null},
+    {icon:'nut',label:'قطع غيار',image_url:null}
+  ];
+}
+
+function renderHeroGalEditor(){
+  document.getElementById('heroGalEditor').innerHTML=heroGalData.map(function(g,i){
+    return'<div class="edit-row">'
+      +'<div class="edit-row-head"><div class="edit-row-num">'+(i+1)+'</div> صورة '+(i+1)+'</div>'
+      +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">'
+        +'<div><div style="font-size:10px;color:var(--g);margin-bottom:4px;font-weight:700;text-transform:uppercase;letter-spacing:.5px">التسمية</div>'
+          +'<input class="fi" value="'+h(g.label||'')+'" oninput="heroGalData['+i+'].label=this.value" placeholder="مركز صيانة"></div>'
+        +'<div><div style="font-size:10px;color:var(--g);margin-bottom:4px;font-weight:700;text-transform:uppercase;letter-spacing:.5px">أيقونة احتياطية (لو مفيش صورة)</div>'
+          +'<input class="fi" value="'+h(g.icon||'')+'" oninput="heroGalData['+i+'].icon=this.value" placeholder="wrench-adjustable"></div>'
+      +'</div>'
+      +'<div class="upload-zone" onclick="document.getElementById(\'hg-f'+i+'\').click()">📁 ارفع صورة حقيقية من جهازك (JPG/PNG)'
+        +'<input type="file" id="hg-f'+i+'" accept="image/*" style="display:none" onchange="upHeroGalImg(this,'+i+')">'
+      +'</div>'
+      +(g.image_url?'<img src="'+h(g.image_url)+'" class="port-preview" style="max-height:100px;object-fit:cover;background:var(--s2);padding:0;border-radius:8px;margin-top:8px">':'')
+      +'</div>';
+  }).join('');
+}
+
+async function upHeroGalImg(inp,i){
+  if(!inp.files[0])return;
+  toast('⏳ جاري الرفع...');
+  var f=inp.files[0];var ext=f.name.split('.').pop();
+  var nm='hero/'+Date.now()+'-'+i+'.'+ext;
+  var{error}=await sb.storage.from('ao-images').upload(nm,f,{upsert:true});
+  if(error){toast('❌ '+error.message);return}
+  var url=sb.storage.from('ao-images').getPublicUrl(nm).data.publicUrl;
+  heroGalData[i].image_url=url;
+  renderHeroGalEditor();
+  toast('✅ تم رفع الصورة!');
+}
+
+async function saveHeroGallery(){
+  var{error}=await sb.from('ao_settings').upsert({id:1,hero_gallery:heroGalData,updated_at:new Date().toISOString()});
+  if(error){toast('❌ '+error.message);return}
+  toast('✅ تم حفظ صور البانر!');
 }
 
 function defaultStats(){
