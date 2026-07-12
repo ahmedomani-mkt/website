@@ -423,6 +423,7 @@ button,select,input,textarea{font-family:var(--font)}
         <div class="card-header">
           <div class="card-title"><svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>الأرقام الإحصائية (تظهر على خلفية حمراء)</div>
         </div>
+        <div class="field-hint" style="margin-bottom:12px">اكتب اسم الأيقونة من <a href="https://icons.getbootstrap.com" target="_blank" rel="noopener" style="color:var(--red)">icons.getbootstrap.com</a> بدون بادئة bi- مثال: trophy</div>
         <div class="edit-grid" id="statsEditor"></div>
       </div>
       <button class="btn btn-p" onclick="saveStats()">
@@ -435,12 +436,13 @@ button,select,input,textarea{font-family:var(--font)}
     <div class="sec" id="sec-features">
       <div class="sec-header">
         <div class="sec-title">شريط المميزات</div>
-        <div class="sec-sub">البطاقات الأربعة في الشريط الأسود بعد الـ Hero مباشرةً</div>
+        <div class="sec-sub">البطاقات الأربعة أسفل الشريط الإحصائي مباشرةً</div>
       </div>
       <div class="card">
         <div class="card-header">
           <div class="card-title"><svg viewBox="0 0 24 24"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>المميزات الأربعة</div>
         </div>
+        <div class="field-hint" style="margin-bottom:12px">اكتب اسم الأيقونة من <a href="https://icons.getbootstrap.com" target="_blank" rel="noopener" style="color:var(--red)">icons.getbootstrap.com</a> بدون بادئة bi- مثال: megaphone</div>
         <div class="edit-grid" id="featEditor"></div>
       </div>
       <button class="btn btn-p" onclick="saveFeatures()">
@@ -946,18 +948,18 @@ async function loadSettings(){
 
 function defaultStats(){
   return[
-    {icon:'🏆',num:'10+',label:'سنوات في السوق المصري'},
-    {icon:'🤝',num:'30+',label:'عميل في قطاع السيارات'},
-    {icon:'🚀',num:'500+',label:'مشروع منجز بنجاح'},
-    {icon:'💡',num:'5x',label:'متوسط عائد الاستثمار'}
+    {icon:'trophy',num:'10+',label:'سنوات في السوق المصري'},
+    {icon:'people',num:'30+',label:'عميل في قطاع السيارات'},
+    {icon:'rocket-takeoff',num:'500+',label:'مشروع منجز بنجاح'},
+    {icon:'lightbulb',num:'5x',label:'متوسط عائد الاستثمار'}
   ];
 }
 function defaultFeatures(){
   return[
-    {label:'خدمة 01',icon:'📱',title:'التسويق الإلكتروني الكامل',desc:'سوشيال + إعلانات Meta/Google + تقارير شهرية'},
-    {label:'خدمة 02',icon:'🏪',title:'دعاية وإعلان أوفلاين',desc:'يافطات + يوني فورم + كروت + Job Orders'},
-    {label:'خدمة 03',icon:'📸',title:'تصوير احترافي',desc:'تصوير المراكز والسيارات والمنتجات'},
-    {label:'خدمة 04',icon:'🎨',title:'هوية بصرية متكاملة',desc:'لوجو + هوية + تطبيق على جميع المواد'}
+    {label:'خدمة 01',icon:'megaphone',title:'التسويق الإلكتروني الكامل',desc:'سوشيال + إعلانات Meta/Google + تقارير شهرية'},
+    {label:'خدمة 02',icon:'shop',title:'دعاية وإعلان أوفلاين',desc:'يافطات + يوني فورم + كروت + Job Orders'},
+    {label:'خدمة 03',icon:'camera',title:'تصوير احترافي',desc:'تصوير المراكز والسيارات والمنتجات'},
+    {label:'خدمة 04',icon:'palette',title:'هوية بصرية متكاملة',desc:'لوجو + هوية + تطبيق على جميع المواد'}
   ];
 }
 
@@ -966,8 +968,8 @@ function renderStatsEditor(){
     return'<div class="edit-row">'
       +'<div class="edit-row-head"><div class="edit-row-num">'+(i+1)+'</div> إحصائية '+(i+1)+'</div>'
       +'<div style="display:grid;grid-template-columns:80px 1fr 2fr;gap:10px">'
-        +'<div><div style="font-size:10px;color:var(--g);margin-bottom:4px;font-weight:700;text-transform:uppercase;letter-spacing:.5px">أيقونة</div>'
-          +'<input class="fi" value="'+h(s.icon||'')+'" oninput="statsData['+i+'].icon=this.value" placeholder="🏆"></div>'
+        +'<div><div style="font-size:10px;color:var(--g);margin-bottom:4px;font-weight:700;text-transform:uppercase;letter-spacing:.5px">أيقونة (Bootstrap Icons)</div>'
+          +'<input class="fi" value="'+h(s.icon||'')+'" oninput="statsData['+i+'].icon=this.value" placeholder="trophy"></div>'
         +'<div><div style="font-size:10px;color:var(--g);margin-bottom:4px;font-weight:700;text-transform:uppercase;letter-spacing:.5px">الرقم</div>'
           +'<input class="fi" value="'+h(s.num||'')+'" oninput="statsData['+i+'].num=this.value" placeholder="10+"></div>'
         +'<div><div style="font-size:10px;color:var(--g);margin-bottom:4px;font-weight:700;text-transform:uppercase;letter-spacing:.5px">الوصف</div>'
@@ -990,8 +992,8 @@ function renderFeatEditor(){
       +'<div style="display:grid;grid-template-columns:80px 80px 1fr;gap:10px;margin-bottom:8px">'
         +'<div><div style="font-size:10px;color:var(--g);margin-bottom:4px;font-weight:700;text-transform:uppercase;letter-spacing:.5px">تسمية</div>'
           +'<input class="fi" value="'+h(f.label||'')+'" oninput="featData['+i+'].label=this.value" placeholder="خدمة 01"></div>'
-        +'<div><div style="font-size:10px;color:var(--g);margin-bottom:4px;font-weight:700;text-transform:uppercase;letter-spacing:.5px">أيقونة</div>'
-          +'<input class="fi" value="'+h(f.icon||'')+'" oninput="featData['+i+'].icon=this.value" placeholder="📱"></div>'
+        +'<div><div style="font-size:10px;color:var(--g);margin-bottom:4px;font-weight:700;text-transform:uppercase;letter-spacing:.5px">أيقونة (Bootstrap Icons)</div>'
+          +'<input class="fi" value="'+h(f.icon||'')+'" oninput="featData['+i+'].icon=this.value" placeholder="megaphone"></div>'
         +'<div><div style="font-size:10px;color:var(--g);margin-bottom:4px;font-weight:700;text-transform:uppercase;letter-spacing:.5px">العنوان</div>'
           +'<input class="fi" value="'+h(f.title||'')+'" oninput="featData['+i+'].title=this.value"></div>'
       +'</div>'
