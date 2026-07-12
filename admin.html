@@ -253,6 +253,10 @@ button,select,input,textarea{font-family:var(--font)}
       <div class="ni-ic"><svg viewBox="0 0 24 24"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></div>
       شريط المميزات
     </div>
+    <div class="ni" data-s="story" onclick="go('story',this)">
+      <div class="ni-ic"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg></div>
+      سيكشن العرض
+    </div>
     <div class="ni" data-s="wa" onclick="go('wa',this)">
       <div class="ni-ic"><svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg></div>
       رسائل واتساب
@@ -393,6 +397,16 @@ button,select,input,textarea{font-family:var(--font)}
           <div class="field"><label>نص الزر الأول</label><input type="text" id="h-b1" placeholder="اكتشف خدماتنا"></div>
           <div class="field"><label>نص الزر الثاني</label><input type="text" id="h-b2" placeholder="واتساب مباشر"></div>
         </div>
+        <div class="field">
+          <label>صورة خلفية الهيرو (اختياري)</label>
+          <input type="url" id="h-bg" placeholder="https://..." oninput="prevHeroBg(this.value)">
+          <div class="field-hint">لو رفعت صورة، هتظهر كخلفية عريضة خلف العنوان الرئيسي مع تظليل غامق فوقها. سيبها فاضية للرجوع للتصميم الأبيض البسيط.</div>
+        </div>
+        <div class="upload-zone" onclick="document.getElementById('h-bg-f').click()">
+          📁 أو ارفع صورة من جهازك (JPG/PNG)
+          <input type="file" id="h-bg-f" accept="image/*" style="display:none" onchange="upHeroBg(this)">
+        </div>
+        <img id="h-bg-pv" class="port-preview" style="max-height:120px;object-fit:cover;width:100%;border-radius:8px;display:none;margin-top:10px">
       </div>
       <div class="card">
         <div class="card-header">
@@ -459,6 +473,72 @@ button,select,input,textarea{font-family:var(--font)}
       <button class="btn btn-p" onclick="saveFeatures()">
         <svg viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
         حفظ المميزات
+      </button>
+    </div>
+
+    <!-- STORY / SHOWCASE SECTIONS -->
+    <div class="sec" id="sec-story">
+      <div class="sec-header">
+        <div class="sec-title">سيكشن العرض (بين الأعمال وآراء العملاء)</div>
+        <div class="sec-sub">سيكشن غامق بالإمكانيات + سيكشنين صورة ونص لقصص النجاح</div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>السيكشن الغامق — إمكانياتنا</div>
+        </div>
+        <div class="field"><label>البادج الصغير</label><input type="text" id="cap-badge" placeholder="إمكانياتنا"></div>
+        <div class="field"><label>العنوان</label><input type="text" id="cap-title" placeholder="خبرة. سرعة. نتائج."></div>
+        <div class="field-hint" style="margin-bottom:12px">3 نقاط قوة (رقم + وصف + أيقونة من icons.getbootstrap.com)</div>
+        <div class="edit-grid" id="capEditor"></div>
+        <div class="field" style="margin-top:14px"><label>رابط صورة الخلفية</label><input type="url" id="cap-img" placeholder="https://..." oninput="prevStoryImg('cap-img-pv',this.value)"></div>
+        <div class="upload-zone" onclick="document.getElementById('cap-img-f').click()">
+          📁 أو ارفع صورة من جهازك (JPG/PNG)
+          <input type="file" id="cap-img-f" accept="image/*" style="display:none" onchange="upStoryImg(this,'cap-img')">
+        </div>
+        <img id="cap-img-pv" class="port-preview" style="max-height:120px;object-fit:cover;width:100%;border-radius:8px;display:none;margin-top:10px">
+      </div>
+      <button class="btn btn-p" onclick="saveCapability()">
+        <svg viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+        حفظ السيكشن الغامق
+      </button>
+
+      <div class="card" style="margin-top:20px">
+        <div class="card-header">
+          <div class="card-title"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>سيكشن قصة نجاح 1</div>
+        </div>
+        <div class="field"><label>البادج الصغير</label><input type="text" id="sp1-badge" placeholder="قصص نجاح"></div>
+        <div class="field"><label>العنوان</label><input type="text" id="sp1-title"></div>
+        <div class="field"><label>النص</label><textarea id="sp1-text" rows="3"></textarea></div>
+        <div class="field"><label>رابط الصورة</label><input type="url" id="sp1-img" placeholder="https://..." oninput="prevStoryImg('sp1-img-pv',this.value)"></div>
+        <div class="upload-zone" onclick="document.getElementById('sp1-img-f').click()">
+          📁 أو ارفع صورة من جهازك (JPG/PNG)
+          <input type="file" id="sp1-img-f" accept="image/*" style="display:none" onchange="upStoryImg(this,'sp1-img')">
+        </div>
+        <img id="sp1-img-pv" class="port-preview" style="max-height:120px;object-fit:cover;width:100%;border-radius:8px;display:none;margin-top:10px">
+      </div>
+      <button class="btn btn-p" onclick="saveSplit(1)">
+        <svg viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+        حفظ قصة النجاح 1
+      </button>
+
+      <div class="card" style="margin-top:20px">
+        <div class="card-header">
+          <div class="card-title"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>سيكشن قصة نجاح 2</div>
+        </div>
+        <div class="field"><label>البادج الصغير</label><input type="text" id="sp2-badge" placeholder="ليه إحنا مختلفين"></div>
+        <div class="field"><label>العنوان</label><input type="text" id="sp2-title"></div>
+        <div class="field"><label>النص</label><textarea id="sp2-text" rows="3"></textarea></div>
+        <div class="field"><label>رابط الصورة</label><input type="url" id="sp2-img" placeholder="https://..." oninput="prevStoryImg('sp2-img-pv',this.value)"></div>
+        <div class="upload-zone" onclick="document.getElementById('sp2-img-f').click()">
+          📁 أو ارفع صورة من جهازك (JPG/PNG)
+          <input type="file" id="sp2-img-f" accept="image/*" style="display:none" onchange="upStoryImg(this,'sp2-img')">
+        </div>
+        <img id="sp2-img-pv" class="port-preview" style="max-height:120px;object-fit:cover;width:100%;border-radius:8px;display:none;margin-top:10px">
+      </div>
+      <button class="btn btn-p" onclick="saveSplit(2)">
+        <svg viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+        حفظ قصة النجاح 2
       </button>
     </div>
 
@@ -853,10 +933,10 @@ const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZ
 const sb=supabase.createClient(SB_URL,SB_KEY);
 
 var portfolio=[],clients=[],faqs=[],pages=[],pageSecs=[],products=[];
-var statsData=[],featData=[],textsData={},tstData=[],heroGalData=[];
+var statsData=[],featData=[],textsData={},tstData=[],heroGalData=[],capData=[];
 
 // ── BREADCRUMB MAP ────────────────────────────────────
-var secNames={dash:'الرئيسية',hero:'الصفحة الرئيسية',stats:'الشريط الإحصائي',features:'شريط المميزات',wa:'رسائل واتساب',port:'الأعمال',products:'الكتالوج',clients:'العملاء',tst:'آراء العملاء',faq:'الأسئلة',pages:'الصفحات',texts:'نصوص الأقسام',settings:'الإعدادات'};
+var secNames={dash:'الرئيسية',hero:'الصفحة الرئيسية',stats:'الشريط الإحصائي',features:'شريط المميزات',story:'سيكشن العرض',wa:'رسائل واتساب',port:'الأعمال',products:'الكتالوج',clients:'العملاء',tst:'آراء العملاء',faq:'الأسئلة',pages:'الصفحات',texts:'نصوص الأقسام',settings:'الإعدادات'};
 
 // ── LOGIN ──────────────────────────────────────────────
 async function doLogin(){
@@ -924,6 +1004,7 @@ async function loadHero(){
   v('h-n1',data.stat1_num);v('h-l1',data.stat1_label);
   v('h-n2',data.stat2_num);v('h-l2',data.stat2_label);
   v('h-n3',data.stat3_num);v('h-l3',data.stat3_label);
+  v('h-bg',data.bg_image_url);prevHeroBg(data.bg_image_url);
 }
 async function saveHero(){
   var{error}=await sb.from('ao_hero').upsert({id:1,
@@ -932,10 +1013,26 @@ async function saveHero(){
     stat1_num:g('h-n1'),stat1_label:g('h-l1'),
     stat2_num:g('h-n2'),stat2_label:g('h-l2'),
     stat3_num:g('h-n3'),stat3_label:g('h-l3'),
+    bg_image_url:g('h-bg')||null,
     updated_at:new Date().toISOString()
   });
   if(error){toast('❌ '+error.message);return}
   toast('✅ تم حفظ الصفحة الرئيسية!');
+}
+function prevHeroBg(url){
+  var pv=document.getElementById('h-bg-pv');
+  if(url){pv.src=url;pv.style.display='block'}else{pv.style.display='none'}
+}
+async function upHeroBg(inp){
+  if(!inp.files[0])return;
+  toast('⏳ جاري الرفع...');
+  var f=inp.files[0];var ext=f.name.split('.').pop();
+  var nm='hero/bg-'+Date.now()+'.'+ext;
+  var{error}=await sb.storage.from('ao-images').upload(nm,f,{upsert:true});
+  if(error){toast('❌ '+error.message);return}
+  var url=sb.storage.from('ao-images').getPublicUrl(nm).data.publicUrl;
+  v('h-bg',url);prevHeroBg(url);
+  toast('✅ تم رفع الصورة!');
 }
 
 // ── STATS BAR ──────────────────────────────────────────
@@ -957,6 +1054,70 @@ async function loadSettings(){
   loadTextsEditor();
   renderTstsEditor();
   renderHeroGalEditor();
+  var cap=data.capability_section||{};
+  v('cap-badge',cap.badge);v('cap-title',cap.title);v('cap-img',cap.image_url);prevStoryImg('cap-img-pv',cap.image_url);
+  capData=(cap.points&&cap.points.length)?cap.points:defaultCapPoints();
+  renderCapEditor();
+  var s1=data.split1||{};
+  v('sp1-badge',s1.badge);v('sp1-title',s1.title);v('sp1-text',s1.text);v('sp1-img',s1.image_url);prevStoryImg('sp1-img-pv',s1.image_url);
+  var s2=data.split2||{};
+  v('sp2-badge',s2.badge);v('sp2-title',s2.title);v('sp2-text',s2.text);v('sp2-img',s2.image_url);prevStoryImg('sp2-img-pv',s2.image_url);
+}
+
+function defaultCapPoints(){
+  return[
+    {icon:'clock-history',num:'48 ساعة',label:'مدة تسليم أول تصميم'},
+    {icon:'people-fill',num:'6+',label:'متخصصين في الفريق'},
+    {icon:'graph-up-arrow',num:'3x',label:'متوسط نمو المتابعين'}
+  ];
+}
+function renderCapEditor(){
+  document.getElementById('capEditor').innerHTML=capData.map(function(p,i){
+    return'<div class="edit-row">'
+      +'<div class="edit-row-head"><div class="edit-row-num">'+(i+1)+'</div> نقطة '+(i+1)+'</div>'
+      +'<div style="display:grid;grid-template-columns:80px 1fr 2fr;gap:10px">'
+        +'<div><div style="font-size:10px;color:var(--g);margin-bottom:4px;font-weight:700;text-transform:uppercase;letter-spacing:.5px">أيقونة</div>'
+          +'<input class="fi" value="'+h(p.icon||'')+'" oninput="capData['+i+'].icon=this.value" placeholder="clock-history"></div>'
+        +'<div><div style="font-size:10px;color:var(--g);margin-bottom:4px;font-weight:700;text-transform:uppercase;letter-spacing:.5px">الرقم</div>'
+          +'<input class="fi" value="'+h(p.num||'')+'" oninput="capData['+i+'].num=this.value" placeholder="48 ساعة"></div>'
+        +'<div><div style="font-size:10px;color:var(--g);margin-bottom:4px;font-weight:700;text-transform:uppercase;letter-spacing:.5px">الوصف</div>'
+          +'<input class="fi" value="'+h(p.label||'')+'" oninput="capData['+i+'].label=this.value" placeholder="مدة تسليم أول تصميم"></div>'
+      +'</div>'
+      +'</div>';
+  }).join('');
+}
+async function saveCapability(){
+  var payload={badge:g('cap-badge'),title:g('cap-title'),image_url:g('cap-img')||null,points:capData};
+  var{error}=await sb.from('ao_settings').upsert({id:1,capability_section:payload,updated_at:new Date().toISOString()});
+  if(error){toast('❌ '+error.message);return}
+  toast('✅ تم حفظ السيكشن الغامق!');
+}
+
+async function saveSplit(n){
+  var p='sp'+n+'-';
+  var payload={badge:g(p+'badge'),title:g(p+'title'),text:g(p+'text'),image_url:g(p+'img')||null};
+  var upd={id:1,updated_at:new Date().toISOString()};
+  upd['split'+n]=payload;
+  var{error}=await sb.from('ao_settings').upsert(upd);
+  if(error){toast('❌ '+error.message);return}
+  toast('✅ تم حفظ قصة النجاح '+n+'!');
+}
+
+function prevStoryImg(pvId,url){
+  var pv=document.getElementById(pvId);
+  if(!pv)return;
+  if(url){pv.src=url;pv.style.display='block'}else{pv.style.display='none'}
+}
+async function upStoryImg(inp,fieldId){
+  if(!inp.files[0])return;
+  toast('⏳ جاري الرفع...');
+  var f=inp.files[0];var ext=f.name.split('.').pop();
+  var nm='story/'+Date.now()+'-'+fieldId+'.'+ext;
+  var{error}=await sb.storage.from('ao-images').upload(nm,f,{upsert:true});
+  if(error){toast('❌ '+error.message);return}
+  var url=sb.storage.from('ao-images').getPublicUrl(nm).data.publicUrl;
+  v(fieldId,url);prevStoryImg(fieldId+'-pv',url);
+  toast('✅ تم رفع الصورة!');
 }
 
 function defaultHeroGallery(){
