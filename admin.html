@@ -146,6 +146,8 @@ button,select,input,textarea{font-family:var(--font)}
 .b-red{background:var(--rdim2);color:var(--red);border:1px solid rgba(232,25,44,.2)}
 .b-green{background:rgba(34,197,94,.08);color:var(--green);border:1px solid rgba(34,197,94,.2)}
 .b-off{background:rgba(255,255,255,.04);color:var(--g);border:1px solid var(--b2)}
+.b-purple{background:rgba(168,85,247,.1);color:#c084fc;border:1px solid rgba(168,85,247,.2)}
+.b-orange{background:rgba(249,115,22,.1);color:#fb923c;border:1px solid rgba(249,115,22,.2)}
 
 /* ── MODAL ───────────────────────────────────────────── */
 .ov{position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(4px);z-index:500;display:none;align-items:center;justify-content:center;padding:20px}
@@ -897,6 +899,14 @@ button,select,input,textarea{font-family:var(--font)}
     <input type="hidden" id="prm-id">
     <div class="r2">
       <div class="field"><label>اسم المنتج</label><input type="text" id="prm-t" placeholder="يافطة واجهة — تصميم وتنفيذ"></div>
+      <div class="field"><label>الكتالوج</label>
+        <select id="prm-catalog">
+          <option value="ads">كتالوج الدعاية والإعلان</option>
+          <option value="marketing">كتالوج التسويق</option>
+        </select>
+      </div>
+    </div>
+    <div class="r2">
       <div class="field"><label>التصنيف</label>
         <select id="prm-c">
           <option value="signage">يافطات وواجهات</option>
@@ -1491,6 +1501,7 @@ function renderProducts(){
     return'<div class="li">'+thumb
       +'<div class="li-b"><div class="li-t">'+h(p.title)+'</div>'
         +'<div class="li-s">'
+          +'<span class="badge '+(p.catalog==='marketing'?'b-purple':'b-orange')+'">'+(p.catalog==='marketing'?'كتالوج التسويق':'كتالوج الدعاية والإعلان')+'</span>'
           +'<span class="badge b-blue">'+h(prodCatNames[p.category]||p.category)+'</span>'
           +'<span class="badge b-red">'+h(price)+'</span>'
           +'<span class="badge '+(p.is_active?'b-green':'b-off')+'">'+(p.is_active?'ظاهر':'مخفي')+'</span>'
@@ -1507,6 +1518,7 @@ function openPrM(item){
   document.getElementById('prm-id').value=item?item.id:'';
   v('prm-t',item?item.title:'');v('prm-d',item?item.description:'');
   document.getElementById('prm-c').value=item?item.category:'signage';
+  document.getElementById('prm-catalog').value=item?(item.catalog||'ads'):'ads';
   v('prm-p',item&&item.price?item.price:'');v('prm-pn',item?item.price_note||'':'');
   v('prm-i',item?item.image_url||'':'');
   v('prm-details',item?item.details||'':'');
@@ -1605,6 +1617,7 @@ async function savePrM(){
   if(!title){toast('اكتب اسم المنتج');return}
   var priceRaw=g('prm-p').trim();
   var payload={title:title,description:g('prm-d'),category:document.getElementById('prm-c').value,
+    catalog:document.getElementById('prm-catalog').value,
     price:priceRaw?parseFloat(priceRaw):null,price_note:g('prm-pn')||null,
     image_url:g('prm-i')||null,details:g('prm-details')||null};
   var err;

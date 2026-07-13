@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="description" content="كتالوج الدعاية والإعلان — أحمد عماني. اختار منتجاتك وابعت طلبك واتساب مباشرة.">
+<meta name="description" content="كتالوج التسويق — أحمد عماني. اختار خدماتك وابعت طلبك واتساب مباشرة.">
 <link rel="icon" href="assets/logo.png" type="image/png" id="faviconLink">
-<title>كتالوج الدعاية والإعلان — Ahmed Omani</title>
+<title>كتالوج التسويق — Ahmed Omani</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -166,7 +166,7 @@ footer{border-top:1px solid var(--line);padding:24px var(--pad);display:flex;ali
     <img id="navLogoImg" src="assets/logo.png" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Crect width=%27100%27 height=%27100%27 fill=%27%23E8192C%27/%3E%3Cpolygon points=%2750,22 78,68 22,68%27 fill=%27white%27/%3E%3C/svg%3E'" alt="Ahmed Omani Auto Marketing" class="logo-img">
   </a>
   <div class="nav-side">
-    <a href="catalog-marketing.html" class="nav-home">كتالوج التسويق</a>
+    <a href="catalog.html" class="nav-home">كتالوج الدعاية والإعلان</a>
     <a href="/" class="nav-home">← HOME</a>
     <button class="cart-btn" onclick="openCart()">
       <span class="cart-btn-txt">السلة</span>
@@ -177,9 +177,9 @@ footer{border-top:1px solid var(--line);padding:24px var(--pad);display:flex;ali
 
 <header class="cat-header">
   <div class="container cat-header-inner">
-    <div class="cat-kicker">كتالوج الدعاية والإعلان</div>
-    <h1>اختار منتجاتك وابعت طلبك <span class="r">واتساب</span></h1>
-    <p>كل منتجات الدعاية والإعلان لمركزك في مكان واحد — ضيف اللي محتاجه للسلة وهيوصلنا طلبك على واتساب فورًا.</p>
+    <div class="cat-kicker">كتالوج التسويق</div>
+    <h1>اختار خدماتك التسويقية وابعت طلبك <span class="r">واتساب</span></h1>
+    <p>كل خدمات التسويق والتصميم والإدارة الرقمية لمركزك في مكان واحد — ضيف اللي محتاجه للسلة وهيوصلنا طلبك على واتساب فورًا.</p>
     <div class="cat-filter" id="catFilter"></div>
   </div>
 </header>
@@ -236,7 +236,7 @@ var _waNum='201152501056';
 var products=[];
 var cart={};       // {productId: qty}
 var activeCat='all';
-var CART_KEY='ao_cart_v1';
+var CART_KEY='ao_cart_marketing_v1';
 var catLabels={general:'عام',signage:'يافطات وواجهات',print:'مطبوعات',uniform:'يوني فورم',accessories:'اكسسوارات',digital:'خدمات رقمية',branding:'هوية بصرية'};
 
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
@@ -464,7 +464,7 @@ async function loadCatalog(){
     if(cfg&&cfg.meta_pixel_id)injectMetaPixel(cfg.meta_pixel_id);
     if(cfg&&cfg.logo_url){var nl=document.getElementById('navLogoImg');if(nl)nl.src=cfg.logo_url;}
     if(cfg&&cfg.favicon_url){var fav=document.getElementById('faviconLink');if(fav)fav.href=cfg.favicon_url;}
-    var res=await sb.from('ao_products').select('*').eq('is_active',true).eq('catalog','ads').order('sort_order');
+    var res=await sb.from('ao_products').select('*').eq('is_active',true).eq('catalog','marketing').order('sort_order');
     products=res.data||[];
   }catch(e){products=[]}
   document.getElementById('catLoading').style.display='none';

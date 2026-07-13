@@ -115,8 +115,8 @@ footer{border-top:1px solid var(--line);padding:24px var(--pad);display:flex;ali
     <img id="navLogoImg" src="assets/logo.png" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Crect width=%27100%27 height=%27100%27 fill=%27%23E8192C%27/%3E%3Cpolygon points=%2750,22 78,68 22,68%27 fill=%27white%27/%3E%3C/svg%3E'" alt="Ahmed Omani Auto Marketing" class="logo-img">
   </a>
   <div class="nav-side">
-    <a href="catalog.html" class="nav-back"><i class="bi bi-arrow-right"></i> <span>الكتالوج</span></a>
-    <a href="catalog.html" class="cart-btn">
+    <a href="catalog.html" class="nav-back" id="navBackLink"><i class="bi bi-arrow-right"></i> <span id="navBackLabel">الكتالوج</span></a>
+    <a href="catalog.html" class="cart-btn" id="navCartLink">
       <span class="cart-btn-txt">السلة</span>
       <span class="cart-count" id="cartCount">0</span>
     </a>
@@ -137,7 +137,7 @@ footer{border-top:1px solid var(--line);padding:24px var(--pad);display:flex;ali
 <div id="pdContent" style="display:none">
   <div class="pd-crumb">
     <div class="container pd-crumb-inner">
-      <a href="/">الرئيسية</a><span>/</span><a href="catalog.html">الكتالوج</a><span>/</span><span id="pdCrumbTitle" style="color:var(--ink)"></span>
+      <a href="/">الرئيسية</a><span>/</span><a href="catalog.html" id="crumbCatLink">الكتالوج</a><span>/</span><span id="pdCrumbTitle" style="color:var(--ink)"></span>
     </div>
   </div>
 
@@ -177,7 +177,7 @@ footer{border-top:1px solid var(--line);padding:24px var(--pad);display:flex;ali
 
   <section class="pd-more">
     <div class="container">
-      <a href="catalog.html"><i class="bi bi-grid"></i> شوف باقي منتجات الكتالوج</a>
+      <a href="catalog.html" id="moreCatLink"><i class="bi bi-grid"></i> شوف باقي منتجات الكتالوج</a>
     </div>
   </section>
 </div>
@@ -194,6 +194,7 @@ var SB_URL='https://knwnviglquxvvwknxbqa.supabase.co';
 var SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtud252aWdscXV4dnZ3a254YnFhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA5MzI2NDIsImV4cCI6MjA5NjUwODY0Mn0.VuxAC-J7it4m_wrSTBHCh7t_z_PL8CCGwhvtv6NiZmQ';
 var _waNum='201152501056';
 var CART_KEY='ao_cart_v1';
+var catalogPage='catalog.html';
 var product=null;
 var catLabels={general:'عام',signage:'يافطات وواجهات',print:'مطبوعات',uniform:'يوني فورم',accessories:'اكسسوارات',digital:'خدمات رقمية',branding:'هوية بصرية'};
 
@@ -222,7 +223,19 @@ function addAndGoToCart(){
   localStorage.setItem(CART_KEY,JSON.stringify(cart));
   pxTrack('AddToCart',{content_ids:[product.id],content_name:product.title,content_type:'product',currency:'EGP',value:parseFloat(product.price)||0});
   toast('اتضاف للسلة ✓ هننقلك للكتالوج...');
-  setTimeout(function(){window.location.href='catalog.html'},700);
+  setTimeout(function(){window.location.href=catalogPage},700);
+}
+
+function setCatalogTarget(catalog){
+  catalogPage=catalog==='marketing'?'catalog-marketing.html':'catalog.html';
+  CART_KEY=catalog==='marketing'?'ao_cart_marketing_v1':'ao_cart_v1';
+  var label=catalog==='marketing'?'كتالوج التسويق':'كتالوج الدعاية والإعلان';
+  ['navBackLink','navCartLink','crumbCatLink','moreCatLink'].forEach(function(id){
+    var el=document.getElementById(id);
+    if(el)el.href=catalogPage;
+  });
+  var lbl=document.getElementById('navBackLabel');
+  if(lbl)lbl.textContent=label;
 }
 
 // ── META PIXEL ───────────────────────────────────────
@@ -238,6 +251,8 @@ function pxTrack(name,params){
 
 function renderProduct(p){
   product=p;
+  setCatalogTarget(p.catalog);
+  updateCartCount();
   document.title=p.title+' — Ahmed Omani';
   document.getElementById('pdCrumbTitle').textContent=p.title;
   document.getElementById('pdCat').textContent=catName(p.category);
