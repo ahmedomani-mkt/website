@@ -769,7 +769,7 @@ button,select,input,textarea{font-family:var(--font)}
       </div>
       <div class="card">
         <div class="card-header"><div class="card-title"><svg viewBox="0 0 24 24"><circle cx="13.5" cy="6.5" r=".5"/><circle cx="17.5" cy="10.5" r=".5"/><circle cx="8.5" cy="7.5" r=".5"/><circle cx="6.5" cy="12.5" r=".5"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 011.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/></svg>ألوان الأقسام</div></div>
-        <div class="field-hint" style="margin-bottom:12px">لكل قسم 5 ألوان: الخلفية، خلفية الكروت، النصوص، الأزرار/الشارات، والأيقونات. غيّر اللي محتاجه بس — سيب الباقي زي ما هو. في السيكشنات ذات الخلفية الغامقة أو الحمراء أصلًا، لون النص بيفضل أبيض ثابت للوضوح بغض النظر عن اختيارك.</div>
+        <div class="field-hint" style="margin-bottom:12px">لكل قسم 6 ألوان: الخلفية، نصوص السيكشن، الأزرار/الشارات، الأيقونات، خلفية الكروت، ونص جوه الكروت (مستقل عن نص السيكشن — مفيد لو خليت خلفية الكارت غامقة والسيكشن فاتح مثلًا). غيّر اللي محتاجه بس — سيب الباقي زي ما هو. في السيكشنات ذات الخلفية الغامقة أو الحمراء أصلًا، لون النص بيفضل أبيض ثابت للوضوح بغض النظر عن اختيارك.</div>
         <div id="colorsEditor"></div>
       </div>
       <button class="btn btn-p" onclick="saveSectionColors()">
@@ -1872,21 +1872,21 @@ async function saveTexts(){
 
 // ── SECTION COLORS ───────────────────────────────────────
 var SECTION_COLOR_DEFS=[
-  {id:'home',label:'الهيرو (الصفحة الرئيسية)',defBg:'#ffffff',defText:'#18150f',defAccent:'#e8192c',defCard:'#ffffff',defIcon:'#e8192c'},
-  {id:'secStats',label:'الشريط الإحصائي',defBg:'#e8192c',defText:'#ffffff',defAccent:'#ffffff',defCard:'#ffffff',defIcon:'#e8192c'},
-  {id:'secFeatures',label:'شريط المميزات',defBg:'#f8f6f3',defText:'#18150f',defAccent:'#e8192c',defCard:'#ffffff',defIcon:'#e8192c'},
-  {id:'services',label:'قسم الخدمات',defBg:'#f1ede7',defText:'#18150f',defAccent:'#e8192c',defCard:'#ffffff',defIcon:'#e8192c'},
-  {id:'portfolio',label:'قسم الأعمال',defBg:'#f8f6f3',defText:'#18150f',defAccent:'#e8192c',defCard:'#ffffff',defIcon:'#e8192c'},
-  {id:'capSec',label:'السيكشن الغامق (إمكانياتنا)',defBg:'#18150f',defText:'#ffffff',defAccent:'#e8192c',defCard:'#ffffff',defIcon:'#e8192c'},
-  {id:'split1Sec',label:'قصة نجاح 1',defBg:'#f8f6f3',defText:'#18150f',defAccent:'#e8192c',defCard:'#ffffff',defIcon:'#e8192c'},
-  {id:'split2Sec',label:'قصة نجاح 2',defBg:'#ffffff',defText:'#18150f',defAccent:'#e8192c',defCard:'#ffffff',defIcon:'#e8192c'},
-  {id:'secTestimonials',label:'قسم آراء العملاء',defBg:'#f1ede7',defText:'#18150f',defAccent:'#e8192c',defCard:'#ffffff',defIcon:'#e8192c'},
-  {id:'clients',label:'قسم العملاء',defBg:'#f8f6f3',defText:'#18150f',defAccent:'#e8192c',defCard:'#ffffff',defIcon:'#e8192c'},
-  {id:'secProcess',label:'قسم كيف نعمل',defBg:'#f1ede7',defText:'#18150f',defAccent:'#e8192c',defCard:'#ffffff',defIcon:'#e8192c'},
-  {id:'faq',label:'قسم الأسئلة الشائعة',defBg:'#f8f6f3',defText:'#18150f',defAccent:'#e8192c',defCard:'#ffffff',defIcon:'#e8192c'},
-  {id:'contact',label:'قسم التواصل',defBg:'#f1ede7',defText:'#18150f',defAccent:'#e8192c',defCard:'#ffffff',defIcon:'#e8192c'},
-  {id:'secCta',label:'شريط الدعوة النهائي (CTA)',defBg:'#e8192c',defText:'#ffffff',defAccent:'#ffffff',defCard:'#ffffff',defIcon:'#e8192c'},
-  {id:'secFooter',label:'الفوتر',defBg:'#f8f6f3',defText:'#18150f',defAccent:'#e8192c',defCard:'#ffffff',defIcon:'#e8192c'}
+  {id:'home',label:'الهيرو (الصفحة الرئيسية)',defBg:'#ffffff',defText:'#18150f',defAccent:'#e8192c',defCard:'#ffffff',defIcon:'#e8192c',defCardText:'#18150f'},
+  {id:'secStats',label:'الشريط الإحصائي',defBg:'#e8192c',defText:'#ffffff',defAccent:'#ffffff',defCard:'#ffffff',defIcon:'#e8192c',defCardText:'#18150f'},
+  {id:'secFeatures',label:'شريط المميزات',defBg:'#f8f6f3',defText:'#18150f',defAccent:'#e8192c',defCard:'#ffffff',defIcon:'#e8192c',defCardText:'#18150f'},
+  {id:'services',label:'قسم الخدمات',defBg:'#f1ede7',defText:'#18150f',defAccent:'#e8192c',defCard:'#ffffff',defIcon:'#e8192c',defCardText:'#18150f'},
+  {id:'portfolio',label:'قسم الأعمال',defBg:'#f8f6f3',defText:'#18150f',defAccent:'#e8192c',defCard:'#ffffff',defIcon:'#e8192c',defCardText:'#18150f'},
+  {id:'capSec',label:'السيكشن الغامق (إمكانياتنا)',defBg:'#18150f',defText:'#ffffff',defAccent:'#e8192c',defCard:'#ffffff',defIcon:'#e8192c',defCardText:'#18150f'},
+  {id:'split1Sec',label:'قصة نجاح 1',defBg:'#f8f6f3',defText:'#18150f',defAccent:'#e8192c',defCard:'#ffffff',defIcon:'#e8192c',defCardText:'#18150f'},
+  {id:'split2Sec',label:'قصة نجاح 2',defBg:'#ffffff',defText:'#18150f',defAccent:'#e8192c',defCard:'#ffffff',defIcon:'#e8192c',defCardText:'#18150f'},
+  {id:'secTestimonials',label:'قسم آراء العملاء',defBg:'#f1ede7',defText:'#18150f',defAccent:'#e8192c',defCard:'#ffffff',defIcon:'#e8192c',defCardText:'#18150f'},
+  {id:'clients',label:'قسم العملاء',defBg:'#f8f6f3',defText:'#18150f',defAccent:'#e8192c',defCard:'#ffffff',defIcon:'#e8192c',defCardText:'#18150f'},
+  {id:'secProcess',label:'قسم كيف نعمل',defBg:'#f1ede7',defText:'#18150f',defAccent:'#e8192c',defCard:'#ffffff',defIcon:'#e8192c',defCardText:'#18150f'},
+  {id:'faq',label:'قسم الأسئلة الشائعة',defBg:'#f8f6f3',defText:'#18150f',defAccent:'#e8192c',defCard:'#ffffff',defIcon:'#e8192c',defCardText:'#18150f'},
+  {id:'contact',label:'قسم التواصل',defBg:'#f1ede7',defText:'#18150f',defAccent:'#e8192c',defCard:'#ffffff',defIcon:'#e8192c',defCardText:'#18150f'},
+  {id:'secCta',label:'شريط الدعوة النهائي (CTA)',defBg:'#e8192c',defText:'#ffffff',defAccent:'#ffffff',defCard:'#ffffff',defIcon:'#e8192c',defCardText:'#18150f'},
+  {id:'secFooter',label:'الفوتر',defBg:'#f8f6f3',defText:'#18150f',defAccent:'#e8192c',defCard:'#ffffff',defIcon:'#e8192c',defCardText:'#18150f'}
 ];
 var sectionColorsData={};
 function colorSwatch(id,key,val,title){
@@ -1898,15 +1898,16 @@ function renderColorsEditor(){
   document.getElementById('colorsEditor').innerHTML=SECTION_COLOR_DEFS.map(function(s){
     var cur=sectionColorsData[s.id]||{};
     var bg=cur.bg||s.defBg,text=cur.text||s.defText,accent=cur.accent||s.defAccent;
-    var card=cur.card||s.defCard,icon=cur.icon||s.defIcon;
+    var card=cur.card||s.defCard,icon=cur.icon||s.defIcon,cardText=cur.cardText||s.defCardText;
     return'<div class="clr-row">'
       +'<div class="clr-label">'+s.label+'</div>'
       +'<div class="clr-controls">'
         +'<div class="clr-swatch-col">'+colorSwatch(s.id,'bg',bg,'لون الخلفية')+'<span class="clr-tag">خلفية</span></div>'
-        +'<div class="clr-swatch-col">'+colorSwatch(s.id,'card',card,'لون خلفية الكروت')+'<span class="clr-tag">كروت</span></div>'
         +'<div class="clr-swatch-col">'+colorSwatch(s.id,'text',text,'لون النصوص')+'<span class="clr-tag">نص</span></div>'
         +'<div class="clr-swatch-col">'+colorSwatch(s.id,'accent',accent,'لون الأزرار والشارات')+'<span class="clr-tag">أزرار</span></div>'
         +'<div class="clr-swatch-col">'+colorSwatch(s.id,'icon',icon,'لون الأيقونات')+'<span class="clr-tag">أيقونات</span></div>'
+        +'<div class="clr-swatch-col">'+colorSwatch(s.id,'card',card,'لون خلفية الكروت')+'<span class="clr-tag">كروت</span></div>'
+        +'<div class="clr-swatch-col">'+colorSwatch(s.id,'cardText',cardText,'لون النص جوه الكروت')+'<span class="clr-tag">نص الكارت</span></div>'
         +'<button class="btn btn-g bsm" type="button" onclick="resetSectionColor(\''+s.id+'\')">افتراضي</button>'
       +'</div>'
       +'</div>';
