@@ -104,15 +104,16 @@ nav.solid{box-shadow:0 2px 16px rgba(24,21,15,.06)}
 .hero.has-bg .btn-secondary{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.32);color:#fff}
 .hero.has-bg .btn-secondary:hover{background:rgba(255,255,255,.2)}
 
-/* ══ HERO GALLERY · business types ═════════════════ */
+/* ══ HERO GALLERY · business types (icons) ═════════ */
 .hero-gallery{position:relative;z-index:1;margin-top:clamp(36px,6vw,56px)}
-.hg-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
-.hg-item{position:relative;border-radius:var(--r);overflow:hidden;aspect-ratio:3/4;border:1px solid var(--line);background:linear-gradient(160deg,var(--p2),var(--p3))}
-.hg-item img{width:100%;height:100%;object-fit:cover}
+.hg-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:18px}
+.hg-item{display:flex;flex-direction:column;align-items:center;gap:12px}
+.hg-ic{width:76px;height:76px;border-radius:50%;background:#fff;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:26px;color:var(--red);box-shadow:0 8px 22px rgba(24,21,15,.06);transition:.3s cubic-bezier(.16,1,.3,1)}
+.hg-item:hover .hg-ic{transform:translateY(-4px);border-color:var(--red);box-shadow:0 14px 28px rgba(232,25,44,.16)}
+.hg-name{font-size:12.5px;font-weight:600;color:var(--ink2);text-align:center}
 .hg-fallback{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px}
 .hg-fallback i{font-size:30px;color:var(--red)}
 .hg-fallback span{font-size:12px;font-weight:600;color:var(--ink2);text-align:center;padding:0 8px}
-.hg-label{position:absolute;bottom:0;left:0;right:0;padding:16px 10px 12px;background:linear-gradient(to top,rgba(10,8,6,.78),transparent);color:#fff;font-size:12.5px;font-weight:600;text-align:center}
 
 /* ══ TRUST STATS · RED ════════════════════════════ */
 .stats-bar{padding:0}
@@ -359,7 +360,7 @@ footer{padding:clamp(36px,5.5vw,56px) var(--pad) 0;border-top:1px solid var(--li
   .proc-grid{grid-template-columns:1fr 1fr}
   .stats-grid{grid-template-columns:1fr 1fr}
   .tst-grid{grid-template-columns:1fr}
-  .hg-grid{grid-template-columns:1fr 1fr}
+  .hg-grid{grid-template-columns:repeat(3,1fr);gap:22px 14px}
   .cap-grid,.split-grid{grid-template-columns:1fr;gap:28px}
 }
 @media(max-width:767px){
@@ -369,7 +370,7 @@ footer{padding:clamp(36px,5.5vw,56px) var(--pad) 0;border-top:1px solid var(--li
   .hero.has-bg{padding-top:150px}
   .btn-primary,.btn-secondary{width:100%;justify-content:center}
   .hero-btns{flex-direction:column}
-  .hg-item{aspect-ratio:1/1}
+  .hg-ic{width:64px;height:64px;font-size:22px}
   .cap-img,.split-img{aspect-ratio:16/10;order:1!important}
   .split-text{order:2!important}
   .srv-pillars{grid-template-columns:1fr}
@@ -445,16 +446,24 @@ footer{padding:clamp(36px,5.5vw,56px) var(--pad) 0;border-top:1px solid var(--li
   <div class="container hero-gallery">
     <div class="hg-grid stagger" id="heroGallery">
       <div class="hg-item">
-        <div class="hg-fallback"><i class="bi bi-wrench-adjustable"></i><span>مركز صيانة</span></div>
+        <div class="hg-ic"><i class="bi bi-wrench-adjustable"></i></div>
+        <span class="hg-name">مركز صيانة</span>
       </div>
       <div class="hg-item">
-        <div class="hg-fallback"><i class="bi bi-building"></i><span>معرض سيارات</span></div>
+        <div class="hg-ic"><i class="bi bi-nut"></i></div>
+        <span class="hg-name">قطع غيار</span>
       </div>
       <div class="hg-item">
-        <div class="hg-fallback"><i class="bi bi-droplet"></i><span>مغسلة سيارات</span></div>
+        <div class="hg-ic"><i class="bi bi-building"></i></div>
+        <span class="hg-name">معرض سيارات</span>
       </div>
       <div class="hg-item">
-        <div class="hg-fallback"><i class="bi bi-nut"></i><span>قطع غيار</span></div>
+        <div class="hg-ic"><i class="bi bi-bag"></i></div>
+        <span class="hg-name">محل إكسسوارات</span>
+      </div>
+      <div class="hg-item">
+        <div class="hg-ic"><i class="bi bi-palette"></i></div>
+        <span class="hg-name">مراكز دهانات</span>
       </div>
     </div>
   </div>
@@ -1292,12 +1301,7 @@ function renderHeroGallery(list){
   var g=document.getElementById('heroGallery');
   if(!g||!list||!list.length)return;
   g.innerHTML=list.map(function(item){
-    if(item.image_url){
-      return'<div class="hg-item"><img src="'+esc(item.image_url)+'" alt="'+esc(item.label||'')+'" loading="lazy">'
-        +(item.label?'<div class="hg-label">'+esc(item.label)+'</div>':'')
-        +'</div>';
-    }
-    return'<div class="hg-item"><div class="hg-fallback"><i class="bi bi-'+esc(item.icon||'image')+'"></i><span>'+esc(item.label||'')+'</span></div></div>';
+    return'<div class="hg-item"><div class="hg-ic"><i class="bi bi-'+esc(item.icon||'star')+'"></i></div><span class="hg-name">'+esc(item.label||'')+'</span></div>';
   }).join('');
 }
 
