@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="description" id="metaDesc" content="">
 <title id="pageTitle">Ahmed Omani</title>
-<link rel="icon" href="assets/logo.png" type="image/png">
+<link rel="icon" href="assets/logo.png" type="image/png" id="faviconLink">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800&family=Racing+Sans+One&display=swap" rel="stylesheet">
@@ -94,7 +94,7 @@ footer{border-top:1px solid var(--line);padding:24px var(--pad);display:flex;ali
 
 <nav>
   <a href="/" class="logo-wrap">
-    <img src="assets/logo.png" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Crect width=%27100%27 height=%27100%27 fill=%27%23E8192C%27/%3E%3Cpolygon points=%2750,22 78,68 22,68%27 fill=%27white%27/%3E%3C/svg%3E'" alt="Ahmed Omani Logo" class="logo-img">
+    <img id="navLogoImg" src="assets/logo.png" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Crect width=%27100%27 height=%27100%27 fill=%27%23E8192C%27/%3E%3Cpolygon points=%2750,22 78,68 22,68%27 fill=%27white%27/%3E%3C/svg%3E'" alt="Ahmed Omani Logo" class="logo-img">
     <div class="logo-text">
       <div class="name">AHMED OMANI</div>
       <div class="sub">Auto Marketing</div>
@@ -209,8 +209,10 @@ async function loadPage(){
     if(typeof supabase==='undefined'){show404();return;}
     var sb=supabase.createClient(SB_URL,SB_KEY);
 
-    var cfg=(await sb.from('ao_settings').select('whatsapp').single()).data;
+    var cfg=(await sb.from('ao_settings').select('whatsapp,logo_url,favicon_url').single()).data;
     if(cfg&&cfg.whatsapp)_waNum=cfg.whatsapp;
+    if(cfg&&cfg.logo_url){var nl=document.getElementById('navLogoImg');if(nl)nl.src=cfg.logo_url;}
+    if(cfg&&cfg.favicon_url){var fav=document.getElementById('faviconLink');if(fav)fav.href=cfg.favicon_url;}
 
     var res=await sb.from('ao_pages').select('*').eq('slug',slug).eq('is_published',true).single();
     var pg=res.data;

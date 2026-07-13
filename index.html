@@ -8,7 +8,7 @@
 <meta property="og:description" content="شريكك المتخصص في الأوتوموتيف — تسويق رقمي + دعاية وإعلان من الواجهة للكرت الشخصي">
 <meta property="og:type" content="website">
 <meta property="og:image" content="assets/og.png">
-<link rel="icon" href="assets/logo.png" type="image/png">
+<link rel="icon" href="assets/logo.png" type="image/png" id="faviconLink">
 <title>Ahmed Omani — تسويق وإعلان للسيارات</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -381,7 +381,7 @@ footer{padding:clamp(36px,5.5vw,56px) var(--pad) 0;border-top:1px solid var(--li
 <!-- ══ NAV ══════════════════════════════════════════ -->
 <nav id="mainNav">
   <div class="logo-wrap">
-    <img src="assets/logo.png" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Crect width=%27100%27 height=%27100%27 fill=%27%23E8192C%27/%3E%3Cpolygon points=%2750,22 78,68 22,68%27 fill=%27white%27/%3E%3C/svg%3E'" alt="Ahmed Omani" class="logo-img">
+    <img id="navLogoImg" src="assets/logo.png" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Crect width=%27100%27 height=%27100%27 fill=%27%23E8192C%27/%3E%3Cpolygon points=%2750,22 78,68 22,68%27 fill=%27white%27/%3E%3C/svg%3E'" alt="Ahmed Omani" class="logo-img">
     <div class="logo-text">
       <div class="name">AHMED OMANI</div>
       <div class="sub-b">Auto Marketing</div>
@@ -952,7 +952,7 @@ footer{padding:clamp(36px,5.5vw,56px) var(--pad) 0;border-top:1px solid var(--li
   <div class="ft-grid">
     <div>
       <div class="ft-logo">
-        <img src="assets/logo.png" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Crect width=%27100%27 height=%27100%27 fill=%27%23E8192C%27/%3E%3Cpolygon points=%2750,22 78,68 22,68%27 fill=%27white%27/%3E%3C/svg%3E'" alt="Logo">
+        <img id="ftLogoImg" src="assets/logo.png" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Crect width=%27100%27 height=%27100%27 fill=%27%23E8192C%27/%3E%3Cpolygon points=%2750,22 78,68 22,68%27 fill=%27white%27/%3E%3C/svg%3E'" alt="Logo">
         <div><div class="fn">AHMED OMANI</div><div class="fs">Auto Marketing</div></div>
       </div>
       <p class="ft-desc">تسويق إلكتروني ودعاية وإعلان متخصصة لقطاع السيارات في مصر.</p>
@@ -1344,6 +1344,11 @@ async function loadSite(){
       if(cfg.footer_text){var fc=document.getElementById('ftCopy');if(fc)fc.textContent=cfg.footer_text;}
       if(cfg.site_title){document.title=cfg.site_title;}
       if(cfg.site_description){var md=document.querySelector('meta[name="description"]');if(md)md.content=cfg.site_description;}
+      if(cfg.logo_url){
+        var nl=document.getElementById('navLogoImg');if(nl)nl.src=cfg.logo_url;
+        var fl=document.getElementById('ftLogoImg');if(fl)fl.src=cfg.logo_url;
+      }
+      if(cfg.favicon_url){var fav=document.getElementById('faviconLink');if(fav)fav.href=cfg.favicon_url;}
       if(cfg.page_texts)applyPageTexts(cfg.page_texts);
       if(cfg.testimonials_data&&cfg.testimonials_data.length)renderTestimonials(cfg.testimonials_data);
       if(cfg.hero_gallery&&cfg.hero_gallery.length)renderHeroGallery(cfg.hero_gallery);

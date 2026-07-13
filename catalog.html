@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="description" content="كتالوج منتجات الدعاية والإعلان — أحمد عماني. اختار منتجاتك وابعت طلبك واتساب مباشرة.">
-<link rel="icon" href="assets/logo.png" type="image/png">
+<link rel="icon" href="assets/logo.png" type="image/png" id="faviconLink">
 <title>الكتالوج — Ahmed Omani</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -166,7 +166,7 @@ footer{border-top:1px solid var(--line);padding:24px var(--pad);display:flex;ali
 
 <nav>
   <a href="/" class="logo-wrap">
-    <img src="assets/logo.png" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Crect width=%27100%27 height=%27100%27 fill=%27%23E8192C%27/%3E%3Cpolygon points=%2750,22 78,68 22,68%27 fill=%27white%27/%3E%3C/svg%3E'" alt="Ahmed Omani Logo" class="logo-img">
+    <img id="navLogoImg" src="assets/logo.png" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Crect width=%27100%27 height=%27100%27 fill=%27%23E8192C%27/%3E%3Cpolygon points=%2750,22 78,68 22,68%27 fill=%27white%27/%3E%3C/svg%3E'" alt="Ahmed Omani Logo" class="logo-img">
     <div class="logo-text">
       <div class="name">AHMED OMANI</div>
       <div class="sub">Auto Marketing</div>
@@ -465,9 +465,11 @@ async function loadCatalog(){
   try{
     if(typeof supabase==='undefined')throw new Error('no sb');
     var sb=supabase.createClient(SB_URL,SB_KEY);
-    var cfg=(await sb.from('ao_settings').select('whatsapp,meta_pixel_id').single()).data;
+    var cfg=(await sb.from('ao_settings').select('whatsapp,meta_pixel_id,logo_url,favicon_url').single()).data;
     if(cfg&&cfg.whatsapp)_waNum=cfg.whatsapp;
     if(cfg&&cfg.meta_pixel_id)injectMetaPixel(cfg.meta_pixel_id);
+    if(cfg&&cfg.logo_url){var nl=document.getElementById('navLogoImg');if(nl)nl.src=cfg.logo_url;}
+    if(cfg&&cfg.favicon_url){var fav=document.getElementById('faviconLink');if(fav)fav.href=cfg.favicon_url;}
     var res=await sb.from('ao_products').select('*').eq('is_active',true).order('sort_order');
     products=res.data||[];
   }catch(e){products=[]}
