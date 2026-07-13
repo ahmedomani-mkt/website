@@ -170,7 +170,15 @@ button,select,input,textarea{font-family:var(--font)}
 /* ── UPLOAD ZONE ─────────────────────────────────────── */
 .upload-zone{border:1.5px dashed var(--b2);border-radius:var(--rsm);padding:16px;text-align:center;cursor:pointer;background:var(--dk);font-size:12px;color:var(--g);transition:.15s;margin-bottom:12px}
 .upload-zone:hover{border-color:var(--red);color:var(--w2)}
+.upload-zone.disabled{pointer-events:none;opacity:.5}
 .port-preview{display:none;width:100%;max-height:110px;object-fit:cover;border-radius:var(--rsm);margin-bottom:12px;border:1px solid var(--b)}
+.upload-progress{display:none;align-items:center;gap:10px;margin-bottom:12px;padding:10px 12px;background:var(--dk);border:1px solid var(--b2);border-radius:var(--rsm)}
+.upload-progress.show{display:flex}
+.upload-spinner{width:18px;height:18px;border:2px solid var(--b2);border-top-color:var(--red);border-radius:50%;animation:uspin .7s linear infinite;flex-shrink:0}
+@keyframes uspin{to{transform:rotate(360deg)}}
+.upload-bar-wrap{flex:1;height:6px;background:var(--b2);border-radius:999px;overflow:hidden}
+.upload-bar{height:100%;width:0%;background:var(--red);border-radius:999px;transition:width .15s ease}
+.upload-pct{font-size:11px;color:var(--g);font-weight:700;min-width:34px;text-align:left;flex-shrink:0}
 
 /* ── INFO / ALERT ────────────────────────────────────── */
 .info-box{background:var(--rdim);border:1px solid rgba(232,25,44,.15);border-radius:var(--rsm);padding:11px 14px;font-size:12px;color:var(--w3);line-height:1.7;margin-bottom:14px}
@@ -870,9 +878,14 @@ button,select,input,textarea{font-family:var(--font)}
       <div class="field"><label>ملاحظة السعر (اختياري)</label><input type="text" id="prm-pn" placeholder="/ للقطعة، حسب المقاس..."></div>
     </div>
     <div class="field"><label>رابط الصورة (URL)</label><input type="url" id="prm-i" placeholder="https://..." oninput="prevPrImg(this.value)"></div>
-    <div class="upload-zone" onclick="document.getElementById('prm-f').click()">
+    <div class="upload-zone" id="prm-uz" onclick="document.getElementById('prm-f').click()">
       📁 أو ارفع صورة من جهازك
       <input type="file" id="prm-f" accept="image/*" style="display:none" onchange="upPrImg(this)">
+    </div>
+    <div class="upload-progress" id="prm-progress">
+      <div class="upload-spinner"></div>
+      <div class="upload-bar-wrap"><div class="upload-bar" id="prm-progress-bar"></div></div>
+      <div class="upload-pct" id="prm-progress-pct">0%</div>
     </div>
     <img id="prm-pv" class="port-preview">
     <div class="field">
@@ -1059,10 +1072,11 @@ async function upHeroBg(inp){
   var f=inp.files[0];var ext=f.name.split('.').pop();
   var nm='hero/bg-'+Date.now()+'.'+ext;
   var{error}=await sb.storage.from('ao-images').upload(nm,f,{upsert:true});
-  if(error){toast('❌ '+error.message);return}
+  if(error){toast('❌ '+error.message);inp.value='';return}
   var url=sb.storage.from('ao-images').getPublicUrl(nm).data.publicUrl;
   v('h-bg',url);prevHeroBg(url);
   toast('✅ تم رفع الصورة!');
+  inp.value='';
 }
 
 // ── STATS BAR ──────────────────────────────────────────
@@ -1146,10 +1160,11 @@ async function upStoryImg(inp,fieldId){
   var f=inp.files[0];var ext=f.name.split('.').pop();
   var nm='story/'+Date.now()+'-'+fieldId+'.'+ext;
   var{error}=await sb.storage.from('ao-images').upload(nm,f,{upsert:true});
-  if(error){toast('❌ '+error.message);return}
+  if(error){toast('❌ '+error.message);inp.value='';return}
   var url=sb.storage.from('ao-images').getPublicUrl(nm).data.publicUrl;
   v(fieldId,url);prevStoryImg(fieldId+'-pv',url);
   toast('✅ تم رفع الصورة!');
+  inp.value='';
 }
 
 function defaultHeroGallery(){
@@ -1282,10 +1297,11 @@ async function upBrand(inp,fieldId){
   var f=inp.files[0];var ext=f.name.split('.').pop();
   var nm='branding/'+fieldId+'-'+Date.now()+'.'+ext;
   var{error}=await sb.storage.from('ao-images').upload(nm,f,{upsert:true});
-  if(error){toast('❌ '+error.message);return}
+  if(error){toast('❌ '+error.message);inp.value='';return}
   var url=sb.storage.from('ao-images').getPublicUrl(nm).data.publicUrl;
   v(fieldId,url);prevBrand(fieldId+'-pv',url);
   toast('✅ تم رفع الصورة!');
+  inp.value='';
 }
 
 // ── PORTFOLIO ──────────────────────────────────────────
@@ -1334,12 +1350,14 @@ function editPort(id){openPM(portfolio.find(function(p){return p.id===id}))}
 function prevImg(url){var pv=document.getElementById('pm-pv');if(url){pv.src=url;pv.style.display='block'}else{pv.style.display='none'}}
 async function upPortImg(inp){
   if(!inp.files[0])return;
+  toast('⏳ جاري الرفع...');
   var f=inp.files[0];var ext=f.name.split('.').pop();
   var nm='portfolio/'+Date.now()+'.'+ext;
   var{data,error}=await sb.storage.from('ao-images').upload(nm,f,{upsert:true});
-  if(error){toast('❌ '+error.message);return}
+  if(error){toast('❌ '+error.message);inp.value='';return}
   var url=sb.storage.from('ao-images').getPublicUrl(nm).data.publicUrl;
   v('pm-i',url);prevImg(url);toast('✅ تم رفع الصورة');
+  inp.value='';
 }
 async function savePM(){
   var id=document.getElementById('pm-id').value;
@@ -1407,14 +1425,86 @@ function openPrM(item){
 function closePrM(){document.getElementById('ov-prod').classList.remove('open')}
 function editProd(id){openPrM(products.find(function(p){return p.id===id}))}
 function prevPrImg(url){var pv=document.getElementById('prm-pv');if(url){pv.src=url;pv.style.display='block'}else{pv.style.display='none'}}
+// ── IMAGE UPLOAD (resize + real progress, shared) ───────
+function resizeImageFile(file,maxDim,quality){
+  return new Promise(function(resolve){
+    if(!file.type||!file.type.startsWith('image/')||file.type==='image/svg+xml'){resolve(file);return}
+    var reader=new FileReader();
+    reader.onload=function(e){
+      var img=new Image();
+      img.onload=function(){
+        var w=img.width,h=img.height;
+        if(w<=maxDim&&h<=maxDim){resolve(file);return}
+        var scale=Math.min(maxDim/w,maxDim/h);
+        var canvas=document.createElement('canvas');
+        canvas.width=Math.round(w*scale);canvas.height=Math.round(h*scale);
+        var ctx=canvas.getContext('2d');
+        ctx.drawImage(img,0,0,canvas.width,canvas.height);
+        canvas.toBlob(function(blob){
+          if(!blob){resolve(file);return}
+          resolve(new File([blob],file.name,{type:'image/jpeg'}));
+        },'image/jpeg',quality||0.85);
+      };
+      img.onerror=function(){resolve(file)};
+      img.src=e.target.result;
+    };
+    reader.onerror=function(){resolve(file)};
+    reader.readAsDataURL(file);
+  });
+}
+function uploadWithProgress(bucket,path,file,onProgress){
+  return new Promise(function(resolve,reject){
+    var xhr=new XMLHttpRequest();
+    xhr.open('POST',SB_URL+'/storage/v1/object/'+bucket+'/'+path);
+    xhr.setRequestHeader('Authorization','Bearer '+SB_KEY);
+    xhr.setRequestHeader('apikey',SB_KEY);
+    xhr.setRequestHeader('x-upsert','true');
+    xhr.setRequestHeader('Content-Type',file.type||'application/octet-stream');
+    xhr.upload.onprogress=function(e){
+      if(e.lengthComputable&&onProgress)onProgress(Math.round(e.loaded/e.total*100));
+    };
+    xhr.onload=function(){
+      if(xhr.status>=200&&xhr.status<300){resolve();return}
+      var msg='فشل رفع الصورة ('+xhr.status+')';
+      try{var j=JSON.parse(xhr.responseText);if(j.message)msg=j.message}catch(err){}
+      reject(new Error(msg));
+    };
+    xhr.onerror=function(){reject(new Error('تعذر الاتصال بالسيرفر — تأكد من الإنترنت وحاول تاني'))};
+    xhr.ontimeout=function(){reject(new Error('استغرق الرفع وقتًا طويلاً — حاول بصورة أصغر أو تحقق من الإنترنت'))};
+    xhr.timeout=60000;
+    xhr.send(file);
+  });
+}
+
+var prmUploading=false;
 async function upPrImg(inp){
-  if(!inp.files[0])return;
-  var f=inp.files[0];var ext=f.name.split('.').pop();
-  var nm='products/'+Date.now()+'.'+ext;
-  var{data,error}=await sb.storage.from('ao-images').upload(nm,f,{upsert:true});
-  if(error){toast('❌ '+error.message);return}
-  var url=sb.storage.from('ao-images').getPublicUrl(nm).data.publicUrl;
-  v('prm-i',url);prevPrImg(url);toast('✅ تم رفع الصورة');
+  if(!inp.files[0]||prmUploading)return;
+  var f=inp.files[0];
+  if(!f.type||!f.type.startsWith('image/')){toast('❌ اختار ملف صورة بس');inp.value='';return}
+  if(f.size>15*1024*1024){toast('❌ الصورة كبيرة جدًا (أقصى حجم 15 ميجا)');inp.value='';return}
+  prmUploading=true;
+  var uz=document.getElementById('prm-uz');uz.classList.add('disabled');
+  var prog=document.getElementById('prm-progress');prog.classList.add('show');
+  var bar=document.getElementById('prm-progress-bar');bar.style.width='0%';
+  var pct=document.getElementById('prm-progress-pct');pct.textContent='0%';
+  try{
+    var file=await resizeImageFile(f,1600,.85);
+    var ext=file.type==='image/jpeg'?'jpg':(f.name.split('.').pop()||'jpg');
+    var nm='products/'+Date.now()+'.'+ext;
+    await uploadWithProgress('ao-images',nm,file,function(p){
+      bar.style.width=p+'%';pct.textContent=p+'%';
+    });
+    var url=sb.storage.from('ao-images').getPublicUrl(nm).data.publicUrl;
+    v('prm-i',url);prevPrImg(url);
+    toast('✅ تم رفع الصورة');
+  }catch(err){
+    toast('❌ '+(err.message||'فشل رفع الصورة، حاول تاني'));
+  }finally{
+    prmUploading=false;
+    uz.classList.remove('disabled');
+    prog.classList.remove('show');
+    inp.value='';
+  }
 }
 async function savePrM(){
   var id=document.getElementById('prm-id').value;
@@ -1698,10 +1788,11 @@ async function upClientLogo(inp){
   var f=inp.files[0];var ext=f.name.split('.').pop();
   var nm='clients/'+Date.now()+'.'+ext;
   var{error}=await sb.storage.from('ao-images').upload(nm,f,{upsert:true});
-  if(error){toast('❌ '+error.message);return}
+  if(error){toast('❌ '+error.message);inp.value='';return}
   var url=sb.storage.from('ao-images').getPublicUrl(nm).data.publicUrl;
   v('cm-l',url);prevCLogo(url);
   toast('✅ تم رفع اللوجو!');
+  inp.value='';
 }
 
 // ── PAGE PUBLISH TOGGLE ────────────────────────────────
