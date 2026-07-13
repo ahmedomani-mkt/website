@@ -58,10 +58,15 @@ nav{position:fixed;top:0;width:100%;z-index:200;height:72px;padding:0 var(--pad)
 /* HERO */
 .pd-hero{padding:24px 0 clamp(48px,6vw,72px)}
 .pd-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(28px,4vw,56px);align-items:flex-start}
-.pd-img{border-radius:var(--r);overflow:hidden;aspect-ratio:1/1;border:1px solid var(--line);background:linear-gradient(160deg,var(--p2),var(--p3));display:flex;align-items:center;justify-content:center;position:sticky;top:96px}
+.pd-media{position:sticky;top:96px}
+.pd-img{border-radius:var(--r);overflow:hidden;aspect-ratio:1/1;border:1px solid var(--line);background:linear-gradient(160deg,var(--p2),var(--p3));display:flex;align-items:center;justify-content:center}
 .pd-img img{width:100%;height:100%;object-fit:cover}
 .pd-img-ph{display:flex;flex-direction:column;align-items:center;gap:10px;color:var(--ink3)}
 .pd-img-ph i{font-size:44px;color:var(--red)}
+.pd-thumbs{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.pd-thumb{width:64px;height:64px;border-radius:10px;overflow:hidden;border:2px solid var(--line);cursor:pointer;background:var(--p3);flex-shrink:0;padding:0}
+.pd-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.pd-thumb.active{border-color:var(--red)}
 .pd-cat{display:inline-block;background:var(--red-soft);color:var(--red);padding:6px 16px;border-radius:var(--rp);font-size:11.5px;font-weight:700;margin-bottom:16px}
 .pd-title{font-size:clamp(24px,3vw,32px);font-weight:700;line-height:1.35;margin-bottom:14px;color:var(--ink)}
 .pd-desc{font-size:14px;color:var(--ink2);line-height:1.85;margin-bottom:22px;font-weight:400}
@@ -101,7 +106,8 @@ footer{border-top:1px solid var(--line);padding:24px var(--pad);display:flex;ali
 
 @media(max-width:900px){
   .pd-grid{grid-template-columns:1fr;gap:24px}
-  .pd-img{position:static;aspect-ratio:4/3}
+  .pd-media{position:static}
+  .pd-img{aspect-ratio:4/3}
 }
 @media(max-width:600px){
   .cart-btn .cart-btn-txt,.nav-back span{display:none}
@@ -143,8 +149,11 @@ footer{border-top:1px solid var(--line);padding:24px var(--pad);display:flex;ali
 
   <section class="pd-hero">
     <div class="container pd-grid">
-      <div class="pd-img" id="pdImg">
-        <div class="pd-img-ph"><i class="bi bi-image"></i><span id="pdImgPh"></span></div>
+      <div class="pd-media">
+        <div class="pd-img" id="pdImg">
+          <div class="pd-img-ph"><i class="bi bi-image"></i><span id="pdImgPh"></span></div>
+        </div>
+        <div class="pd-thumbs" id="pdThumbs"></div>
       </div>
       <div class="pd-info">
         <div class="pd-cat" id="pdCat"></div>
@@ -249,6 +258,29 @@ function pxTrack(name,params){
   if(typeof fbq==='function')fbq('track',name,params||{});
 }
 
+function renderGallery(images,title,category){
+  var img=document.getElementById('pdImg');
+  var thumbs=document.getElementById('pdThumbs');
+  if(!images.length){
+    document.getElementById('pdImgPh').textContent=catName(category);
+    thumbs.innerHTML='';
+    return;
+  }
+  function showAt(i){
+    img.innerHTML='<img src="'+esc(images[i])+'" alt="'+esc(title)+'">';
+    thumbs.querySelectorAll('.pd-thumb').forEach(function(t,ti){t.classList.toggle('active',ti===i)});
+  }
+  if(images.length>1){
+    thumbs.innerHTML=images.map(function(url,i){
+      return'<button type="button" class="pd-thumb'+(i===0?' active':'')+'"><img src="'+esc(url)+'" alt=""></button>';
+    }).join('');
+    thumbs.querySelectorAll('.pd-thumb').forEach(function(t,i){t.onclick=function(){showAt(i)}});
+  }else{
+    thumbs.innerHTML='';
+  }
+  showAt(0);
+}
+
 function renderProduct(p){
   product=p;
   setCatalogTarget(p.catalog);
@@ -258,12 +290,8 @@ function renderProduct(p){
   document.getElementById('pdCat').textContent=catName(p.category);
   document.getElementById('pdTitle').textContent=p.title;
   document.getElementById('pdDesc').textContent=p.description||'';
-  var img=document.getElementById('pdImg');
-  if(p.image_url){
-    img.innerHTML='<img src="'+esc(p.image_url)+'" alt="'+esc(p.title)+'">';
-  }else{
-    document.getElementById('pdImgPh').textContent=catName(p.category);
-  }
+  var gallery=Array.isArray(p.images)&&p.images.length?p.images:(p.image_url?[p.image_url]:[]);
+  renderGallery(gallery,p.title,p.category);
   var price=fmtPrice(p.price);
   if(price){
     document.getElementById('pdPrice').textContent=price;

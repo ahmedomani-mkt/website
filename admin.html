@@ -197,6 +197,14 @@ button,select,input,textarea{font-family:var(--font)}
 @keyframes uspin{to{transform:rotate(360deg)}}
 .upload-bar-wrap{flex:1;height:6px;background:var(--b2);border-radius:999px;overflow:hidden}
 .upload-bar{height:100%;width:0%;background:var(--red);border-radius:999px;transition:width .15s ease}
+.prm-imgs{display:grid;grid-template-columns:repeat(auto-fill,minmax(84px,1fr));gap:8px;margin-bottom:12px}
+.prm-img-item{position:relative;border-radius:var(--rsm);overflow:hidden;border:1px solid var(--b);aspect-ratio:1/1;background:var(--dk)}
+.prm-img-item img{width:100%;height:100%;object-fit:cover;display:block}
+.prm-img-cover{border-color:var(--red)}
+.prm-img-badge{position:absolute;top:4px;right:4px;background:var(--red);color:#fff;font-size:8.5px;font-weight:700;padding:2px 6px;border-radius:999px}
+.prm-img-acts{position:absolute;inset:auto 0 0 0;display:flex;gap:2px;padding:3px;background:linear-gradient(0deg,rgba(0,0,0,.75),transparent)}
+.prm-img-acts button{flex:1;background:rgba(255,255,255,.12);border:none;color:#fff;font-size:9.5px;padding:3px 2px;border-radius:4px;cursor:pointer;transition:.15s}
+.prm-img-acts button:hover{background:var(--red)}
 .upload-pct{font-size:11px;color:var(--g);font-weight:700;min-width:34px;text-align:left;flex-shrink:0}
 
 /* ── INFO / ALERT ────────────────────────────────────── */
@@ -924,17 +932,21 @@ button,select,input,textarea{font-family:var(--font)}
       <div class="field"><label>السعر (اتركه فاضي = "السعر عند التواصل")</label><input type="number" id="prm-p" placeholder="1500" min="0" step="0.01"></div>
       <div class="field"><label>ملاحظة السعر (اختياري)</label><input type="text" id="prm-pn" placeholder="/ للقطعة، حسب المقاس..."></div>
     </div>
-    <div class="field"><label>رابط الصورة (URL)</label><input type="url" id="prm-i" placeholder="https://..." oninput="prevPrImg(this.value)"></div>
+    <div class="field"><label>صور المنتج (أول صورة = صورة الغلاف في الكتالوج)</label></div>
+    <div class="prm-imgs" id="prm-imgs"></div>
+    <div class="field" style="display:flex;gap:8px;align-items:flex-end">
+      <div style="flex:1"><input type="url" id="prm-i" placeholder="https://... (رابط صورة)" onkeydown="if(event.key==='Enter'){event.preventDefault();addPrImgUrl()}"></div>
+      <button type="button" class="btn btn-g bsm" onclick="addPrImgUrl()">إضافة</button>
+    </div>
     <div class="upload-zone" id="prm-uz" onclick="document.getElementById('prm-f').click()">
-      📁 أو ارفع صورة من جهازك
-      <input type="file" id="prm-f" accept="image/*" style="display:none" onchange="upPrImg(this)">
+      📁 ارفع صورة أو أكتر من جهازك
+      <input type="file" id="prm-f" accept="image/*" multiple style="display:none" onchange="upPrImg(this)">
     </div>
     <div class="upload-progress" id="prm-progress">
       <div class="upload-spinner"></div>
       <div class="upload-bar-wrap"><div class="upload-bar" id="prm-progress-bar"></div></div>
       <div class="upload-pct" id="prm-progress-pct">0%</div>
     </div>
-    <img id="prm-pv" class="port-preview">
     <div class="field">
       <label>تفاصيل صفحة المنتج (لاندينج بيج)</label>
       <textarea id="prm-details" rows="5" placeholder="اكتب كل نقطة في سطر لوحدها، مثال:&#10;تصميم مجاني حسب هوية مركزك&#10;خامات مقاومة للشمس والمطر&#10;تركيب في القاهرة والجيزة مجانًا"></textarea>
@@ -1513,6 +1525,7 @@ function renderProducts(){
       +'</div></div>';
   }).join('');
 }
+var prmImages=[];
 function openPrM(item){
   document.getElementById('prm-ttl').textContent=item?'تعديل المنتج':'إضافة منتج';
   document.getElementById('prm-id').value=item?item.id:'';
@@ -1520,16 +1533,37 @@ function openPrM(item){
   document.getElementById('prm-c').value=item?item.category:'signage';
   document.getElementById('prm-catalog').value=item?(item.catalog||'ads'):'ads';
   v('prm-p',item&&item.price?item.price:'');v('prm-pn',item?item.price_note||'':'');
-  v('prm-i',item?item.image_url||'':'');
+  v('prm-i','');
   v('prm-details',item?item.details||'':'');
-  var pv=document.getElementById('prm-pv');
-  pv.src=item&&item.image_url?item.image_url:'';
-  pv.style.display=(item&&item.image_url)?'block':'none';
+  prmImages=item&&Array.isArray(item.images)&&item.images.length
+    ?item.images.slice()
+    :(item&&item.image_url?[item.image_url]:[]);
+  renderPrImgs();
   document.getElementById('ov-prod').classList.add('open');
 }
 function closePrM(){document.getElementById('ov-prod').classList.remove('open')}
+function renderPrImgs(){
+  var wrap=document.getElementById('prm-imgs');
+  wrap.innerHTML=prmImages.map(function(url,i){
+    return'<div class="prm-img-item'+(i===0?' prm-img-cover':'')+'">'
+      +(i===0?'<span class="prm-img-badge">الغلاف</span>':'')
+      +'<img src="'+h(url)+'" alt="">'
+      +'<div class="prm-img-acts">'
+        +(i>0?'<button type="button" onclick="makeCoverPrImg('+i+')">غلاف</button>':'')
+        +'<button type="button" onclick="removePrImg('+i+')">حذف</button>'
+      +'</div></div>';
+  }).join('');
+}
+function addPrImgUrl(){
+  var url=g('prm-i').trim();
+  if(!url)return;
+  prmImages.push(url);
+  v('prm-i','');
+  renderPrImgs();
+}
+function removePrImg(i){prmImages.splice(i,1);renderPrImgs()}
+function makeCoverPrImg(i){var it=prmImages.splice(i,1)[0];prmImages.unshift(it);renderPrImgs()}
 function editProd(id){openPrM(products.find(function(p){return p.id===id}))}
-function prevPrImg(url){var pv=document.getElementById('prm-pv');if(url){pv.src=url;pv.style.display='block'}else{pv.style.display='none'}}
 // ── IMAGE UPLOAD (resize + real progress, shared) ───────
 function resizeImageFile(file,maxDim,quality){
   return new Promise(function(resolve){
@@ -1583,33 +1617,40 @@ function uploadWithProgress(bucket,path,file,onProgress){
 
 var prmUploading=false;
 async function upPrImg(inp){
-  if(!inp.files[0]||prmUploading)return;
-  var f=inp.files[0];
-  if(!f.type||!f.type.startsWith('image/')){toast('❌ اختار ملف صورة بس');inp.value='';return}
-  if(f.size>15*1024*1024){toast('❌ الصورة كبيرة جدًا (أقصى حجم 15 ميجا)');inp.value='';return}
+  var files=Array.prototype.slice.call(inp.files||[]);
+  if(!files.length||prmUploading)return;
   prmUploading=true;
   var uz=document.getElementById('prm-uz');uz.classList.add('disabled');
   var prog=document.getElementById('prm-progress');prog.classList.add('show');
-  var bar=document.getElementById('prm-progress-bar');bar.style.width='0%';
-  var pct=document.getElementById('prm-progress-pct');pct.textContent='0%';
-  try{
-    var file=await resizeImageFile(f,1600,.85);
-    var ext=file.type==='image/jpeg'?'jpg':(f.name.split('.').pop()||'jpg');
-    var nm='products/'+Date.now()+'.'+ext;
-    await uploadWithProgress('ao-images',nm,file,function(p){
-      bar.style.width=p+'%';pct.textContent=p+'%';
-    });
-    var url=sb.storage.from('ao-images').getPublicUrl(nm).data.publicUrl;
-    v('prm-i',url);prevPrImg(url);
-    toast('✅ تم رفع الصورة');
-  }catch(err){
-    toast('❌ '+(err.message||'فشل رفع الصورة، حاول تاني'));
-  }finally{
-    prmUploading=false;
-    uz.classList.remove('disabled');
-    prog.classList.remove('show');
-    inp.value='';
+  var bar=document.getElementById('prm-progress-bar');
+  var pct=document.getElementById('prm-progress-pct');
+  var okCount=0;
+  for(var i=0;i<files.length;i++){
+    var f=files[i];
+    var label=files.length>1?'('+(i+1)+'/'+files.length+') ':'';
+    if(!f.type||!f.type.startsWith('image/')){toast('❌ '+label+'اختار ملف صورة بس');continue}
+    if(f.size>15*1024*1024){toast('❌ '+label+'الصورة كبيرة جدًا (أقصى حجم 15 ميجا)');continue}
+    bar.style.width='0%';pct.textContent=label+'0%';
+    try{
+      var file=await resizeImageFile(f,1600,.85);
+      var ext=file.type==='image/jpeg'?'jpg':(f.name.split('.').pop()||'jpg');
+      var nm='products/'+Date.now()+'-'+i+'.'+ext;
+      await uploadWithProgress('ao-images',nm,file,function(p){
+        bar.style.width=p+'%';pct.textContent=label+p+'%';
+      });
+      var url=sb.storage.from('ao-images').getPublicUrl(nm).data.publicUrl;
+      prmImages.push(url);
+      renderPrImgs();
+      okCount++;
+    }catch(err){
+      toast('❌ '+label+(err.message||'فشل رفع الصورة، حاول تاني'));
+    }
   }
+  if(okCount)toast('✅ تم رفع '+okCount+' صورة');
+  prmUploading=false;
+  uz.classList.remove('disabled');
+  prog.classList.remove('show');
+  inp.value='';
 }
 async function savePrM(){
   var id=document.getElementById('prm-id').value;
@@ -1619,7 +1660,7 @@ async function savePrM(){
   var payload={title:title,description:g('prm-d'),category:document.getElementById('prm-c').value,
     catalog:document.getElementById('prm-catalog').value,
     price:priceRaw?parseFloat(priceRaw):null,price_note:g('prm-pn')||null,
-    image_url:g('prm-i')||null,details:g('prm-details')||null};
+    image_url:prmImages[0]||null,images:prmImages,details:g('prm-details')||null};
   var err;
   if(id){err=(await sb.from('ao_products').update(payload).eq('id',id)).error}
   else{payload.is_active=true;payload.sort_order=products.length;err=(await sb.from('ao_products').insert(payload)).error}
