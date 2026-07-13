@@ -68,7 +68,9 @@ nav{position:fixed;top:0;width:100%;z-index:200;height:72px;padding:0 var(--pad)
 .prod-card:hover .prod-img img{transform:scale(1.04)}
 .prod-img-ph{font-size:12px;color:var(--ink3);font-weight:600}
 .prod-cat{position:absolute;top:12px;right:12px;background:rgba(24,21,15,.72);backdrop-filter:blur(6px);color:#fff;padding:5px 12px;border-radius:var(--rp);font-size:10px;font-weight:600}
+.prod-link{display:flex;flex-direction:column;flex:1;color:inherit}
 .prod-body{padding:18px;display:flex;flex-direction:column;flex:1}
+.prod-body-foot{padding:0 18px 18px}
 .prod-title{font-size:14.5px;font-weight:600;margin-bottom:6px;line-height:1.5;color:var(--ink)}
 .prod-desc{font-size:12px;color:var(--ink3);line-height:1.8;margin-bottom:16px;flex:1}
 .prod-foot{display:flex;align-items:center;justify-content:space-between;gap:10px;border-top:1px solid var(--line);padding-top:14px}
@@ -309,10 +311,14 @@ function renderGrid(){
       ?'<div class="prod-price">'+price+(p.price_note?'<small>'+esc(p.price_note)+'</small>':'')+'</div>'
       :'<div class="prod-price ask">السعر عند التواصل</div>';
     return'<div class="prod-card'+(qty>0?' in-cart':'')+'" data-id="'+esc(p.id)+'">'
+      +'<a class="prod-link" href="product.html?id='+esc(p.id)+'">'
       +'<div class="prod-img">'+img+'<div class="prod-cat">'+esc(catName(p.category))+'</div></div>'
       +'<div class="prod-body">'
       +'<div class="prod-title">'+esc(p.title)+'</div>'
       +(p.description?'<div class="prod-desc">'+esc(p.description)+'</div>':'<div class="prod-desc"></div>')
+      +'</div>'
+      +'</a>'
+      +'<div class="prod-body prod-body-foot">'
       +'<div class="prod-foot">'
       +priceHtml
       +'<button class="add-btn" onclick="addToCart(\''+esc(p.id)+'\')">+ أضف للسلة</button>'

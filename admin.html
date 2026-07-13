@@ -850,6 +850,11 @@ button,select,input,textarea{font-family:var(--font)}
       <input type="file" id="prm-f" accept="image/*" style="display:none" onchange="upPrImg(this)">
     </div>
     <img id="prm-pv" class="port-preview">
+    <div class="field">
+      <label>تفاصيل صفحة المنتج (لاندينج بيج)</label>
+      <textarea id="prm-details" rows="5" placeholder="اكتب كل نقطة في سطر لوحدها، مثال:&#10;تصميم مجاني حسب هوية مركزك&#10;خامات مقاومة للشمس والمطر&#10;تركيب في القاهرة والجيزة مجانًا"></textarea>
+      <div class="field-hint">كل سطر هيظهر كنقطة منفصلة في صفحة المنتج اللي بتفتح لما العميل يدوس على المنتج من الكتالوج. سيبها فاضية لو مش عايز صفحة تفاصيل.</div>
+    </div>
     <div class="mf">
       <button class="btn btn-g" onclick="closePrM()">إلغاء</button>
       <button class="btn btn-p" onclick="savePrM()">
@@ -1365,6 +1370,7 @@ function openPrM(item){
   document.getElementById('prm-c').value=item?item.category:'signage';
   v('prm-p',item&&item.price?item.price:'');v('prm-pn',item?item.price_note||'':'');
   v('prm-i',item?item.image_url||'':'');
+  v('prm-details',item?item.details||'':'');
   var pv=document.getElementById('prm-pv');
   pv.src=item&&item.image_url?item.image_url:'';
   pv.style.display=(item&&item.image_url)?'block':'none';
@@ -1389,10 +1395,10 @@ async function savePrM(){
   var priceRaw=g('prm-p').trim();
   var payload={title:title,description:g('prm-d'),category:document.getElementById('prm-c').value,
     price:priceRaw?parseFloat(priceRaw):null,price_note:g('prm-pn')||null,
-    image_url:g('prm-i')||null,is_active:true};
+    image_url:g('prm-i')||null,details:g('prm-details')||null};
   var err;
   if(id){err=(await sb.from('ao_products').update(payload).eq('id',id)).error}
-  else{payload.sort_order=products.length;err=(await sb.from('ao_products').insert(payload)).error}
+  else{payload.is_active=true;payload.sort_order=products.length;err=(await sb.from('ao_products').insert(payload)).error}
   if(err){toast('❌ '+err.message);return}
   closePrM();await loadProducts();toast('✅ تم حفظ المنتج!');
 }
