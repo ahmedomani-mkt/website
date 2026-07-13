@@ -211,16 +211,12 @@ section{padding:clamp(56px,8vw,92px) 0}
 .tst-name{font-size:12.5px;font-weight:600;color:var(--ink)}
 .tst-role{font-size:10.5px;color:var(--ink3);margin-top:2px;font-weight:400}
 
-/* ══ CLIENTS · MARQUEE ════════════════════════════ */
-.clients-sec{overflow:hidden}
-.cl-marquee{overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}
-.cl-track{display:flex;width:max-content;animation:tick 42s linear infinite}
-.cl-marquee:hover .cl-track{animation-play-state:paused}
-@keyframes tick{from{transform:translateX(0)}to{transform:translateX(-50%)}}
-.cl-group{display:flex;align-items:center;flex-shrink:0}
-.cl-item{display:flex;align-items:center;justify-content:center;padding:0 26px}
-.cl-name{font-size:13.5px;font-weight:600;color:var(--ink3);white-space:nowrap;transition:.2s}
-.cl-item:hover .cl-name{color:var(--ink)}
+/* ══ CLIENTS · STATIC GRID ═════════════════════════ */
+.cl-grid{display:flex;flex-wrap:wrap;justify-content:center;gap:12px}
+.cl-item{display:flex;align-items:center;justify-content:center;min-width:112px;padding:14px 22px;background:var(--p1);border:1px solid var(--line);border-radius:var(--rs);transition:.3s cubic-bezier(.16,1,.3,1)}
+.cl-item:hover{border-color:var(--red);transform:translateY(-4px);box-shadow:0 12px 26px rgba(24,21,15,.08)}
+.cl-item img{max-height:32px;max-width:100px;object-fit:contain}
+.cl-name{font-size:13px;font-weight:600;color:var(--ink2);white-space:nowrap}
 .clients-note{font-size:12px;color:var(--ink3);text-align:center;margin-top:22px;font-weight:400}
 
 /* ══ CAPABILITY · DARK ═════════════════════════════ */
@@ -342,8 +338,19 @@ footer{padding:clamp(36px,5.5vw,56px) var(--pad) 0;border-top:1px solid var(--li
 .stt{position:fixed;bottom:88px;left:24px;z-index:389;width:42px;height:42px;border-radius:50%;border:1px solid var(--line2);background:var(--p1);color:var(--ink2);font-size:15px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:.2s;opacity:0;pointer-events:none;box-shadow:0 4px 16px rgba(24,21,15,.08)}
 .stt.show{opacity:1;pointer-events:all}
 .stt:hover{background:var(--red);color:#fff;border-color:var(--red)}
-.fade-up{opacity:0;transform:translateY(16px);transition:opacity .5s ease,transform .5s ease}
+.fade-up{opacity:0;transform:translateY(26px);transition:opacity .8s cubic-bezier(.16,1,.3,1),transform .8s cubic-bezier(.16,1,.3,1)}
 .fade-up.visible{opacity:1;transform:translateY(0)}
+.stagger>.fade-up:nth-child(1){transition-delay:.05s}
+.stagger>.fade-up:nth-child(2){transition-delay:.11s}
+.stagger>.fade-up:nth-child(3){transition-delay:.17s}
+.stagger>.fade-up:nth-child(4){transition-delay:.23s}
+.stagger>.fade-up:nth-child(5){transition-delay:.29s}
+.stagger>.fade-up:nth-child(6){transition-delay:.35s}
+.stagger>.fade-up:nth-child(7){transition-delay:.41s}
+.stagger>.fade-up:nth-child(8){transition-delay:.47s}
+@media(prefers-reduced-motion:reduce){
+  .fade-up{opacity:1;transform:none;transition:none}
+}
 
 /* ══ RESPONSIVE ═══════════════════════════════════ */
 @media(max-width:1023px){
@@ -418,7 +425,7 @@ footer{padding:clamp(36px,5.5vw,56px) var(--pad) 0;border-top:1px solid var(--li
 <section class="hero bg-1" id="home">
   <div class="hero-bg" id="heroBg"><img src="" alt=""></div>
   <div class="hero-glow"></div>
-  <div class="container hero-inner">
+  <div class="container hero-inner stagger">
     <div class="hero-badge" id="heroBadge">
       <span class="hero-badge-dot"></span>
       متخصصون في السيارات · منذ 2015
@@ -435,7 +442,7 @@ footer{padding:clamp(36px,5.5vw,56px) var(--pad) 0;border-top:1px solid var(--li
     </div>
   </div>
   <div class="container hero-gallery">
-    <div class="hg-grid" id="heroGallery">
+    <div class="hg-grid stagger" id="heroGallery">
       <div class="hg-item">
         <div class="hg-fallback"><i class="bi bi-wrench-adjustable"></i><span>مركز صيانة</span></div>
       </div>
@@ -455,7 +462,7 @@ footer{padding:clamp(36px,5.5vw,56px) var(--pad) 0;border-top:1px solid var(--li
 <!-- ══ 2 · TRUST STATS — red ═════════════════════════ -->
 <div class="stats-bar bg-red">
   <div class="container">
-    <div class="stats-grid" id="statsGrid">
+    <div class="stats-grid stagger" id="statsGrid">
       <div class="stat-item">
         <div class="stat-icon"><i class="bi bi-trophy"></i></div>
         <div class="stat-num" data-count>10+</div>
@@ -487,7 +494,7 @@ footer{padding:clamp(36px,5.5vw,56px) var(--pad) 0;border-top:1px solid var(--li
       <div class="sec-label">إيه اللي بنقدمه</div>
       <h2 class="sec-title">كل حاجة مركزك محتاجها</h2>
     </div>
-    <div class="features-grid" id="featGrid">
+    <div class="features-grid stagger" id="featGrid">
       <div class="feat-item">
         <div class="feat-icon"><i class="bi bi-megaphone"></i></div>
         <div class="feat-label">خدمة 01</div>
@@ -524,7 +531,7 @@ footer{padding:clamp(36px,5.5vw,56px) var(--pad) 0;border-top:1px solid var(--li
       <h2 class="sec-title" id="srvTitle">حلول متكاملة لعالم الأوتوموتيف</h2>
       <p class="sec-sub" id="srvSub">ركّزنا في قطاع واحد — عشان نقدم الأفضل فيه</p>
     </div>
-    <div class="srv-pillars fade-up">
+    <div class="srv-pillars stagger">
       <!-- DIGITAL -->
       <div class="pillar">
         <div class="pillar-icon"><i class="bi bi-megaphone"></i></div>
@@ -598,7 +605,7 @@ footer{padding:clamp(36px,5.5vw,56px) var(--pad) 0;border-top:1px solid var(--li
       <button class="pf-btn" onclick="filterPort('branding',this)">هوية بصرية</button>
     </div>
     <div class="port-track-wrap">
-      <div class="port-track" id="portGrid">
+      <div class="port-track stagger" id="portGrid">
         <div class="port-card" data-cat="digital">
           <div class="port-img"><div class="port-img-ph"><i class="bi bi-bar-chart"></i></div></div>
           <div class="port-type-badge">تسويق إلكتروني</div>
@@ -729,7 +736,7 @@ footer{padding:clamp(36px,5.5vw,56px) var(--pad) 0;border-top:1px solid var(--li
       <div class="sec-label">آراء العملاء</div>
       <h2 class="sec-title">بيتكلموا عنا</h2>
     </div>
-    <div class="tst-grid fade-up" id="tstGrid">
+    <div class="tst-grid stagger" id="tstGrid">
       <div class="tst-card">
         <div class="tst-q">"</div>
         <p class="tst-text">زادت مبيعاتنا أكتر من 200% في 3 أشهر — أفضل قرار في التسويق.</p>
@@ -766,46 +773,41 @@ footer{padding:clamp(36px,5.5vw,56px) var(--pad) 0;border-top:1px solid var(--li
       <h2 class="sec-title" id="clTitle">ثقوا فينا</h2>
       <p class="sec-sub" id="clSub">أكثر من 30 علامة في قطاع السيارات المصري</p>
     </div>
-  </div>
-  <div class="cl-marquee">
-    <div class="cl-track" id="clientsTrack">
-      <div class="cl-group" id="clientsGrid">
-        <div class="cl-item"><div class="cl-name">KSH</div></div>
-        <div class="cl-item"><div class="cl-name">Nakamichi</div></div>
-        <div class="cl-item"><div class="cl-name">CARiMUSiC</div></div>
-        <div class="cl-item"><div class="cl-name">AL OSTORA</div></div>
-        <div class="cl-item"><div class="cl-name">MB WORLD</div></div>
-        <div class="cl-item"><div class="cl-name">DR.BM</div></div>
-        <div class="cl-item"><div class="cl-name">ALPINA</div></div>
-        <div class="cl-item"><div class="cl-name">EL BARRAMY</div></div>
-        <div class="cl-item"><div class="cl-name">Sound Power</div></div>
-        <div class="cl-item"><div class="cl-name">AUTO GO</div></div>
-        <div class="cl-item"><div class="cl-name">Cardiff</div></div>
-        <div class="cl-item"><div class="cl-name">EL-ARABY</div></div>
-        <div class="cl-item"><div class="cl-name">American Zone</div></div>
-        <div class="cl-item"><div class="cl-name">El Fayrouz</div></div>
-        <div class="cl-item"><div class="cl-name">EL KOPTAN</div></div>
-        <div class="cl-item"><div class="cl-name">AL KHALIFA</div></div>
-        <div class="cl-item"><div class="cl-name">CARBENZ</div></div>
-        <div class="cl-item"><div class="cl-name">المتخصص</div></div>
-        <div class="cl-item"><div class="cl-name">M.HANAFY</div></div>
-        <div class="cl-item"><div class="cl-name">CRACKLE</div></div>
-        <div class="cl-item"><div class="cl-name">Motor Dynamics</div></div>
-        <div class="cl-item"><div class="cl-name">GT</div></div>
-        <div class="cl-item"><div class="cl-name">ELSISI</div></div>
-        <div class="cl-item"><div class="cl-name">Three A Shell</div></div>
-        <div class="cl-item"><div class="cl-name">EL EMAN</div></div>
-        <div class="cl-item"><div class="cl-name">MECCA</div></div>
-        <div class="cl-item"><div class="cl-name">STG</div></div>
-        <div class="cl-item"><div class="cl-name">التوأم</div></div>
-        <div class="cl-item"><div class="cl-name">EL-Sherif</div></div>
-        <div class="cl-item"><div class="cl-name">الدمياطي</div></div>
-        <div class="cl-item"><div class="cl-name">EL NASR</div></div>
-      </div>
-      <div class="cl-group" id="clientsGridDup" aria-hidden="true"></div>
+    <div class="cl-grid stagger" id="clientsGrid">
+      <div class="cl-item"><div class="cl-name">KSH</div></div>
+      <div class="cl-item"><div class="cl-name">Nakamichi</div></div>
+      <div class="cl-item"><div class="cl-name">CARiMUSiC</div></div>
+      <div class="cl-item"><div class="cl-name">AL OSTORA</div></div>
+      <div class="cl-item"><div class="cl-name">MB WORLD</div></div>
+      <div class="cl-item"><div class="cl-name">DR.BM</div></div>
+      <div class="cl-item"><div class="cl-name">ALPINA</div></div>
+      <div class="cl-item"><div class="cl-name">EL BARRAMY</div></div>
+      <div class="cl-item"><div class="cl-name">Sound Power</div></div>
+      <div class="cl-item"><div class="cl-name">AUTO GO</div></div>
+      <div class="cl-item"><div class="cl-name">Cardiff</div></div>
+      <div class="cl-item"><div class="cl-name">EL-ARABY</div></div>
+      <div class="cl-item"><div class="cl-name">American Zone</div></div>
+      <div class="cl-item"><div class="cl-name">El Fayrouz</div></div>
+      <div class="cl-item"><div class="cl-name">EL KOPTAN</div></div>
+      <div class="cl-item"><div class="cl-name">AL KHALIFA</div></div>
+      <div class="cl-item"><div class="cl-name">CARBENZ</div></div>
+      <div class="cl-item"><div class="cl-name">المتخصص</div></div>
+      <div class="cl-item"><div class="cl-name">M.HANAFY</div></div>
+      <div class="cl-item"><div class="cl-name">CRACKLE</div></div>
+      <div class="cl-item"><div class="cl-name">Motor Dynamics</div></div>
+      <div class="cl-item"><div class="cl-name">GT</div></div>
+      <div class="cl-item"><div class="cl-name">ELSISI</div></div>
+      <div class="cl-item"><div class="cl-name">Three A Shell</div></div>
+      <div class="cl-item"><div class="cl-name">EL EMAN</div></div>
+      <div class="cl-item"><div class="cl-name">MECCA</div></div>
+      <div class="cl-item"><div class="cl-name">STG</div></div>
+      <div class="cl-item"><div class="cl-name">التوأم</div></div>
+      <div class="cl-item"><div class="cl-name">EL-Sherif</div></div>
+      <div class="cl-item"><div class="cl-name">الدمياطي</div></div>
+      <div class="cl-item"><div class="cl-name">EL NASR</div></div>
     </div>
+    <div class="clients-note">+30 علامة تجارية بمصر</div>
   </div>
-  <div class="clients-note">+30 علامة تجارية بمصر</div>
 </section>
 
 <!-- ══ 8 · PROCESS — deeper off-white ════════════════ -->
@@ -815,7 +817,7 @@ footer{padding:clamp(36px,5.5vw,56px) var(--pad) 0;border-top:1px solid var(--li
       <div class="sec-label">كيف نعمل</div>
       <h2 class="sec-title">4 خطوات للنتيجة</h2>
     </div>
-    <div class="proc-grid fade-up">
+    <div class="proc-grid stagger">
       <div class="proc-item">
         <div class="proc-num">1</div>
         <div class="proc-icon"></div>
@@ -856,7 +858,7 @@ footer{padding:clamp(36px,5.5vw,56px) var(--pad) 0;border-top:1px solid var(--li
       <div class="sec-label">أسئلة شائعة</div>
       <h2 class="sec-title" id="faqTitle">إجابات على أسئلتك</h2>
     </div>
-    <div class="faq-wrap" id="faqWrap">
+    <div class="faq-wrap stagger" id="faqWrap">
       <div class="faq-item" onclick="toggleFaq(this)">
         <div class="faq-q"><div class="faq-q-text">هل تشتغلوا على مراكز الصيانة بس؟</div><div class="faq-icon">+</div></div>
         <div class="faq-a"><div class="faq-a-inner">لأ، بنشتغل مع كل قطاعات السيارات — صيانة، معارض، قطع غيار، وأكتر.</div></div>
@@ -891,7 +893,7 @@ footer{padding:clamp(36px,5.5vw,56px) var(--pad) 0;border-top:1px solid var(--li
     <div class="sec-head">
       <div class="sec-label">تواصل معنا</div>
     </div>
-    <div class="contact-inner">
+    <div class="contact-inner stagger">
       <div class="contact-info">
         <h2 id="ctTitle">خلينا نشتغل مع بعض</h2>
         <p id="ctDesc">احصل على استشارة مجانية دلوقتي.</p>
@@ -1049,13 +1051,6 @@ function slidePort(dir){
 // ── WHATSAPP NUMBER ──────────────────────────────────
 var _waNum='201152501056';
 
-// ── CLIENTS MARQUEE DUP ──────────────────────────────
-function syncClientsDup(){
-  var g=document.getElementById('clientsGrid');
-  var d=document.getElementById('clientsGridDup');
-  if(g&&d)d.innerHTML=g.innerHTML;
-}
-
 // ── STAT COUNTERS ────────────────────────────────────
 function animateCounters(){
   var els=document.querySelectorAll('[data-count]');
@@ -1082,13 +1077,24 @@ function animateCounters(){
   els.forEach(function(el){obs.observe(el)});
 }
 
-// ── ENTRANCE ANIMATIONS ──────────────────────────────
-(function(){
-  var obs=new IntersectionObserver(function(entries){
-    entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible')});
-  },{threshold:.12});
-  document.querySelectorAll('.fade-up').forEach(function(el){obs.observe(el)});
-})();
+// ── ENTRANCE ANIMATIONS (scroll reveal) ──────────────
+var REVEAL_SEL='.sec-head,.hero-badge,#heroH1,.hero-sub,.hero-btns,.stat-item,.feat-item,.pillar,.port-card,.tst-card,.cl-item,.hg-item,.proc-item,.faq-item,.cap-grid,.split-grid,.contact-info,.wa-cta-card,.cta-band-inner,.ft-grid';
+var revealObs;
+function initReveal(){
+  document.querySelectorAll(REVEAL_SEL).forEach(function(el){el.classList.add('fade-up')});
+  if(!revealObs){
+    revealObs=new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(e.isIntersecting){e.target.classList.add('visible');revealObs.unobserve(e.target)}
+      });
+    },{threshold:.12,rootMargin:'0px 0px -30px 0px'});
+  }
+  document.querySelectorAll('.fade-up').forEach(function(el){
+    if(el.dataset.revealBound)return;
+    el.dataset.revealBound='1';
+    revealObs.observe(el);
+  });
+}
 
 // ── TOAST ────────────────────────────────────────────
 var toastTimer;
@@ -1100,7 +1106,7 @@ function showToast(msg){
 }
 
 document.addEventListener('DOMContentLoaded',function(){
-  syncClientsDup();
+  initReveal();
   animateCounters();
 });
 </script>
@@ -1266,10 +1272,9 @@ function renderClients(list){
   var g=document.getElementById('clientsGrid');
   g.innerHTML=list.map(function(c){
     return c.logo_url
-      ?'<div class="cl-item"><img src="'+esc(c.logo_url)+'" alt="'+esc(c.name)+'" style="max-height:30px;max-width:92px;object-fit:contain;filter:grayscale(1);opacity:.55;transition:.2s" onmouseover="this.style.filter=\'none\';this.style.opacity=1" onmouseout="this.style.filter=\'grayscale(1)\';this.style.opacity=.55"></div>'
+      ?'<div class="cl-item"><img src="'+esc(c.logo_url)+'" alt="'+esc(c.name)+'" loading="lazy"></div>'
       :'<div class="cl-item"><div class="cl-name">'+esc(c.name)+'</div></div>';
   }).join('');
-  syncClientsDup();
 }
 
 function renderFaq(list){
@@ -1367,19 +1372,10 @@ async function loadSite(){
     if(faq&&faq.length)renderFaq(faq);
     var pglist=(await sb.from('ao_pages').select('title,slug').eq('is_published',true).order('created_at')).data;
     if(pglist&&pglist.length)renderPagesLinks(pglist);
+    initReveal();
   }catch(e){console.log('Static fallback active')}
 }
 document.addEventListener('DOMContentLoaded',loadSite);
-document.addEventListener('DOMContentLoaded',function(){
-  setTimeout(function(){
-    var obs=new IntersectionObserver(function(entries){
-      entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible')});
-    },{threshold:.08});
-    document.querySelectorAll('.sec-head,.pillar,.proc-item,.tst-card,.feat-item,.faq-item,.cap-grid,.split-grid').forEach(function(el){
-      el.classList.add('fade-up');obs.observe(el);
-    });
-  },300);
-});
 })();
 </script>
 </body>
