@@ -742,13 +742,14 @@ button,select,input,textarea{font-family:var(--font)}
         <div class="card-header"><div class="card-title"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>الشعار وأيقونة المتصفح</div></div>
         <div class="r2">
           <div class="field">
-            <label>لوجو الموقع (يظهر في الشريط العلوي والفوتر)</label>
+            <label>لوجو الموقع الكامل (الأيقونة + الاسم في صورة واحدة)</label>
             <input type="url" id="s-logo" placeholder="https://..." oninput="prevBrand('s-logo-pv',this.value)">
             <div class="upload-zone" onclick="document.getElementById('s-logo-f').click()">
               📁 أو ارفع صورة من جهازك
               <input type="file" id="s-logo-f" accept="image/*" style="display:none" onchange="upBrand(this,'s-logo')">
             </div>
             <img id="s-logo-pv" class="port-preview" style="max-height:70px;object-fit:contain;background:var(--s2);padding:8px">
+            <div class="field-hint">يظهر في الشريط العلوي والفوتر بدل الأيقونة والاسم المنفصلين — ارفع اللوجو النهائي كامل (زي أي لوجو جاهز فيه الأيقونة واسم البراند مع بعض).</div>
           </div>
           <div class="field">
             <label>أيقونة التبويب Favicon</label>

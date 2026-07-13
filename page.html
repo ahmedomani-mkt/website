@@ -8,7 +8,7 @@
 <link rel="icon" href="assets/logo.png" type="image/png" id="faviconLink">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800&family=Racing+Sans+One&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -31,10 +31,8 @@ img{max-width:100%;display:block}
 
 /* NAV */
 nav{position:fixed;top:0;width:100%;z-index:200;height:72px;padding:0 var(--pad);display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,.9);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
-.logo-wrap{display:flex;align-items:center;gap:11px}
-.logo-img{height:40px;width:40px;object-fit:contain;border-radius:9px}
-.logo-text .name{font-family:'Racing Sans One',var(--font);font-size:16px;font-weight:400;letter-spacing:.5px;line-height:1.15;color:var(--ink)}
-.logo-text .sub{font-family:'Racing Sans One',var(--font);font-size:9.5px;color:var(--red);font-weight:400;letter-spacing:2px}
+.logo-wrap{display:flex;align-items:center}
+.logo-img{height:40px;width:auto;max-width:180px;object-fit:contain}
 .nav-home{color:var(--ink2);font-size:13px;font-weight:600;transition:.2s;padding:10px 18px;border:1px solid var(--line2);border-radius:var(--rp)}
 .nav-home:hover{color:#fff;background:var(--red);border-color:var(--red)}
 
@@ -94,11 +92,7 @@ footer{border-top:1px solid var(--line);padding:24px var(--pad);display:flex;ali
 
 <nav>
   <a href="/" class="logo-wrap">
-    <img id="navLogoImg" src="assets/logo.png" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Crect width=%27100%27 height=%27100%27 fill=%27%23E8192C%27/%3E%3Cpolygon points=%2750,22 78,68 22,68%27 fill=%27white%27/%3E%3C/svg%3E'" alt="Ahmed Omani Logo" class="logo-img">
-    <div class="logo-text">
-      <div class="name">AHMED OMANI</div>
-      <div class="sub">Auto Marketing</div>
-    </div>
+    <img id="navLogoImg" src="assets/logo.png" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Crect width=%27100%27 height=%27100%27 fill=%27%23E8192C%27/%3E%3Cpolygon points=%2750,22 78,68 22,68%27 fill=%27white%27/%3E%3C/svg%3E'" alt="Ahmed Omani Auto Marketing" class="logo-img">
   </a>
   <a href="/" class="nav-home">← الرئيسية</a>
 </nav>
