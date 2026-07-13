@@ -176,12 +176,13 @@ button,select,input,textarea{font-family:var(--font)}
 .icon-opt:hover{border-color:var(--red);color:var(--red);background:var(--rdim)}
 
 /* ── SECTION COLORS ──────────────────────────────────── */
-.clr-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 0;border-top:1px solid var(--b)}
+.clr-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 0;border-top:1px solid var(--b);flex-wrap:wrap}
 .clr-row:first-child{border-top:none;padding-top:0}
-.clr-label{font-size:12.5px;font-weight:600;color:var(--w2)}
-.clr-controls{display:flex;align-items:center;gap:8px;flex-shrink:0}
-.clr-input{width:38px;height:30px;border:1px solid var(--b2);border-radius:6px;background:transparent;cursor:pointer;padding:2px}
-.clr-hex{font-size:11px;color:var(--g);font-family:monospace;min-width:62px}
+.clr-label{font-size:12.5px;font-weight:600;color:var(--w2);min-width:150px}
+.clr-controls{display:flex;align-items:center;gap:16px;flex-shrink:0}
+.clr-swatch-col{display:flex;flex-direction:column;align-items:center;gap:4px}
+.clr-tag{font-size:9px;color:var(--g);font-weight:700;text-transform:uppercase;letter-spacing:.4px}
+.clr-input{width:34px;height:28px;border:1px solid var(--b2);border-radius:6px;background:transparent;cursor:pointer;padding:2px}
 
 /* ── UPLOAD ZONE ─────────────────────────────────────── */
 .upload-zone{border:1.5px dashed var(--b2);border-radius:var(--rsm);padding:16px;text-align:center;cursor:pointer;background:var(--dk);font-size:12px;color:var(--g);transition:.15s;margin-bottom:12px}
@@ -767,8 +768,8 @@ button,select,input,textarea{font-family:var(--font)}
         <div class="sec-sub">اختار لون خلفية مختلف لكل قسم في الصفحة الرئيسية</div>
       </div>
       <div class="card">
-        <div class="card-header"><div class="card-title"><svg viewBox="0 0 24 24"><circle cx="13.5" cy="6.5" r=".5"/><circle cx="17.5" cy="10.5" r=".5"/><circle cx="8.5" cy="7.5" r=".5"/><circle cx="6.5" cy="12.5" r=".5"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 011.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/></svg>خلفيات الأقسام</div></div>
-        <div class="field-hint" style="margin-bottom:12px">النصوص في الموقع لونها غامق ثابت — يفضل اختيار ألوان فاتحة عشان تفضل النصوص واضحة (ما عدا السيكشنات المخصصة أصلًا للون غامق).</div>
+        <div class="card-header"><div class="card-title"><svg viewBox="0 0 24 24"><circle cx="13.5" cy="6.5" r=".5"/><circle cx="17.5" cy="10.5" r=".5"/><circle cx="8.5" cy="7.5" r=".5"/><circle cx="6.5" cy="12.5" r=".5"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 011.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/></svg>ألوان الأقسام</div></div>
+        <div class="field-hint" style="margin-bottom:12px">لكل قسم 3 ألوان: الخلفية، النصوص، والأزرار/العناصر المميزة. غيّر اللي محتاجه بس — سيب الباقي زي ما هو. في السيكشنات ذات الخلفية الغامقة أو الحمراء أصلًا، لون النص بيفضل أبيض ثابت للوضوح بغض النظر عن اختيارك.</div>
         <div id="colorsEditor"></div>
       </div>
       <button class="btn btn-p" onclick="saveSectionColors()">
@@ -1187,6 +1188,9 @@ async function loadSettings(){
   var s2=data.split2||{};
   v('sp2-badge',s2.badge);v('sp2-title',s2.title);v('sp2-text',s2.text);v('sp2-img',s2.image_url);prevStoryImg('sp2-img-pv',s2.image_url);
   sectionColorsData=data.section_colors||{};
+  Object.keys(sectionColorsData).forEach(function(k){
+    if(typeof sectionColorsData[k]==='string')sectionColorsData[k]={bg:sectionColorsData[k]};
+  });
   renderColorsEditor();
 }
 
@@ -1868,35 +1872,46 @@ async function saveTexts(){
 
 // ── SECTION COLORS ───────────────────────────────────────
 var SECTION_COLOR_DEFS=[
-  {id:'home',label:'الهيرو (الصفحة الرئيسية)',def:'#ffffff'},
-  {id:'secStats',label:'الشريط الإحصائي',def:'#e8192c'},
-  {id:'secFeatures',label:'شريط المميزات',def:'#f8f6f3'},
-  {id:'services',label:'قسم الخدمات',def:'#f1ede7'},
-  {id:'portfolio',label:'قسم الأعمال',def:'#f8f6f3'},
-  {id:'capSec',label:'السيكشن الغامق (إمكانياتنا)',def:'#18150f'},
-  {id:'split1Sec',label:'قصة نجاح 1',def:'#f8f6f3'},
-  {id:'split2Sec',label:'قصة نجاح 2',def:'#ffffff'},
-  {id:'secTestimonials',label:'قسم آراء العملاء',def:'#f1ede7'},
-  {id:'clients',label:'قسم العملاء',def:'#f8f6f3'},
-  {id:'secProcess',label:'قسم كيف نعمل',def:'#f1ede7'},
-  {id:'faq',label:'قسم الأسئلة الشائعة',def:'#f8f6f3'},
-  {id:'contact',label:'قسم التواصل',def:'#f1ede7'},
-  {id:'secCta',label:'شريط الدعوة النهائي (CTA)',def:'#e8192c'},
-  {id:'secFooter',label:'الفوتر',def:'#f8f6f3'}
+  {id:'home',label:'الهيرو (الصفحة الرئيسية)',defBg:'#ffffff',defText:'#18150f',defAccent:'#e8192c'},
+  {id:'secStats',label:'الشريط الإحصائي',defBg:'#e8192c',defText:'#ffffff',defAccent:'#ffffff'},
+  {id:'secFeatures',label:'شريط المميزات',defBg:'#f8f6f3',defText:'#18150f',defAccent:'#e8192c'},
+  {id:'services',label:'قسم الخدمات',defBg:'#f1ede7',defText:'#18150f',defAccent:'#e8192c'},
+  {id:'portfolio',label:'قسم الأعمال',defBg:'#f8f6f3',defText:'#18150f',defAccent:'#e8192c'},
+  {id:'capSec',label:'السيكشن الغامق (إمكانياتنا)',defBg:'#18150f',defText:'#ffffff',defAccent:'#e8192c'},
+  {id:'split1Sec',label:'قصة نجاح 1',defBg:'#f8f6f3',defText:'#18150f',defAccent:'#e8192c'},
+  {id:'split2Sec',label:'قصة نجاح 2',defBg:'#ffffff',defText:'#18150f',defAccent:'#e8192c'},
+  {id:'secTestimonials',label:'قسم آراء العملاء',defBg:'#f1ede7',defText:'#18150f',defAccent:'#e8192c'},
+  {id:'clients',label:'قسم العملاء',defBg:'#f8f6f3',defText:'#18150f',defAccent:'#e8192c'},
+  {id:'secProcess',label:'قسم كيف نعمل',defBg:'#f1ede7',defText:'#18150f',defAccent:'#e8192c'},
+  {id:'faq',label:'قسم الأسئلة الشائعة',defBg:'#f8f6f3',defText:'#18150f',defAccent:'#e8192c'},
+  {id:'contact',label:'قسم التواصل',defBg:'#f1ede7',defText:'#18150f',defAccent:'#e8192c'},
+  {id:'secCta',label:'شريط الدعوة النهائي (CTA)',defBg:'#e8192c',defText:'#ffffff',defAccent:'#ffffff'},
+  {id:'secFooter',label:'الفوتر',defBg:'#f8f6f3',defText:'#18150f',defAccent:'#e8192c'}
 ];
 var sectionColorsData={};
+function colorSwatch(id,key,val,title){
+  return'<div class="clr-group" title="'+title+'">'
+    +'<input type="color" class="clr-input" value="'+val+'" oninput="setSectionColor(\''+id+'\',\''+key+'\',this.value)">'
+    +'</div>';
+}
 function renderColorsEditor(){
   document.getElementById('colorsEditor').innerHTML=SECTION_COLOR_DEFS.map(function(s){
-    var val=sectionColorsData[s.id]||s.def;
+    var cur=sectionColorsData[s.id]||{};
+    var bg=cur.bg||s.defBg,text=cur.text||s.defText,accent=cur.accent||s.defAccent;
     return'<div class="clr-row">'
       +'<div class="clr-label">'+s.label+'</div>'
       +'<div class="clr-controls">'
-        +'<span class="clr-hex">'+val.toUpperCase()+'</span>'
-        +'<input type="color" class="clr-input" value="'+val+'" oninput="sectionColorsData[\''+s.id+'\']=this.value;this.previousElementSibling.textContent=this.value.toUpperCase()">'
+        +'<div class="clr-swatch-col">'+colorSwatch(s.id,'bg',bg,'لون الخلفية')+'<span class="clr-tag">خلفية</span></div>'
+        +'<div class="clr-swatch-col">'+colorSwatch(s.id,'text',text,'لون النصوص')+'<span class="clr-tag">نص</span></div>'
+        +'<div class="clr-swatch-col">'+colorSwatch(s.id,'accent',accent,'لون الأزرار والعناصر المميزة')+'<span class="clr-tag">أزرار</span></div>'
         +'<button class="btn btn-g bsm" type="button" onclick="resetSectionColor(\''+s.id+'\')">افتراضي</button>'
       +'</div>'
       +'</div>';
   }).join('');
+}
+function setSectionColor(id,key,val){
+  if(!sectionColorsData[id])sectionColorsData[id]={};
+  sectionColorsData[id][key]=val;
 }
 function resetSectionColor(id){
   delete sectionColorsData[id];
