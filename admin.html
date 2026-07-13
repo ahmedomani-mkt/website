@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>لوحة التحكم — Ahmed Omani</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{
@@ -167,6 +168,21 @@ button,select,input,textarea{font-family:var(--font)}
 .edit-row-head{display:flex;align-items:center;gap:8px;margin-bottom:4px;font-size:11px;font-weight:700;color:var(--red);letter-spacing:.5px;text-transform:uppercase}
 .edit-row-num{width:22px;height:22px;background:var(--rdim2);border:1px solid rgba(232,25,44,.2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:900;color:var(--red)}
 
+/* ── ICON PICKER ─────────────────────────────────────── */
+.icon-pick-btn{width:38px;height:38px;flex-shrink:0;display:flex;align-items:center;justify-content:center;background:var(--dk);border:1px solid var(--b2);border-radius:var(--rsm);cursor:pointer;font-size:16px;color:var(--red);transition:.15s}
+.icon-pick-btn:hover{border-color:var(--red);background:var(--rdim)}
+.icon-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(48px,1fr));gap:8px;max-height:340px;overflow-y:auto;margin-top:2px}
+.icon-opt{display:flex;align-items:center;justify-content:center;width:100%;aspect-ratio:1/1;background:var(--dk);border:1px solid var(--b2);border-radius:8px;cursor:pointer;font-size:17px;color:var(--w2);transition:.15s}
+.icon-opt:hover{border-color:var(--red);color:var(--red);background:var(--rdim)}
+
+/* ── SECTION COLORS ──────────────────────────────────── */
+.clr-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 0;border-top:1px solid var(--b)}
+.clr-row:first-child{border-top:none;padding-top:0}
+.clr-label{font-size:12.5px;font-weight:600;color:var(--w2)}
+.clr-controls{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.clr-input{width:38px;height:30px;border:1px solid var(--b2);border-radius:6px;background:transparent;cursor:pointer;padding:2px}
+.clr-hex{font-size:11px;color:var(--g);font-family:monospace;min-width:62px}
+
 /* ── UPLOAD ZONE ─────────────────────────────────────── */
 .upload-zone{border:1.5px dashed var(--b2);border-radius:var(--rsm);padding:16px;text-align:center;cursor:pointer;background:var(--dk);font-size:12px;color:var(--g);transition:.15s;margin-bottom:12px}
 .upload-zone:hover{border-color:var(--red);color:var(--w2)}
@@ -297,6 +313,10 @@ button,select,input,textarea{font-family:var(--font)}
     <div class="ni" data-s="texts" onclick="go('texts',this)">
       <div class="ni-ic"><svg viewBox="0 0 24 24"><line x1="17" y1="10" x2="3" y2="10"/><line x1="21" y1="6" x2="3" y2="6"/><line x1="21" y1="14" x2="3" y2="14"/><line x1="17" y1="18" x2="3" y2="18"/></svg></div>
       نصوص الأقسام
+    </div>
+    <div class="ni" data-s="colors" onclick="go('colors',this)">
+      <div class="ni-ic"><svg viewBox="0 0 24 24"><circle cx="13.5" cy="6.5" r=".5"/><circle cx="17.5" cy="10.5" r=".5"/><circle cx="8.5" cy="7.5" r=".5"/><circle cx="6.5" cy="12.5" r=".5"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 011.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/></svg></div>
+      ألوان الأقسام
     </div>
     <div class="nsep"></div>
     <div class="ni" data-s="settings" onclick="go('settings',this)">
@@ -740,6 +760,23 @@ button,select,input,textarea{font-family:var(--font)}
       </button>
     </div>
 
+    <!-- SECTION COLORS -->
+    <div class="sec" id="sec-colors">
+      <div class="sec-header">
+        <div class="sec-title">ألوان الأقسام</div>
+        <div class="sec-sub">اختار لون خلفية مختلف لكل قسم في الصفحة الرئيسية</div>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-title"><svg viewBox="0 0 24 24"><circle cx="13.5" cy="6.5" r=".5"/><circle cx="17.5" cy="10.5" r=".5"/><circle cx="8.5" cy="7.5" r=".5"/><circle cx="6.5" cy="12.5" r=".5"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 011.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/></svg>خلفيات الأقسام</div></div>
+        <div class="field-hint" style="margin-bottom:12px">النصوص في الموقع لونها غامق ثابت — يفضل اختيار ألوان فاتحة عشان تفضل النصوص واضحة (ما عدا السيكشنات المخصصة أصلًا للون غامق).</div>
+        <div id="colorsEditor"></div>
+      </div>
+      <button class="btn btn-p" onclick="saveSectionColors()">
+        <svg viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+        حفظ الألوان
+      </button>
+    </div>
+
     <!-- SETTINGS -->
     <div class="sec" id="sec-settings">
       <div class="sec-header">
@@ -842,7 +879,6 @@ button,select,input,textarea{font-family:var(--font)}
       <input type="file" id="pm-f" accept="image/*" style="display:none" onchange="upPortImg(this)">
     </div>
     <img id="pm-pv" class="port-preview">
-    <div class="field"><label>تاجز (مفصولة بفاصلة)</label><input type="text" id="pm-tg" placeholder="Meta Ads, Service Center"></div>
     <div class="mf">
       <button class="btn btn-g" onclick="closePM()">إلغاء</button>
       <button class="btn btn-p" onclick="savePM()">
@@ -967,6 +1003,15 @@ button,select,input,textarea{font-family:var(--font)}
   </div>
 </div>
 
+<!-- ICON PICKER MODAL -->
+<div class="ov" id="ov-iconpicker" onclick="if(event.target===this)closeIconPicker()">
+  <div class="modal">
+    <div class="mh"><span>اختر أيقونة</span><button class="mx" onclick="closeIconPicker()">✕</button></div>
+    <input type="text" id="icp-search" class="fi" placeholder="دور على أيقونة... (بالإنجليزي مثال: car)" oninput="renderIconGrid(this.value)" style="margin-bottom:14px;padding:10px 12px">
+    <div id="icp-grid" class="icon-grid"></div>
+  </div>
+</div>
+
 <div class="toast" id="toastEl"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
@@ -979,7 +1024,40 @@ var portfolio=[],clients=[],faqs=[],pages=[],pageSecs=[],products=[];
 var statsData=[],featData=[],textsData={},tstData=[],heroGalData=[],capData=[];
 
 // ── BREADCRUMB MAP ────────────────────────────────────
-var secNames={dash:'الرئيسية',hero:'الصفحة الرئيسية',stats:'الشريط الإحصائي',features:'شريط المميزات',story:'سيكشن العرض',wa:'رسائل واتساب',port:'الأعمال',products:'الكتالوج',clients:'العملاء',tst:'آراء العملاء',faq:'الأسئلة',pages:'الصفحات',texts:'نصوص الأقسام',settings:'الإعدادات'};
+var secNames={dash:'الرئيسية',hero:'الصفحة الرئيسية',stats:'الشريط الإحصائي',features:'شريط المميزات',story:'سيكشن العرض',wa:'رسائل واتساب',port:'الأعمال',products:'الكتالوج',clients:'العملاء',tst:'آراء العملاء',faq:'الأسئلة',pages:'الصفحات',texts:'نصوص الأقسام',colors:'ألوان الأقسام',settings:'الإعدادات'};
+
+// ── ICON PICKER (flat modern icon library) ──────────────
+var ICON_LIB=['car-front','car-front-fill','truck','truck-front','wrench','wrench-adjustable','tools','gear','gear-fill','nut','fuel-pump','fuel-pump-fill','speedometer','speedometer2','battery-charging','cone-striped','signpost','signpost-2','map','geo-alt','geo-alt-fill','compass',
+'megaphone','megaphone-fill','graph-up','graph-up-arrow','graph-down','bar-chart','bar-chart-fill','bar-chart-line','pie-chart','pie-chart-fill','briefcase','briefcase-fill','building','building-fill','shop','shop-window','cart','cart-fill','cart-plus','bag','bag-fill','bag-check','tag','tag-fill','tags','tags-fill','cash','cash-stack','credit-card','wallet2','receipt','currency-dollar','percent',
+'people','people-fill','person','person-fill','person-check','person-badge','headset','chat-dots','chat-dots-fill','chat-square-text','envelope','envelope-fill','telephone','telephone-fill','whatsapp','send','send-fill',
+'trophy','trophy-fill','award','award-fill','star','star-fill','stars','shield-check','shield-fill-check','patch-check','patch-check-fill','gem','lightning','lightning-fill','lightning-charge','rocket','rocket-takeoff','rocket-takeoff-fill','bullseye',
+'palette','palette-fill','brush','camera','camera-fill','camera-reels','image','images','film','magic','pencil','pencil-fill','pen','easel','layers','grid','columns-gap',
+'laptop','phone','tablet','wifi','cloud','cloud-check','globe','globe2','code-slash','cpu','display',
+'clock','clock-history','calendar','calendar-check','hourglass-split','arrow-repeat','check-circle','check-circle-fill','check2-circle','x-circle','exclamation-circle','info-circle','question-circle','plus-circle',
+'house','house-fill','list','grid-3x3-gap','funnel','filter',
+'droplet','droplet-fill','sun','umbrella','heart','heart-fill','hand-thumbs-up','hand-thumbs-up-fill','flag','flag-fill','box','box-seam','gift','key','lock','puzzle'];
+var iconPickerCallback=null;
+function openIconPicker(cb){
+  iconPickerCallback=cb;
+  document.getElementById('icp-search').value='';
+  renderIconGrid('');
+  document.getElementById('ov-iconpicker').classList.add('open');
+}
+function closeIconPicker(){
+  document.getElementById('ov-iconpicker').classList.remove('open');
+  iconPickerCallback=null;
+}
+function renderIconGrid(q){
+  q=(q||'').trim().toLowerCase();
+  var list=q?ICON_LIB.filter(function(n){return n.indexOf(q)>-1}):ICON_LIB;
+  document.getElementById('icp-grid').innerHTML=list.length?list.map(function(n){
+    return'<div class="icon-opt" title="'+n+'" onclick="pickIcon(\''+n+'\')"><i class="bi bi-'+n+'"></i></div>';
+  }).join(''):'<div style="grid-column:1/-1;text-align:center;color:var(--g);font-size:12px;padding:24px">مفيش نتائج — جرب كلمة تانية</div>';
+}
+function pickIcon(name){
+  if(iconPickerCallback)iconPickerCallback(name);
+  closeIconPicker();
+}
 
 // ── LOGIN ──────────────────────────────────────────────
 async function doLogin(){
@@ -1108,6 +1186,8 @@ async function loadSettings(){
   v('sp1-badge',s1.badge);v('sp1-title',s1.title);v('sp1-text',s1.text);v('sp1-img',s1.image_url);prevStoryImg('sp1-img-pv',s1.image_url);
   var s2=data.split2||{};
   v('sp2-badge',s2.badge);v('sp2-title',s2.title);v('sp2-text',s2.text);v('sp2-img',s2.image_url);prevStoryImg('sp2-img-pv',s2.image_url);
+  sectionColorsData=data.section_colors||{};
+  renderColorsEditor();
 }
 
 function defaultCapPoints(){
@@ -1121,9 +1201,12 @@ function renderCapEditor(){
   document.getElementById('capEditor').innerHTML=capData.map(function(p,i){
     return'<div class="edit-row">'
       +'<div class="edit-row-head"><div class="edit-row-num">'+(i+1)+'</div> نقطة '+(i+1)+'</div>'
-      +'<div style="display:grid;grid-template-columns:80px 1fr 2fr;gap:10px">'
+      +'<div style="display:grid;grid-template-columns:120px 1fr 2fr;gap:10px">'
         +'<div><div style="font-size:10px;color:var(--g);margin-bottom:4px;font-weight:700;text-transform:uppercase;letter-spacing:.5px">أيقونة</div>'
-          +'<input class="fi" value="'+h(p.icon||'')+'" oninput="capData['+i+'].icon=this.value" placeholder="clock-history"></div>'
+          +'<div style="display:flex;gap:6px">'
+          +'<div class="icon-pick-btn" onclick="openIconPicker(function(n){capData['+i+'].icon=n;renderCapEditor()})"><i class="bi bi-'+h(p.icon||'question-circle')+'"></i></div>'
+          +'<input class="fi" value="'+h(p.icon||'')+'" oninput="capData['+i+'].icon=this.value" placeholder="clock-history">'
+          +'</div></div>'
         +'<div><div style="font-size:10px;color:var(--g);margin-bottom:4px;font-weight:700;text-transform:uppercase;letter-spacing:.5px">الرقم</div>'
           +'<input class="fi" value="'+h(p.num||'')+'" oninput="capData['+i+'].num=this.value" placeholder="48 ساعة"></div>'
         +'<div><div style="font-size:10px;color:var(--g);margin-bottom:4px;font-weight:700;text-transform:uppercase;letter-spacing:.5px">الوصف</div>'
@@ -1184,8 +1267,11 @@ function renderHeroGalEditor(){
       +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">'
         +'<div><div style="font-size:10px;color:var(--g);margin-bottom:4px;font-weight:700;text-transform:uppercase;letter-spacing:.5px">التسمية</div>'
           +'<input class="fi" value="'+h(g.label||'')+'" oninput="heroGalData['+i+'].label=this.value" placeholder="مركز صيانة"></div>'
-        +'<div><div style="font-size:10px;color:var(--g);margin-bottom:4px;font-weight:700;text-transform:uppercase;letter-spacing:.5px">أيقونة (Bootstrap Icons)</div>'
-          +'<input class="fi" value="'+h(g.icon||'')+'" oninput="heroGalData['+i+'].icon=this.value" placeholder="wrench-adjustable"></div>'
+        +'<div><div style="font-size:10px;color:var(--g);margin-bottom:4px;font-weight:700;text-transform:uppercase;letter-spacing:.5px">أيقونة</div>'
+          +'<div style="display:flex;gap:6px">'
+          +'<div class="icon-pick-btn" onclick="openIconPicker(function(n){heroGalData['+i+'].icon=n;renderHeroGalEditor()})"><i class="bi bi-'+h(g.icon||'question-circle')+'"></i></div>'
+          +'<input class="fi" value="'+h(g.icon||'')+'" oninput="heroGalData['+i+'].icon=this.value" placeholder="wrench-adjustable">'
+          +'</div></div>'
       +'</div>'
       +'</div>';
   }).join('');
@@ -1218,9 +1304,12 @@ function renderStatsEditor(){
   document.getElementById('statsEditor').innerHTML=statsData.map(function(s,i){
     return'<div class="edit-row">'
       +'<div class="edit-row-head"><div class="edit-row-num">'+(i+1)+'</div> إحصائية '+(i+1)+'</div>'
-      +'<div style="display:grid;grid-template-columns:80px 1fr 2fr;gap:10px">'
-        +'<div><div style="font-size:10px;color:var(--g);margin-bottom:4px;font-weight:700;text-transform:uppercase;letter-spacing:.5px">أيقونة (Bootstrap Icons)</div>'
-          +'<input class="fi" value="'+h(s.icon||'')+'" oninput="statsData['+i+'].icon=this.value" placeholder="trophy"></div>'
+      +'<div style="display:grid;grid-template-columns:120px 1fr 2fr;gap:10px">'
+        +'<div><div style="font-size:10px;color:var(--g);margin-bottom:4px;font-weight:700;text-transform:uppercase;letter-spacing:.5px">أيقونة</div>'
+          +'<div style="display:flex;gap:6px">'
+          +'<div class="icon-pick-btn" onclick="openIconPicker(function(n){statsData['+i+'].icon=n;renderStatsEditor()})"><i class="bi bi-'+h(s.icon||'question-circle')+'"></i></div>'
+          +'<input class="fi" value="'+h(s.icon||'')+'" oninput="statsData['+i+'].icon=this.value" placeholder="trophy">'
+          +'</div></div>'
         +'<div><div style="font-size:10px;color:var(--g);margin-bottom:4px;font-weight:700;text-transform:uppercase;letter-spacing:.5px">الرقم</div>'
           +'<input class="fi" value="'+h(s.num||'')+'" oninput="statsData['+i+'].num=this.value" placeholder="10+"></div>'
         +'<div><div style="font-size:10px;color:var(--g);margin-bottom:4px;font-weight:700;text-transform:uppercase;letter-spacing:.5px">الوصف</div>'
@@ -1240,11 +1329,14 @@ function renderFeatEditor(){
   document.getElementById('featEditor').innerHTML=featData.map(function(f,i){
     return'<div class="edit-row">'
       +'<div class="edit-row-head"><div class="edit-row-num">'+(i+1)+'</div> ميزة '+(i+1)+'</div>'
-      +'<div style="display:grid;grid-template-columns:80px 80px 1fr;gap:10px;margin-bottom:8px">'
+      +'<div style="display:grid;grid-template-columns:90px 120px 1fr;gap:10px;margin-bottom:8px">'
         +'<div><div style="font-size:10px;color:var(--g);margin-bottom:4px;font-weight:700;text-transform:uppercase;letter-spacing:.5px">تسمية</div>'
           +'<input class="fi" value="'+h(f.label||'')+'" oninput="featData['+i+'].label=this.value" placeholder="خدمة 01"></div>'
-        +'<div><div style="font-size:10px;color:var(--g);margin-bottom:4px;font-weight:700;text-transform:uppercase;letter-spacing:.5px">أيقونة (Bootstrap Icons)</div>'
-          +'<input class="fi" value="'+h(f.icon||'')+'" oninput="featData['+i+'].icon=this.value" placeholder="megaphone"></div>'
+        +'<div><div style="font-size:10px;color:var(--g);margin-bottom:4px;font-weight:700;text-transform:uppercase;letter-spacing:.5px">أيقونة</div>'
+          +'<div style="display:flex;gap:6px">'
+          +'<div class="icon-pick-btn" onclick="openIconPicker(function(n){featData['+i+'].icon=n;renderFeatEditor()})"><i class="bi bi-'+h(f.icon||'question-circle')+'"></i></div>'
+          +'<input class="fi" value="'+h(f.icon||'')+'" oninput="featData['+i+'].icon=this.value" placeholder="megaphone">'
+          +'</div></div>'
         +'<div><div style="font-size:10px;color:var(--g);margin-bottom:4px;font-weight:700;text-transform:uppercase;letter-spacing:.5px">العنوان</div>'
           +'<input class="fi" value="'+h(f.title||'')+'" oninput="featData['+i+'].title=this.value"></div>'
       +'</div>'
@@ -1339,7 +1431,6 @@ function openPM(item){
   v('pm-t',item?item.title:'');v('pm-d',item?item.description:'');
   document.getElementById('pm-c').value=item?item.category:'digital';
   v('pm-s',item?item.stat_badge||'':'');v('pm-i',item?item.image_url||'':'');
-  v('pm-tg',item?(item.tags||[]).join(', '):'');
   var pv=document.getElementById('pm-pv');
   pv.src=item&&item.image_url?item.image_url:'';
   pv.style.display=(item&&item.image_url)?'block':'none';
@@ -1364,12 +1455,10 @@ async function savePM(){
   var title=g('pm-t').trim();
   if(!title){toast('اكتب عنوان العمل');return}
   var payload={title:title,description:g('pm-d'),category:document.getElementById('pm-c').value,
-    stat_badge:g('pm-s')||null,image_url:g('pm-i')||null,
-    tags:g('pm-tg').split(',').map(function(t){return t.trim()}).filter(Boolean),
-    is_active:true};
+    stat_badge:g('pm-s')||null,image_url:g('pm-i')||null};
   var err;
   if(id){err=(await sb.from('ao_portfolio').update(payload).eq('id',id)).error}
-  else{payload.sort_order=portfolio.length;err=(await sb.from('ao_portfolio').insert(payload)).error}
+  else{payload.is_active=true;payload.sort_order=portfolio.length;err=(await sb.from('ao_portfolio').insert(payload)).error}
   if(err){toast('❌ '+err.message);return}
   closePM();await loadPort();updateStats();toast('✅ تم حفظ العمل!');
 }
@@ -1775,6 +1864,48 @@ async function saveTexts(){
   var{error}=await sb.from('ao_settings').upsert({id:1,page_texts:textsData,updated_at:new Date().toISOString()});
   if(error){toast('❌ '+error.message);return}
   toast('✅ تم حفظ النصوص!');
+}
+
+// ── SECTION COLORS ───────────────────────────────────────
+var SECTION_COLOR_DEFS=[
+  {id:'home',label:'الهيرو (الصفحة الرئيسية)',def:'#ffffff'},
+  {id:'secStats',label:'الشريط الإحصائي',def:'#e8192c'},
+  {id:'secFeatures',label:'شريط المميزات',def:'#f8f6f3'},
+  {id:'services',label:'قسم الخدمات',def:'#f1ede7'},
+  {id:'portfolio',label:'قسم الأعمال',def:'#f8f6f3'},
+  {id:'capSec',label:'السيكشن الغامق (إمكانياتنا)',def:'#18150f'},
+  {id:'split1Sec',label:'قصة نجاح 1',def:'#f8f6f3'},
+  {id:'split2Sec',label:'قصة نجاح 2',def:'#ffffff'},
+  {id:'secTestimonials',label:'قسم آراء العملاء',def:'#f1ede7'},
+  {id:'clients',label:'قسم العملاء',def:'#f8f6f3'},
+  {id:'secProcess',label:'قسم كيف نعمل',def:'#f1ede7'},
+  {id:'faq',label:'قسم الأسئلة الشائعة',def:'#f8f6f3'},
+  {id:'contact',label:'قسم التواصل',def:'#f1ede7'},
+  {id:'secCta',label:'شريط الدعوة النهائي (CTA)',def:'#e8192c'},
+  {id:'secFooter',label:'الفوتر',def:'#f8f6f3'}
+];
+var sectionColorsData={};
+function renderColorsEditor(){
+  document.getElementById('colorsEditor').innerHTML=SECTION_COLOR_DEFS.map(function(s){
+    var val=sectionColorsData[s.id]||s.def;
+    return'<div class="clr-row">'
+      +'<div class="clr-label">'+s.label+'</div>'
+      +'<div class="clr-controls">'
+        +'<span class="clr-hex">'+val.toUpperCase()+'</span>'
+        +'<input type="color" class="clr-input" value="'+val+'" oninput="sectionColorsData[\''+s.id+'\']=this.value;this.previousElementSibling.textContent=this.value.toUpperCase()">'
+        +'<button class="btn btn-g bsm" type="button" onclick="resetSectionColor(\''+s.id+'\')">افتراضي</button>'
+      +'</div>'
+      +'</div>';
+  }).join('');
+}
+function resetSectionColor(id){
+  delete sectionColorsData[id];
+  renderColorsEditor();
+}
+async function saveSectionColors(){
+  var{error}=await sb.from('ao_settings').upsert({id:1,section_colors:sectionColorsData,updated_at:new Date().toISOString()});
+  if(error){toast('❌ '+error.message);return}
+  toast('✅ تم حفظ الألوان!');
 }
 
 // ── CLIENT LOGO UPLOAD ─────────────────────────────────

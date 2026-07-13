@@ -124,10 +124,10 @@ nav.solid{box-shadow:0 2px 16px rgba(24,21,15,.06)}
 
 /* ══ SECTION HEAD ═════════════════════════════════ */
 section{padding:clamp(56px,8vw,92px) 0}
-.sec-head{text-align:center;max-width:600px;margin:0 auto clamp(36px,5vw,56px)}
-.sec-label{display:inline-block;font-size:12px;font-weight:600;color:var(--red);letter-spacing:.3px;margin-bottom:12px;background:var(--red-soft);padding:6px 16px;border-radius:var(--rp)}
-.sec-title{font-size:clamp(26px,3.6vw,38px);font-weight:700;line-height:1.3;letter-spacing:-.01em;color:var(--ink)}
-.sec-sub{font-size:14px;color:var(--ink2);line-height:1.7;margin-top:12px;font-weight:400}
+.sec-head{text-align:center;max-width:640px;margin:0 auto clamp(40px,5.5vw,64px)}
+.sec-label{display:inline-block;font-size:12px;font-weight:600;color:var(--red);letter-spacing:.3px;margin-bottom:14px;background:var(--red-soft);padding:6px 16px;border-radius:var(--rp)}
+.sec-title{font-size:clamp(32px,4.6vw,50px);font-weight:800;line-height:1.22;letter-spacing:-.02em;color:var(--ink)}
+.sec-sub{font-size:14.5px;color:var(--ink2);line-height:1.7;margin-top:14px;font-weight:400}
 
 /* ══ FEATURES STRIP ═══════════════════════════════ */
 .features-strip{padding:clamp(48px,7vw,76px) 0}
@@ -184,19 +184,17 @@ section{padding:clamp(56px,8vw,92px) 0}
 .port-track-wrap{overflow:hidden;margin:0 calc(var(--pad) * -1);padding:0 var(--pad)}
 .port-track{display:flex;gap:18px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;scroll-behavior:smooth;padding-bottom:4px}
 .port-track::-webkit-scrollbar{display:none}
-.port-card{flex-shrink:0;width:min(290px,80vw);scroll-snap-align:start;background:var(--p1);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;transition:.2s;cursor:pointer}
-.port-card:hover{border-color:var(--line2);transform:translateY(-3px);box-shadow:0 10px 26px rgba(24,21,15,.06)}
+.port-card{flex-shrink:0;width:min(290px,80vw);scroll-snap-align:start;background:var(--p1);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;transition:.3s cubic-bezier(.16,1,.3,1);cursor:pointer}
+.port-card:hover{border-color:var(--line2);transform:translateY(-5px);box-shadow:0 16px 34px rgba(24,21,15,.09)}
 .port-img{width:100%;height:180px;display:flex;align-items:center;justify-content:center;background:var(--p3);position:relative;overflow:hidden}
 .port-img img{width:100%;height:100%;object-fit:cover;transition:.4s}
-.port-card:hover .port-img img{transform:scale(1.04)}
+.port-card:hover .port-img img{transform:scale(1.05)}
 .port-img-ph{font-size:12px;font-weight:500;color:var(--ink3)}
 .port-type-badge{position:absolute;top:12px;right:12px;background:rgba(24,21,15,.72);backdrop-filter:blur(6px);color:#fff;padding:5px 12px;border-radius:var(--rp);font-size:10px;font-weight:600}
 .port-stat{position:absolute;top:12px;left:12px;background:var(--red);color:#fff;padding:5px 12px;border-radius:var(--rp);font-size:10.5px;font-weight:600}
-.port-body{padding:17px}
-.port-title{font-size:13.5px;font-weight:600;margin-bottom:5px;color:var(--ink)}
-.port-desc{font-size:11.5px;color:var(--ink3);line-height:1.6;margin-bottom:10px;font-weight:400}
-.port-meta{display:flex;gap:6px;flex-wrap:wrap}
-.ptag{background:var(--red-soft);color:var(--red);padding:3px 9px;border-radius:6px;font-size:10px;font-weight:600}
+.port-body{padding:20px}
+.port-title{font-size:14.5px;font-weight:700;margin-bottom:7px;line-height:1.4;color:var(--ink)}
+.port-desc{font-size:12px;color:var(--ink3);line-height:1.7;font-weight:400}
 
 /* ══ TESTIMONIALS ═════════════════════════════════ */
 .tst-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
@@ -462,7 +460,7 @@ footer{padding:clamp(36px,5.5vw,56px) var(--pad) 0;border-top:1px solid var(--li
 </section>
 
 <!-- ══ 2 · TRUST STATS — red ═════════════════════════ -->
-<div class="stats-bar bg-red">
+<div class="stats-bar bg-red" id="secStats">
   <div class="container">
     <div class="stats-grid stagger" id="statsGrid">
       <div class="stat-item">
@@ -490,7 +488,7 @@ footer{padding:clamp(36px,5.5vw,56px) var(--pad) 0;border-top:1px solid var(--li
 </div>
 
 <!-- ══ 3 · FEATURES — off-white ══════════════════════ -->
-<div class="features-strip bg-2">
+<div class="features-strip bg-2" id="secFeatures">
   <div class="container">
     <div class="sec-head">
       <div class="sec-label">إيه اللي بنقدمه</div>
@@ -615,7 +613,6 @@ footer{padding:clamp(36px,5.5vw,56px) var(--pad) 0;border-top:1px solid var(--li
           <div class="port-body">
             <div class="port-title">حملة Meta — مركز خدمة سيارات</div>
             <div class="port-desc">زيادة الحجوزات 320% خلال 30 يوم</div>
-            <div class="port-meta"><span class="ptag">Meta Ads</span><span class="ptag">Service Center</span></div>
           </div>
         </div>
         <div class="port-card" data-cat="digital">
@@ -625,7 +622,6 @@ footer{padding:clamp(36px,5.5vw,56px) var(--pad) 0;border-top:1px solid var(--li
           <div class="port-body">
             <div class="port-title">حملة Google — قطع غيار</div>
             <div class="port-desc">1,200 ليد في شهر واحد</div>
-            <div class="port-meta"><span class="ptag">Google Ads</span><span class="ptag">Auto Parts</span></div>
           </div>
         </div>
         <div class="port-card" data-cat="digital">
@@ -635,7 +631,6 @@ footer{padding:clamp(36px,5.5vw,56px) var(--pad) 0;border-top:1px solid var(--li
           <div class="port-body">
             <div class="port-title">سوشيال ميديا — معرض سيارات</div>
             <div class="port-desc">نمو 50,000 متابع في 3 أشهر</div>
-            <div class="port-meta"><span class="ptag">Social Media</span><span class="ptag">Showroom</span></div>
           </div>
         </div>
         <div class="port-card" data-cat="print">
@@ -644,7 +639,6 @@ footer{padding:clamp(36px,5.5vw,56px) var(--pad) 0;border-top:1px solid var(--li
           <div class="port-body">
             <div class="port-title">حزمة هوية كاملة — مركز صيانة</div>
             <div class="port-desc">يافطات ويوني فورم وكروت بهوية موحدة</div>
-            <div class="port-meta"><span class="ptag">Print</span><span class="ptag">Branding</span></div>
           </div>
         </div>
         <div class="port-card" data-cat="print">
@@ -653,7 +647,6 @@ footer{padding:clamp(36px,5.5vw,56px) var(--pad) 0;border-top:1px solid var(--li
           <div class="port-body">
             <div class="port-title">يوني فورم ودواسات — سلسلة مراكز</div>
             <div class="port-desc">تجهيز كامل لـ 3 فروع بهوية موحدة</div>
-            <div class="port-meta"><span class="ptag">Uniform</span><span class="ptag">Floor Mats</span></div>
           </div>
         </div>
         <div class="port-card" data-cat="branding">
@@ -662,7 +655,6 @@ footer{padding:clamp(36px,5.5vw,56px) var(--pad) 0;border-top:1px solid var(--li
           <div class="port-body">
             <div class="port-title">هوية كاملة — معرض سيارات</div>
             <div class="port-desc">لوجو وهوية بصرية متكاملة</div>
-            <div class="port-meta"><span class="ptag">Logo</span><span class="ptag">Brand Identity</span></div>
           </div>
         </div>
       </div>
@@ -732,7 +724,7 @@ footer{padding:clamp(36px,5.5vw,56px) var(--pad) 0;border-top:1px solid var(--li
 </section>
 
 <!-- ══ 6 · TESTIMONIALS — deeper off-white ═══════════ -->
-<section class="bg-3">
+<section class="bg-3" id="secTestimonials">
   <div class="container">
     <div class="sec-head">
       <div class="sec-label">آراء العملاء</div>
@@ -813,7 +805,7 @@ footer{padding:clamp(36px,5.5vw,56px) var(--pad) 0;border-top:1px solid var(--li
 </section>
 
 <!-- ══ 8 · PROCESS — deeper off-white ════════════════ -->
-<section class="bg-3">
+<section class="bg-3" id="secProcess">
   <div class="container">
     <div class="sec-head">
       <div class="sec-label">كيف نعمل</div>
@@ -940,7 +932,7 @@ footer{padding:clamp(36px,5.5vw,56px) var(--pad) 0;border-top:1px solid var(--li
 </section>
 
 <!-- ══ 11 · CTA BAND — red ═══════════════════════════ -->
-<div class="cta-band bg-red">
+<div class="cta-band bg-red" id="secCta">
   <div class="container cta-band-inner">
     <h2>جاهز تبدأ مشروعك؟</h2>
     <p>كلمنا دلوقتي واحصل على استشارة مجانية</p>
@@ -952,7 +944,7 @@ footer{padding:clamp(36px,5.5vw,56px) var(--pad) 0;border-top:1px solid var(--li
 </div>
 
 <!-- ══ 12 · FOOTER — off-white ═══════════════════════ -->
-<footer class="bg-2">
+<footer class="bg-2" id="secFooter">
   <div class="ft-grid">
     <div>
       <div class="ft-logo">
@@ -1201,6 +1193,13 @@ function renderPagesLinks(list){
   });
 }
 
+function applySectionColors(colors){
+  Object.keys(colors).forEach(function(id){
+    var el=document.getElementById(id);
+    if(el&&colors[id])el.style.backgroundColor=colors[id];
+  });
+}
+
 function renderSocial(cfg){
   var s=document.getElementById('ftSocial');
   if(!s)return;
@@ -1255,14 +1254,12 @@ function renderPortfolio(list){
     var img=p.image_url?'<img src="'+esc(p.image_url)+'" alt="'+esc(p.title)+'">'
       :'<div class="port-img-ph"><i class="bi '+esc(catIcon[p.category]||'bi-image')+'"></i></div>';
     var badge=p.stat_badge?'<div class="port-stat">'+esc(p.stat_badge)+'</div>':'';
-    var tags=(p.tags||[]).map(function(t){return'<span class="ptag">'+esc(t)+'</span>'}).join('');
     return'<div class="port-card" data-cat="'+esc(p.category)+'">'
       +'<div class="port-img">'+img+'</div>'
       +'<div class="port-type-badge">'+esc(catLabel[p.category]||p.category)+'</div>'
       +badge
       +'<div class="port-body"><div class="port-title">'+esc(p.title)+'</div>'
       +'<div class="port-desc">'+esc(p.description)+'</div>'
-      +(tags?'<div class="port-meta">'+tags+'</div>':'')
       +'</div></div>';
   }).join('');
   var active=document.querySelector('.pf-btn.active');
@@ -1356,6 +1353,7 @@ async function loadSite(){
       if(cfg.capability_section)renderCapability(cfg.capability_section);
       if(cfg.split1)renderSplit('split1',cfg.split1);
       if(cfg.split2)renderSplit('split2',cfg.split2);
+      if(cfg.section_colors)applySectionColors(cfg.section_colors);
       renderSocial(cfg);
     }
     var hero=(await sb.from('ao_hero').select('*').single()).data;
