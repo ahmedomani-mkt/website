@@ -774,12 +774,21 @@ button,select,input,textarea{font-family:var(--font)}
     <!-- SECTION COLORS -->
     <div class="sec" id="sec-colors">
       <div class="sec-header">
-        <div class="sec-title">ألوان الأقسام</div>
-        <div class="sec-sub">اختار لون خلفية مختلف لكل قسم في الصفحة الرئيسية</div>
+        <div class="sec-title">ألوان الموقع</div>
+        <div class="sec-sub">غيّر ألوان الموقع كله دفعة واحدة، أو خصّص كل قسم لوحده</div>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-title"><svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>الألوان العامة للموقع</div></div>
+        <div class="field-hint" style="margin-bottom:12px">لون واحد لكل عنصر يتطبق على الموقع كله فورًا (كل الأقسام اللي مالهاش لون مخصص تحتها في "ألوان الأقسام" تاخد اللون العام ده تلقائيًا). لو قسم معين عنده لون مخصص، الون المخصص بيفضل هو الغالب لنفس القسم.</div>
+        <div id="globalColorsEditor"></div>
+        <button class="btn btn-p bsm" onclick="saveGlobalColors()" style="margin-top:12px">
+          <svg viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+          حفظ الألوان العامة
+        </button>
       </div>
       <div class="card">
         <div class="card-header"><div class="card-title"><svg viewBox="0 0 24 24"><circle cx="13.5" cy="6.5" r=".5"/><circle cx="17.5" cy="10.5" r=".5"/><circle cx="8.5" cy="7.5" r=".5"/><circle cx="6.5" cy="12.5" r=".5"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 011.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/></svg>ألوان الأقسام</div></div>
-        <div class="field-hint" style="margin-bottom:12px">لكل قسم 6 ألوان: الخلفية، نصوص السيكشن، الأزرار/الشارات، الأيقونات، خلفية الكروت، ونص جوه الكروت (مستقل عن نص السيكشن — مفيد لو خليت خلفية الكارت غامقة والسيكشن فاتح مثلًا). غيّر اللي محتاجه بس — سيب الباقي زي ما هو. في السيكشنات ذات الخلفية الغامقة أو الحمراء أصلًا، لون النص بيفضل أبيض ثابت للوضوح بغض النظر عن اختيارك.</div>
+        <div class="field-hint" style="margin-bottom:12px">لكل قسم حتى 6 ألوان: الخلفية، نصوص السيكشن، الأزرار/الشارات، الأيقونات، خلفية الكروت، ونص جوه الكروت (مستقل عن نص السيكشن — مفيد لو خليت خلفية الكارت غامقة والسيكشن فاتح مثلًا). غيّر اللي محتاجه بس — سيب الباقي زي ما هو. بعض السيكشنات (زي الشريط الإحصائي والفوتر) ملهاش كروت أو أزرار داخلية، فالخيارات دي مش ظاهرة ليها.</div>
         <div id="colorsEditor"></div>
       </div>
       <button class="btn btn-p" onclick="saveSectionColors()">
@@ -1214,6 +1223,8 @@ async function loadSettings(){
     if(typeof sectionColorsData[k]==='string')sectionColorsData[k]={bg:sectionColorsData[k]};
   });
   renderColorsEditor();
+  globalColorsData=data.global_colors||{};
+  renderGlobalColorsEditor();
 }
 
 function defaultCapPoints(){
@@ -1927,20 +1938,20 @@ async function saveTexts(){
 // ── SECTION COLORS ───────────────────────────────────────
 var SECTION_COLOR_DEFS=[
   {id:'home',label:'الهيرو (الصفحة الرئيسية)',defBg:'#ffffff',defText:'#18150f',defAccent:'#e8192c',defCard:'#ffffff',defIcon:'#e8192c',defCardText:'#18150f'},
-  {id:'secStats',label:'الشريط الإحصائي',defBg:'#e8192c',defText:'#ffffff',defAccent:'#ffffff',defCard:'#ffffff',defIcon:'#e8192c',defCardText:'#18150f'},
+  {id:'secStats',label:'الشريط الإحصائي',defBg:'#e8192c',defText:'#ffffff',defAccent:'#e8192c',defCard:'#ffffff',defIcon:'#ffffff',defCardText:'#18150f',hide:['accent','card','cardText']},
   {id:'secFeatures',label:'شريط المميزات',defBg:'#f8f6f3',defText:'#18150f',defAccent:'#e8192c',defCard:'#ffffff',defIcon:'#e8192c',defCardText:'#18150f'},
   {id:'services',label:'قسم الخدمات',defBg:'#f1ede7',defText:'#18150f',defAccent:'#e8192c',defCard:'#ffffff',defIcon:'#e8192c',defCardText:'#18150f'},
   {id:'portfolio',label:'قسم الأعمال',defBg:'#f8f6f3',defText:'#18150f',defAccent:'#e8192c',defCard:'#ffffff',defIcon:'#e8192c',defCardText:'#18150f'},
-  {id:'capSec',label:'السيكشن الغامق (إمكانياتنا)',defBg:'#18150f',defText:'#ffffff',defAccent:'#e8192c',defCard:'#ffffff',defIcon:'#e8192c',defCardText:'#18150f'},
-  {id:'split1Sec',label:'قصة نجاح 1',defBg:'#f8f6f3',defText:'#18150f',defAccent:'#e8192c',defCard:'#ffffff',defIcon:'#e8192c',defCardText:'#18150f'},
-  {id:'split2Sec',label:'قصة نجاح 2',defBg:'#ffffff',defText:'#18150f',defAccent:'#e8192c',defCard:'#ffffff',defIcon:'#e8192c',defCardText:'#18150f'},
+  {id:'capSec',label:'السيكشن الغامق (إمكانياتنا)',defBg:'#18150f',defText:'#ffffff',defAccent:'#e8192c',defCard:'#ffffff',defIcon:'#e8192c',defCardText:'#18150f',hide:['card','cardText']},
+  {id:'split1Sec',label:'قصة نجاح 1',defBg:'#f8f6f3',defText:'#18150f',defAccent:'#e8192c',defCard:'#ffffff',defIcon:'#e8192c',defCardText:'#18150f',hide:['card','cardText']},
+  {id:'split2Sec',label:'قصة نجاح 2',defBg:'#ffffff',defText:'#18150f',defAccent:'#e8192c',defCard:'#ffffff',defIcon:'#e8192c',defCardText:'#18150f',hide:['card','cardText']},
   {id:'secTestimonials',label:'قسم آراء العملاء',defBg:'#f1ede7',defText:'#18150f',defAccent:'#e8192c',defCard:'#ffffff',defIcon:'#e8192c',defCardText:'#18150f'},
   {id:'clients',label:'قسم العملاء',defBg:'#f8f6f3',defText:'#18150f',defAccent:'#e8192c',defCard:'#ffffff',defIcon:'#e8192c',defCardText:'#18150f'},
   {id:'secProcess',label:'قسم كيف نعمل',defBg:'#f1ede7',defText:'#18150f',defAccent:'#e8192c',defCard:'#ffffff',defIcon:'#e8192c',defCardText:'#18150f'},
   {id:'faq',label:'قسم الأسئلة الشائعة',defBg:'#f8f6f3',defText:'#18150f',defAccent:'#e8192c',defCard:'#ffffff',defIcon:'#e8192c',defCardText:'#18150f'},
   {id:'contact',label:'قسم التواصل',defBg:'#f1ede7',defText:'#18150f',defAccent:'#e8192c',defCard:'#ffffff',defIcon:'#e8192c',defCardText:'#18150f'},
-  {id:'secCta',label:'شريط الدعوة النهائي (CTA)',defBg:'#e8192c',defText:'#ffffff',defAccent:'#ffffff',defCard:'#ffffff',defIcon:'#e8192c',defCardText:'#18150f'},
-  {id:'secFooter',label:'الفوتر',defBg:'#f8f6f3',defText:'#18150f',defAccent:'#e8192c',defCard:'#ffffff',defIcon:'#e8192c',defCardText:'#18150f'}
+  {id:'secCta',label:'شريط الدعوة النهائي (CTA)',defBg:'#e8192c',defText:'#ffffff',defAccent:'#e8192c',defCard:'#ffffff',defIcon:'#e8192c',defCardText:'#18150f',hide:['card','cardText']},
+  {id:'secFooter',label:'الفوتر',defBg:'#f8f6f3',defText:'#18150f',defAccent:'#e8192c',defCard:'#ffffff',defIcon:'#e8192c',defCardText:'#18150f',hide:['card','cardText']}
 ];
 var sectionColorsData={};
 function colorSwatch(id,key,val,title){
@@ -1951,23 +1962,28 @@ function colorSwatch(id,key,val,title){
 function renderColorsEditor(){
   document.getElementById('colorsEditor').innerHTML=SECTION_COLOR_DEFS.map(function(s){
     var cur=sectionColorsData[s.id]||{};
+    var hide=s.hide||[];
     var bg=cur.bg||s.defBg,text=cur.text||s.defText,accent=cur.accent||s.defAccent;
     var card=cur.card||s.defCard,icon=cur.icon||s.defIcon,cardText=cur.cardText||s.defCardText;
+    var cols=[
+      ['bg',bg,'لون الخلفية','خلفية'],
+      ['text',text,'لون النصوص','نص'],
+      ['accent',accent,'لون الأزرار والشارات','أزرار'],
+      ['icon',icon,'لون الأيقونات','أيقونات'],
+      ['card',card,'لون خلفية الكروت','كروت'],
+      ['cardText',cardText,'لون النص جوه الكروت','نص الكارت']
+    ].filter(function(c){return hide.indexOf(c[0])===-1});
     return'<div class="clr-row">'
       +'<div class="clr-label">'+s.label+'</div>'
       +'<div class="clr-controls">'
-        +'<div class="clr-swatch-col">'+colorSwatch(s.id,'bg',bg,'لون الخلفية')+'<span class="clr-tag">خلفية</span></div>'
-        +'<div class="clr-swatch-col">'+colorSwatch(s.id,'text',text,'لون النصوص')+'<span class="clr-tag">نص</span></div>'
-        +'<div class="clr-swatch-col">'+colorSwatch(s.id,'accent',accent,'لون الأزرار والشارات')+'<span class="clr-tag">أزرار</span></div>'
-        +'<div class="clr-swatch-col">'+colorSwatch(s.id,'icon',icon,'لون الأيقونات')+'<span class="clr-tag">أيقونات</span></div>'
-        +'<div class="clr-swatch-col">'+colorSwatch(s.id,'card',card,'لون خلفية الكروت')+'<span class="clr-tag">كروت</span></div>'
-        +'<div class="clr-swatch-col">'+colorSwatch(s.id,'cardText',cardText,'لون النص جوه الكروت')+'<span class="clr-tag">نص الكارت</span></div>'
+        +cols.map(function(c){return'<div class="clr-swatch-col">'+colorSwatch(s.id,c[0],c[1],c[2])+'<span class="clr-tag">'+c[3]+'</span></div>'}).join('')
         +'<button class="btn btn-g bsm" type="button" onclick="resetSectionColor(\''+s.id+'\')">افتراضي</button>'
       +'</div>'
       +'</div>';
   }).join('');
 }
 function setSectionColor(id,key,val){
+  if(id==='__global'){globalColorsData[key]=val;return}
   if(!sectionColorsData[id])sectionColorsData[id]={};
   sectionColorsData[id][key]=val;
 }
@@ -1979,6 +1995,36 @@ async function saveSectionColors(){
   var{error}=await sb.from('ao_settings').upsert({id:1,section_colors:sectionColorsData,updated_at:new Date().toISOString()});
   if(error){toast('❌ '+error.message);return}
   toast('✅ تم حفظ الألوان!');
+}
+
+// ── GLOBAL SITE COLORS ──────────────────────────────────
+var GLOBAL_COLOR_DEF={defBg:'#ffffff',defText:'#18150f',defAccent:'#e8192c',defCard:'#ffffff',defIcon:'#e8192c',defCardText:'#18150f'};
+var globalColorsData={};
+function renderGlobalColorsEditor(){
+  var cur=globalColorsData||{};
+  var bg=cur.bg||GLOBAL_COLOR_DEF.defBg,text=cur.text||GLOBAL_COLOR_DEF.defText,accent=cur.accent||GLOBAL_COLOR_DEF.defAccent;
+  var card=cur.card||GLOBAL_COLOR_DEF.defCard,icon=cur.icon||GLOBAL_COLOR_DEF.defIcon,cardText=cur.cardText||GLOBAL_COLOR_DEF.defCardText;
+  var cols=[
+    ['bg',bg,'لون خلفية الصفحة','خلفية'],
+    ['text',text,'لون النصوص','نص'],
+    ['accent',accent,'لون الأزرار والشارات','أزرار'],
+    ['icon',icon,'لون الأيقونات','أيقونات'],
+    ['card',card,'لون خلفية الكروت','كروت'],
+    ['cardText',cardText,'لون النص جوه الكروت','نص الكارت']
+  ];
+  document.getElementById('globalColorsEditor').innerHTML='<div class="clr-row"><div class="clr-controls">'
+    +cols.map(function(c){return'<div class="clr-swatch-col">'+colorSwatch('__global',c[0],c[1],c[2])+'<span class="clr-tag">'+c[3]+'</span></div>'}).join('')
+    +'<button class="btn btn-g bsm" type="button" onclick="resetGlobalColors()">افتراضي</button>'
+    +'</div></div>';
+}
+function resetGlobalColors(){
+  globalColorsData={};
+  renderGlobalColorsEditor();
+}
+async function saveGlobalColors(){
+  var{error}=await sb.from('ao_settings').upsert({id:1,global_colors:globalColorsData,updated_at:new Date().toISOString()});
+  if(error){toast('❌ '+error.message);return}
+  toast('✅ تم حفظ الألوان العامة! هتلاقيها طبقت على الموقع كله.');
 }
 
 // ── CLIENT LOGO UPLOAD ─────────────────────────────────
