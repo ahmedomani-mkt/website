@@ -152,12 +152,17 @@ section{padding:clamp(56px,8vw,92px) 0}
 .port-desc{font-size:12px;color:var(--card-ink3);line-height:1.7;font-weight:400}
 .port-empty{padding:50px 20px;text-align:center;color:var(--ink3);font-size:13px}
 
-/* ══ PORTFOLIO TRACK (ADS) ══════════════════════════ */
-.pg-track{display:flex;gap:0;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+/* ══ PORTFOLIO GROUPS (ADS) — full-bleed tracks ═════ */
+.pg-group{margin-bottom:38px}
+.pg-group:last-child{margin-bottom:0}
+.pg-group-head{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:16px;flex-wrap:wrap}
+.pg-group-title{font-size:15px;font-weight:700;color:var(--ink2);padding-right:12px;border-right:3px solid var(--red)}
+.pg-track-wrap{width:100%;overflow:hidden}
+.pg-track{display:flex;gap:12px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
 .pg-track::-webkit-scrollbar{display:none}
-.pg-track img{flex-shrink:0;width:240px;height:240px;object-fit:cover;display:block;transition:opacity .25s;cursor:pointer}
-.pg-track img:hover{opacity:.85}
-@media(max-width:560px){.pg-track img{width:160px;height:160px}}
+.pg-track img{flex-shrink:0;width:240px;height:240px;object-fit:cover;display:block;border-radius:14px;transition:opacity .25s,transform .25s;cursor:pointer}
+.pg-track img:hover{opacity:.9;transform:translateY(-3px)}
+@media(max-width:560px){.pg-track{gap:8px}.pg-track img{width:160px;height:160px;border-radius:10px}}
 
 /* ══ COLLAGE LIGHTBOX ═══════════════════════════════ */
 .cg-lb-ov{position:fixed;inset:0;z-index:600;background:rgba(15,13,10,.9);display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .25s}
@@ -385,16 +390,12 @@ footer{padding:clamp(36px,5.5vw,56px) var(--pad) 0;border-top:1px solid var(--li
 <!-- ══ 4 · PORTFOLIO: ADS — off-white ════════════════ -->
 <section id="portfolio" class="bg-2">
   <div class="container">
-    <div class="port-head">
-      <div class="port-head-text sec-head" style="margin:0;text-align:right">
-        <h2 class="sec-title" id="portTitle">أعمالنا في الدعاية والإعلان</h2>
-      </div>
-      <div class="port-nav-btns">
-        <button class="port-nav-btn" onclick="slidePort(-1,'portGrid')"><i class="bi bi-arrow-right"></i></button>
-        <button class="port-nav-btn" onclick="slidePort(1,'portGrid')"><i class="bi bi-arrow-left"></i></button>
-      </div>
+    <div class="sec-head" style="text-align:right">
+      <h2 class="sec-title" id="portTitle">أعمالنا في الدعاية والإعلان</h2>
     </div>
-    <div class="port-track-wrap"><div class="pg-track" id="portGrid"></div></div>
+  </div>
+  <div id="portGroups"></div>
+  <div class="container">
     <div class="port-empty" id="portEmpty">لسه مفيش أعمال في القسم ده — تابعنا قريبًا</div>
   </div>
 </section>
@@ -632,7 +633,7 @@ function animateCounters(){
 // Note: hero-badge/.hero-text-blocks/.hero-btns/.stat-item are deliberately
 // excluded here and revealed instead from loadSite() once real Supabase data
 // has replaced the static placeholder text, to avoid a flash of stale content.
-var REVEAL_SEL='.sec-head,.cat-link-card,.port-card,.ba-card,.cl-item,.ft-grid';
+var REVEAL_SEL='.sec-head,.cat-link-card,.pg-group,.port-card,.ba-card,.cl-item,.ft-grid';
 var revealObs;
 function initReveal(){
   document.querySelectorAll(REVEAL_SEL).forEach(function(el){el.classList.add('fade-up')});
@@ -835,19 +836,40 @@ function portCardHtml(p){
     +'<div class="port-desc">'+esc(p.description)+'</div>'
     +'</div></div>';
 }
-function renderAdsTrack(list){
-  var g=document.getElementById('portGrid');
-  if(!g)return;
+function renderAdsGroups(list){
+  var wrap=document.getElementById('portGroups');
+  if(!wrap)return;
   var withImg=list.filter(function(p){return p.image_url});
-  g.innerHTML=withImg.map(function(p){
-    return'<img src="'+esc(p.image_url)+'" alt="'+esc(p.title||'')+'" loading="lazy" onclick="openCollageLightbox(this.src)">';
+  if(!withImg.length){wrap.innerHTML='';return}
+  var groups={},order=[];
+  withImg.forEach(function(p){
+    var gname=(p.group_label||'').trim()||'متنوع';
+    if(!groups[gname]){groups[gname]=[];order.push(gname)}
+    groups[gname].push(p);
+  });
+  wrap.innerHTML=order.map(function(gname,gi){
+    var trackId='pgTrack'+gi;
+    return'<div class="pg-group">'
+      +'<div class="container"><div class="pg-group-head">'
+        +'<div class="pg-group-title">'+esc(gname)+'</div>'
+        +'<div class="port-nav-btns">'
+          +'<button class="port-nav-btn" onclick="slidePort(-1,\''+trackId+'\')"><i class="bi bi-arrow-right"></i></button>'
+          +'<button class="port-nav-btn" onclick="slidePort(1,\''+trackId+'\')"><i class="bi bi-arrow-left"></i></button>'
+        +'</div>'
+      +'</div></div>'
+      +'<div class="pg-track-wrap"><div class="pg-track" id="'+trackId+'">'
+        +groups[gname].map(function(p){
+          return'<img src="'+esc(p.image_url)+'" alt="'+esc(p.title||gname)+'" loading="lazy" onclick="openCollageLightbox(this.src)">';
+        }).join('')
+      +'</div></div>'
+    +'</div>';
   }).join('');
-  initAutoScroll('portGrid');
+  order.forEach(function(gname,gi){initAutoScroll('pgTrack'+gi)});
 }
 function renderPortfolio(list){
   var ads=list.filter(function(p){return(p.catalog||'ads')!=='marketing'});
   var marketing=list.filter(function(p){return p.catalog==='marketing'});
-  renderAdsTrack(ads);
+  renderAdsGroups(ads);
   var ge=document.getElementById('portEmpty');
   if(ge)ge.style.display=ads.length?'none':'block';
   var gm=document.getElementById('portGridMarketing');
