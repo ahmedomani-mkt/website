@@ -179,6 +179,10 @@ button,select,input,textarea{font-family:var(--font)}
 .li-card-badges{display:flex;flex-wrap:wrap;gap:5px}
 .li-card-ac{display:flex;gap:6px;padding:10px 14px;border-top:1px solid var(--b);background:var(--dk)}
 .li-card-ac .btn{flex:1;justify-content:center;padding:7px 8px}
+.port-group-block{margin-bottom:24px}
+.port-group-block:last-child{margin-bottom:0}
+.port-group-heading{font-size:12.5px;font-weight:700;color:var(--w2);margin-bottom:12px;padding-inline-start:10px;border-inline-start:3px solid var(--red);display:flex;align-items:center;gap:6px}
+.port-group-count{color:var(--g);font-weight:600;font-size:11px}
 
 /* ── MODAL ───────────────────────────────────────────── */
 .ov{position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(4px);z-index:500;display:none;align-items:center;justify-content:center;padding:20px}
@@ -1303,18 +1307,34 @@ function renderPort(){
   if(!portfolio.length){el.className='';el.innerHTML=empty('لا توجد أعمال بعد — اضغط إضافة لإنشاء أول عمل');return}
   var cm={digital:'b-blue',print:'b-red',branding:'b-green'};
   var cn={digital:'تسويق رقمي',print:'دعاية وإعلان',branding:'هوية بصرية'};
-  el.className='card-grid';
-  el.innerHTML=portfolio.map(function(p){
+  function cardFor(p){
     var badges='<span class="badge '+(p.catalog==='marketing'?'b-purple':'b-orange')+'">'+(p.catalog==='marketing'?'أعمالنا في التسويق':'أعمالنا في الدعاية والإعلان')+'</span>'
       +'<span class="badge '+(cm[p.category]||'b-blue')+'">'+cn[p.category]+'</span>'
-      +(p.catalog!=='marketing'?'<span class="badge b-off">📁 '+h(p.group_label||'متنوع')+'</span>':'')
       +(p.stat_badge?'<span class="badge b-red">'+h(p.stat_badge)+'</span>':'')
       +'<span class="badge '+(p.is_active?'b-green':'b-off')+'">'+(p.is_active?'ظاهر':'مخفي')+'</span>';
     var actions='<button class="btn btn-g bsm" onclick="editPort(\''+p.id+'\')">تعديل</button>'
       +'<button class="btn btn-g bsm" onclick="togglePort(\''+p.id+'\','+(!p.is_active)+')">'+( p.is_active?'إخفاء':'إظهار')+'</button>'
       +'<button class="btn btn-d bsm" onclick="delPort(\''+p.id+'\')">حذف</button>';
     return liCardHtml({imgUrl:p.image_url,ph:'🖼️',title:p.title,badges:badges,actions:actions});
+  }
+  var ads=portfolio.filter(function(p){return p.catalog!=='marketing'});
+  var marketing=portfolio.filter(function(p){return p.catalog==='marketing'});
+  var groups={},order=[];
+  ads.forEach(function(p){
+    var gname=p.group_label||'متنوع';
+    if(!groups[gname]){groups[gname]=[];order.push(gname)}
+    groups[gname].push(p);
+  });
+  var html=order.map(function(gname){
+    return'<div class="port-group-block"><div class="port-group-heading">📁 '+h(gname)+' <span class="port-group-count">('+groups[gname].length+')</span></div>'
+      +'<div class="card-grid">'+groups[gname].map(cardFor).join('')+'</div></div>';
   }).join('');
+  if(marketing.length){
+    html+='<div class="port-group-block"><div class="port-group-heading">🎯 أعمالنا في التسويق <span class="port-group-count">('+marketing.length+')</span></div>'
+      +'<div class="card-grid">'+marketing.map(cardFor).join('')+'</div></div>';
+  }
+  el.className='';
+  el.innerHTML=html;
 }
 function renderGroupSummary(){
   var ads=portfolio.filter(function(p){return p.catalog!=='marketing'});
