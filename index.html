@@ -149,10 +149,20 @@ section{padding:clamp(56px,8vw,92px) 0}
 .port-desc{font-size:12px;color:var(--card-ink3);line-height:1.7;font-weight:400}
 .port-empty{padding:50px 20px;text-align:center;color:var(--ink3);font-size:13px}
 
+/* ══ PORTFOLIO COLLAGE (ADS) ═══════════════════════ */
+.pg-group{margin-bottom:34px}
+.pg-group:last-child{margin-bottom:0}
+.pg-group-title{font-size:14px;font-weight:700;color:var(--ink2);margin-bottom:14px;text-align:right;padding-right:14px;border-right:3px solid var(--red)}
+.pg-collage{column-count:3;column-gap:10px}
+.pg-collage img{width:100%;display:block;margin-bottom:10px;border-radius:12px;break-inside:avoid;transition:.3s}
+.pg-collage img:hover{opacity:.9}
+@media(max-width:900px){.pg-collage{column-count:2}}
+@media(max-width:560px){.pg-collage{column-count:2;column-gap:7px}.pg-collage img{margin-bottom:7px;border-radius:8px}}
+
 /* ══ BEFORE / AFTER ═══════════════════════════════ */
 .ba-track{display:flex;gap:20px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;scroll-behavior:smooth;padding:10px 4px 14px}
 .ba-track::-webkit-scrollbar{display:none}
-.ba-card{flex-shrink:0;width:min(420px,85vw);scroll-snap-align:start;background:var(--card-bg);border:1px solid var(--line);border-radius:var(--r);padding:22px;display:flex;align-items:center;gap:22px;transition:.3s cubic-bezier(.16,1,.3,1)}
+.ba-card{flex-shrink:0;width:min(420px,85vw);scroll-snap-align:start;background:var(--card-bg);border:1px solid var(--line);border-radius:var(--r);padding:22px;display:flex;align-items:center;gap:22px;transition:.3s cubic-bezier(.16,1,.3,1);cursor:pointer}
 .ba-card:hover{border-color:var(--line2);transform:translateY(-4px);box-shadow:0 16px 34px rgba(24,21,15,.08)}
 .ba-stack{position:relative;width:140px;height:140px;flex-shrink:0}
 .ba-img{position:absolute;width:110px;height:110px}
@@ -168,6 +178,21 @@ section{padding:clamp(56px,8vw,92px) 0}
 .ba-info{flex:1;min-width:0}
 .ba-name{font-size:15.5px;font-weight:700;color:var(--card-ink);margin-bottom:6px;line-height:1.4}
 .ba-desc{font-size:12px;color:var(--card-ink3);line-height:1.7}
+
+/* ══ BEFORE / AFTER LIGHTBOX ═══════════════════════ */
+.ba-lb-ov{position:fixed;inset:0;z-index:600;background:rgba(15,13,10,.86);display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .25s}
+.ba-lb-ov.open{opacity:1;pointer-events:all}
+.ba-lb{background:var(--card-bg);border-radius:var(--r);max-width:720px;width:100%;max-height:90vh;overflow-y:auto;padding:26px;position:relative}
+.ba-lb-close{position:absolute;top:14px;left:14px;width:38px;height:38px;border-radius:50%;background:var(--p3);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;color:var(--ink2);border:none;z-index:2}
+.ba-lb-imgs{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px}
+.ba-lb-img-wrap{position:relative}
+.ba-lb-img-wrap img{width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:12px;background:var(--p3);display:block}
+.ba-lb-tag{position:absolute;top:10px;right:10px;font-size:11px;font-weight:800;padding:5px 13px;border-radius:var(--rp);color:#fff}
+.ba-lb-tag-before{background:rgba(var(--ink-rgb),.6)}
+.ba-lb-tag-after{background:var(--red);right:auto;left:10px}
+.ba-lb-name{font-size:19px;font-weight:700;color:var(--card-ink);margin-bottom:8px}
+.ba-lb-desc{font-size:13.5px;color:var(--card-ink3);line-height:1.8}
+@media(max-width:600px){.ba-lb-imgs{grid-template-columns:1fr}}
 
 /* ══ CLIENTS · STATIC GRID ═════════════════════════ */
 .cl-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:12px}
@@ -351,44 +376,11 @@ footer{padding:clamp(36px,5.5vw,56px) var(--pad) 0;border-top:1px solid var(--li
 <!-- ══ 4 · PORTFOLIO: ADS — off-white ════════════════ -->
 <section id="portfolio" class="bg-2">
   <div class="container">
-    <div class="port-head">
-      <div class="port-head-text sec-head" style="margin:0;text-align:right">
-        <h2 class="sec-title" id="portTitle">أعمالنا في الدعاية والإعلان</h2>
-      </div>
-      <div class="port-nav-btns">
-        <button class="port-nav-btn" onclick="slidePort(-1,'portGrid')"><i class="bi bi-arrow-right"></i></button>
-        <button class="port-nav-btn" onclick="slidePort(1,'portGrid')"><i class="bi bi-arrow-left"></i></button>
-      </div>
+    <div class="sec-head" style="text-align:right">
+      <h2 class="sec-title" id="portTitle">أعمالنا في الدعاية والإعلان</h2>
     </div>
-    <div class="port-track-wrap">
-      <div class="port-track stagger" id="portGrid">
-        <div class="port-card" data-cat="print">
-          <div class="port-img"><div class="port-img-ph"><i class="bi bi-shop"></i></div></div>
-          <div class="port-type-badge">دعاية وإعلان</div>
-          <div class="port-body">
-            <div class="port-title">حزمة هوية كاملة — مركز صيانة</div>
-            <div class="port-desc">يافطات ويوني فورم وكروت بهوية موحدة</div>
-          </div>
-        </div>
-        <div class="port-card" data-cat="print">
-          <div class="port-img"><div class="port-img-ph"><i class="bi bi-person-badge"></i></div></div>
-          <div class="port-type-badge">دعاية وإعلان</div>
-          <div class="port-body">
-            <div class="port-title">يوني فورم ودواسات — سلسلة مراكز</div>
-            <div class="port-desc">تجهيز كامل لـ 3 فروع بهوية موحدة</div>
-          </div>
-        </div>
-        <div class="port-card" data-cat="branding">
-          <div class="port-img"><div class="port-img-ph"><i class="bi bi-palette"></i></div></div>
-          <div class="port-type-badge">هوية بصرية</div>
-          <div class="port-body">
-            <div class="port-title">هوية كاملة — معرض سيارات</div>
-            <div class="port-desc">لوجو وهوية بصرية متكاملة</div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="port-empty" id="portEmpty" style="display:none">لسه مفيش أعمال في القسم ده — تابعنا قريبًا</div>
+    <div id="portGroups"></div>
+    <div class="port-empty" id="portEmpty">لسه مفيش أعمال في القسم ده — تابعنا قريبًا</div>
   </div>
 </section>
 
@@ -429,6 +421,19 @@ footer{padding:clamp(36px,5.5vw,56px) var(--pad) 0;border-top:1px solid var(--li
     </div>
   </div>
 </section>
+
+<!-- BEFORE/AFTER LIGHTBOX -->
+<div class="ba-lb-ov" id="baLightbox" onclick="if(event.target===this)closeBALightbox()">
+  <div class="ba-lb">
+    <button class="ba-lb-close" onclick="closeBALightbox()" aria-label="إغلاق">✕</button>
+    <div class="ba-lb-imgs">
+      <div class="ba-lb-img-wrap"><img id="baLbBefore" src="" alt="قبل"><span class="ba-lb-tag ba-lb-tag-before">قبل</span></div>
+      <div class="ba-lb-img-wrap"><img id="baLbAfter" src="" alt="بعد"><span class="ba-lb-tag ba-lb-tag-after">بعد</span></div>
+    </div>
+    <div class="ba-lb-name" id="baLbName"></div>
+    <div class="ba-lb-desc" id="baLbDesc"></div>
+  </div>
+</div>
 
 <!-- ══ 5 · CLIENTS — white ═══════════════════════════ -->
 <section id="clients" class="clients-sec bg-1">
@@ -585,7 +590,7 @@ function animateCounters(){
 }
 
 // ── ENTRANCE ANIMATIONS (scroll reveal) ──────────────
-var REVEAL_SEL='.sec-head,.hero-badge,#heroH1,.hero-sub,.hero-btns,.stat-item,.cat-link-card,.port-card,.ba-card,.cl-item,.ft-grid';
+var REVEAL_SEL='.sec-head,.hero-badge,#heroH1,.hero-sub,.hero-btns,.stat-item,.cat-link-card,.pg-group,.port-card,.ba-card,.cl-item,.ft-grid';
 var revealObs;
 function initReveal(){
   document.querySelectorAll(REVEAL_SEL).forEach(function(el){el.classList.add('fade-up')});
@@ -790,11 +795,31 @@ function portCardHtml(p){
     +'<div class="port-desc">'+esc(p.description)+'</div>'
     +'</div></div>';
 }
+function renderAdsCollage(list){
+  var wrap=document.getElementById('portGroups');
+  if(!wrap)return;
+  var withImg=list.filter(function(p){return p.image_url});
+  if(!withImg.length){wrap.innerHTML='';return}
+  var groups={},order=[];
+  withImg.forEach(function(p){
+    var gname=(p.group_label||'').trim()||'متنوع';
+    if(!groups[gname]){groups[gname]=[];order.push(gname)}
+    groups[gname].push(p);
+  });
+  wrap.innerHTML=order.map(function(gname){
+    return'<div class="pg-group">'
+      +'<div class="pg-group-title">'+esc(gname)+'</div>'
+      +'<div class="pg-collage">'
+        +groups[gname].map(function(p){
+          return'<img src="'+esc(p.image_url)+'" alt="'+esc(p.title||gname)+'" loading="lazy">';
+        }).join('')
+      +'</div></div>';
+  }).join('');
+}
 function renderPortfolio(list){
   var ads=list.filter(function(p){return(p.catalog||'ads')!=='marketing'});
   var marketing=list.filter(function(p){return p.catalog==='marketing'});
-  var g=document.getElementById('portGrid');
-  if(g)g.innerHTML=ads.map(portCardHtml).join('');
+  renderAdsCollage(ads);
   var ge=document.getElementById('portEmpty');
   if(ge)ge.style.display=ads.length?'none':'block';
   var gm=document.getElementById('portGridMarketing');
@@ -803,14 +828,16 @@ function renderPortfolio(list){
   if(gme)gme.style.display=marketing.length?'none':'block';
 }
 
+var baList=[];
 function renderBeforeAfter(list){
   var sec=document.getElementById('secBeforeAfter');
   if(!list||!list.length){if(sec)sec.style.display='none';return;}
+  baList=list;
   var g=document.getElementById('baGrid');
-  if(g)g.innerHTML=list.map(function(b){
+  if(g)g.innerHTML=list.map(function(b,i){
     var before=b.before_image_url?'<img src="'+esc(b.before_image_url)+'" alt="قبل">':'<div class="ba-img-ph"><i class="bi bi-image"></i></div>';
     var after=b.after_image_url?'<img src="'+esc(b.after_image_url)+'" alt="بعد">':'<div class="ba-img-ph"><i class="bi bi-image"></i></div>';
-    return'<div class="ba-card">'
+    return'<div class="ba-card" onclick="openBALightbox('+i+')">'
       +'<div class="ba-stack">'
         +'<div class="ba-img ba-img-before"><div class="ba-img-inner">'+before+'</div><span class="ba-tag ba-tag-before">قبل</span></div>'
         +'<div class="ba-img ba-img-after"><div class="ba-img-inner">'+after+'</div><span class="ba-tag ba-tag-after">بعد</span></div>'
@@ -823,6 +850,27 @@ function renderBeforeAfter(list){
   }).join('');
   if(sec)sec.style.display='';
 }
+function openBALightbox(i){
+  var b=baList[i];
+  if(!b)return;
+  document.getElementById('baLbBefore').src=b.before_image_url||'';
+  document.getElementById('baLbAfter').src=b.after_image_url||'';
+  document.getElementById('baLbName').textContent=b.client_name;
+  var d=document.getElementById('baLbDesc');
+  d.textContent=b.description||'';
+  d.style.display=b.description?'block':'none';
+  document.getElementById('baLightbox').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeBALightbox(){
+  document.getElementById('baLightbox').classList.remove('open');
+  document.body.style.overflow='';
+}
+window.openBALightbox=openBALightbox;
+window.closeBALightbox=closeBALightbox;
+document.addEventListener('keydown',function(e){
+  if(e.key==='Escape')closeBALightbox();
+});
 
 function renderClients(list){
   var g=document.getElementById('clientsGrid');

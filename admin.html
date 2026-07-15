@@ -714,8 +714,15 @@ button,select,input,textarea{font-family:var(--font)}
           <option value="branding">هوية بصرية</option>
         </select>
       </div>
+      <div class="field"><label>مجموعة الكوليج (لقسم الدعاية والإعلان فقط)</label>
+        <input type="text" id="pm-group" placeholder="مثال: عميل 1 / متنوع" list="pm-group-list">
+        <datalist id="pm-group-list"></datalist>
+        <div class="field-hint">الصور اللي بنفس اسم المجموعة بتتجمع تحت بعض بعنوان واحد في قسم "أعمالنا في الدعاية والإعلان". سيبها فاضية عشان تتحط تحت "متنوع" تلقائيًا.</div>
+      </div>
     </div>
-    <div class="field"><label>الوصف</label><textarea id="pm-d" rows="2" placeholder="وصف مختصر للعمل..."></textarea></div>
+    <div class="field"><label>الوصف</label><textarea id="pm-d" rows="2" placeholder="وصف مختصر للعمل..."></textarea>
+      <div class="field-hint">الوصف والبادج مش بيظهروا في قسم الدعاية والإعلان (كوليج صور بس) — بيظهروا في قسم التسويق فقط.</div>
+    </div>
     <div class="field"><label>بادج النتيجة (اختياري)</label><input type="text" id="pm-s" placeholder="+320% مبيعات"></div>
     <div class="field"><label>رابط الصورة (URL)</label><input type="url" id="pm-i" placeholder="https://..." oninput="prevImg(this.value)"></div>
     <div class="upload-zone" onclick="document.getElementById('pm-f').click()">
@@ -1140,6 +1147,7 @@ function renderPort(){
         +'<div class="li-s">'
           +'<span class="badge '+(p.catalog==='marketing'?'b-purple':'b-orange')+'">'+(p.catalog==='marketing'?'أعمالنا في التسويق':'أعمالنا في الدعاية والإعلان')+'</span>'
           +'<span class="badge '+(cm[p.category]||'b-blue')+'">'+cn[p.category]+'</span>'
+          +(p.catalog!=='marketing'?'<span class="badge b-off">📁 '+h(p.group_label||'متنوع')+'</span>':'')
           +(p.stat_badge?'<span class="badge b-red">'+h(p.stat_badge)+'</span>':'')
           +'<span class="badge '+(p.is_active?'b-green':'b-off')+'">'+(p.is_active?'ظاهر':'مخفي')+'</span>'
         +'</div></div>'
@@ -1156,6 +1164,9 @@ function openPM(item){
   v('pm-t',item?item.title:'');v('pm-d',item?item.description:'');
   document.getElementById('pm-c').value=item?item.category:'digital';
   document.getElementById('pm-catalog').value=item?(item.catalog||'ads'):'ads';
+  v('pm-group',item?item.group_label||'':'');
+  var groupNames=Array.from(new Set(portfolio.map(function(p){return p.group_label}).filter(Boolean)));
+  document.getElementById('pm-group-list').innerHTML=groupNames.map(function(g){return'<option value="'+h(g)+'">'}).join('');
   v('pm-s',item?item.stat_badge||'':'');v('pm-i',item?item.image_url||'':'');
   var pv=document.getElementById('pm-pv');
   pv.src=item&&item.image_url?item.image_url:'';
@@ -1181,7 +1192,7 @@ async function savePM(){
   var title=g('pm-t').trim();
   if(!title){toast('اكتب عنوان العمل');return}
   var payload={title:title,description:g('pm-d'),category:document.getElementById('pm-c').value,
-    catalog:document.getElementById('pm-catalog').value,
+    catalog:document.getElementById('pm-catalog').value,group_label:g('pm-group').trim()||null,
     stat_badge:g('pm-s')||null,image_url:g('pm-i')||null};
   var err;
   if(id){err=(await sb.from('ao_portfolio').update(payload).eq('id',id)).error}
