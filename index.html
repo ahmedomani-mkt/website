@@ -155,13 +155,18 @@ section{padding:clamp(56px,8vw,92px) 0}
 /* ══ PORTFOLIO GROUPS (ADS) — full-bleed tracks ═════ */
 .pg-group{margin-bottom:38px}
 .pg-group:last-child{margin-bottom:0}
-.pg-group-head{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:16px;flex-wrap:wrap}
+.pg-group-head{margin-bottom:16px}
 .pg-group-title{font-size:15px;font-weight:700;color:var(--ink2);padding-right:12px;border-right:3px solid var(--red)}
-.pg-track-wrap{width:100%;overflow:hidden}
+.pg-track-wrap{width:100%;overflow:hidden;position:relative}
 .pg-track{display:flex;gap:12px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
 .pg-track::-webkit-scrollbar{display:none}
 .pg-track img{flex-shrink:0;width:240px;height:240px;object-fit:cover;display:block;border-radius:14px;transition:opacity .25s,transform .25s;cursor:pointer}
 .pg-track img:hover{opacity:.9;transform:translateY(-3px)}
+.pg-nav-btn{position:absolute;top:50%;transform:translateY(-50%);z-index:5;width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.85);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);border:1px solid rgba(24,21,15,.08);display:flex;align-items:center;justify-content:center;color:var(--ink);font-size:17px;cursor:pointer;transition:.2s;box-shadow:0 6px 18px rgba(24,21,15,.16)}
+.pg-nav-btn:hover{background:#fff;transform:translateY(-50%) scale(1.08);color:var(--red)}
+.pg-nav-prev{right:20px}
+.pg-nav-next{left:20px}
+@media(max-width:768px){.pg-nav-btn{display:none}}
 @media(max-width:560px){.pg-track{gap:8px}.pg-track img{width:160px;height:160px;border-radius:10px}}
 
 /* ══ COLLAGE LIGHTBOX ═══════════════════════════════ */
@@ -852,12 +857,11 @@ function renderAdsGroups(list){
     return'<div class="pg-group">'
       +'<div class="container"><div class="pg-group-head">'
         +'<div class="pg-group-title">'+esc(gname)+'</div>'
-        +'<div class="port-nav-btns">'
-          +'<button class="port-nav-btn" onclick="slidePort(-1,\''+trackId+'\')"><i class="bi bi-arrow-right"></i></button>'
-          +'<button class="port-nav-btn" onclick="slidePort(1,\''+trackId+'\')"><i class="bi bi-arrow-left"></i></button>'
-        +'</div>'
       +'</div></div>'
-      +'<div class="pg-track-wrap"><div class="pg-track" id="'+trackId+'">'
+      +'<div class="pg-track-wrap">'
+        +'<button class="pg-nav-btn pg-nav-prev" onclick="slidePort(-1,\''+trackId+'\')" aria-label="السابق"><i class="bi bi-chevron-right"></i></button>'
+        +'<button class="pg-nav-btn pg-nav-next" onclick="slidePort(1,\''+trackId+'\')" aria-label="التالي"><i class="bi bi-chevron-left"></i></button>'
+        +'<div class="pg-track" id="'+trackId+'">'
         +groups[gname].map(function(p){
           return'<img src="'+esc(p.image_url)+'" alt="'+esc(p.title||gname)+'" loading="lazy" onclick="openCollageLightbox(this.src)">';
         }).join('')
