@@ -135,9 +135,6 @@ section{padding:clamp(56px,8vw,92px) 0}
 .port-nav-btns{display:flex;gap:8px}
 .port-nav-btn{width:42px;height:42px;border-radius:50%;border:1px solid var(--line2);background:var(--p1);color:var(--ink);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:.2s;font-size:15px}
 .port-nav-btn:hover{background:var(--red);border-color:var(--red);color:#fff}
-.port-filter{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:26px}
-.pf-btn{background:var(--p1);border:1px solid var(--line);color:var(--ink2);padding:9px 17px;border-radius:var(--rp);font-size:12.5px;font-weight:500;cursor:pointer;font-family:var(--font);transition:.2s}
-.pf-btn.active,.pf-btn:hover{background:var(--red);border-color:var(--red);color:#fff}
 .port-track-wrap{overflow:hidden;margin:0 calc(var(--pad) * -1);padding:0 var(--pad)}
 .port-track{display:flex;gap:18px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;scroll-behavior:smooth;padding-bottom:4px}
 .port-track::-webkit-scrollbar{display:none}
@@ -333,53 +330,20 @@ footer{padding:clamp(36px,5.5vw,56px) var(--pad) 0;border-top:1px solid var(--li
   </div>
 </section>
 
-<!-- ══ 4 · PORTFOLIO — off-white ═════════════════════ -->
+<!-- ══ 4 · PORTFOLIO: ADS — off-white ════════════════ -->
 <section id="portfolio" class="bg-2">
   <div class="container">
     <div class="port-head">
       <div class="port-head-text sec-head" style="margin:0;text-align:right">
-        <h2 class="sec-title" id="portTitle">شغلنا بيتكلم عن نفسه</h2>
+        <h2 class="sec-title" id="portTitle">أعمالنا في الدعاية والإعلان</h2>
       </div>
       <div class="port-nav-btns">
-        <button class="port-nav-btn" onclick="slidePort(-1)"><i class="bi bi-arrow-right"></i></button>
-        <button class="port-nav-btn" onclick="slidePort(1)"><i class="bi bi-arrow-left"></i></button>
+        <button class="port-nav-btn" onclick="slidePort(-1,'portGrid')"><i class="bi bi-arrow-right"></i></button>
+        <button class="port-nav-btn" onclick="slidePort(1,'portGrid')"><i class="bi bi-arrow-left"></i></button>
       </div>
-    </div>
-    <div class="port-filter">
-      <button class="pf-btn active" onclick="filterPort('all',this)">الكل</button>
-      <button class="pf-btn" onclick="filterPort('digital',this)">تسويق إلكتروني</button>
-      <button class="pf-btn" onclick="filterPort('print',this)">دعاية وإعلان</button>
-      <button class="pf-btn" onclick="filterPort('branding',this)">هوية بصرية</button>
     </div>
     <div class="port-track-wrap">
       <div class="port-track stagger" id="portGrid">
-        <div class="port-card" data-cat="digital">
-          <div class="port-img"><div class="port-img-ph"><i class="bi bi-bar-chart"></i></div></div>
-          <div class="port-type-badge">تسويق إلكتروني</div>
-          <div class="port-stat">+320% مبيعات</div>
-          <div class="port-body">
-            <div class="port-title">حملة Meta — مركز خدمة سيارات</div>
-            <div class="port-desc">زيادة الحجوزات 320% خلال 30 يوم</div>
-          </div>
-        </div>
-        <div class="port-card" data-cat="digital">
-          <div class="port-img"><div class="port-img-ph"><i class="bi bi-graph-up-arrow"></i></div></div>
-          <div class="port-type-badge">تسويق إلكتروني</div>
-          <div class="port-stat">1,200 Lead</div>
-          <div class="port-body">
-            <div class="port-title">حملة Google — قطع غيار</div>
-            <div class="port-desc">1,200 ليد في شهر واحد</div>
-          </div>
-        </div>
-        <div class="port-card" data-cat="digital">
-          <div class="port-img"><div class="port-img-ph"><i class="bi bi-phone"></i></div></div>
-          <div class="port-type-badge">تسويق إلكتروني</div>
-          <div class="port-stat">50K متابع</div>
-          <div class="port-body">
-            <div class="port-title">سوشيال ميديا — معرض سيارات</div>
-            <div class="port-desc">نمو 50,000 متابع في 3 أشهر</div>
-          </div>
-        </div>
         <div class="port-card" data-cat="print">
           <div class="port-img"><div class="port-img-ph"><i class="bi bi-shop"></i></div></div>
           <div class="port-type-badge">دعاية وإعلان</div>
@@ -407,6 +371,25 @@ footer{padding:clamp(36px,5.5vw,56px) var(--pad) 0;border-top:1px solid var(--li
       </div>
     </div>
     <div class="port-empty" id="portEmpty" style="display:none">لسه مفيش أعمال في القسم ده — تابعنا قريبًا</div>
+  </div>
+</section>
+
+<!-- ══ 4.1 · PORTFOLIO: MARKETING — white ════════════ -->
+<section id="portfolioMarketing" class="bg-1">
+  <div class="container">
+    <div class="port-head">
+      <div class="port-head-text sec-head" style="margin:0;text-align:right">
+        <h2 class="sec-title" id="portTitleMarketing">أعمالنا في التسويق</h2>
+      </div>
+      <div class="port-nav-btns">
+        <button class="port-nav-btn" onclick="slidePort(-1,'portGridMarketing')"><i class="bi bi-arrow-right"></i></button>
+        <button class="port-nav-btn" onclick="slidePort(1,'portGridMarketing')"><i class="bi bi-arrow-left"></i></button>
+      </div>
+    </div>
+    <div class="port-track-wrap">
+      <div class="port-track stagger" id="portGridMarketing"></div>
+    </div>
+    <div class="port-empty" id="portEmptyMarketing">لسه مفيش أعمال في القسم ده — تابعنا قريبًا</div>
   </div>
 </section>
 
@@ -529,26 +512,10 @@ window.addEventListener('scroll',function(){
   document.getElementById('sttBtn').classList.toggle('show',window.scrollY>500);
 },{passive:true});
 
-// ── PORTFOLIO FILTER ─────────────────────────────────
-function filterPort(cat,btn){
-  document.querySelectorAll('.pf-btn').forEach(function(b){b.classList.remove('active')});
-  if(btn)btn.classList.add('active');
-  var visible=0;
-  document.querySelectorAll('.port-card').forEach(function(c){
-    var show=(cat==='all'||c.dataset.cat===cat);
-    c.style.display=show?'':'none';
-    if(show)visible++;
-  });
-  var empty=document.getElementById('portEmpty');
-  if(empty)empty.style.display=visible?'none':'block';
-  var grid=document.getElementById('portGrid');
-  if(grid)grid.style.display=visible?'':'none';
-}
-
 // ── PORTFOLIO SLIDE ──────────────────────────────────
-function slidePort(dir){
-  var t=document.getElementById('portGrid');
-  t.scrollBy({left:dir*310,behavior:'smooth'});
+function slidePort(dir,gridId){
+  var t=document.getElementById(gridId);
+  if(t)t.scrollBy({left:dir*310,behavior:'smooth'});
 }
 
 // ── WHATSAPP NUMBER ──────────────────────────────────
@@ -774,22 +741,29 @@ function injectTikTokPixel(id){
   document.head.appendChild(s);
 }
 
+function portCardHtml(p){
+  var img=p.image_url?'<img src="'+esc(p.image_url)+'" alt="'+esc(p.title)+'">'
+    :'<div class="port-img-ph"><i class="bi '+esc(catIcon[p.category]||'bi-image')+'"></i></div>';
+  var badge=p.stat_badge?'<div class="port-stat">'+esc(p.stat_badge)+'</div>':'';
+  return'<div class="port-card" data-cat="'+esc(p.category)+'">'
+    +'<div class="port-img">'+img+'</div>'
+    +'<div class="port-type-badge">'+esc(catLabel[p.category]||p.category)+'</div>'
+    +badge
+    +'<div class="port-body"><div class="port-title">'+esc(p.title)+'</div>'
+    +'<div class="port-desc">'+esc(p.description)+'</div>'
+    +'</div></div>';
+}
 function renderPortfolio(list){
+  var ads=list.filter(function(p){return(p.catalog||'ads')!=='marketing'});
+  var marketing=list.filter(function(p){return p.catalog==='marketing'});
   var g=document.getElementById('portGrid');
-  g.innerHTML=list.map(function(p){
-    var img=p.image_url?'<img src="'+esc(p.image_url)+'" alt="'+esc(p.title)+'">'
-      :'<div class="port-img-ph"><i class="bi '+esc(catIcon[p.category]||'bi-image')+'"></i></div>';
-    var badge=p.stat_badge?'<div class="port-stat">'+esc(p.stat_badge)+'</div>':'';
-    return'<div class="port-card" data-cat="'+esc(p.category)+'">'
-      +'<div class="port-img">'+img+'</div>'
-      +'<div class="port-type-badge">'+esc(catLabel[p.category]||p.category)+'</div>'
-      +badge
-      +'<div class="port-body"><div class="port-title">'+esc(p.title)+'</div>'
-      +'<div class="port-desc">'+esc(p.description)+'</div>'
-      +'</div></div>';
-  }).join('');
-  var active=document.querySelector('.pf-btn.active');
-  if(active){var m=active.getAttribute('onclick').match(/'([^']+)'/);if(m)filterPort(m[1],null);}
+  if(g)g.innerHTML=ads.map(portCardHtml).join('');
+  var ge=document.getElementById('portEmpty');
+  if(ge)ge.style.display=ads.length?'none':'block';
+  var gm=document.getElementById('portGridMarketing');
+  if(gm)gm.innerHTML=marketing.map(portCardHtml).join('');
+  var gme=document.getElementById('portEmptyMarketing');
+  if(gme)gme.style.display=marketing.length?'none':'block';
 }
 
 function renderClients(list){

@@ -677,6 +677,14 @@ button,select,input,textarea{font-family:var(--font)}
     <input type="hidden" id="pm-id">
     <div class="r2">
       <div class="field"><label>العنوان</label><input type="text" id="pm-t" placeholder="حملة Meta — مركز صيانة"></div>
+      <div class="field"><label>يظهر في قسم</label>
+        <select id="pm-catalog">
+          <option value="ads">أعمالنا في الدعاية والإعلان</option>
+          <option value="marketing">أعمالنا في التسويق</option>
+        </select>
+      </div>
+    </div>
+    <div class="r2">
       <div class="field"><label>التصنيف</label>
         <select id="pm-c">
           <option value="digital">تسويق إلكتروني</option>
@@ -1076,6 +1084,7 @@ function renderPort(){
     return'<div class="li">'+thumb
       +'<div class="li-b"><div class="li-t">'+h(p.title)+'</div>'
         +'<div class="li-s">'
+          +'<span class="badge '+(p.catalog==='marketing'?'b-purple':'b-orange')+'">'+(p.catalog==='marketing'?'أعمالنا في التسويق':'أعمالنا في الدعاية والإعلان')+'</span>'
           +'<span class="badge '+(cm[p.category]||'b-blue')+'">'+cn[p.category]+'</span>'
           +(p.stat_badge?'<span class="badge b-red">'+h(p.stat_badge)+'</span>':'')
           +'<span class="badge '+(p.is_active?'b-green':'b-off')+'">'+(p.is_active?'ظاهر':'مخفي')+'</span>'
@@ -1092,6 +1101,7 @@ function openPM(item){
   document.getElementById('pm-id').value=item?item.id:'';
   v('pm-t',item?item.title:'');v('pm-d',item?item.description:'');
   document.getElementById('pm-c').value=item?item.category:'digital';
+  document.getElementById('pm-catalog').value=item?(item.catalog||'ads'):'ads';
   v('pm-s',item?item.stat_badge||'':'');v('pm-i',item?item.image_url||'':'');
   var pv=document.getElementById('pm-pv');
   pv.src=item&&item.image_url?item.image_url:'';
@@ -1117,6 +1127,7 @@ async function savePM(){
   var title=g('pm-t').trim();
   if(!title){toast('اكتب عنوان العمل');return}
   var payload={title:title,description:g('pm-d'),category:document.getElementById('pm-c').value,
+    catalog:document.getElementById('pm-catalog').value,
     stat_badge:g('pm-s')||null,image_url:g('pm-i')||null};
   var err;
   if(id){err=(await sb.from('ao_portfolio').update(payload).eq('id',id)).error}
