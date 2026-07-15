@@ -14,10 +14,24 @@
   --b:#1f1f28;--b2:#2a2a38;--b3:#353545;
   --w:#ffffff;--w2:#e8e8f0;--w3:#a0a0b8;--g:#666678;
   --green:#22c55e;--blue:#3b82f6;--amber:#f59e0b;
+  --blue-text:#60a5fa;--purple-text:#c084fc;--orange-text:#fb923c;
+  --green-text2:#86efac;--del-text:#f87171;--del-off:#ef4444;
+  --card-shadow:none;--toast-shadow:0 4px 20px rgba(0,0,0,.4);--off-bg:rgba(255,255,255,.04);--panel-shadow:none;
   --font:'Noto Kufi Arabic','Segoe UI',Arial,sans-serif;
   --r:10px;--rsm:7px;--sb:240px;
 }
-html,body{height:100%;font-family:var(--font);background:var(--black);color:var(--w);overflow:hidden}
+:root[data-theme="light"]{
+  --rdim:rgba(232,25,44,.06);--rdim2:rgba(232,25,44,.12);
+  --black:#eef0f4;--dk:#f5f6f9;--s:#ffffff;--s2:#f0f1f5;--s3:#e7e8ee;
+  --b:#e3e4ea;--b2:#d3d5de;--b3:#bfc2cf;
+  --w:#16161d;--w2:#3c3c48;--w3:#6b6b7a;
+  --green:#16a34a;--blue:#2563eb;--amber:#d97706;
+  --blue-text:#2563eb;--purple-text:#9333ea;--orange-text:#ea580c;
+  --green-text2:#16a34a;--del-text:#dc2626;--del-off:#dc2626;
+  --card-shadow:0 10px 26px rgba(20,20,35,.08);--toast-shadow:0 10px 30px rgba(20,20,35,.18);--off-bg:rgba(20,20,35,.045);
+  --panel-shadow:0 1px 2px rgba(20,20,35,.03),0 1px 8px rgba(20,20,35,.05);
+}
+html,body{height:100%;font-family:var(--font);background:var(--black);color:var(--w);overflow:hidden;transition:background .2s,color .2s}
 a{text-decoration:none;color:inherit}
 button,select,input,textarea{font-family:var(--font)}
 
@@ -55,7 +69,10 @@ button,select,input,textarea{font-family:var(--font)}
 .tb-right{display:flex;align-items:center;gap:10px}
 .tb-status{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--g);background:var(--dk);border:1px solid var(--b);padding:5px 12px;border-radius:50px}
 .dot{width:6px;height:6px;border-radius:50%;background:var(--green);flex-shrink:0}
-.dot.off{background:#ef4444}
+.dot.off{background:var(--del-off)}
+.tb-theme{display:flex;align-items:center;justify-content:center;width:32px;height:32px;background:transparent;border:1px solid var(--b2);color:var(--w2);border-radius:var(--rsm);cursor:pointer;transition:.15s}
+.tb-theme:hover{border-color:var(--red);color:var(--red)}
+.tb-theme svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .tb-preview{display:flex;align-items:center;gap:6px;background:transparent;border:1px solid var(--b2);color:var(--w2);padding:7px 14px;border-radius:var(--rsm);font-size:12px;font-weight:600;cursor:pointer;transition:.15s}
 .tb-preview:hover{border-color:var(--red);color:var(--red)}
 .tb-preview svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
@@ -78,14 +95,14 @@ button,select,input,textarea{font-family:var(--font)}
 .sb-user-role{font-size:10px;color:var(--g)}
 
 /* ── MAIN ────────────────────────────────────────────── */
-.main{background:var(--dk);overflow-y:auto;padding:24px 28px}
-.sec{display:none;max-width:860px}.sec.active{display:block}
-.sec-header{margin-bottom:24px}
-.sec-title{font-size:20px;font-weight:800;color:var(--w);margin-bottom:4px}
+.main{background:var(--dk);overflow-y:auto;padding:28px 32px}
+.sec{display:none;max-width:1100px}.sec.active{display:block}
+.sec-header{margin-bottom:26px}
+.sec-title{font-size:21px;font-weight:800;color:var(--w);margin-bottom:5px;letter-spacing:-.01em}
 .sec-sub{font-size:13px;color:var(--g)}
 
 /* ── CARDS ───────────────────────────────────────────── */
-.card{background:var(--s);border:1px solid var(--b);border-radius:var(--r);padding:20px;margin-bottom:16px}
+.card{background:var(--s);border:1px solid var(--b);border-radius:var(--r);padding:20px;margin-bottom:16px;box-shadow:var(--panel-shadow)}
 .card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;padding-bottom:14px;border-bottom:1px solid var(--b)}
 .card-title{font-size:13px;font-weight:700;color:var(--w2);display:flex;align-items:center;gap:8px}
 .card-title svg{width:15px;height:15px;stroke:var(--red);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
@@ -93,7 +110,7 @@ button,select,input,textarea{font-family:var(--font)}
 
 /* ── STATS DASHBOARD ─────────────────────────────────── */
 .dash-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
-.ds-card{background:var(--s);border:1px solid var(--b);border-radius:var(--r);padding:16px 18px;position:relative;overflow:hidden;transition:.2s}
+.ds-card{background:var(--s);border:1px solid var(--b);border-radius:var(--r);padding:16px 18px;position:relative;overflow:hidden;transition:.2s;box-shadow:var(--panel-shadow)}
 .ds-card::after{content:'';position:absolute;top:0;left:0;width:3px;height:100%;background:var(--red);border-radius:0}
 .ds-card.green::after{background:var(--green)}
 .ds-card.blue::after{background:var(--blue)}
@@ -102,7 +119,7 @@ button,select,input,textarea{font-family:var(--font)}
 .ds-label{font-size:11px;color:var(--g);font-weight:600}
 .ds-icon{position:absolute;top:14px;left:16px;font-size:22px;opacity:.18}
 .dash-quick{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
-.dq-btn{background:var(--s);border:1px solid var(--b);border-radius:var(--r);padding:14px 16px;cursor:pointer;transition:.2s;text-align:right;display:flex;align-items:center;gap:10px}
+.dq-btn{background:var(--s);border:1px solid var(--b);border-radius:var(--r);padding:14px 16px;cursor:pointer;transition:.2s;text-align:right;display:flex;align-items:center;gap:10px;box-shadow:var(--panel-shadow)}
 .dq-btn:hover{border-color:var(--red);background:var(--rdim)}
 .dq-ic{width:36px;height:36px;background:var(--rdim2);border-radius:var(--rsm);display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .dq-ic svg{width:17px;height:17px;stroke:var(--red);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
@@ -128,7 +145,7 @@ button,select,input,textarea{font-family:var(--font)}
 .btn svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .btn-p{background:var(--red);color:#fff}.btn-p:hover{background:var(--rd);transform:translateY(-1px)}
 .btn-g{background:transparent;border:1px solid var(--b2);color:var(--g)}.btn-g:hover{border-color:var(--b3);color:var(--w2)}
-.btn-d{background:transparent;border:1px solid rgba(239,68,68,.2);color:#f87171}.btn-d:hover{background:rgba(239,68,68,.08)}
+.btn-d{background:transparent;border:1px solid rgba(239,68,68,.2);color:var(--del-text)}.btn-d:hover{background:rgba(239,68,68,.08)}
 .btn-success{background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.25);color:var(--green)}.btn-success:hover{background:rgba(34,197,94,.15)}
 .bsm{padding:5px 11px;font-size:11px}
 .btn-full{width:100%;justify-content:center}
@@ -142,17 +159,31 @@ button,select,input,textarea{font-family:var(--font)}
 .li-s{font-size:11px;color:var(--g);display:flex;align-items:center;gap:6px;flex-wrap:wrap}
 .li-ac{display:flex;gap:6px;flex-shrink:0}
 .badge{display:inline-flex;align-items:center;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:700;white-space:nowrap}
-.b-blue{background:rgba(59,130,246,.1);color:#60a5fa;border:1px solid rgba(59,130,246,.2)}
+.b-blue{background:rgba(59,130,246,.1);color:var(--blue-text);border:1px solid rgba(59,130,246,.2)}
 .b-red{background:var(--rdim2);color:var(--red);border:1px solid rgba(232,25,44,.2)}
 .b-green{background:rgba(34,197,94,.08);color:var(--green);border:1px solid rgba(34,197,94,.2)}
-.b-off{background:rgba(255,255,255,.04);color:var(--g);border:1px solid var(--b2)}
-.b-purple{background:rgba(168,85,247,.1);color:#c084fc;border:1px solid rgba(168,85,247,.2)}
-.b-orange{background:rgba(249,115,22,.1);color:#fb923c;border:1px solid rgba(249,115,22,.2)}
+.b-off{background:var(--off-bg);color:var(--g);border:1px solid var(--b2)}
+.b-purple{background:rgba(168,85,247,.1);color:var(--purple-text);border:1px solid rgba(168,85,247,.2)}
+.b-orange{background:rgba(249,115,22,.1);color:var(--orange-text);border:1px solid rgba(249,115,22,.2)}
+
+/* ── IMAGE CARD GRID ─────────────────────────────────── */
+.card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:16px}
+.li-card{background:var(--s);border:1px solid var(--b);border-radius:var(--r);overflow:hidden;transition:.2s;display:flex;flex-direction:column}
+.li-card:hover{border-color:var(--red);transform:translateY(-3px);box-shadow:var(--card-shadow)}
+.li-card-img{width:100%;aspect-ratio:4/3;background:var(--dk);position:relative;overflow:hidden;flex-shrink:0}
+.li-card-img img{width:100%;height:100%;object-fit:cover;display:block}
+.li-card-img.contain img{object-fit:contain;padding:16px}
+.li-card-ph{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:32px;color:var(--b3)}
+.li-card-body{padding:12px 14px;flex:1;display:flex;flex-direction:column;gap:8px}
+.li-card-title{font-size:13.5px;font-weight:700;color:var(--w2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.li-card-badges{display:flex;flex-wrap:wrap;gap:5px}
+.li-card-ac{display:flex;gap:6px;padding:10px 14px;border-top:1px solid var(--b);background:var(--dk)}
+.li-card-ac .btn{flex:1;justify-content:center;padding:7px 8px}
 
 /* ── MODAL ───────────────────────────────────────────── */
 .ov{position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(4px);z-index:500;display:none;align-items:center;justify-content:center;padding:20px}
 .ov.open{display:flex}
-.modal{background:var(--s);border:1px solid var(--b2);border-radius:14px;padding:24px;width:540px;max-width:100%;max-height:88vh;overflow-y:auto}
+.modal{background:var(--s);border:1px solid var(--b2);border-radius:14px;padding:24px;width:540px;max-width:100%;max-height:88vh;overflow-y:auto;box-shadow:var(--toast-shadow)}
 .modal-lg{width:680px}
 .mh{font-size:15px;font-weight:800;margin-bottom:20px;display:flex;justify-content:space-between;align-items:center;color:var(--w)}
 .mx{background:transparent;border:none;color:var(--g);font-size:22px;cursor:pointer;line-height:1;transition:.15s;padding:2px 6px}.mx:hover{color:var(--w)}
@@ -209,7 +240,7 @@ button,select,input,textarea{font-family:var(--font)}
 
 /* ── INFO / ALERT ────────────────────────────────────── */
 .info-box{background:var(--rdim);border:1px solid rgba(232,25,44,.15);border-radius:var(--rsm);padding:11px 14px;font-size:12px;color:var(--w3);line-height:1.7;margin-bottom:14px}
-.info-green{background:rgba(34,197,94,.06);border-color:rgba(34,197,94,.2);color:#86efac}
+.info-green{background:rgba(34,197,94,.06);border-color:rgba(34,197,94,.2);color:var(--green-text2)}
 
 /* ── GROUP CHIPS (portfolio collage) ─────────────────── */
 .pm-group-chips{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
@@ -218,9 +249,15 @@ button,select,input,textarea{font-family:var(--font)}
 .pm-group-chip.active{background:var(--red);border-color:var(--red);color:#fff}
 
 /* ── TOAST ───────────────────────────────────────────── */
-.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(60px);background:var(--s2);border:1px solid var(--b2);color:var(--w);padding:10px 22px;border-radius:50px;font-size:13px;font-weight:600;z-index:999;transition:.3s;opacity:0;pointer-events:none;white-space:nowrap;box-shadow:0 4px 20px rgba(0,0,0,.4)}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(60px);background:var(--s2);border:1px solid var(--b2);color:var(--w);padding:10px 22px;border-radius:50px;font-size:13px;font-weight:600;z-index:999;transition:.3s;opacity:0;pointer-events:none;white-space:nowrap;box-shadow:var(--toast-shadow)}
 .toast.show{transform:translateX(-50%) translateY(0);opacity:1}
 </style>
+<script>
+try{
+  var savedTheme=localStorage.getItem('ao-theme');
+  if(savedTheme==='light')document.documentElement.dataset.theme='light';
+}catch(e){}
+</script>
 </head>
 <body>
 
@@ -266,6 +303,10 @@ button,select,input,textarea{font-family:var(--font)}
         <div class="dot" id="cdot"></div>
         <span id="clbl">متصل</span>
       </div>
+      <button class="tb-theme" id="themeToggle" onclick="toggleTheme()" aria-label="تبديل الوضع الليلي/النهاري">
+        <svg id="themeIconMoon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+        <svg id="themeIconSun" viewBox="0 0 24 24" style="display:none"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+      </button>
       <button class="tb-preview" onclick="window.open('index.html','_blank')">
         <svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
         معاينة الموقع
@@ -1035,6 +1076,18 @@ function startAdmin(){
   loadAll();
 }
 function doLogout(){sessionStorage.removeItem('ao');location.reload()}
+function toggleTheme(){
+  var isLight=document.documentElement.dataset.theme==='light';
+  if(isLight){delete document.documentElement.dataset.theme;localStorage.setItem('ao-theme','dark')}
+  else{document.documentElement.dataset.theme='light';localStorage.setItem('ao-theme','light')}
+  syncThemeIcon();
+}
+function syncThemeIcon(){
+  var isLight=document.documentElement.dataset.theme==='light';
+  document.getElementById('themeIconMoon').style.display=isLight?'none':'block';
+  document.getElementById('themeIconSun').style.display=isLight?'block':'none';
+}
+syncThemeIcon();
 if(sessionStorage.getItem('ao')==='1'){
   document.getElementById('loginWrap').style.display='none';
   document.getElementById('adminShell').style.display='grid';
@@ -1247,27 +1300,20 @@ function renderPort(){
   document.getElementById('pc').textContent=portfolio.length;
   renderGroupSummary();
   var el=document.getElementById('pl');
-  if(!portfolio.length){el.innerHTML=empty('لا توجد أعمال بعد — اضغط إضافة لإنشاء أول عمل');return}
+  if(!portfolio.length){el.className='';el.innerHTML=empty('لا توجد أعمال بعد — اضغط إضافة لإنشاء أول عمل');return}
   var cm={digital:'b-blue',print:'b-red',branding:'b-green'};
   var cn={digital:'تسويق رقمي',print:'دعاية وإعلان',branding:'هوية بصرية'};
+  el.className='card-grid';
   el.innerHTML=portfolio.map(function(p){
-    var thumb=p.image_url
-      ?'<img class="li-thumb" src="'+h(p.image_url)+'" alt="">'
-      :'<div class="li-thumb" style="font-size:20px">🖼️</div>';
-    return'<div class="li">'+thumb
-      +'<div class="li-b"><div class="li-t">'+h(p.title)+'</div>'
-        +'<div class="li-s">'
-          +'<span class="badge '+(p.catalog==='marketing'?'b-purple':'b-orange')+'">'+(p.catalog==='marketing'?'أعمالنا في التسويق':'أعمالنا في الدعاية والإعلان')+'</span>'
-          +'<span class="badge '+(cm[p.category]||'b-blue')+'">'+cn[p.category]+'</span>'
-          +(p.catalog!=='marketing'?'<span class="badge b-off">📁 '+h(p.group_label||'متنوع')+'</span>':'')
-          +(p.stat_badge?'<span class="badge b-red">'+h(p.stat_badge)+'</span>':'')
-          +'<span class="badge '+(p.is_active?'b-green':'b-off')+'">'+(p.is_active?'ظاهر':'مخفي')+'</span>'
-        +'</div></div>'
-      +'<div class="li-ac">'
-        +'<button class="btn btn-g bsm" onclick="editPort(\''+p.id+'\')">تعديل</button>'
-        +'<button class="btn btn-g bsm" onclick="togglePort(\''+p.id+'\','+(!p.is_active)+')">'+( p.is_active?'إخفاء':'إظهار')+'</button>'
-        +'<button class="btn btn-d bsm" onclick="delPort(\''+p.id+'\')">حذف</button>'
-      +'</div></div>';
+    var badges='<span class="badge '+(p.catalog==='marketing'?'b-purple':'b-orange')+'">'+(p.catalog==='marketing'?'أعمالنا في التسويق':'أعمالنا في الدعاية والإعلان')+'</span>'
+      +'<span class="badge '+(cm[p.category]||'b-blue')+'">'+cn[p.category]+'</span>'
+      +(p.catalog!=='marketing'?'<span class="badge b-off">📁 '+h(p.group_label||'متنوع')+'</span>':'')
+      +(p.stat_badge?'<span class="badge b-red">'+h(p.stat_badge)+'</span>':'')
+      +'<span class="badge '+(p.is_active?'b-green':'b-off')+'">'+(p.is_active?'ظاهر':'مخفي')+'</span>';
+    var actions='<button class="btn btn-g bsm" onclick="editPort(\''+p.id+'\')">تعديل</button>'
+      +'<button class="btn btn-g bsm" onclick="togglePort(\''+p.id+'\','+(!p.is_active)+')">'+( p.is_active?'إخفاء':'إظهار')+'</button>'
+      +'<button class="btn btn-d bsm" onclick="delPort(\''+p.id+'\')">حذف</button>';
+    return liCardHtml({imgUrl:p.image_url,ph:'🖼️',title:p.title,badges:badges,actions:actions});
   }).join('');
 }
 function renderGroupSummary(){
@@ -1441,25 +1487,18 @@ async function loadProducts(){
 function renderProducts(){
   document.getElementById('prc').textContent=products.length;
   var el=document.getElementById('prl');
-  if(!products.length){el.innerHTML=empty('لا توجد منتجات بعد — اضغط إضافة منتج لبدء الكتالوج');return}
+  if(!products.length){el.className='';el.innerHTML=empty('لا توجد منتجات بعد — اضغط إضافة منتج لبدء الكتالوج');return}
+  el.className='card-grid';
   el.innerHTML=products.map(function(p){
-    var thumb=p.image_url
-      ?'<img class="li-thumb" src="'+h(p.image_url)+'" alt="">'
-      :'<div class="li-thumb" style="font-size:20px">🛍️</div>';
     var price=p.price?parseFloat(p.price).toLocaleString('en-US')+' EGP':'عند التواصل';
-    return'<div class="li">'+thumb
-      +'<div class="li-b"><div class="li-t">'+h(p.title)+'</div>'
-        +'<div class="li-s">'
-          +'<span class="badge '+(p.catalog==='marketing'?'b-purple':'b-orange')+'">'+(p.catalog==='marketing'?'كتالوج التسويق':'كتالوج الدعاية والإعلان')+'</span>'
-          +'<span class="badge b-blue">'+h(prodCatNames[p.category]||p.category)+'</span>'
-          +'<span class="badge b-red">'+h(price)+'</span>'
-          +'<span class="badge '+(p.is_active?'b-green':'b-off')+'">'+(p.is_active?'ظاهر':'مخفي')+'</span>'
-        +'</div></div>'
-      +'<div class="li-ac">'
-        +'<button class="btn btn-g bsm" onclick="editProd(\''+p.id+'\')">تعديل</button>'
-        +'<button class="btn btn-g bsm" onclick="toggleProd(\''+p.id+'\','+(!p.is_active)+')">'+(p.is_active?'إخفاء':'إظهار')+'</button>'
-        +'<button class="btn btn-d bsm" onclick="delProd(\''+p.id+'\')">حذف</button>'
-      +'</div></div>';
+    var badges='<span class="badge '+(p.catalog==='marketing'?'b-purple':'b-orange')+'">'+(p.catalog==='marketing'?'كتالوج التسويق':'كتالوج الدعاية والإعلان')+'</span>'
+      +'<span class="badge b-blue">'+h(prodCatNames[p.category]||p.category)+'</span>'
+      +'<span class="badge b-red">'+h(price)+'</span>'
+      +'<span class="badge '+(p.is_active?'b-green':'b-off')+'">'+(p.is_active?'ظاهر':'مخفي')+'</span>';
+    var actions='<button class="btn btn-g bsm" onclick="editProd(\''+p.id+'\')">تعديل</button>'
+      +'<button class="btn btn-g bsm" onclick="toggleProd(\''+p.id+'\','+(!p.is_active)+')">'+(p.is_active?'إخفاء':'إظهار')+'</button>'
+      +'<button class="btn btn-d bsm" onclick="delProd(\''+p.id+'\')">حذف</button>';
+    return liCardHtml({imgUrl:p.image_url,ph:'🛍️',title:p.title,badges:badges,actions:actions});
   }).join('');
 }
 var prmImages=[];
@@ -1619,17 +1658,14 @@ async function loadClients(){
 function renderClients(){
   document.getElementById('cc').textContent=clients.length;
   var el=document.getElementById('cl');
-  if(!clients.length){el.innerHTML=empty('لا يوجد عملاء بعد');return}
+  if(!clients.length){el.className='';el.innerHTML=empty('لا يوجد عملاء بعد');return}
+  el.className='card-grid';
   el.innerHTML=clients.map(function(c){
-    return'<div class="li">'
-      +(c.logo_url?'<img class="li-thumb" src="'+h(c.logo_url)+'" alt="" style="object-fit:contain;background:var(--s);padding:4px">':'<div class="li-thumb" style="font-size:18px">🏢</div>')
-      +'<div class="li-b"><div class="li-t">'+h(c.name)+'</div>'
-        +'<div class="li-s"><span class="badge '+(c.is_active?'b-green':'b-off')+'">'+(c.is_active?'ظاهر':'مخفي')+'</span></div></div>'
-      +'<div class="li-ac">'
-        +'<button class="btn btn-g bsm" onclick="editClient(\''+c.id+'\')">تعديل</button>'
-        +'<button class="btn btn-g bsm" onclick="toggleClient(\''+c.id+'\','+(!c.is_active)+')">'+( c.is_active?'إخفاء':'إظهار')+'</button>'
-        +'<button class="btn btn-d bsm" onclick="delClient(\''+c.id+'\')">حذف</button>'
-      +'</div></div>';
+    var badges='<span class="badge '+(c.is_active?'b-green':'b-off')+'">'+(c.is_active?'ظاهر':'مخفي')+'</span>';
+    var actions='<button class="btn btn-g bsm" onclick="editClient(\''+c.id+'\')">تعديل</button>'
+      +'<button class="btn btn-g bsm" onclick="toggleClient(\''+c.id+'\','+(!c.is_active)+')">'+( c.is_active?'إخفاء':'إظهار')+'</button>'
+      +'<button class="btn btn-d bsm" onclick="delClient(\''+c.id+'\')">حذف</button>';
+    return liCardHtml({imgUrl:c.logo_url,contain:true,ph:'🏢',title:c.name,badges:badges,actions:actions});
   }).join('');
 }
 function openCM(item){
@@ -1669,17 +1705,14 @@ async function loadBA(){
 function renderBA(){
   document.getElementById('bac').textContent=beforeAfters.length;
   var el=document.getElementById('bal');
-  if(!beforeAfters.length){el.innerHTML=empty('لا يوجد عملاء قبل/بعد بعد — اضغط إضافة');return}
+  if(!beforeAfters.length){el.className='';el.innerHTML=empty('لا يوجد عملاء قبل/بعد بعد — اضغط إضافة');return}
+  el.className='card-grid';
   el.innerHTML=beforeAfters.map(function(b){
-    return'<div class="li">'
-      +(b.after_image_url?'<img class="li-thumb" src="'+h(b.after_image_url)+'" alt="" style="object-fit:contain;background:var(--s);padding:4px">':'<div class="li-thumb" style="font-size:18px">🖼️</div>')
-      +'<div class="li-b"><div class="li-t">'+h(b.client_name)+'</div>'
-        +'<div class="li-s"><span class="badge '+(b.is_active?'b-green':'b-off')+'">'+(b.is_active?'ظاهر':'مخفي')+'</span></div></div>'
-      +'<div class="li-ac">'
-        +'<button class="btn btn-g bsm" onclick="editBA(\''+b.id+'\')">تعديل</button>'
-        +'<button class="btn btn-g bsm" onclick="toggleBA(\''+b.id+'\','+(!b.is_active)+')">'+( b.is_active?'إخفاء':'إظهار')+'</button>'
-        +'<button class="btn btn-d bsm" onclick="delBA(\''+b.id+'\')">حذف</button>'
-      +'</div></div>';
+    var badges='<span class="badge '+(b.is_active?'b-green':'b-off')+'">'+(b.is_active?'ظاهر':'مخفي')+'</span>';
+    var actions='<button class="btn btn-g bsm" onclick="editBA(\''+b.id+'\')">تعديل</button>'
+      +'<button class="btn btn-g bsm" onclick="toggleBA(\''+b.id+'\','+(!b.is_active)+')">'+( b.is_active?'إخفاء':'إظهار')+'</button>'
+      +'<button class="btn btn-d bsm" onclick="delBA(\''+b.id+'\')">حذف</button>';
+    return liCardHtml({imgUrl:b.after_image_url,contain:true,ph:'🖼️',title:b.client_name,badges:badges,actions:actions});
   }).join('');
 }
 function openBAM(item){
@@ -1762,7 +1795,7 @@ function renderPages(){
           +'<button class="btn btn-g bsm" onclick="copyUrl(\''+h(pageUrl)+'\')">📋 نسخ الرابط</button>'
           +'<a href="'+h(pageUrl)+'" target="_blank" class="btn btn-p bsm">🔗 فتح الصفحة</a>'
         +'</div>'
-        :'<div style="background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.2);border-radius:var(--rsm);padding:8px 12px;font-size:11px;color:#f59e0b">⚠️ الصفحة غير منشورة — اضغط "نشر الآن" لتظهر على الموقع</div>'
+        :'<div style="background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.2);border-radius:var(--rsm);padding:8px 12px;font-size:11px;color:var(--amber)">⚠️ الصفحة غير منشورة — اضغط "نشر الآن" لتظهر على الموقع</div>'
       )
     +'</div>';
   }).join('');
@@ -1955,6 +1988,16 @@ function g(id){return(document.getElementById(id)||{value:''}).value}
 function v(id,val){var el=document.getElementById(id);if(el)el.value=val||''}
 function h(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
 function empty(msg){return'<div style="text-align:center;padding:28px;color:var(--g);font-size:13px;border:1px dashed var(--b);border-radius:var(--rsm)">'+msg+'</div>'}
+function liCardHtml(o){
+  var img=o.imgUrl
+    ?'<div class="li-card-img'+(o.contain?' contain':'')+'"><img src="'+h(o.imgUrl)+'" alt=""></div>'
+    :'<div class="li-card-img"><div class="li-card-ph">'+(o.ph||'🖼️')+'</div></div>';
+  return'<div class="li-card">'+img
+    +'<div class="li-card-body"><div class="li-card-title">'+h(o.title)+'</div>'
+    +'<div class="li-card-badges">'+o.badges+'</div></div>'
+    +'<div class="li-card-ac">'+o.actions+'</div>'
+    +'</div>';
+}
 var tt;
 function toast(msg){
   var t=document.getElementById('toastEl');
