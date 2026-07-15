@@ -211,6 +211,12 @@ button,select,input,textarea{font-family:var(--font)}
 .info-box{background:var(--rdim);border:1px solid rgba(232,25,44,.15);border-radius:var(--rsm);padding:11px 14px;font-size:12px;color:var(--w3);line-height:1.7;margin-bottom:14px}
 .info-green{background:rgba(34,197,94,.06);border-color:rgba(34,197,94,.2);color:#86efac}
 
+/* ── GROUP CHIPS (portfolio collage) ─────────────────── */
+.pm-group-chips{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.pm-group-chip{font-size:11.5px;font-weight:600;padding:6px 13px;border-radius:var(--rp);background:var(--s2);border:1px solid var(--b2);color:var(--w2);cursor:pointer;transition:.15s}
+.pm-group-chip:hover{border-color:var(--red);color:var(--red)}
+.pm-group-chip.active{background:var(--red);border-color:var(--red);color:#fff}
+
 /* ── TOAST ───────────────────────────────────────────── */
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(60px);background:var(--s2);border:1px solid var(--b2);color:var(--w);padding:10px 22px;border-radius:50px;font-size:13px;font-weight:600;z-index:999;transition:.3s;opacity:0;pointer-events:none;white-space:nowrap;box-shadow:0 4px 20px rgba(0,0,0,.4)}
 .toast.show{transform:translateX(-50%) translateY(0);opacity:1}
@@ -468,6 +474,9 @@ button,select,input,textarea{font-family:var(--font)}
         <div class="sec-title">الأعمال</div>
         <div class="sec-sub">إضافة وتعديل وحذف أعمالك في قسم البورتفوليو</div>
       </div>
+      <div class="info-box" id="portGroupsInfo" style="display:none">
+        📁 <strong>مجموعات الكوليج الحالية:</strong> <span id="portGroupsSummary"></span> — عشان تضيف مجموعة جديدة، اضغط "إضافة" أو "تعديل" على أي عمل واكتب اسم جديد في حقل "مجموعة الكوليج".
+      </div>
       <div class="card">
         <div class="card-header">
           <div class="card-title"><svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/></svg>الأعمال (<span id="pc">0</span>)</div>
@@ -700,11 +709,18 @@ button,select,input,textarea{font-family:var(--font)}
     <div class="r2">
       <div class="field"><label>العنوان</label><input type="text" id="pm-t" placeholder="حملة Meta — مركز صيانة"></div>
       <div class="field"><label>يظهر في قسم</label>
-        <select id="pm-catalog">
+        <select id="pm-catalog" onchange="toggleGroupField()">
           <option value="ads">أعمالنا في الدعاية والإعلان</option>
           <option value="marketing">أعمالنا في التسويق</option>
         </select>
       </div>
+    </div>
+    <div class="field" id="pm-group-field" style="background:var(--rdim);border:1px solid rgba(232,25,44,.2);border-radius:var(--rsm);padding:14px">
+      <label style="color:var(--red)">📁 مجموعة الكوليج — الصور اللي بنفس الاسم بتتجمع تحت عنوان واحد</label>
+      <input type="text" id="pm-group" placeholder="اكتب اسم مجموعة جديدة، أو اضغط على مجموعة موجودة تحت..." list="pm-group-list">
+      <datalist id="pm-group-list"></datalist>
+      <div class="pm-group-chips" id="pm-group-chips"></div>
+      <div class="field-hint">اكتب أي اسم مش موجود في القائمة عشان تنشئ مجموعة جديدة تلقائيًا (مثال: "عميل 3"). سيبها فاضية عشان الصورة تتحط تحت "متنوع".</div>
     </div>
     <div class="r2">
       <div class="field"><label>التصنيف</label>
@@ -713,11 +729,6 @@ button,select,input,textarea{font-family:var(--font)}
           <option value="print">دعاية وإعلان</option>
           <option value="branding">هوية بصرية</option>
         </select>
-      </div>
-      <div class="field"><label>مجموعة الكوليج (لقسم الدعاية والإعلان فقط)</label>
-        <input type="text" id="pm-group" placeholder="مثال: عميل 1 / متنوع" list="pm-group-list">
-        <datalist id="pm-group-list"></datalist>
-        <div class="field-hint">الصور اللي بنفس اسم المجموعة بتتجمع تحت بعض بعنوان واحد في قسم "أعمالنا في الدعاية والإعلان". سيبها فاضية عشان تتحط تحت "متنوع" تلقائيًا.</div>
       </div>
     </div>
     <div class="field"><label>الوصف</label><textarea id="pm-d" rows="2" placeholder="وصف مختصر للعمل..."></textarea>
@@ -1134,6 +1145,7 @@ async function loadPort(){
 }
 function renderPort(){
   document.getElementById('pc').textContent=portfolio.length;
+  renderGroupSummary();
   var el=document.getElementById('pl');
   if(!portfolio.length){el.innerHTML=empty('لا توجد أعمال بعد — اضغط إضافة لإنشاء أول عمل');return}
   var cm={digital:'b-blue',print:'b-red',branding:'b-green'};
@@ -1158,6 +1170,16 @@ function renderPort(){
       +'</div></div>';
   }).join('');
 }
+function renderGroupSummary(){
+  var ads=portfolio.filter(function(p){return p.catalog!=='marketing'});
+  var counts={};
+  ads.forEach(function(p){var g=p.group_label||'متنوع';counts[g]=(counts[g]||0)+1});
+  var names=Object.keys(counts);
+  var box=document.getElementById('portGroupsInfo');
+  if(!names.length){box.style.display='none';return}
+  box.style.display='block';
+  document.getElementById('portGroupsSummary').textContent=names.map(function(g){return g+' ('+counts[g]+')'}).join(' · ');
+}
 function openPM(item){
   document.getElementById('pm-ttl').textContent=item?'تعديل العمل':'إضافة عمل';
   document.getElementById('pm-id').value=item?item.id:'';
@@ -1165,13 +1187,26 @@ function openPM(item){
   document.getElementById('pm-c').value=item?item.category:'digital';
   document.getElementById('pm-catalog').value=item?(item.catalog||'ads'):'ads';
   v('pm-group',item?item.group_label||'':'');
-  var groupNames=Array.from(new Set(portfolio.map(function(p){return p.group_label}).filter(Boolean)));
-  document.getElementById('pm-group-list').innerHTML=groupNames.map(function(g){return'<option value="'+h(g)+'">'}).join('');
+  renderGroupChips(item?item.group_label||'':'');
   v('pm-s',item?item.stat_badge||'':'');v('pm-i',item?item.image_url||'':'');
   var pv=document.getElementById('pm-pv');
   pv.src=item&&item.image_url?item.image_url:'';
   pv.style.display=(item&&item.image_url)?'block':'none';
+  toggleGroupField();
   document.getElementById('ov-port').classList.add('open');
+}
+function toggleGroupField(){
+  var isAds=document.getElementById('pm-catalog').value==='ads';
+  document.getElementById('pm-group-field').style.display=isAds?'block':'none';
+}
+function renderGroupChips(current){
+  var groupNames=Array.from(new Set(portfolio.map(function(p){return p.group_label}).filter(Boolean)));
+  document.getElementById('pm-group-list').innerHTML=groupNames.map(function(g){return'<option value="'+h(g)+'">'}).join('');
+  var names=groupNames.length?groupNames:[];
+  if(!names.length){document.getElementById('pm-group-chips').innerHTML='<span style="font-size:11px;color:var(--g)">لسه مفيش مجموعات — اكتب اسم فوق عشان تنشئ أول مجموعة</span>';return}
+  document.getElementById('pm-group-chips').innerHTML=names.map(function(g){
+    return'<span class="pm-group-chip'+(g===current?' active':'')+'" onclick="v(\'pm-group\',\''+g.replace(/'/g,"\\'")+'\');renderGroupChips(\''+g.replace(/'/g,"\\'")+'\')">'+h(g)+'</span>';
+  }).join('');
 }
 function closePM(){document.getElementById('ov-port').classList.remove('open')}
 function editPort(id){openPM(portfolio.find(function(p){return p.id===id}))}

@@ -301,13 +301,13 @@ footer{padding:clamp(36px,5.5vw,56px) var(--pad) 0;border-top:1px solid var(--li
   <div class="hero-bg" id="heroBg"><img src="" alt=""></div>
   <div class="hero-glow"></div>
   <div class="container hero-inner stagger">
-    <div class="hero-badge" id="heroBadge">
+    <div class="hero-badge fade-up" id="heroBadge" data-reveal-bound="1">
       <span class="hero-badge-dot"></span>
       متخصصون في السيارات · منذ 2015
     </div>
-    <h1 id="heroH1">التسويق <span class="r">والدعاية</span> لمراكز السيارات</h1>
-    <p class="hero-sub" id="heroSub">شوف شغلنا وتصفح كتالوج شغلنا — دعاية وإعلان ومنتجات تسويقية جاهزة تطلبها فورًا.</p>
-    <div class="hero-btns">
+    <h1 id="heroH1" class="fade-up" data-reveal-bound="1">التسويق <span class="r">والدعاية</span> لمراكز السيارات</h1>
+    <p class="hero-sub fade-up" id="heroSub" data-reveal-bound="1">شوف شغلنا وتصفح كتالوج شغلنا — دعاية وإعلان ومنتجات تسويقية جاهزة تطلبها فورًا.</p>
+    <div class="hero-btns fade-up" data-reveal-bound="1">
       <a href="catalog.html" class="btn-primary" id="heroBtn1">
         كتالوج الدعاية والإعلان
       </a>
@@ -322,22 +322,22 @@ footer{padding:clamp(36px,5.5vw,56px) var(--pad) 0;border-top:1px solid var(--li
 <div class="stats-bar bg-red" id="secStats">
   <div class="container">
     <div class="stats-grid stagger" id="statsGrid">
-      <div class="stat-item">
+      <div class="stat-item fade-up" data-reveal-bound="1">
         <div class="stat-icon"><i class="bi bi-trophy"></i></div>
         <div class="stat-num" data-count>10+</div>
         <div class="stat-label">سنوات في السوق المصري</div>
       </div>
-      <div class="stat-item">
+      <div class="stat-item fade-up" data-reveal-bound="1">
         <div class="stat-icon"><i class="bi bi-people"></i></div>
         <div class="stat-num" data-count>30+</div>
         <div class="stat-label">عميل في قطاع السيارات</div>
       </div>
-      <div class="stat-item">
+      <div class="stat-item fade-up" data-reveal-bound="1">
         <div class="stat-icon"><i class="bi bi-rocket-takeoff"></i></div>
         <div class="stat-num" data-count>500+</div>
         <div class="stat-label">مشروع منجز بنجاح</div>
       </div>
-      <div class="stat-item">
+      <div class="stat-item fade-up" data-reveal-bound="1">
         <div class="stat-icon"><i class="bi bi-lightbulb"></i></div>
         <div class="stat-num" data-count>5x</div>
         <div class="stat-label">متوسط عائد الاستثمار</div>
@@ -590,7 +590,10 @@ function animateCounters(){
 }
 
 // ── ENTRANCE ANIMATIONS (scroll reveal) ──────────────
-var REVEAL_SEL='.sec-head,.hero-badge,#heroH1,.hero-sub,.hero-btns,.stat-item,.cat-link-card,.pg-group,.port-card,.ba-card,.cl-item,.ft-grid';
+// Note: hero-badge/#heroH1/.hero-sub/.hero-btns/.stat-item are deliberately
+// excluded here and revealed instead from loadSite() once real Supabase data
+// has replaced the static placeholder text, to avoid a flash of stale content.
+var REVEAL_SEL='.sec-head,.cat-link-card,.pg-group,.port-card,.ba-card,.cl-item,.ft-grid';
 var revealObs;
 function initReveal(){
   document.querySelectorAll(REVEAL_SEL).forEach(function(el){el.classList.add('fade-up')});
@@ -619,7 +622,6 @@ function showToast(msg){
 
 document.addEventListener('DOMContentLoaded',function(){
   initReveal();
-  animateCounters();
 });
 </script>
 
@@ -645,13 +647,12 @@ function renderStats(list){
   var g=document.getElementById('statsGrid');
   if(!g||!list||!list.length)return;
   g.innerHTML=list.map(function(s){
-    return'<div class="stat-item">'
+    return'<div class="stat-item fade-up" data-reveal-bound="1">'
       +'<div class="stat-icon">'+iconHtml(s.icon)+'</div>'
       +'<div class="stat-num" data-count>'+esc(s.num||'')+'</div>'
       +'<div class="stat-label">'+esc(s.label||'')+'</div>'
       +'</div>';
   }).join('');
-  animateCounters();
 }
 
 function renderPagesLinks(list){
@@ -891,8 +892,22 @@ function applyHero(h){
   }
 }
 
+var heroStatsRevealed=false;
+function revealHeroStats(){
+  if(heroStatsRevealed)return;
+  heroStatsRevealed=true;
+  var els=document.querySelectorAll('.hero-badge,#heroH1,.hero-sub,.hero-btns,.stat-item');
+  els.forEach(function(el){el.classList.add('fade-up')});
+  requestAnimationFrame(function(){
+    requestAnimationFrame(function(){
+      els.forEach(function(el){el.classList.add('visible')});
+    });
+  });
+  animateCounters();
+}
+
 async function loadSite(){
-  if(typeof supabase==='undefined')return;
+  if(typeof supabase==='undefined'){revealHeroStats();return;}
   try{
     var sb=supabase.createClient(SB_URL,SB_KEY);
     var cfg=(await sb.from('ao_settings').select('*').single()).data;
@@ -917,6 +932,7 @@ async function loadSite(){
     }
     var hero=(await sb.from('ao_hero').select('*').single()).data;
     if(hero)applyHero(hero);
+    revealHeroStats();
     var port=(await sb.from('ao_portfolio').select('*').eq('is_active',true).order('sort_order')).data;
     if(port&&port.length)renderPortfolio(port);
     var clients=(await sb.from('ao_clients').select('*').eq('is_active',true).order('sort_order')).data;
@@ -926,7 +942,7 @@ async function loadSite(){
     var pglist=(await sb.from('ao_pages').select('title,slug').eq('is_published',true).order('created_at')).data;
     if(pglist&&pglist.length)renderPagesLinks(pglist);
     initReveal();
-  }catch(e){console.log('Static fallback active')}
+  }catch(e){revealHeroStats();console.log('Static fallback active')}
 }
 document.addEventListener('DOMContentLoaded',loadSite);
 })();
