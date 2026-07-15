@@ -489,10 +489,16 @@ button,select,input,textarea{font-family:var(--font)}
       <div class="card">
         <div class="card-header">
           <div class="card-title"><svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/></svg>الأعمال (<span id="pc">0</span>)</div>
-          <button class="btn btn-p bsm" onclick="openPM()">
-            <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-            إضافة
-          </button>
+          <div style="display:flex;gap:6px">
+            <button class="btn btn-g bsm" onclick="openPBM()">
+              <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+              رفع صور متعددة
+            </button>
+            <button class="btn btn-p bsm" onclick="openPM()">
+              <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              إضافة
+            </button>
+          </div>
         </div>
         <div id="pl"></div>
       </div>
@@ -755,6 +761,54 @@ button,select,input,textarea{font-family:var(--font)}
       <button class="btn btn-p" onclick="savePM()">
         <svg viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/></svg>
         حفظ
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- PORTFOLIO BULK UPLOAD MODAL -->
+<div class="ov" id="ov-port-bulk" onclick="if(event.target===this)closePBM()">
+  <div class="modal modal-lg">
+    <div class="mh"><span>رفع صور متعددة</span><button class="mx" onclick="closePBM()">✕</button></div>
+    <div class="field-hint" style="margin-bottom:12px">اختار الإعدادات المشتركة مرة واحدة تحت، وبعدين اختار كذا صورة دفعة واحدة — كل صورة هتتحفظ كعمل منفصل بنفس الإعدادات دي.</div>
+    <div class="r2">
+      <div class="field"><label>يظهر في قسم</label>
+        <select id="pbm-catalog" onchange="toggleBulkGroupField()">
+          <option value="ads">أعمالنا في الدعاية والإعلان</option>
+          <option value="marketing">أعمالنا في التسويق</option>
+        </select>
+      </div>
+      <div class="field"><label>التصنيف</label>
+        <select id="pbm-c">
+          <option value="digital">تسويق إلكتروني</option>
+          <option value="print">دعاية وإعلان</option>
+          <option value="branding">هوية بصرية</option>
+        </select>
+      </div>
+    </div>
+    <div class="field" id="pbm-group-field" style="background:var(--rdim);border:1px solid rgba(232,25,44,.2);border-radius:var(--rsm);padding:14px">
+      <label style="color:var(--red)">📁 مجموعة الكوليج — كل الصور دي هتتحط في نفس المجموعة</label>
+      <input type="text" id="pbm-group" placeholder="اكتب اسم مجموعة جديدة، أو اضغط على مجموعة موجودة تحت..." list="pbm-group-list">
+      <datalist id="pbm-group-list"></datalist>
+      <div class="pm-group-chips" id="pbm-group-chips"></div>
+      <div class="field-hint">سيبها فاضية عشان الصور تتحط تحت "متنوع".</div>
+    </div>
+    <div class="field"><label>اسم أساسي للعنوان (اختياري)</label><input type="text" id="pbm-t" placeholder="مثال: حملة العميل الفلاني"><div class="field-hint">العنوان مش بيظهر في الكوليج، بيتستخدم بس لتنظيم الأعمال في لوحة التحكم — سيبه فاضي وهيتحدد تلقائيًا.</div></div>
+    <div class="upload-zone" id="pbm-uz" onclick="document.getElementById('pbm-f').click()">
+      📁 اختار كذا صورة من جهازك دفعة واحدة
+      <input type="file" id="pbm-f" accept="image/*" multiple style="display:none" onchange="upBulkPortImgs(this)">
+    </div>
+    <div class="upload-progress" id="pbm-progress">
+      <div class="upload-spinner"></div>
+      <div class="upload-bar-wrap"><div class="upload-bar" id="pbm-progress-bar"></div></div>
+      <div class="upload-pct" id="pbm-progress-pct">0%</div>
+    </div>
+    <div class="prm-imgs" id="pbm-imgs"></div>
+    <div class="mf">
+      <button class="btn btn-g" onclick="closePBM()">إلغاء</button>
+      <button class="btn btn-p" onclick="savePBM()">
+        <svg viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/></svg>
+        حفظ (<span id="pbm-count">0</span> صورة)
       </button>
     </div>
   </div>
@@ -1286,6 +1340,96 @@ async function delPort(id){
   if(!confirm('تأكيد الحذف؟'))return;
   await sb.from('ao_portfolio').delete().eq('id',id);
   await loadPort();updateStats();toast('🗑 تم الحذف');
+}
+
+// ── PORTFOLIO — BULK MULTI-IMAGE UPLOAD ─────────────────
+var pbmImages=[];
+function openPBM(){
+  pbmImages=[];
+  v('pbm-t','');v('pbm-group','');
+  document.getElementById('pbm-catalog').value='ads';
+  document.getElementById('pbm-c').value='digital';
+  document.getElementById('pbm-f').value='';
+  renderBulkGroupChips('');
+  renderPBMImgs();
+  toggleBulkGroupField();
+  document.getElementById('ov-port-bulk').classList.add('open');
+}
+function closePBM(){document.getElementById('ov-port-bulk').classList.remove('open')}
+function toggleBulkGroupField(){
+  var isAds=document.getElementById('pbm-catalog').value==='ads';
+  document.getElementById('pbm-group-field').style.display=isAds?'block':'none';
+}
+function renderBulkGroupChips(current){
+  var groupNames=Array.from(new Set(portfolio.map(function(p){return p.group_label}).filter(Boolean)));
+  document.getElementById('pbm-group-list').innerHTML=groupNames.map(function(g){return'<option value="'+h(g)+'">'}).join('');
+  if(!groupNames.length){document.getElementById('pbm-group-chips').innerHTML='<span style="font-size:11px;color:var(--g)">لسه مفيش مجموعات — اكتب اسم فوق عشان تنشئ أول مجموعة</span>';return}
+  document.getElementById('pbm-group-chips').innerHTML=groupNames.map(function(g){
+    return'<span class="pm-group-chip'+(g===current?' active':'')+'" onclick="v(\'pbm-group\',\''+g.replace(/'/g,"\\'")+'\');renderBulkGroupChips(\''+g.replace(/'/g,"\\'")+'\')">'+h(g)+'</span>';
+  }).join('');
+}
+function renderPBMImgs(){
+  document.getElementById('pbm-count').textContent=pbmImages.length;
+  document.getElementById('pbm-imgs').innerHTML=pbmImages.map(function(url,i){
+    return'<div class="prm-img-item"><img src="'+h(url)+'" alt="">'
+      +'<div class="prm-img-acts"><button type="button" onclick="removePBMImg('+i+')">حذف</button></div></div>';
+  }).join('');
+}
+function removePBMImg(i){pbmImages.splice(i,1);renderPBMImgs()}
+var pbmUploading=false;
+async function upBulkPortImgs(inp){
+  var files=Array.prototype.slice.call(inp.files||[]);
+  if(!files.length||pbmUploading)return;
+  pbmUploading=true;
+  var uz=document.getElementById('pbm-uz');uz.classList.add('disabled');
+  var prog=document.getElementById('pbm-progress');prog.classList.add('show');
+  var bar=document.getElementById('pbm-progress-bar');
+  var pct=document.getElementById('pbm-progress-pct');
+  var okCount=0;
+  for(var i=0;i<files.length;i++){
+    var f=files[i];
+    var label='('+(i+1)+'/'+files.length+') ';
+    if(!f.type||!f.type.startsWith('image/')){toast('❌ '+label+'اختار ملف صورة بس');continue}
+    if(f.size>15*1024*1024){toast('❌ '+label+'الصورة كبيرة جدًا (أقصى حجم 15 ميجا)');continue}
+    bar.style.width='0%';pct.textContent=label+'0%';
+    try{
+      var file=await resizeImageFile(f,1600,.85);
+      var ext=file.type==='image/jpeg'?'jpg':(f.name.split('.').pop()||'jpg');
+      var nm='portfolio/'+Date.now()+'-'+i+'.'+ext;
+      await uploadWithProgress('ao-images',nm,file,function(p){
+        bar.style.width=p+'%';pct.textContent=label+p+'%';
+      });
+      var url=sb.storage.from('ao-images').getPublicUrl(nm).data.publicUrl;
+      pbmImages.push(url);
+      renderPBMImgs();
+      okCount++;
+    }catch(err){
+      toast('❌ '+label+(err.message||'فشل رفع الصورة، حاول تاني'));
+    }
+  }
+  if(okCount)toast('✅ تم رفع '+okCount+' صورة');
+  pbmUploading=false;
+  uz.classList.remove('disabled');
+  prog.classList.remove('show');
+  inp.value='';
+}
+async function savePBM(){
+  if(!pbmImages.length){toast('ارفع صورة واحدة على الأقل');return}
+  var baseTitle=g('pbm-t').trim();
+  var catalog=document.getElementById('pbm-catalog').value;
+  var category=document.getElementById('pbm-c').value;
+  var group=g('pbm-group').trim()||null;
+  var fallback=group||'عمل';
+  var rows=pbmImages.map(function(url,i){
+    var title=baseTitle
+      ?(pbmImages.length>1?baseTitle+' '+(i+1):baseTitle)
+      :fallback+' '+(i+1);
+    return{title:title,catalog:catalog,category:category,group_label:catalog==='ads'?group:null,
+      image_url:url,is_active:true,sort_order:portfolio.length+i};
+  });
+  var{error}=await sb.from('ao_portfolio').insert(rows);
+  if(error){toast('❌ '+error.message);return}
+  closePBM();await loadPort();updateStats();toast('✅ تم حفظ '+rows.length+' صورة!');
 }
 
 // ── PRODUCTS / CATALOG ──────────────────────────────────
