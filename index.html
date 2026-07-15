@@ -79,9 +79,12 @@ nav.solid{box-shadow:0 2px 16px rgba(24,21,15,.06)}
 .hero-inner{position:relative;z-index:1;max-width:760px;margin:0 auto}
 .hero-badge{display:inline-flex;align-items:center;gap:9px;background:var(--p2);border:1px solid var(--line2);color:var(--ink2);padding:8px 18px;border-radius:var(--rp);font-size:12px;font-weight:500;margin-bottom:24px}
 .hero-badge-dot{width:7px;height:7px;background:var(--red);border-radius:50%;display:inline-block;flex-shrink:0}
+.hero-text-blocks{display:flex;flex-direction:column;align-items:center}
 .hero h1{font-size:clamp(32px,5.6vw,54px);font-weight:700;line-height:1.28;letter-spacing:-.01em;margin-bottom:18px;color:var(--ink)}
-.hero h1 .r{color:var(--red)}
-.hero-sub{font-size:16px;color:var(--ink2);line-height:1.8;max-width:480px;margin:0 auto 32px;font-weight:400}
+.hero h1 .r,.hero-text-blocks h2 .r,.hero-text-blocks h3 .r{color:var(--red)}
+.hero-text-blocks h2{font-size:clamp(22px,3.6vw,34px);font-weight:700;line-height:1.32;letter-spacing:-.01em;margin-bottom:16px;color:var(--ink)}
+.hero-text-blocks h3{font-size:clamp(17px,2.6vw,22px);font-weight:600;line-height:1.4;margin-bottom:14px;color:var(--ink)}
+.hero-sub,.hero-text-blocks p{font-size:16px;color:var(--ink2);line-height:1.8;max-width:480px;margin:0 auto 32px;font-weight:400}
 .hero-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
 .btn-primary{background:var(--red);color:#fff;padding:17px 32px;border-radius:var(--rp);font-weight:600;font-size:15px;transition:.2s;display:inline-flex;align-items:center;gap:9px;box-shadow:0 6px 22px rgba(var(--red-rgb),.28)}
 .btn-primary:hover{background:var(--red-d);transform:translateY(-2px)}
@@ -305,8 +308,10 @@ footer{padding:clamp(36px,5.5vw,56px) var(--pad) 0;border-top:1px solid var(--li
       <span class="hero-badge-dot"></span>
       متخصصون في السيارات · منذ 2015
     </div>
-    <h1 id="heroH1" class="fade-up" data-reveal-bound="1">التسويق <span class="r">والدعاية</span> لمراكز السيارات</h1>
-    <p class="hero-sub fade-up" id="heroSub" data-reveal-bound="1">شوف شغلنا وتصفح كتالوج شغلنا — دعاية وإعلان ومنتجات تسويقية جاهزة تطلبها فورًا.</p>
+    <div id="heroTextBlocks" class="hero-text-blocks fade-up" data-reveal-bound="1">
+      <h1 id="heroH1">التسويق <span class="r">والدعاية</span> لمراكز السيارات</h1>
+      <p class="hero-sub" id="heroSub">شوف شغلنا وتصفح كتالوج شغلنا — دعاية وإعلان ومنتجات تسويقية جاهزة تطلبها فورًا.</p>
+    </div>
     <div class="hero-btns fade-up" data-reveal-bound="1">
       <a href="catalog.html" class="btn-primary" id="heroBtn1">
         كتالوج الدعاية والإعلان
@@ -590,7 +595,7 @@ function animateCounters(){
 }
 
 // ── ENTRANCE ANIMATIONS (scroll reveal) ──────────────
-// Note: hero-badge/#heroH1/.hero-sub/.hero-btns/.stat-item are deliberately
+// Note: hero-badge/.hero-text-blocks/.hero-btns/.stat-item are deliberately
 // excluded here and revealed instead from loadSite() once real Supabase data
 // has replaced the static placeholder text, to avoid a flash of stale content.
 var REVEAL_SEL='.sec-head,.cat-link-card,.pg-group,.port-card,.ba-card,.cl-item,.ft-grid';
@@ -882,10 +887,19 @@ function renderClients(list){
   }).join('');
 }
 
+var HERO_TAGS={h1:1,h2:1,h3:1,p:1};
 function applyHero(h){
   if(h.badge){var b=document.getElementById('heroBadge');if(b)b.innerHTML='<span class="hero-badge-dot"></span>'+esc(h.badge);}
-  if(h.title){var t=document.getElementById('heroH1');if(t)t.innerHTML=h.title;}
-  if(h.subtitle){var s=document.getElementById('heroSub');if(s)s.innerHTML=h.subtitle;}
+  if(h.text_blocks&&h.text_blocks.length){
+    var tb=document.getElementById('heroTextBlocks');
+    if(tb)tb.innerHTML=h.text_blocks.map(function(b){
+      var tag=HERO_TAGS[b.tag]?b.tag:'p';
+      return'<'+tag+'>'+(b.text||'')+'</'+tag+'>';
+    }).join('');
+  }else{
+    if(h.title){var t=document.getElementById('heroH1');if(t)t.innerHTML=h.title;}
+    if(h.subtitle){var s=document.getElementById('heroSub');if(s)s.innerHTML=h.subtitle;}
+  }
   if(h.bg_image_url){
     var bg=document.getElementById('heroBg');
     if(bg){bg.querySelector('img').src=h.bg_image_url;document.getElementById('home').classList.add('has-bg');}
@@ -896,7 +910,7 @@ var heroStatsRevealed=false;
 function revealHeroStats(){
   if(heroStatsRevealed)return;
   heroStatsRevealed=true;
-  var els=document.querySelectorAll('.hero-badge,#heroH1,.hero-sub,.hero-btns,.stat-item');
+  var els=document.querySelectorAll('.hero-badge,.hero-text-blocks,.hero-btns,.stat-item');
   els.forEach(function(el){el.classList.add('fade-up')});
   requestAnimationFrame(function(){
     requestAnimationFrame(function(){

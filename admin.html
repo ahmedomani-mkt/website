@@ -416,9 +416,6 @@ button,select,input,textarea{font-family:var(--font)}
           <div class="card-title"><svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>النص الرئيسي</div>
         </div>
         <div class="field"><label>البادج (النص الصغير فوق العنوان)</label><input type="text" id="h-badge" placeholder="متخصصون في السيارات · منذ 2015"></div>
-        <div class="field"><label>العنوان الرئيسي H1</label><textarea id="h-title" rows="3" placeholder="شريكك في التسويق..."></textarea><div class="field-hint">يمكنك استخدام HTML مثل: &lt;span class="r"&gt;النص الأحمر&lt;/span&gt;</div></div>
-        <div class="field"><label>النص التفسيري</label><textarea id="h-sub" rows="2"></textarea></div>
-        <div class="field-hint" style="margin-bottom:12px">زرارين الهيرو ثابتين حاليًا ("كتالوج الدعاية والإعلان" و"كتالوج التسويق") وبيودوا لصفحتي الكتالوج مباشرة.</div>
         <div class="field">
           <label>صورة خلفية الهيرو (اختياري)</label>
           <input type="url" id="h-bg" placeholder="https://..." oninput="prevHeroBg(this.value)">
@@ -429,6 +426,18 @@ button,select,input,textarea{font-family:var(--font)}
           <input type="file" id="h-bg-f" accept="image/*" style="display:none" onchange="upHeroBg(this)">
         </div>
         <img id="h-bg-pv" class="port-preview" style="max-height:120px;object-fit:cover;width:100%;border-radius:8px;display:none;margin-top:10px">
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><svg viewBox="0 0 24 24"><line x1="17" y1="10" x2="3" y2="10"/><line x1="21" y1="6" x2="3" y2="6"/><line x1="21" y1="14" x2="3" y2="14"/><line x1="17" y1="18" x2="3" y2="18"/></svg>نصوص العنوان (H1 / H2 / H3 / فقرة)</div>
+          <div style="display:flex;gap:6px">
+            <button class="btn btn-g bsm" onclick="addHeroBlock('h2')">+ عنوان</button>
+            <button class="btn btn-g bsm" onclick="addHeroBlock('p')">+ فقرة</button>
+          </div>
+        </div>
+        <div class="field-hint" style="margin-bottom:12px">أضف كل ما تحتاج من عناوين وفقرات ورتبها زي ما تحب — تظهر فوق بعض بنفس الترتيب. لأسباب السيو يفضّل يكون عندك H1 واحد بس. تقدر تستخدم &lt;span class="r"&gt;نص&lt;/span&gt; جوه أي نص عشان تلوّنه أحمر.</div>
+        <div id="heroBlocksEditor"></div>
+        <div class="field-hint" style="margin-bottom:12px">زرارين الهيرو ثابتين حاليًا ("كتالوج الدعاية والإعلان" و"كتالوج التسويق") وبيودوا لصفحتي الكتالوج مباشرة.</div>
       </div>
       <div class="card">
         <div class="card-header">
@@ -1009,18 +1018,55 @@ function updateStats(){
 }
 
 // ── HERO ───────────────────────────────────────────────
+var heroBlocks=[];
 async function loadHero(){
   var{data}=await sb.from('ao_hero').select('*').eq('id',1).single();
   if(!data)return;
-  v('h-badge',data.badge);v('h-title',data.title);v('h-sub',data.subtitle);
+  v('h-badge',data.badge);
+  heroBlocks=(data.text_blocks&&data.text_blocks.length)?JSON.parse(JSON.stringify(data.text_blocks))
+    :[{tag:'h1',text:data.title||''},{tag:'p',text:data.subtitle||''}];
+  renderHeroBlocksEditor();
   v('h-n1',data.stat1_num);v('h-l1',data.stat1_label);
   v('h-n2',data.stat2_num);v('h-l2',data.stat2_label);
   v('h-n3',data.stat3_num);v('h-l3',data.stat3_label);
   v('h-bg',data.bg_image_url);prevHeroBg(data.bg_image_url);
 }
+var HERO_TAG_LABELS={h1:'H1 — العنوان الرئيسي',h2:'H2 — عنوان فرعي',h3:'H3 — عنوان صغير',p:'فقرة نصية'};
+function renderHeroBlocksEditor(){
+  var el=document.getElementById('heroBlocksEditor');
+  if(!heroBlocks.length){el.innerHTML='<div style="text-align:center;padding:16px;color:var(--g);font-size:12px;border:1px dashed var(--b2);border-radius:var(--rsm)">لسه مفيش نصوص — دوس "+ عنوان" أو "+ فقرة" فوق</div>';return}
+  el.innerHTML=heroBlocks.map(function(b,i){
+    var opts=Object.keys(HERO_TAG_LABELS).map(function(t){
+      return'<option value="'+t+'"'+(b.tag===t?' selected':'')+'>'+HERO_TAG_LABELS[t]+'</option>';
+    }).join('');
+    return'<div class="psi"><div class="psih">'
+        +'<select class="fi" style="width:auto" onchange="heroBlocks['+i+'].tag=this.value">'+opts+'</select>'
+        +'<div style="display:flex;gap:6px">'
+          +'<button class="btn btn-g bsm" onclick="moveHeroBlock('+i+',-1)"'+(i===0?' disabled':'')+'>↑</button>'
+          +'<button class="btn btn-g bsm" onclick="moveHeroBlock('+i+',1)"'+(i===heroBlocks.length-1?' disabled':'')+'>↓</button>'
+          +'<button class="btn btn-d bsm" onclick="delHeroBlock('+i+')">حذف</button>'
+        +'</div></div>'
+      +'<textarea rows="2" class="fi" oninput="heroBlocks['+i+'].text=this.value">'+h(b.text||'')+'</textarea>'
+      +'</div>';
+  }).join('');
+}
+function addHeroBlock(tag){
+  heroBlocks.push({tag:tag||'p',text:''});
+  renderHeroBlocksEditor();
+}
+function moveHeroBlock(i,dir){
+  var j=i+dir;
+  if(j<0||j>=heroBlocks.length)return;
+  var tmp=heroBlocks[i];heroBlocks[i]=heroBlocks[j];heroBlocks[j]=tmp;
+  renderHeroBlocksEditor();
+}
+function delHeroBlock(i){
+  heroBlocks.splice(i,1);
+  renderHeroBlocksEditor();
+}
 async function saveHero(){
   var{error}=await sb.from('ao_hero').upsert({id:1,
-    badge:g('h-badge'),title:g('h-title'),subtitle:g('h-sub'),
+    badge:g('h-badge'),text_blocks:heroBlocks,
     stat1_num:g('h-n1'),stat1_label:g('h-l1'),
     stat2_num:g('h-n2'),stat2_label:g('h-l2'),
     stat3_num:g('h-n3'),stat3_label:g('h-l3'),
