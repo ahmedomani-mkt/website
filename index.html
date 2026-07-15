@@ -85,10 +85,8 @@ nav.solid{box-shadow:0 2px 16px rgba(24,21,15,.06)}
 .hero-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
 .btn-primary{background:var(--red);color:#fff;padding:17px 32px;border-radius:var(--rp);font-weight:600;font-size:15px;transition:.2s;display:inline-flex;align-items:center;gap:9px;box-shadow:0 6px 22px rgba(var(--red-rgb),.28)}
 .btn-primary:hover{background:var(--red-d);transform:translateY(-2px)}
-.btn-primary-arrow{transition:.25s}
-.btn-primary:hover .btn-primary-arrow{transform:translateX(-4px)}
-.btn-secondary{background:var(--p1);color:var(--ink);padding:17px 32px;border-radius:var(--rp);font-weight:600;font-size:15px;transition:.2s;border:1px solid var(--line2);display:inline-flex;align-items:center;gap:8px}
-.btn-secondary:hover{background:var(--card);transform:translateY(-2px)}
+.btn-secondary{background:var(--p1);color:var(--red);padding:17px 32px;border-radius:var(--rp);font-weight:600;font-size:15px;transition:.2s;border:1.5px solid var(--red);display:inline-flex;align-items:center;gap:8px}
+.btn-secondary:hover{background:var(--red-soft);transform:translateY(-2px)}
 
 /* ══ HERO BACKGROUND IMAGE (optional) ══════════════ */
 .hero-bg{position:absolute;inset:0;z-index:0;overflow:hidden;display:none}
@@ -100,8 +98,8 @@ nav.solid{box-shadow:0 2px 16px rgba(24,21,15,.06)}
 .hero.has-bg .hero-badge{background:rgba(var(--ink-rgb),.12);border-color:rgba(var(--ink-rgb),.28);color:var(--ink)}
 .hero.has-bg h1{color:var(--ink)}
 .hero.has-bg .hero-sub{color:rgba(var(--ink-rgb),.85)}
-.hero.has-bg .btn-secondary{background:rgba(var(--ink-rgb),.12);border-color:rgba(var(--ink-rgb),.32);color:var(--ink)}
-.hero.has-bg .btn-secondary:hover{background:rgba(var(--ink-rgb),.2)}
+.hero.has-bg .btn-secondary{background:var(--p1);border-color:var(--red);color:var(--red)}
+.hero.has-bg .btn-secondary:hover{background:var(--red-soft)}
 
 /* ══ TRUST STATS · RED ════════════════════════════ */
 .stats-bar{padding:0}
@@ -161,20 +159,20 @@ section{padding:clamp(56px,8vw,92px) 0}
 
 /* ══ FOOTER ═══════════════════════════════════════ */
 footer{padding:clamp(36px,5.5vw,56px) var(--pad) 0;border-top:1px solid var(--line)}
-.ft-grid{max-width:1180px;margin:0 auto;display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:36px;padding-bottom:36px}
+.ft-grid{max-width:1180px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr 1.4fr;gap:36px;padding-bottom:36px}
 .ft-logo{display:flex;align-items:center;margin-bottom:14px}
-.ft-logo img{height:32px;width:auto;max-width:160px;object-fit:contain}
-.ft-desc{font-size:12px;color:var(--ink3);line-height:1.8;max-width:280px;font-weight:400}
-.ft-col-title{font-size:11px;color:var(--ink3);font-weight:500;margin-bottom:14px}
-.ft-links{display:flex;flex-direction:column;gap:10px;align-items:flex-start}
-.ft-links a{color:var(--ink2);font-size:13px;font-weight:500;transition:.2s}
+.ft-logo img{height:38px;width:auto;max-width:180px;object-fit:contain}
+.ft-desc{font-size:14px;color:var(--ink3);line-height:1.8;max-width:320px;font-weight:400}
+.ft-col-title{font-size:13px;color:var(--ink3);font-weight:600;margin-bottom:14px}
+.ft-links{display:flex;flex-direction:column;gap:11px;align-items:flex-start}
+.ft-links a{color:var(--ink2);font-size:15px;font-weight:500;transition:.2s}
 .ft-links a:hover{color:var(--red)}
-.ft-social{display:flex;gap:8px}
-.ft-soc{width:36px;height:36px;border-radius:50%;background:var(--p1);border:1px solid var(--line2);display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--ink2);transition:.2s}
+.ft-social{display:flex;gap:10px}
+.ft-soc{width:46px;height:46px;border-radius:50%;background:var(--p1);border:1px solid var(--line2);display:flex;align-items:center;justify-content:center;font-size:18px;color:var(--ink2);transition:.2s}
 .ft-soc:hover{background:var(--red);border-color:var(--red);color:#fff}
 .ft-bottom{max-width:1180px;margin:0 auto;border-top:1px solid var(--line);padding:18px 0;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
-.ft-copy{font-size:11.5px;color:var(--ink3);font-weight:400}
-.ft-mark{font-size:11.5px;color:var(--ink3);font-weight:400}
+.ft-copy{font-size:13.5px;color:var(--ink3);font-weight:400}
+.ft-mark{font-size:13.5px;color:var(--ink3);font-weight:400}
 
 /* ══ WA FLOAT ═════════════════════════════════════ */
 .wa-float{position:fixed;bottom:24px;left:24px;z-index:390}
@@ -227,19 +225,19 @@ footer{padding:clamp(36px,5.5vw,56px) var(--pad) 0;border-top:1px solid var(--li
 
 <!-- ══ NAV ══════════════════════════════════════════ -->
 <nav id="mainNav">
-  <div class="logo-wrap">
-    <img id="navLogoImg" src="assets/logo.png" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Crect width=%27100%27 height=%27100%27 fill=%27%23E8192C%27/%3E%3Cpolygon points=%2750,22 78,68 22,68%27 fill=%27white%27/%3E%3C/svg%3E'" alt="Ahmed Omani Auto Marketing" class="logo-img">
-  </div>
+  <a href="https://wa.me/201152501056?text=مرحبا،%20أريد%20الاستفسار%20عن%20خدماتكم" class="nav-cta" target="_blank" rel="noopener"><i class="bi bi-whatsapp"></i> واتساب مباشر</a>
   <ul class="nav-links" id="navLinks">
     <li><a href="#portfolio">أعمالنا</a></li>
     <li><a href="catalog.html">كتالوج الدعاية والإعلان</a></li>
     <li><a href="catalog-marketing.html">كتالوج التسويق</a></li>
     <li><a href="#clients">عملاؤنا</a></li>
   </ul>
-  <a href="https://wa.me/201152501056?text=مرحبا،%20أريد%20الاستفسار%20عن%20خدماتكم" class="nav-cta" target="_blank" rel="noopener"><i class="bi bi-whatsapp"></i> واتساب مباشر</a>
   <button class="burger" id="burger" onclick="toggleMenu()" aria-label="القائمة">
     <span></span><span></span><span></span>
   </button>
+  <div class="logo-wrap">
+    <img id="navLogoImg" src="assets/logo.png" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Crect width=%27100%27 height=%27100%27 fill=%27%23E8192C%27/%3E%3Cpolygon points=%2750,22 78,68 22,68%27 fill=%27white%27/%3E%3C/svg%3E'" alt="Ahmed Omani Auto Marketing" class="logo-img">
+  </div>
 </nav>
 
 <!-- ══ MOBILE OVERLAY ═══════════════════════════════ -->
@@ -266,7 +264,7 @@ footer{padding:clamp(36px,5.5vw,56px) var(--pad) 0;border-top:1px solid var(--li
     <p class="hero-sub" id="heroSub">شوف شغلنا وتصفح كتالوج شغلنا — دعاية وإعلان ومنتجات تسويقية جاهزة تطلبها فورًا.</p>
     <div class="hero-btns">
       <a href="catalog.html" class="btn-primary" id="heroBtn1">
-        كتالوج الدعاية والإعلان <span class="btn-primary-arrow">←</span>
+        كتالوج الدعاية والإعلان
       </a>
       <a href="catalog-marketing.html" class="btn-secondary" id="heroBtn2">
         كتالوج التسويق
@@ -441,12 +439,6 @@ footer{padding:clamp(36px,5.5vw,56px) var(--pad) 0;border-top:1px solid var(--li
 <footer class="bg-2" id="secFooter">
   <div class="ft-grid">
     <div>
-      <div class="ft-logo">
-        <img id="ftLogoImg" src="assets/logo.png" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Crect width=%27100%27 height=%27100%27 fill=%27%23E8192C%27/%3E%3Cpolygon points=%2750,22 78,68 22,68%27 fill=%27white%27/%3E%3C/svg%3E'" alt="Ahmed Omani Auto Marketing">
-      </div>
-      <p class="ft-desc">تسويق إلكتروني ودعاية وإعلان متخصصة لقطاع السيارات في مصر.</p>
-    </div>
-    <div>
       <div class="ft-col-title">تصفح</div>
       <div class="ft-links" id="ftLinks">
         <a href="#portfolio">أعمالنا</a>
@@ -459,6 +451,12 @@ footer{padding:clamp(36px,5.5vw,56px) var(--pad) 0;border-top:1px solid var(--li
     <div>
       <div class="ft-col-title">تابعنا</div>
       <div class="ft-social" id="ftSocial"></div>
+    </div>
+    <div>
+      <div class="ft-logo">
+        <img id="ftLogoImg" src="assets/logo.png" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Crect width=%27100%27 height=%27100%27 fill=%27%23E8192C%27/%3E%3Cpolygon points=%2750,22 78,68 22,68%27 fill=%27white%27/%3E%3C/svg%3E'" alt="Ahmed Omani Auto Marketing">
+      </div>
+      <p class="ft-desc">تسويق إلكتروني ودعاية وإعلان متخصصة لقطاع السيارات في مصر.</p>
     </div>
   </div>
   <div class="ft-bottom">
