@@ -149,6 +149,26 @@ section{padding:clamp(56px,8vw,92px) 0}
 .port-desc{font-size:12px;color:var(--card-ink3);line-height:1.7;font-weight:400}
 .port-empty{padding:50px 20px;text-align:center;color:var(--ink3);font-size:13px}
 
+/* ══ BEFORE / AFTER ═══════════════════════════════ */
+.ba-track{display:flex;gap:20px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;scroll-behavior:smooth;padding:10px 4px 14px}
+.ba-track::-webkit-scrollbar{display:none}
+.ba-card{flex-shrink:0;width:min(420px,85vw);scroll-snap-align:start;background:var(--card-bg);border:1px solid var(--line);border-radius:var(--r);padding:22px;display:flex;align-items:center;gap:22px;transition:.3s cubic-bezier(.16,1,.3,1)}
+.ba-card:hover{border-color:var(--line2);transform:translateY(-4px);box-shadow:0 16px 34px rgba(24,21,15,.08)}
+.ba-stack{position:relative;width:140px;height:140px;flex-shrink:0}
+.ba-img{position:absolute;width:110px;height:110px}
+.ba-img-before{top:0;right:0;transform:rotate(-9deg);z-index:1}
+.ba-img-after{bottom:0;left:0;transform:rotate(3deg);z-index:2}
+.ba-img-inner{width:100%;height:100%;border-radius:14px;overflow:hidden;background:var(--p3);border:2px solid var(--card-bg);box-shadow:0 10px 22px rgba(24,21,15,.16);display:flex;align-items:center;justify-content:center}
+.ba-img-inner img{width:100%;height:100%;object-fit:cover;display:block}
+.ba-img-inner i{font-size:22px;color:var(--ink3)}
+.ba-img-ph{width:100%;height:100%;display:flex;align-items:center;justify-content:center}
+.ba-tag{position:absolute;font-size:9px;font-weight:800;letter-spacing:.3px;padding:4px 11px;border-radius:var(--rp);color:#fff;z-index:3;white-space:nowrap}
+.ba-tag-before{background:rgba(var(--ink-rgb),.6);top:-7px;right:10px}
+.ba-tag-after{background:var(--red);bottom:-7px;left:10px}
+.ba-info{flex:1;min-width:0}
+.ba-name{font-size:15.5px;font-weight:700;color:var(--card-ink);margin-bottom:6px;line-height:1.4}
+.ba-desc{font-size:12px;color:var(--card-ink3);line-height:1.7}
+
 /* ══ CLIENTS · STATIC GRID ═════════════════════════ */
 .cl-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:12px}
 .cl-item{display:flex;align-items:center;justify-content:center;height:64px;padding:10px 16px;background:var(--card-bg);border:1px solid var(--line);border-radius:var(--rs);overflow:hidden;transition:.3s cubic-bezier(.16,1,.3,1)}
@@ -391,6 +411,25 @@ footer{padding:clamp(36px,5.5vw,56px) var(--pad) 0;border-top:1px solid var(--li
   </div>
 </section>
 
+<!-- ══ 4.2 · BEFORE / AFTER — off-white ══════════════ -->
+<section id="secBeforeAfter" class="bg-2" style="display:none">
+  <div class="container">
+    <div class="port-head">
+      <div class="port-head-text sec-head" style="margin:0;text-align:right">
+        <h2 class="sec-title">قبل وبعد</h2>
+        <p class="sec-sub" style="margin-top:8px">شوف الفرق اللي بنعمله في هوية عملائنا</p>
+      </div>
+      <div class="port-nav-btns">
+        <button class="port-nav-btn" onclick="slidePort(-1,'baGrid')"><i class="bi bi-arrow-right"></i></button>
+        <button class="port-nav-btn" onclick="slidePort(1,'baGrid')"><i class="bi bi-arrow-left"></i></button>
+      </div>
+    </div>
+    <div class="port-track-wrap">
+      <div class="ba-track stagger" id="baGrid"></div>
+    </div>
+  </div>
+</section>
+
 <!-- ══ 5 · CLIENTS — white ═══════════════════════════ -->
 <section id="clients" class="clients-sec bg-1">
   <div class="container">
@@ -546,7 +585,7 @@ function animateCounters(){
 }
 
 // ── ENTRANCE ANIMATIONS (scroll reveal) ──────────────
-var REVEAL_SEL='.sec-head,.hero-badge,#heroH1,.hero-sub,.hero-btns,.stat-item,.cat-link-card,.port-card,.cl-item,.ft-grid';
+var REVEAL_SEL='.sec-head,.hero-badge,#heroH1,.hero-sub,.hero-btns,.stat-item,.cat-link-card,.port-card,.ba-card,.cl-item,.ft-grid';
 var revealObs;
 function initReveal(){
   document.querySelectorAll(REVEAL_SEL).forEach(function(el){el.classList.add('fade-up')});
@@ -764,6 +803,27 @@ function renderPortfolio(list){
   if(gme)gme.style.display=marketing.length?'none':'block';
 }
 
+function renderBeforeAfter(list){
+  var sec=document.getElementById('secBeforeAfter');
+  if(!list||!list.length){if(sec)sec.style.display='none';return;}
+  var g=document.getElementById('baGrid');
+  if(g)g.innerHTML=list.map(function(b){
+    var before=b.before_image_url?'<img src="'+esc(b.before_image_url)+'" alt="قبل">':'<div class="ba-img-ph"><i class="bi bi-image"></i></div>';
+    var after=b.after_image_url?'<img src="'+esc(b.after_image_url)+'" alt="بعد">':'<div class="ba-img-ph"><i class="bi bi-image"></i></div>';
+    return'<div class="ba-card">'
+      +'<div class="ba-stack">'
+        +'<div class="ba-img ba-img-before"><div class="ba-img-inner">'+before+'</div><span class="ba-tag ba-tag-before">قبل</span></div>'
+        +'<div class="ba-img ba-img-after"><div class="ba-img-inner">'+after+'</div><span class="ba-tag ba-tag-after">بعد</span></div>'
+      +'</div>'
+      +'<div class="ba-info">'
+        +'<div class="ba-name">'+esc(b.client_name)+'</div>'
+        +(b.description?'<div class="ba-desc">'+esc(b.description)+'</div>':'')
+      +'</div>'
+      +'</div>';
+  }).join('');
+  if(sec)sec.style.display='';
+}
+
 function renderClients(list){
   var g=document.getElementById('clientsGrid');
   g.innerHTML=list.map(function(c){
@@ -813,6 +873,8 @@ async function loadSite(){
     if(port&&port.length)renderPortfolio(port);
     var clients=(await sb.from('ao_clients').select('*').eq('is_active',true).order('sort_order')).data;
     if(clients&&clients.length)renderClients(clients);
+    var beforeAfter=(await sb.from('ao_before_after').select('*').eq('is_active',true).order('sort_order')).data;
+    renderBeforeAfter(beforeAfter||[]);
     var pglist=(await sb.from('ao_pages').select('title,slug').eq('is_published',true).order('created_at')).data;
     if(pglist&&pglist.length)renderPagesLinks(pglist);
     initReveal();

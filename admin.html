@@ -297,6 +297,10 @@ button,select,input,textarea{font-family:var(--font)}
       <div class="ni-ic"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg></div>
       العملاء
     </div>
+    <div class="ni" data-s="ba" onclick="go('ba',this)">
+      <div class="ni-ic"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="18" rx="1"/><rect x="14" y="3" width="7" height="18" rx="1"/><path d="M10 12h4"/><path d="M12 10v4"/></svg></div>
+      قبل وبعد
+    </div>
     <div class="ni" data-s="pages" onclick="go('pages',this)">
       <div class="ni-ic"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></div>
       صفحات جديدة
@@ -513,6 +517,24 @@ button,select,input,textarea{font-family:var(--font)}
           </button>
         </div>
         <div id="cl"></div>
+      </div>
+    </div>
+
+    <!-- BEFORE / AFTER -->
+    <div class="sec" id="sec-ba">
+      <div class="sec-header">
+        <div class="sec-title">قبل وبعد</div>
+        <div class="sec-sub">صور مقارنة قبل/بعد لتجديد هوية العملاء — تظهر في سيكشن "قبل وبعد" بالموقع (يظهر تلقائيًا لما يكون فيه عميل واحد على الأقل)</div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="18" rx="1"/><rect x="14" y="3" width="7" height="18" rx="1"/></svg>عملاء قبل وبعد (<span id="bac">0</span>)</div>
+          <button class="btn btn-p bsm" onclick="openBAM()">
+            <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            إضافة
+          </button>
+        </div>
+        <div id="bal"></div>
       </div>
     </div>
 
@@ -792,6 +814,38 @@ button,select,input,textarea{font-family:var(--font)}
   </div>
 </div>
 
+<!-- BEFORE/AFTER MODAL -->
+<div class="ov" id="ov-ba" onclick="if(event.target===this)closeBAM()">
+  <div class="modal">
+    <div class="mh"><span id="bam-ttl">إضافة عميل قبل/بعد</span><button class="mx" onclick="closeBAM()">✕</button></div>
+    <input type="hidden" id="bam-id">
+    <div class="field"><label>اسم العميل</label><input type="text" id="bam-n" placeholder="مركز المصري لتعليم تقنيات السيارات الحديثة"></div>
+    <div class="field"><label>وصف مختصر (اختياري)</label><textarea id="bam-d" rows="2" placeholder="تجديد الهوية البصرية الكاملة..."></textarea></div>
+    <div class="r2">
+      <div class="field">
+        <label>صورة قبل</label>
+        <div class="upload-zone" onclick="document.getElementById('bam-f-before').click()">
+          📁 ارفع صورة "قبل"
+          <input type="file" id="bam-f-before" accept="image/*" style="display:none" onchange="upBAImg(this,'before')">
+        </div>
+        <img id="bam-pv-before" class="port-preview" style="max-height:100px;object-fit:contain;background:var(--s2);padding:8px">
+      </div>
+      <div class="field">
+        <label>صورة بعد</label>
+        <div class="upload-zone" onclick="document.getElementById('bam-f-after').click()">
+          📁 ارفع صورة "بعد"
+          <input type="file" id="bam-f-after" accept="image/*" style="display:none" onchange="upBAImg(this,'after')">
+        </div>
+        <img id="bam-pv-after" class="port-preview" style="max-height:100px;object-fit:contain;background:var(--s2);padding:8px">
+      </div>
+    </div>
+    <div class="mf">
+      <button class="btn btn-g" onclick="closeBAM()">إلغاء</button>
+      <button class="btn btn-p" onclick="saveBAM()">حفظ</button>
+    </div>
+  </div>
+</div>
+
 <!-- PAGE MODAL -->
 <div class="ov" id="ov-pg" onclick="if(event.target===this)closePgM()">
   <div class="modal modal-lg">
@@ -840,11 +894,11 @@ const SB_URL='https://knwnviglquxvvwknxbqa.supabase.co';
 const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtud252aWdscXV4dnZ3a254YnFhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA5MzI2NDIsImV4cCI6MjA5NjUwODY0Mn0.VuxAC-J7it4m_wrSTBHCh7t_z_PL8CCGwhvtv6NiZmQ';
 const sb=supabase.createClient(SB_URL,SB_KEY);
 
-var portfolio=[],clients=[],pages=[],pageSecs=[],products=[];
+var portfolio=[],clients=[],pages=[],pageSecs=[],products=[],beforeAfters=[];
 var statsData=[],textsData={};
 
 // ── BREADCRUMB MAP ────────────────────────────────────
-var secNames={dash:'الرئيسية',hero:'الصفحة الرئيسية',stats:'الشريط الإحصائي',port:'الأعمال',products:'الكتالوج',clients:'العملاء',pages:'الصفحات',texts:'نصوص الأقسام',colors:'ألوان الأقسام',settings:'الإعدادات'};
+var secNames={dash:'الرئيسية',hero:'الصفحة الرئيسية',stats:'الشريط الإحصائي',port:'الأعمال',products:'الكتالوج',clients:'العملاء',ba:'قبل وبعد',pages:'الصفحات',texts:'نصوص الأقسام',colors:'ألوان الأقسام',settings:'الإعدادات'};
 
 // ── ICON PICKER (flat modern icon library) ──────────────
 var ICON_LIB=['car-front','car-front-fill','truck','truck-front','wrench','wrench-adjustable','tools','gear','gear-fill','nut','fuel-pump','fuel-pump-fill','speedometer','speedometer2','battery-charging','cone-striped','signpost','signpost-2','map','geo-alt','geo-alt-fill','compass',
@@ -919,7 +973,7 @@ function qni(s){return document.querySelector('[data-s='+s+']')}
 // ── LOAD ALL ────────────────────────────────────────────
 async function loadAll(){
   try{
-    await Promise.all([loadHero(),loadPort(),loadProducts(),loadClients(),loadPages(),loadSettings()]);
+    await Promise.all([loadHero(),loadPort(),loadProducts(),loadClients(),loadBA(),loadPages(),loadSettings()]);
     updateStats();
     document.getElementById('cdot').className='dot';
     document.getElementById('clbl').textContent='متصل';
@@ -1369,6 +1423,75 @@ async function delClient(id){
   if(!confirm('تأكيد الحذف؟'))return;
   await sb.from('ao_clients').delete().eq('id',id);
   await loadClients();updateStats();toast('🗑 تم الحذف');
+}
+
+// ── BEFORE / AFTER ───────────────────────────────────────
+async function loadBA(){
+  var{data}=await sb.from('ao_before_after').select('*').order('sort_order');
+  beforeAfters=data||[];renderBA();
+}
+function renderBA(){
+  document.getElementById('bac').textContent=beforeAfters.length;
+  var el=document.getElementById('bal');
+  if(!beforeAfters.length){el.innerHTML=empty('لا يوجد عملاء قبل/بعد بعد — اضغط إضافة');return}
+  el.innerHTML=beforeAfters.map(function(b){
+    return'<div class="li">'
+      +(b.after_image_url?'<img class="li-thumb" src="'+h(b.after_image_url)+'" alt="" style="object-fit:contain;background:var(--s);padding:4px">':'<div class="li-thumb" style="font-size:18px">🖼️</div>')
+      +'<div class="li-b"><div class="li-t">'+h(b.client_name)+'</div>'
+        +'<div class="li-s"><span class="badge '+(b.is_active?'b-green':'b-off')+'">'+(b.is_active?'ظاهر':'مخفي')+'</span></div></div>'
+      +'<div class="li-ac">'
+        +'<button class="btn btn-g bsm" onclick="editBA(\''+b.id+'\')">تعديل</button>'
+        +'<button class="btn btn-g bsm" onclick="toggleBA(\''+b.id+'\','+(!b.is_active)+')">'+( b.is_active?'إخفاء':'إظهار')+'</button>'
+        +'<button class="btn btn-d bsm" onclick="delBA(\''+b.id+'\')">حذف</button>'
+      +'</div></div>';
+  }).join('');
+}
+function openBAM(item){
+  document.getElementById('bam-ttl').textContent=item?'تعديل عميل قبل/بعد':'إضافة عميل قبل/بعد';
+  document.getElementById('bam-id').value=item?item.id:'';
+  v('bam-n',item?item.client_name:'');v('bam-d',item?item.description||'':'');
+  var pvb=document.getElementById('bam-pv-before');
+  if(item&&item.before_image_url){pvb.src=item.before_image_url;pvb.dataset.url=item.before_image_url;pvb.style.display='block'}else{pvb.src='';pvb.dataset.url='';pvb.style.display='none'}
+  var pva=document.getElementById('bam-pv-after');
+  if(item&&item.after_image_url){pva.src=item.after_image_url;pva.dataset.url=item.after_image_url;pva.style.display='block'}else{pva.src='';pva.dataset.url='';pva.style.display='none'}
+  document.getElementById('bam-f-before').value='';
+  document.getElementById('bam-f-after').value='';
+  document.getElementById('ov-ba').classList.add('open');
+}
+function closeBAM(){document.getElementById('ov-ba').classList.remove('open')}
+function editBA(id){openBAM(beforeAfters.find(function(b){return b.id===id}))}
+async function upBAImg(inp,which){
+  if(!inp.files[0])return;
+  toast('⏳ جاري الرفع...');
+  var f=inp.files[0];var ext=f.name.split('.').pop();
+  var nm='before-after/'+which+'-'+Date.now()+'.'+ext;
+  var{error}=await sb.storage.from('ao-images').upload(nm,f,{upsert:true});
+  if(error){toast('❌ '+error.message);inp.value='';return}
+  var url=sb.storage.from('ao-images').getPublicUrl(nm).data.publicUrl;
+  var pv=document.getElementById('bam-pv-'+which);
+  pv.src=url;pv.style.display='block';
+  pv.dataset.url=url;
+  toast('✅ تم رفع الصورة!');
+  inp.value='';
+}
+async function saveBAM(){
+  var id=document.getElementById('bam-id').value;
+  var name=g('bam-n').trim();
+  if(!name){toast('اكتب اسم العميل');return}
+  var beforeUrl=document.getElementById('bam-pv-before').dataset.url||'';
+  var afterUrl=document.getElementById('bam-pv-after').dataset.url||'';
+  var payload={client_name:name,description:g('bam-d')||null,before_image_url:beforeUrl||null,after_image_url:afterUrl||null};
+  var err;
+  if(id){err=(await sb.from('ao_before_after').update(payload).eq('id',id)).error}
+  else{payload.is_active=true;payload.sort_order=beforeAfters.length;err=(await sb.from('ao_before_after').insert(payload)).error}
+  if(err){toast('❌ '+err.message);return}
+  closeBAM();await loadBA();toast('✅ تم الحفظ!');
+}
+async function toggleBA(id,val){await sb.from('ao_before_after').update({is_active:val}).eq('id',id);await loadBA()}
+async function delBA(id){
+  if(!confirm('تأكيد الحذف؟'))return;
+  await sb.from('ao_before_after').delete().eq('id',id);
+  await loadBA();toast('🗑 تم الحذف');
 }
 
 // ── PAGES ──────────────────────────────────────────────
