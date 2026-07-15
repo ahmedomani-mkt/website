@@ -181,8 +181,9 @@ button,select,input,textarea{font-family:var(--font)}
 .li-card-ac .btn{flex:1;justify-content:center;padding:7px 8px}
 .port-group-block{margin-bottom:24px}
 .port-group-block:last-child{margin-bottom:0}
-.port-group-heading{font-size:12.5px;font-weight:700;color:var(--w2);margin-bottom:12px;padding-inline-start:10px;border-inline-start:3px solid var(--red);display:flex;align-items:center;gap:6px}
+.port-group-heading{font-size:12.5px;font-weight:700;color:var(--w2);margin-bottom:12px;padding-inline-start:10px;border-inline-start:3px solid var(--red);display:flex;align-items:center;gap:6px;flex-wrap:wrap}
 .port-group-count{color:var(--g);font-weight:600;font-size:11px}
+.port-group-btn{margin-inline-start:auto}
 
 /* ── MODAL ───────────────────────────────────────────── */
 .ov{position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(4px);z-index:500;display:none;align-items:center;justify-content:center;padding:20px}
@@ -1326,7 +1327,12 @@ function renderPort(){
     groups[gname].push(p);
   });
   var html=order.map(function(gname){
-    return'<div class="port-group-block"><div class="port-group-heading">📁 '+h(gname)+' <span class="port-group-count">('+groups[gname].length+')</span></div>'
+    var groupArg=(gname==='متنوع'?'':gname).replace(/'/g,"\\'");
+    var renameArg=gname.replace(/'/g,"\\'");
+    return'<div class="port-group-block"><div class="port-group-heading">📁 '+h(gname)+' <span class="port-group-count">('+groups[gname].length+')</span>'
+      +'<button class="btn btn-g bsm port-group-btn" onclick="renameGroup(\''+renameArg+'\')">✏️ إعادة تسمية</button>'
+      +'<button class="btn btn-p bsm" onclick="openPBM(\''+groupArg+'\')">+ صور لنفس المجموعة</button>'
+      +'</div>'
       +'<div class="card-grid">'+groups[gname].map(cardFor).join('')+'</div></div>';
   }).join('');
   if(marketing.length){
@@ -1410,16 +1416,28 @@ async function delPort(id){
 
 // ── PORTFOLIO — BULK MULTI-IMAGE UPLOAD ─────────────────
 var pbmImages=[];
-function openPBM(){
+function openPBM(presetGroup){
   pbmImages=[];
-  v('pbm-t','');v('pbm-group','');
+  v('pbm-t','');v('pbm-group',presetGroup||'');
   document.getElementById('pbm-catalog').value='ads';
   document.getElementById('pbm-c').value='digital';
   document.getElementById('pbm-f').value='';
-  renderBulkGroupChips('');
+  renderBulkGroupChips(presetGroup||'');
   renderPBMImgs();
   toggleBulkGroupField();
   document.getElementById('ov-port-bulk').classList.add('open');
+}
+async function renameGroup(oldName){
+  var newName=prompt('اكتب الاسم الجديد للمجموعة:',oldName==='متنوع'?'':oldName);
+  if(newName===null)return;
+  newName=newName.trim();
+  if(!newName){toast('اكتب اسم صحيح');return}
+  if(newName===oldName)return;
+  var ids=portfolio.filter(function(p){return p.catalog!=='marketing'&&(p.group_label||'متنوع')===oldName}).map(function(p){return p.id});
+  if(!ids.length)return;
+  var{error}=await sb.from('ao_portfolio').update({group_label:newName}).in('id',ids);
+  if(error){toast('❌ '+error.message);return}
+  await loadPort();updateStats();toast('✅ تم تغيير اسم المجموعة!');
 }
 function closePBM(){document.getElementById('ov-port-bulk').classList.remove('open')}
 function toggleBulkGroupField(){

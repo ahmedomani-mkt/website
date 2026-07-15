@@ -156,10 +156,10 @@ section{padding:clamp(56px,8vw,92px) 0}
 .pg-group{margin-bottom:34px}
 .pg-group:last-child{margin-bottom:0}
 .pg-group-title{font-size:14px;font-weight:700;color:var(--ink2);margin-bottom:14px;text-align:right;padding-right:14px;border-right:3px solid var(--red)}
-.pg-collage{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px}
-.pg-collage img{width:100%;aspect-ratio:1/1;object-fit:cover;display:block;border-radius:10px;transition:.25s;cursor:pointer}
-.pg-collage img:hover{opacity:.88;transform:scale(1.02)}
-@media(max-width:560px){.pg-collage{grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:6px}.pg-collage img{border-radius:7px}}
+.pg-collage{display:grid;grid-template-columns:repeat(3,1fr);gap:0}
+.pg-collage img{width:100%;aspect-ratio:1/1;object-fit:cover;display:block;transition:opacity .25s;cursor:pointer}
+.pg-collage img:hover{opacity:.85}
+@media(max-width:560px){.pg-collage{grid-template-columns:repeat(2,1fr)}}
 
 /* ══ COLLAGE LIGHTBOX ═══════════════════════════════ */
 .cg-lb-ov{position:fixed;inset:0;z-index:600;background:rgba(15,13,10,.9);display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .25s}
