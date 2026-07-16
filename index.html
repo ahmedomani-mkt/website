@@ -7,7 +7,7 @@
 <meta property="og:title" content="Ahmed Omani — تسويق وإعلان لقطاع السيارات">
 <meta property="og:description" content="شريكك المتخصص في الأوتوموتيف — شوف شغلنا وتصفح كتالوج الدعاية والإعلان وكتالوج التسويق">
 <meta property="og:type" content="website">
-<meta property="og:image" content="assets/og.png">
+<meta property="og:image" content="assets/logo.png">
 <link rel="icon" href="assets/logo.png" type="image/png" id="faviconLink">
 <title>Ahmed Omani — تسويق وإعلان للسيارات</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -811,19 +811,20 @@ function applyPageTexts(t){
   set('clTitle',t.cl_title);set('clSub',t.cl_sub);
 }
 
+function safeTrackId(id){return id&&/^[A-Za-z0-9_-]{1,64}$/.test(id)?id:null}
 function injectMetaPixel(id){
-  if(!id)return;
+  id=safeTrackId(id);if(!id)return;
   var s=document.createElement('script');
   s.innerHTML='!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version=\'2.0\';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,\'script\',\'https://connect.facebook.net/en_US/fbevents.js\');fbq(\'init\',\''+id+'\');fbq(\'track\',\'PageView\');';
   document.head.appendChild(s);
 }
 function injectGoogleTag(id){
-  if(!id)return;
-  var s=document.createElement('script');s.async=true;s.src='https://www.googletagmanager.com/gtag/js?id='+id;document.head.appendChild(s);
+  id=safeTrackId(id);if(!id)return;
+  var s=document.createElement('script');s.async=true;s.src='https://www.googletagmanager.com/gtag/js?id='+encodeURIComponent(id);document.head.appendChild(s);
   var s2=document.createElement('script');s2.innerHTML='window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag(\'js\',new Date());gtag(\'config\',\''+id+'\');';document.head.appendChild(s2);
 }
 function injectTikTokPixel(id){
-  if(!id)return;
+  id=safeTrackId(id);if(!id)return;
   var s=document.createElement('script');
   s.innerHTML='!function(w,d,t){w.TiktokAnalyticsObject=t;var ttq=w[t]=w[t]||[];ttq.methods=["page","track","identify","instances","debug","on","off","once","ready","alias","group","enableCookie","disableCookie"];ttq.setAndDefer=function(t,e){t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}};for(var i=0;i<ttq.methods.length;i++)ttq.setAndDefer(ttq,ttq.methods[i]);ttq.load=function(e){var i="https://analytics.tiktok.com/i18n/pixel/events.js";ttq._i=ttq._i||{};ttq._i[e]=[];var o=document.createElement("script");o.async=!0;o.src=i+"?sdkid="+e;var a=document.getElementsByTagName("script")[0];a.parentNode.insertBefore(o,a)};ttq.load(\''+id+'\');ttq.page();}(window,document,\'ttq\');';
   document.head.appendChild(s);
@@ -1046,7 +1047,7 @@ async function loadSite(){
     var pglist=(await sb.from('ao_pages').select('title,slug').eq('is_published',true).order('created_at')).data;
     if(pglist&&pglist.length)renderPagesLinks(pglist);
     initReveal();
-  }catch(e){revealHeroStats();console.log('Static fallback active')}
+  }catch(e){revealHeroStats()}
 }
 document.addEventListener('DOMContentLoaded',loadSite);
 })();

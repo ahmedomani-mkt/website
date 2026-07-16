@@ -1,52 +1,80 @@
 -- ============================================================
--- Ahmed Omani Website — Database Setup
--- افتح Supabase Dashboard → SQL Editor → الصق وشغّل
+-- Ahmed Omani Website — Database Schema Reference
+-- This is a best-effort snapshot for bootstrapping a FRESH copy of this
+-- project's schema (e.g. if migrating off the current shared Supabase
+-- project — see claude.md → Security Notes). It is NOT the source of
+-- truth for the live database; use the Supabase MCP `list_tables` /
+-- `get_advisors` tools (or the dashboard) to inspect the real live schema.
 -- ============================================================
 
--- SETTINGS (row واحدة ثابتة)
+-- SETTINGS (single row, id=1). No password column — admin auth is
+-- handled entirely by Supabase Auth (auth.users), never store a
+-- plaintext/hashed admin password in an app table again.
 CREATE TABLE IF NOT EXISTS ao_settings (
   id INTEGER PRIMARY KEY DEFAULT 1 CHECK (id = 1),
-  phone TEXT DEFAULT '+20 100 000 0000',
-  whatsapp TEXT DEFAULT '201000000000',
-  email TEXT DEFAULT 'info@ahmedomani.com',
+  phone TEXT DEFAULT '',
+  whatsapp TEXT DEFAULT '',
+  email TEXT DEFAULT '',
   meta_pixel_id TEXT DEFAULT '',
   google_tag_id TEXT DEFAULT '',
   tiktok_pixel_id TEXT DEFAULT '',
   facebook_url TEXT DEFAULT '',
   instagram_url TEXT DEFAULT '',
   tiktok_url TEXT DEFAULT '',
-  admin_password TEXT DEFAULT 'omani2025',
+  site_title TEXT DEFAULT '',
+  site_description TEXT DEFAULT '',
+  footer_text TEXT DEFAULT '',
+  logo_url TEXT DEFAULT '',
+  favicon_url TEXT DEFAULT '',
+  stats_data JSONB DEFAULT '[]',
+  page_texts JSONB DEFAULT '{}',
+  section_colors JSONB DEFAULT '{}',
+  global_colors JSONB DEFAULT '{}',
+  wa_digital TEXT DEFAULT '',
+  wa_offline TEXT DEFAULT '',
+  wa_full TEXT DEFAULT '',
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- HERO (row واحدة ثابتة)
+-- HERO (single row, id=1). title/subtitle are a legacy fallback used only
+-- when text_blocks is empty.
 CREATE TABLE IF NOT EXISTS ao_hero (
   id INTEGER PRIMARY KEY DEFAULT 1 CHECK (id = 1),
-  badge TEXT DEFAULT 'متخصصون في قطاع السيارات منذ 2015',
-  title TEXT DEFAULT 'شريكك في التسويق والدعاية لعالم الأوتوموتيف',
-  subtitle TEXT DEFAULT 'تسويق إلكتروني متكامل + دعاية وإعلان أوفلاين من يافطة مركزك لحد الكرت الشخصي',
-  btn1_text TEXT DEFAULT 'اكتشف خدماتنا',
-  btn2_text TEXT DEFAULT 'واتساب مباشر',
-  stat1_num TEXT DEFAULT '10+',
-  stat1_label TEXT DEFAULT 'سنوات خبرة في السوق المصري',
-  stat2_num TEXT DEFAULT '30+',
-  stat2_label TEXT DEFAULT 'عميل في قطاع السيارات',
-  stat3_num TEXT DEFAULT '500+',
-  stat3_label TEXT DEFAULT 'مشروع منجز',
-  stat4_num TEXT DEFAULT '2',
-  stat4_label TEXT DEFAULT 'خدمة متكاملة رقمي + أوفلاين',
+  badge TEXT DEFAULT '',
+  title TEXT DEFAULT '',
+  subtitle TEXT DEFAULT '',
+  text_blocks JSONB DEFAULT '[]', -- [{tag:'h1'|'h2'|'h3'|'p', text}]
+  bg_image_url TEXT DEFAULT '',
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- PORTFOLIO
+-- PORTFOLIO (ads collage + marketing catalog, split by `catalog`)
 CREATE TABLE IF NOT EXISTS ao_portfolio (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   title TEXT NOT NULL,
   description TEXT DEFAULT '',
+  catalog TEXT DEFAULT 'ads', -- 'ads' | 'marketing'
   category TEXT DEFAULT 'digital',
+  group_label TEXT, -- client/collection name; ads-collage groups by this on the live site
   stat_badge TEXT DEFAULT '',
   image_url TEXT DEFAULT '',
   tags TEXT[] DEFAULT '{}',
+  is_active BOOLEAN DEFAULT TRUE,
+  sort_order INTEGER DEFAULT 0,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- PRODUCTS (catalog.html / catalog-marketing.html / product.html)
+CREATE TABLE IF NOT EXISTS ao_products (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  title TEXT NOT NULL,
+  description TEXT DEFAULT '',
+  catalog TEXT DEFAULT 'ads', -- 'ads' | 'marketing'
+  category TEXT DEFAULT 'digital',
+  image_url TEXT DEFAULT '',
+  price NUMERIC,
+  price_note TEXT DEFAULT '',
+  features JSONB DEFAULT '[]',
   is_active BOOLEAN DEFAULT TRUE,
   sort_order INTEGER DEFAULT 0,
   created_at TIMESTAMPTZ DEFAULT NOW()
@@ -61,7 +89,20 @@ CREATE TABLE IF NOT EXISTS ao_clients (
   sort_order INTEGER DEFAULT 0
 );
 
--- FAQ
+-- BEFORE / AFTER showcase
+CREATE TABLE IF NOT EXISTS ao_before_after (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  client_name TEXT NOT NULL,
+  description TEXT DEFAULT '',
+  before_image_url TEXT DEFAULT '',
+  after_image_url TEXT DEFAULT '',
+  is_active BOOLEAN DEFAULT TRUE,
+  sort_order INTEGER DEFAULT 0
+);
+
+-- FAQ — feature removed from the live site. Table kept for history but
+-- intentionally has NO RLS policy at all (see below), so it's fully
+-- locked/orphaned rather than deleted.
 CREATE TABLE IF NOT EXISTS ao_faq (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   question TEXT NOT NULL,
@@ -70,7 +111,7 @@ CREATE TABLE IF NOT EXISTS ao_faq (
   sort_order INTEGER DEFAULT 0
 );
 
--- PAGES (صفحات ديناميكية)
+-- PAGES (generic published pages, page.html?slug=...)
 CREATE TABLE IF NOT EXISTS ao_pages (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   slug TEXT UNIQUE NOT NULL,
@@ -82,34 +123,78 @@ CREATE TABLE IF NOT EXISTS ao_pages (
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
+-- ── ADMIN USER ───────────────────────────────────────
+-- Create exactly ONE dedicated Supabase Auth user for this site's admin
+-- (do NOT gate write policies on "any authenticated user" if this project
+-- is ever shared with another app again — always pin to one specific uid).
+--
+-- insert into auth.users (
+--   instance_id, id, aud, role, email, encrypted_password,
+--   email_confirmed_at, created_at, updated_at,
+--   raw_app_meta_data, raw_user_meta_data,
+--   confirmation_token, recovery_token, email_change_token_new, email_change,
+--   is_sso_user, is_anonymous
+-- ) values (
+--   '00000000-0000-0000-0000-000000000000',
+--   gen_random_uuid(),           -- save this id, you'll need it below
+--   'authenticated', 'authenticated',
+--   'admin@example.com',
+--   crypt('CHOOSE_A_STRONG_PASSWORD', gen_salt('bf')),
+--   now(), now(), now(),
+--   '{"provider":"email","providers":["email"]}'::jsonb, '{}'::jsonb,
+--   '', '', '', '', false, false
+-- );
+-- insert into auth.identities (id, provider_id, user_id, identity_data, provider, created_at, updated_at)
+-- values (gen_random_uuid(), '<the id above>', '<the id above>',
+--   jsonb_build_object('sub','<the id above>','email','admin@example.com','email_verified',true),
+--   'email', now(), now());
+
 -- ── RLS ──────────────────────────────────────────────
+-- Replace '<ADMIN_UID>' everywhere below with the auth.users.id created above.
 ALTER TABLE ao_settings ENABLE ROW LEVEL SECURITY;
 ALTER TABLE ao_hero ENABLE ROW LEVEL SECURITY;
 ALTER TABLE ao_portfolio ENABLE ROW LEVEL SECURITY;
+ALTER TABLE ao_products ENABLE ROW LEVEL SECURITY;
 ALTER TABLE ao_clients ENABLE ROW LEVEL SECURITY;
-ALTER TABLE ao_faq ENABLE ROW LEVEL SECURITY;
+ALTER TABLE ao_before_after ENABLE ROW LEVEL SECURITY;
+ALTER TABLE ao_faq ENABLE ROW LEVEL SECURITY; -- no policies created for this one — fully locked
 ALTER TABLE ao_pages ENABLE ROW LEVEL SECURITY;
 
--- Public read + anon write (password gate في الـ UI)
-CREATE POLICY "ao_settings_all" ON ao_settings FOR ALL USING (true) WITH CHECK (true);
-CREATE POLICY "ao_hero_all" ON ao_hero FOR ALL USING (true) WITH CHECK (true);
-CREATE POLICY "ao_portfolio_all" ON ao_portfolio FOR ALL USING (true) WITH CHECK (true);
-CREATE POLICY "ao_clients_all" ON ao_clients FOR ALL USING (true) WITH CHECK (true);
-CREATE POLICY "ao_faq_all" ON ao_faq FOR ALL USING (true) WITH CHECK (true);
-CREATE POLICY "ao_pages_all" ON ao_pages FOR ALL USING (true) WITH CHECK (true);
+DO $$
+DECLARE
+  t text;
+  admin_id uuid := '<ADMIN_UID>';
+BEGIN
+  FOREACH t IN ARRAY ARRAY['ao_settings','ao_hero','ao_portfolio','ao_products','ao_clients','ao_before_after','ao_pages'] LOOP
+    EXECUTE format('CREATE POLICY %I ON public.%I FOR SELECT USING (true)', t || '_select', t);
+    EXECUTE format('CREATE POLICY %I ON public.%I FOR INSERT WITH CHECK (auth.uid() = %L)', t || '_insert', t, admin_id);
+    EXECUTE format('CREATE POLICY %I ON public.%I FOR UPDATE USING (auth.uid() = %L) WITH CHECK (auth.uid() = %L)', t || '_update', t, admin_id, admin_id);
+    EXECUTE format('CREATE POLICY %I ON public.%I FOR DELETE USING (auth.uid() = %L)', t || '_delete', t, admin_id);
+  END LOOP;
+END $$;
 
 -- ── STORAGE BUCKET ───────────────────────────────────
 INSERT INTO storage.buckets (id, name, public)
 VALUES ('ao-images', 'ao-images', true)
 ON CONFLICT (id) DO NOTHING;
 
-CREATE POLICY "ao_storage_all" ON storage.objects
-FOR ALL USING (bucket_id = 'ao-images') WITH CHECK (bucket_id = 'ao-images');
+-- Bucket is public, so object GET via the public URL bypasses these
+-- policies entirely. These only gate the storage API (list/upload/
+-- update/delete), which must stay admin-only.
+DO $$
+DECLARE admin_id uuid := '<ADMIN_UID>';
+BEGIN
+  EXECUTE format('CREATE POLICY ao_storage_select ON storage.objects FOR SELECT USING (bucket_id = ''ao-images'' AND auth.uid() = %L)', admin_id);
+  EXECUTE format('CREATE POLICY ao_storage_insert ON storage.objects FOR INSERT WITH CHECK (bucket_id = ''ao-images'' AND auth.uid() = %L)', admin_id);
+  EXECUTE format('CREATE POLICY ao_storage_update ON storage.objects FOR UPDATE USING (bucket_id = ''ao-images'' AND auth.uid() = %L) WITH CHECK (bucket_id = ''ao-images'' AND auth.uid() = %L)', admin_id, admin_id);
+  EXECUTE format('CREATE POLICY ao_storage_delete ON storage.objects FOR DELETE USING (bucket_id = ''ao-images'' AND auth.uid() = %L)', admin_id);
+END $$;
 
 -- ── SEED DATA ────────────────────────────────────────
 INSERT INTO ao_settings (id) VALUES (1) ON CONFLICT (id) DO NOTHING;
 INSERT INTO ao_hero (id) VALUES (1) ON CONFLICT (id) DO NOTHING;
 
+-- Real client list as of this writing — safe to re-seed on a fresh project.
 INSERT INTO ao_clients (name, sort_order) VALUES
 ('KSH',1),('Nakamichi',2),('CARiMUSiC',3),('AL OSTORA',4),('MB WORLD',5),
 ('DR.BM',6),('ALPINA',7),('EL BARRAMY',8),('Sound Power',9),('AUTO GO',10),
@@ -120,23 +205,6 @@ INSERT INTO ao_clients (name, sort_order) VALUES
 ('التوأم',31),('EL-Sherif',32),('الدمياطي',33),('EL NASR',34)
 ON CONFLICT DO NOTHING;
 
-INSERT INTO ao_faq (question, answer, sort_order) VALUES
-('هل تشتغلوا على مراكز الصيانة بس؟','لأ. بنشتغل مع كل قطاعات السيارات — مراكز صيانة، معارض سيارات، تجار قطع غيار، محلات اكسسوارات، وأي نشاط تجاري في عالم الأوتوموتيف.',1),
-('إيه الفرق بين الحزمة الكاملة والخدمة الفردية؟','الحزمة الكاملة بتاخد فيها تسويق متكامل (سوشيال + إعلانات + تصميم + تصوير + تقارير) بسعر أفضل وتنسيق كامل. الخدمة الفردية للي محتاج حاجة بعينها.',2),
-('إيه اللي بيشمله تجهيز الدعاية والإعلان الكامل للمركز؟','الحزمة بتشمل: يافطة وواجهة، كروت شخصية، Job Orders، يوني فورم، أعلام وبنرات، دواسات، فواحات — وكلها بهوية بصرية موحدة. وكمان بنقدر نساعدك في السيستم الإداري.',3),
-('هل ممكن آخد الدعاية الأوفلاين بس من غير تسويق إلكتروني؟','أكيد. الخدمتين منفصلتين تمامًا. ممكن تاخد أي منهم منفردًا.',4),
-('كام بيستغرق تنفيذ حزمة الدعاية الكاملة؟','من 10 لـ 21 يوم عمل حسب حجم الطلب ومراحل الموافقة على التصميم.',5),
-('إيه هو السيستم الإداري اللي بتقدموه للمراكز؟','بنساعدك تنظم شغل المركز من خلال نماذج Job Order احترافية، جداول المواعيد، فواتير وإيصالات بهوية المركز.',6),
-('هل بتشتغلوا برا القاهرة؟','أيوه، بنشتغل مع عملاء في كل أنحاء مصر. التواصل والتصميم أونلاين والمطبوعات بنوصلها لأي محافظة.',7),
-('ليه أختارك بدل أي مكتب إعلانات عادي؟','لأننا متخصصين في قطاع السيارات بس — مش وكالة عامة. 10 سنين في السوق ده عارفين فيه احتياجات العميل ومنافسيه.',8),
-('عايز أعرف الأسعار — بيبدأ من إيه؟','الأسعار بتختلف حسب حجم المشروع والخدمات المطلوبة. تواصل معنا وهنعملك عرض سعر خلال 24 ساعة.',9)
-ON CONFLICT DO NOTHING;
-
-INSERT INTO ao_portfolio (title, description, category, stat_badge, tags, sort_order) VALUES
-('حملة Meta — مركز خدمة سيارات','زيادة الحجوزات 320% خلال 30 يوم بميزانية $2,000','digital','+320% مبيعات',ARRAY['Meta Ads','Service Center'],1),
-('حملة Google — قطع غيار','1,200 ليد في شهر واحد بتكلفة $1.2 للـ lead','digital','1,200 Lead',ARRAY['Google Ads','Auto Parts'],2),
-('سوشيال ميديا — معرض سيارات','نمو 50,000 متابع عضوي في 3 أشهر','digital','50K متابع',ARRAY['Social Media','Showroom'],3),
-('حزمة هوية كاملة — مركز صيانة','يافطات + يوني فورم + كروت + job orders بهوية موحدة','print',NULL,ARRAY['Print','Branding'],4),
-('يوني فورم ودواسات — سلسلة مراكز','تجهيز كامل لـ 3 فروع بهوية موحدة','print',NULL,ARRAY['Uniform','Floor Mats'],5),
-('هوية كاملة — معرض سيارات','لوجو + هوية بصرية متكاملة + تطبيق على كل المواد','branding',NULL,ARRAY['Logo','Brand Identity'],6)
-ON CONFLICT DO NOTHING;
+-- Portfolio, products, before/after, and pages all contain real client work
+-- and are not reproduced here as fabricated seed data — populate them
+-- through admin.html after the schema is created.

@@ -2,127 +2,91 @@
 
 ## Project Overview
 
-Complete B2B automotive marketing portfolio website for Ahmed Omani (automotive marketing specialist in Egypt). Single-file architecture with dynamic content management via Supabase.
+B2B automotive marketing portfolio/catalog website for Ahmed Omani (automotive marketing specialist in Egypt). Static multi-page site (no build step) with dynamic content managed through Supabase and edited via a dedicated admin CMS.
 
-- **Live Site**: Deployed on Vercel with auto-deploy from GitHub branch `claude/portfolio-website-redesign-y8p4kd`
-- **Tech Stack**: HTML/CSS/JS (no build tools) + Supabase + Vercel
-- **Language**: Arabic (RTL) with Noto Kufi Arabic font
-- **Branding**: Red accent (#E8192C), dark/light hybrid theme
+- **Live Site**: Deployed on Vercel, auto-deploy from GitHub branch `claude/portfolio-website-redesign-y8p4kd`
+- **Tech Stack**: Plain HTML/CSS/JS (no framework, no bundler) + Supabase (Postgres + Storage + Auth) + Vercel
+- **Language**: Arabic (RTL) with Noto Kufi Arabic / Rubik fonts
+- **Branding**: Red accent (`#E8192C`), light theme on the public site, light/dark toggle in admin
 
 ---
 
 ## Key Files
 
-### Frontend (Static)
-- **`index.html`** — Main landing page with hero, services, portfolio, testimonials, clients, FAQ, contact
-  - Dynamic content loading from Supabase
-  - Fixed sidebar (desktop) + responsive mobile nav
-  - Published pages auto-inject into nav + footer
-  - IDs: `#navLinks`, `#mobileNavList`, `#ftLinks` for dynamic content
-
-- **`page.html`** — Dynamic page template for user-created pages
-  - URL: `page.html?slug={slug}`
-  - Loads published pages from `ao_pages` table
-  - Render functions: `renderHeroSec()`, `renderTextSec()`, `renderCtaSec()`
-  - **Critical Fix**: Render functions read from `s.data||s` (nested structure) + normalize `btn_link`/`btn_href` and `body`/`content` field names
-
-- **`admin.html`** — Admin CMS panel
-  - Sidebar with grouped navigation (240px, SVG icons)
-  - Dashboard with colored stat cards
-  - Sections: hero, stats, features, WA messages, portfolio, clients, testimonials, FAQ, pages, page texts, settings
-  - Client logo upload to Supabase Storage (`ao-images/clients/`)
-  - Pages quick-publish toggle
+### Frontend (Static, public)
+- **`index.html`** — Lean landing page: hero (flexible H1/H2/H3/paragraph text blocks + optional bg image), trust stats bar, two catalog link-cards, "أعمالنا في الدعاية والإعلان" (ads portfolio, grouped into full-bleed horizontal auto-scroll tracks per client group), "أعمالنا في التسويق" (marketing portfolio cards), "قبل وبعد" before/after showcase, clients grid, footer. Published `ao_pages` rows auto-inject into nav/footer.
+- **`catalog.html`** — Ads/offline-marketing product catalog with cart + WhatsApp checkout.
+- **`catalog-marketing.html`** — Digital-marketing service catalog, same cart/checkout pattern.
+- **`product.html`** — Single product detail page (`product.html?id={uuid}`), image gallery, WhatsApp order.
+- **`page.html`** — Generic published-page template (`page.html?slug={slug}`), renders `ao_pages.sections` (hero/text/cta blocks).
+- **`admin.html`** — Admin CMS. Real Supabase Auth login (see Security below). Sections: hero, stats bar, ads/marketing portfolio (grouped by `group_label`, with group rename + bulk multi-image upload), products catalog, clients, before/after, pages, section text overrides, section colors, settings.
 
 ### Assets
-- **`assets/logo.svg`** — Professional AO logo (SVG, used as favicon + footer)
-- **`assets/og.png`** — OG image for social sharing (not yet created)
+- **`assets/logo.png`** — Brand logo, used as favicon, nav/footer logo, and `og:image`.
+- **`assets/logo.svg`** — Vector variant (kept for potential future use; not currently referenced by any page).
+
+### SEO / infra
+- **`robots.txt`**, **`sitemap.xml`** — basic crawl directives (admin.html disallowed).
+- **`vercel.json`** — security response headers (CSP, X-Frame-Options, etc.) applied to every route.
 
 ---
 
-## Database (Supabase)
+## Database (Supabase project `knwnviglquxvvwknxbqa`)
+
+⚠️ **This Supabase project is shared with an unrelated app** ("Soholi" — workspace/activation functions and several real user accounts unrelated to this site live in the same project). Never assume every table/function/user in this project belongs to this website. This site only owns the `ao_*` tables and the `ao-images` storage bucket.
+
+### RLS model
+Every `ao_*` table: **public SELECT**, **writes (INSERT/UPDATE/DELETE) restricted to one specific authenticated admin user** (`auth.uid() = 'cd67eb45-8335-4160-a04a-67a91e4c4fc0'`), not "any authenticated user" — because other, unrelated real users already exist in this shared project. Same pattern on `storage.objects` for the `ao-images` bucket (bucket itself is `public=true`, so public image URLs still work without auth; only the storage *API* — list/upload/update/delete — is admin-gated).
+
+`ao_faq` is intentionally left with **zero policies** (RLS enabled, no policy = default-deny for everyone including admin) — the FAQ feature was removed from the live site; the table/data still exist but are fully locked down rather than deleted.
 
 ### Tables
 
-All tables have RLS enabled with `FOR ALL USING (true)` (permissive, anon can read/write).
+#### `ao_settings` (single row, id=1)
+- `whatsapp`, `phone`, `email` — contact info
+- `site_title`, `site_description`, `footer_text`
+- `meta_pixel_id`, `google_tag_id`, `tiktok_pixel_id` — tracking pixel IDs (validated client-side against `/^[A-Za-z0-9_-]{1,64}$/` in `safeTrackId()` before being interpolated into an injected `<script>` — do not remove that check, it's the only thing standing between a bad value in this table and stored XSS on every visitor)
+- `facebook_url`, `instagram_url`, `tiktok_url`
+- `stats_data` (jsonb) — trust-stats bar entries
+- `page_texts` (jsonb) — section heading overrides
+- `section_colors`, `global_colors` (jsonb)
+- `logo_url`, `favicon_url`
+- `wa_digital`, `wa_offline`, `wa_full` — WhatsApp message templates
+- **No password column** — admin auth is handled entirely by Supabase Auth (`auth.users`), not this table.
 
-#### `ao_settings`
-Central configuration table. Columns:
-- `whatsapp` (TEXT) — WhatsApp number for all WA buttons
-- `phone`, `email` (TEXT) — Contact info in footer
-- `site_title`, `site_description` (TEXT) — Meta tags
-- `footer_text` (TEXT) — Footer copyright text
-- `meta_pixel_id`, `google_tag_id`, `tiktok_pixel_id` (TEXT) — Tracking pixels
-- `stats_data` (JSONB) — Array of stats: `[{icon, num, label}]`
-- `features_data` (JSONB) — Array of features: `[{label, icon, title, desc}]`
-- `testimonials_data` (JSONB) — Array of testimonials: `[{name, title, quote, avatar}]`
-- `page_texts` (JSONB) — Section headings: `{srv_title, srv_sub, port_title, cl_title, cl_sub, faq_title, faq_sub, ct_title, ct_desc}`
-- `wa_digital`, `wa_offline`, `wa_full` (TEXT) — WA message templates for each service
+#### `ao_hero` (single row, id=1)
+- `badge`, `title`, `subtitle` (legacy fallback fields, still read if `text_blocks` is empty)
+- `text_blocks` (jsonb) — ordered array of `{tag:'h1'|'h2'|'h3'|'p', text}`, the primary hero content source
+- `bg_image_url`
+
+#### `ao_portfolio`
+- `title`, `image_url`, `catalog` (`'ads'|'marketing'`), `category`, `group_label` (client/collection grouping for the ads collage — index.html renders one horizontal track per distinct `group_label`), `stat_badge`, `description`, `is_active`, `sort_order`
+
+#### `ao_products`
+- Product catalog rows: `title`, `image_url`, `price`, `price_note`, `category`, `catalog`, `description`, `features` (jsonb), `is_active`, `sort_order`
+
+#### `ao_clients`
+- `name`, `logo_url`, `is_active`, `sort_order`
+
+#### `ao_before_after`
+- `client_name`, `description`, `before_image_url`, `after_image_url`, `is_active`, `sort_order`
 
 #### `ao_pages`
-User-created pages. Columns:
-- `id` (UUID, PK)
-- `title`, `slug` (TEXT)
-- `meta_description` (TEXT)
-- `sections` (JSONB) — Array of sections: `[{type: 'hero'|'text'|'cta', data: {...}}]`
-- `is_published` (BOOLEAN) — Default: `false` (toggle in admin)
-- `created_at`, `updated_at` (TIMESTAMP)
+- `title`, `slug`, `meta_description`, `sections` (jsonb array of `{type:'hero'|'text'|'cta', data:{...}}`), `is_published`
 
-#### `ao_portfolio`, `ao_clients`, `ao_faq`
-Static seed data. Columns:
-- `id`, `title`, `description`, `is_active`, `sort_order`, etc.
-- Portfolio: `category`, `image_url`, `stat_badge`, `tags`
-- Clients: `name`, `logo_url`
-- FAQ: `question`, `answer`
-
-#### `ao_hero`
-Hero section text (optional, can override in admin). Columns:
-- `badge`, `title`, `subtitle` (TEXT)
-- `btn1_text`, `btn2_text` (TEXT)
+#### `ao_faq` — orphaned, locked (see RLS note above), not read by any live page.
 
 ### Storage
-- **Bucket**: `ao-images` (public)
-- **Paths**:
-  - `clients/{logo_name}` — Client logos uploaded from admin
+- **Bucket**: `ao-images` (public read via direct object URL; API access — list/upload/update/delete — restricted to the admin user)
+- **Paths**: `portfolio/`, `products/`, `clients/`, `hero/`, `branding/`
 
 ---
 
-## Critical Bugs (Fixed)
+## Authentication
 
-### Bug 1: Page Content Not Rendering ✅
-**Cause**: `page.html` render functions read directly from `s.title`, `s.body` but admin saves nested in `s.data.title`, `s.data.content`.
+Admin login (`admin.html`) uses real **Supabase Auth** (`sb.auth.signInWithPassword`), not a client-side password comparison. There is one dedicated admin account, created specifically for this site (not shared with the other app in this Supabase project). To change the admin password, log into admin.html and use the "تغيير كلمة المرور" field in Settings — it calls `sb.auth.updateUser({password})`, a real server-side password change.
 
-**Fix** (page.html):
-```js
-function renderHeroSec(s){
-  var d = s.data || s;           // Read from nested structure
-  var btnHref = d.btn_href || d.btn_link || '';  // Normalize field name
-  // Use d.title, d.subtitle, btnHref instead of s.*
-}
-```
-
-### Bug 2: Pages Not in Header Nav ✅
-**Cause**: `renderPagesLinks()` only added to footer, not nav.
-
-**Fix** (index.html):
-```html
-<ul class="nav-links" id="navLinks">...</ul>
-<ul id="mobileNavList">...</ul>
-```
-
-Updated `renderPagesLinks()` to inject into all three targets:
-```js
-function renderPagesLinks(list){
-  var ft = document.getElementById('ftLinks');
-  var nl = document.getElementById('navLinks');
-  var mn = document.getElementById('mobileNavList');
-  list.forEach(function(p){
-    var href = 'page.html?slug=' + encodeURIComponent(p.slug);
-    if(ft) ft.appendChild(a);      // Footer
-    if(nl) nl.appendChild(li);     // Desktop nav
-    if(mn) mn.appendChild(li);     // Mobile nav
-  });
-}
-```
+If the admin session is lost/locked, a new admin user can be provisioned by inserting into `auth.users`/`auth.identities` with a `pgcrypto`-hashed password and updating the four `auth.uid() = '...'` literals in the RLS policies (see migration `restrict_ao_tables_to_admin_writes` and `restrict_ao_images_storage_to_admin`) to the new user's id — or, preferably, use Supabase's dashboard/Auth API to manage the existing account rather than hand-rolling SQL again.
 
 ---
 
@@ -130,151 +94,80 @@ function renderPagesLinks(list){
 
 ### Local Testing
 ```bash
-# No build step required — serve index.html directly
+# No build step required — serve any .html directly
 python -m http.server 8000
-# Visit http://localhost:8000
+# Visit http://localhost:8000/index.html
 ```
+Local testing hits the real, live Supabase project (there's no separate dev DB) — be mindful that writes from a local session affect production data.
 
 ### Making Changes
-1. Edit `.html` files locally
-2. Test with live Supabase (real DB)
-3. Commit to `claude/portfolio-website-redesign-y8p4kd`
-4. Push to GitHub — auto-deploys to Vercel
-
-### Adding Features
-- New sections/components: Edit `index.html` HTML + CSS
-- New admin controls: Add form inputs + JS handlers in `admin.html`
-- New Supabase fields: Update table schema in `setup.sql`, then apply via Supabase dashboard or MCP tools
+1. Edit `.html` files locally.
+2. Test against live Supabase.
+3. Commit to `claude/portfolio-website-redesign-y8p4kd`.
+4. Push to GitHub — Vercel auto-deploys.
+5. New Supabase columns/tables: apply via migration (Supabase MCP `apply_migration` or the dashboard), then update this file and `setup.sql`.
 
 ---
 
 ## Design & Styling
 
-### Color Palette
+### Color Palette (public site)
 ```css
---red: #E8192C              /* Primary action, accent */
---red-d: #C0111F            /* Hover state */
---red-a: rgba(232,25,44,.1) /* Background tint */
---black: #0A0A0A            /* Dark mode bg */
---white: #FFFFFF            /* Text, cards */
---text2: #555555            /* Secondary text */
---text3: #999999            /* Tertiary text */
+--red: #E8192C
+--red-d: #C0111F
 ```
+Admin panel uses a separate CSS-custom-property theme system with a `:root[data-theme="light"]` override block for its light/dark toggle.
 
 ### Layout
-- **Desktop** (≥768px): Fixed left sidebar (62px) + full nav + 2-col layouts
-- **Tablet** (≥600px): Single column, no sidebar, collapsed nav
-- **Mobile**: Single column, hamburger menu, stacked buttons
-- **Container**: `max-width: 1200px` centered with 5% padding
+- RTL (`dir="rtl"`), mobile-first responsive breakpoints at 768px/560px.
+- `.container` centers content at a constrained max-width; a few elements (the ads-portfolio tracks) deliberately break out to the full viewport edge for a full-bleed slider look.
 
 ### Typography
-- Font: Noto Kufi Arabic (wght 400–900)
-- Headings: 900 weight, clamp() for fluid sizing
-- Body: 400–600 weight, 1.8–1.9 line height
-
-### Animations
-- **Entrance**: `fade-up` class with IntersectionObserver (300ms delay)
-- **Hover**: Transform + shadow on buttons, cards
-- **Scroll**: Fixed sidebar active state follows scroll position
-- **GSAP**: Skill available for advanced animations (installed but not yet used)
+- Public site: Rubik. Admin: Noto Kufi Arabic.
 
 ---
 
 ## WhatsApp Integration
 
-Centralized WhatsApp number in `_waNum` variable. Updated dynamically from Supabase `ao_settings.whatsapp`.
-
-**Message Templates** (in `ao_settings`):
-- `wa_digital` — Service inquiry: Digital marketing
-- `wa_offline` — Service inquiry: Offline advertising
-- `wa_full` — Service inquiry: Full package
-
-**Button Locations**:
-- Hero section call-to-action
-- Service pillar CTAs
-- Contact section WA options
-- Floating WA button (bottom right)
-- Footer social links
+Centralized WhatsApp number in `_waNum`, loaded from `ao_settings.whatsapp`. Message templates (`wa_digital`, `wa_offline`, `wa_full`) live in the same table. Buttons: hero CTAs, catalog checkout, floating WA button, footer.
 
 ---
 
 ## Deployment
 
-### GitHub → Vercel
-- Branch: `claude/portfolio-website-redesign-y8p4kd`
-- Auto-deploy enabled
-- Latest deployment: `dpl_GpCr6uk6szna2SCcpiPnnMuPfVMJ`
-
-### Vercel Config
-- No build step required
-- Framework: Static HTML
-- Environment: Node 24.x
+- **Branch**: `claude/portfolio-website-redesign-y8p4kd` → Vercel auto-deploy.
+- **Vercel project**: `website` (no custom domain attached as of this writing; production alias is `website-mu-umber.vercel.app`). If a custom domain is added later, update `robots.txt`'s `Sitemap:` line and `sitemap.xml`'s `<loc>` values to match.
+- No build step; framework: static HTML; Node 24.x.
+- `vercel.json` adds security headers (CSP, X-Frame-Options, X-Content-Type-Options, Referrer-Policy, Permissions-Policy) to every response.
 
 ---
 
 ## Known Limitations & TODOs
 
-### Not Yet Implemented
-- [ ] `assets/og.png` — Create OG image for social sharing
-- [ ] Contact form — Currently all contact via WhatsApp only
-- [ ] Blog/News section — Not in scope
-- [ ] Analytics dashboard — Supabase logs only
-- [ ] Email notifications — WhatsApp only
-- [ ] Multi-language — Arabic only
-
-### Nice-to-Haves
-- [ ] Page slug validation (alphanumeric only)
-- [ ] Bulk client logo upload
-- [ ] Portfolio image optimization (next/image)
-- [ ] Service-specific landing pages (e.g., `/services/digital`)
-- [ ] Client testimonial form (public submission)
-- [ ] SEO sitemap + robots.txt
-
----
-
-## Troubleshooting
-
-### Pages not showing content?
-1. Check `ao_pages` table — ensure `sections` JSON is valid
-2. Verify `is_published = true`
-3. Inspect page.html render functions — look for `s.data||s` fallback
-
-### Pages not in nav?
-1. Verify `#navLinks` and `#mobileNavList` exist in index.html
-2. Check `renderPagesLinks()` is called in `loadSite()`
-3. Supabase query: `SELECT title, slug FROM ao_pages WHERE is_published=true`
-
-### WhatsApp buttons broken?
-1. Check `_waNum` value in console
-2. Verify `ao_settings.whatsapp` is set in Supabase
-3. Test URL: `https://wa.me/{number}?text={message}`
-
-### Supabase not loading?
-1. Check network tab in DevTools
-2. Verify anon key in `SB_KEY` (should match `.env` if exists)
-3. Check RLS policies — should be `FOR ALL USING (true)`
+- Deleting a portfolio/product/client row only deletes the DB row, not the underlying Supabase Storage object — uploaded images become orphaned in storage over time (harmless, but wastes storage quota).
+- No contact form — WhatsApp only.
+- Arabic only (no i18n).
+- `setup.sql` is a best-effort reference snapshot of the schema, not a source of truth — the live Supabase schema (via `list_tables`/`get_advisors` MCP tools) is authoritative.
 
 ---
 
 ## Security Notes
 
-- **Supabase Anon Key**: Embedded in HTML (intentional for static site, uses RLS for auth)
-- **RLS Policies**: All permissive (`USING (true)`) — data is public
-- **Client Uploads**: Stored in public bucket, validated by file extension
-- **Admin Panel**: No authentication (assumed internal use only)
+- **Supabase anon key**: embedded in every page's HTML (standard for a Supabase-backed static site) — safe *only* because RLS enforces public-read/admin-write on every table (see RLS model above). Any new `ao_*` table must get the same treatment (public select policy + admin-only insert/update/delete policies keyed to the specific admin `auth.uid()`) — never leave a new table on a default-allow or `USING(true)` policy.
+- **Admin auth**: real Supabase Auth session (JWT), not a client-side secret comparison. Do not reintroduce a password stored in a plain `ao_settings` column or a hardcoded fallback password in `admin.html` — both existed historically and were both exploitable (RLS read + `sessionStorage` gate had no server-side check at all).
+- **Tracking pixel IDs**: user-editable via admin Settings, then interpolated into an inline `<script>` on every public page load. `safeTrackId()` (defined in `index.html`, `catalog.html`, `catalog-marketing.html`, `product.html`) must run before any pixel ID is used this way — it's the last line of defense if `ao_settings` write access were ever compromised again.
+- **Storage bucket** `ao-images` is public for object *reads* (that's required for image URLs to render) but the storage API itself (listing, uploading, deleting) is admin-gated — don't loosen this back to a blanket policy.
+- **Shared Supabase project**: this project also hosts an unrelated app's tables/functions/users. Do not assume `list_tables`/`get_advisors` output is exclusively about this site — filter to `ao_*` and this site's known storage bucket before acting on any finding. Migrating this site to its own dedicated Supabase project would remove this risk entirely but hasn't been done (would require re-pointing `SB_URL`/`SB_KEY` in six files, migrating all `ao_*` data and the `ao-images` bucket, and re-testing everything) — worth doing eventually, but is a deliberate, larger decision rather than something to do incidentally.
 
 ---
 
 ## Getting Started (New Dev)
 
-1. **Clone & install**: `git clone ... && cd website`
-2. **Run locally**: `python -m http.server 8000` → `localhost:8000`
-3. **Edit**:
-   - Landing page: `index.html`
-   - New pages template: `page.html`
-   - Admin CMS: `admin.html`
-4. **Test with live Supabase**: All changes sync in real-time
-5. **Commit & push**: Vercel deploys automatically
+1. **Clone**: `git clone ... && cd website`
+2. **Run locally**: `python -m http.server 8000` → `localhost:8000/index.html`
+3. **Edit**: landing page `index.html`, catalogs `catalog.html`/`catalog-marketing.html`/`product.html`, generic pages `page.html`, admin CMS `admin.html`.
+4. **Test with live Supabase** — there is no separate dev database.
+5. **Commit & push** to `claude/portfolio-website-redesign-y8p4kd` — Vercel deploys automatically.
 
 ---
 
@@ -282,17 +175,22 @@ Centralized WhatsApp number in `_waNum` variable. Updated dynamically from Supab
 
 ```
 website/
-├── index.html           Main landing page
-├── page.html           Dynamic page template
-├── admin.html          Admin CMS panel
-├── setup.sql           Database schema (reference only)
-├── claude.md           This file
-├── .agents/
-│   └── skills/
-│       └── gsap-animated-frontend/  GSAP animation skill
-├── skills-lock.json    Skill dependencies
+├── index.html              Main landing page
+├── catalog.html             Ads/offline catalog + cart
+├── catalog-marketing.html   Digital-marketing catalog + cart
+├── product.html             Single product detail page
+├── page.html                Generic published-page template
+├── admin.html               Admin CMS (Supabase Auth-gated)
+├── robots.txt
+├── sitemap.xml
+├── vercel.json               Security headers config
+├── setup.sql                 Best-effort schema reference (not authoritative)
+├── claude.md                 This file
+├── .agents/skills/gsap-animated-frontend/
+├── skills-lock.json
 └── assets/
-    └── logo.svg        Brand logo
+    ├── logo.png              Brand logo (favicon, og:image, nav/footer)
+    └── logo.svg
 ```
 
 ---
@@ -301,5 +199,5 @@ website/
 
 - **Client**: Ahmed Omani (ahmedomani.mkt@gmail.com)
 - **WhatsApp**: +201152501056
-- **Supabase Project**: knwnviglquxvvwknxbqa
+- **Supabase Project**: `knwnviglquxvvwknxbqa` (shared with an unrelated app — see Security Notes)
 - **Vercel Team**: ahmed-omani-s-projects
