@@ -31,12 +31,12 @@ B2B automotive marketing portfolio/catalog website for Ahmed Omani (automotive m
 
 ---
 
-## Database (Supabase project `knwnviglquxvvwknxbqa`)
+## Database (Supabase project `lhunamvderddsplishtg`)
 
-⚠️ **This Supabase project is shared with an unrelated app** ("Soholi" — workspace/activation functions and several real user accounts unrelated to this site live in the same project). Never assume every table/function/user in this project belongs to this website. This site only owns the `ao_*` tables and the `ao-images` storage bucket.
+This is a **dedicated Supabase project for this website only** — it replaced an earlier setup where the site's tables lived inside a shared "Soholi Store" project (that project also hosted an unrelated app's tables/functions/real users). The old project is still reachable at `knwnviglquxvvwknxbqa` and its `ao-images` storage bucket is still referenced by some existing image URLs (see Storage note below), but no new writes should ever target it.
 
 ### RLS model
-Every `ao_*` table: **public SELECT**, **writes (INSERT/UPDATE/DELETE) restricted to one specific authenticated admin user** (`auth.uid() = 'cd67eb45-8335-4160-a04a-67a91e4c4fc0'`), not "any authenticated user" — because other, unrelated real users already exist in this shared project. Same pattern on `storage.objects` for the `ao-images` bucket (bucket itself is `public=true`, so public image URLs still work without auth; only the storage *API* — list/upload/update/delete — is admin-gated).
+Every `ao_*` table: **public SELECT**, **writes (INSERT/UPDATE/DELETE) restricted to one specific authenticated admin user** (`auth.uid() = '0001f508-792e-44e3-9cc8-9f7a54c29765'`), not "any authenticated user" — keep this pattern even though this project is no longer shared, since it's still meaningfully safer than a blanket authenticated-role check. Same pattern on `storage.objects` for the `ao-images` bucket (bucket itself is `public=true`, so public image URLs still work without auth; only the storage *API* — list/upload/update/delete — is admin-gated).
 
 `ao_faq` is intentionally left with **zero policies** (RLS enabled, no policy = default-deny for everyone including admin) — the FAQ feature was removed from the live site; the table/data still exist but are fully locked down rather than deleted.
 
@@ -63,7 +63,7 @@ Every `ao_*` table: **public SELECT**, **writes (INSERT/UPDATE/DELETE) restricte
 - `title`, `image_url`, `catalog` (`'ads'|'marketing'`), `category`, `group_label` (client/collection grouping for the ads collage — index.html renders one horizontal track per distinct `group_label`), `stat_badge`, `description`, `is_active`, `sort_order`
 
 #### `ao_products`
-- Product catalog rows: `title`, `image_url`, `price`, `price_note`, `category`, `catalog`, `description`, `features` (jsonb), `is_active`, `sort_order`
+- Product catalog rows: `title`, `image_url`, `price`, `price_note`, `category`, `catalog`, `description`, `details` (text), `images` (jsonb array of extra gallery URLs), `is_active`, `sort_order`
 
 #### `ao_clients`
 - `name`, `logo_url`, `is_active`, `sort_order`
@@ -157,7 +157,7 @@ Centralized WhatsApp number in `_waNum`, loaded from `ao_settings.whatsapp`. Mes
 - **Admin auth**: real Supabase Auth session (JWT), not a client-side secret comparison. Do not reintroduce a password stored in a plain `ao_settings` column or a hardcoded fallback password in `admin.html` — both existed historically and were both exploitable (RLS read + `sessionStorage` gate had no server-side check at all).
 - **Tracking pixel IDs**: user-editable via admin Settings, then interpolated into an inline `<script>` on every public page load. `safeTrackId()` (defined in `index.html`, `catalog.html`, `catalog-marketing.html`, `product.html`) must run before any pixel ID is used this way — it's the last line of defense if `ao_settings` write access were ever compromised again.
 - **Storage bucket** `ao-images` is public for object *reads* (that's required for image URLs to render) but the storage API itself (listing, uploading, deleting) is admin-gated — don't loosen this back to a blanket policy.
-- **Shared Supabase project**: this project also hosts an unrelated app's tables/functions/users. Do not assume `list_tables`/`get_advisors` output is exclusively about this site — filter to `ao_*` and this site's known storage bucket before acting on any finding. Migrating this site to its own dedicated Supabase project would remove this risk entirely but hasn't been done (would require re-pointing `SB_URL`/`SB_KEY` in six files, migrating all `ao_*` data and the `ao-images` bucket, and re-testing everything) — worth doing eventually, but is a deliberate, larger decision rather than something to do incidentally.
+- **Image URLs from the old project**: some `image_url`/`logo_url` values still point at the old `knwnviglquxvvwknxbqa.supabase.co` bucket (images weren't re-uploaded during the project migration, only the database was). Any *new* upload through admin.html lands in the current project's bucket automatically — this only affects images uploaded before the migration.
 
 ---
 
@@ -199,5 +199,5 @@ website/
 
 - **Client**: Ahmed Omani (ahmedomani.mkt@gmail.com)
 - **WhatsApp**: +201152501056
-- **Supabase Project**: `knwnviglquxvvwknxbqa` (shared with an unrelated app — see Security Notes)
+- **Supabase Project**: `lhunamvderddsplishtg` (dedicated to this site)
 - **Vercel Team**: ahmed-omani-s-projects
