@@ -1592,11 +1592,13 @@ function resizeImageFile(file,maxDim,quality){
     reader.readAsDataURL(file);
   });
 }
-function uploadWithProgress(bucket,path,file,onProgress){
+async function uploadWithProgress(bucket,path,file,onProgress){
+  var{data:sess}=await sb.auth.getSession();
+  var token=(sess&&sess.session&&sess.session.access_token)||SB_KEY;
   return new Promise(function(resolve,reject){
     var xhr=new XMLHttpRequest();
     xhr.open('POST',SB_URL+'/storage/v1/object/'+bucket+'/'+path);
-    xhr.setRequestHeader('Authorization','Bearer '+SB_KEY);
+    xhr.setRequestHeader('Authorization','Bearer '+token);
     xhr.setRequestHeader('apikey',SB_KEY);
     xhr.setRequestHeader('x-upsert','true');
     xhr.setRequestHeader('Content-Type',file.type||'application/octet-stream');
