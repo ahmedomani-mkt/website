@@ -33,6 +33,7 @@ CREATE TABLE IF NOT EXISTS ao_settings (
   wa_digital TEXT DEFAULT '',
   wa_offline TEXT DEFAULT '',
   wa_full TEXT DEFAULT '',
+  show_marketing_portfolio BOOLEAN DEFAULT TRUE,
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 

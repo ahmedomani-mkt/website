@@ -1033,6 +1033,7 @@ async function loadSite(){
       if(cfg.page_texts)applyPageTexts(cfg.page_texts);
       if(cfg.global_colors)applyGlobalColors(cfg.global_colors);
       if(cfg.section_colors)applySectionColors(cfg.section_colors);
+      if(cfg.show_marketing_portfolio===false){var pm=document.getElementById('portfolioMarketing');if(pm)pm.style.display='none';}
       renderSocial(cfg);
     }
     var hero=(await sb.from('ao_hero').select('*').single()).data;

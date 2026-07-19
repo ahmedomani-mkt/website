@@ -736,6 +736,15 @@ try{
         </div>
       </div>
       <div class="card">
+        <div class="card-header"><div class="card-title"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/></svg>ظهور الأقسام</div></div>
+        <div class="field">
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer;text-transform:none;letter-spacing:0;font-size:13px;font-weight:600;color:var(--w2)">
+            <input type="checkbox" id="s-show-mkt-port" checked> إظهار قسم "أعمالنا في التسويق" في الموقع
+          </label>
+          <div class="field-hint">لو مقفول، القسم ده هيتخفي بالكامل من الصفحة الرئيسية لحد ما تفعّله تاني — مفيد لو لسه مفيش أعمال حقيقية تتعرض فيه.</div>
+        </div>
+      </div>
+      <div class="card">
         <div class="card-header"><div class="card-title"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>تغيير كلمة المرور</div></div>
         <div class="r2">
           <div class="field"><label>كلمة المرور الجديدة</label><input type="password" id="s-p1" placeholder="اتركها فارغة إذا لا تريد التغيير"></div>
@@ -1198,6 +1207,7 @@ async function loadSettings(){
   v('s-title',data.site_title);v('s-desc',data.site_description);v('s-footer',data.footer_text);
   v('s-logo',data.logo_url);prevBrand('s-logo-pv',data.logo_url);
   v('s-favicon',data.favicon_url);prevBrand('s-favicon-pv',data.favicon_url);
+  document.getElementById('s-show-mkt-port').checked=data.show_marketing_portfolio!==false;
   statsData=data.stats_data||defaultStats();
   textsData=data.page_texts||{};
   renderStatsEditor();
@@ -1259,6 +1269,7 @@ async function saveSettings(){
     facebook_url:g('s-fb'),instagram_url:g('s-ig'),tiktok_url:g('s-tk'),
     site_title:g('s-title'),site_description:g('s-desc'),footer_text:g('s-footer'),
     logo_url:g('s-logo')||null,favicon_url:g('s-favicon')||null,
+    show_marketing_portfolio:document.getElementById('s-show-mkt-port').checked,
     updated_at:new Date().toISOString()
   };
   var{error}=await sb.from('ao_settings').upsert({id:1,...payload});
