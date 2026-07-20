@@ -34,6 +34,8 @@ CREATE TABLE IF NOT EXISTS ao_settings (
   wa_offline TEXT DEFAULT '',
   wa_full TEXT DEFAULT '',
   show_marketing_portfolio BOOLEAN DEFAULT TRUE,
+  catalog_ads_image TEXT DEFAULT '',
+  catalog_marketing_image TEXT DEFAULT '',
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
@@ -46,6 +48,7 @@ CREATE TABLE IF NOT EXISTS ao_hero (
   subtitle TEXT DEFAULT '',
   text_blocks JSONB DEFAULT '[]', -- [{tag:'h1'|'h2'|'h3'|'p', text}]
   bg_image_url TEXT DEFAULT '',
+  hide_text BOOLEAN DEFAULT FALSE,
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 

@@ -479,6 +479,17 @@ try{
       </div>
       <div class="card">
         <div class="card-header">
+          <div class="card-title"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="1"/><path d="M20.362 10.356l-1.447-1.447A10.002 10.002 0 003.134 16M3.761 12.356l1.447 1.447A10.002 10.002 0 0020.989 7.4"/></svg>إظهار/إخفاء النصوص</div>
+        </div>
+        <div class="field">
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer;text-transform:none;letter-spacing:0;font-size:13px;font-weight:600;color:var(--w2)">
+            <input type="checkbox" id="h-show-text" checked> إظهار نصوص Hero والأزرار
+          </label>
+          <div class="field-hint">لو أخفيت النصوص، الهيرو بيظهر بصورة كاملة بدون نص — مفيد لو عايز تعمل ديزاين كامل على الصورة.</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header">
           <div class="card-title"><svg viewBox="0 0 24 24"><line x1="17" y1="10" x2="3" y2="10"/><line x1="21" y1="6" x2="3" y2="6"/><line x1="21" y1="14" x2="3" y2="14"/><line x1="17" y1="18" x2="3" y2="18"/></svg>نصوص العنوان (H1 / H2 / H3 / فقرة)</div>
           <div style="display:flex;gap:6px">
             <button class="btn btn-g bsm" onclick="addHeroBlock('h2')">+ عنوان</button>
@@ -736,6 +747,30 @@ try{
         </div>
       </div>
       <div class="card">
+        <div class="card-header"><div class="card-title"><svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/></svg>صور الكتالوجات</div></div>
+        <div class="field-hint" style="margin-bottom:12px">صور معبرة لقسم الكتالوجات تظهر في الصفحة الرئيسية</div>
+        <div class="r2">
+          <div class="field">
+            <label>صورة كتالوج الدعاية والإعلان</label>
+            <input type="url" id="s-cat-ads" placeholder="https://..." oninput="prevCatalogImg('s-cat-ads-pv',this.value)">
+            <div class="upload-zone" onclick="document.getElementById('s-cat-ads-f').click()">
+              📁 ارفع صورة من جهازك
+              <input type="file" id="s-cat-ads-f" accept="image/*" style="display:none" onchange="upCatalogImg(this,'s-cat-ads')">
+            </div>
+            <img id="s-cat-ads-pv" class="port-preview" style="max-height:120px;object-fit:cover">
+          </div>
+          <div class="field">
+            <label>صورة كتالوج التسويق</label>
+            <input type="url" id="s-cat-marketing" placeholder="https://..." oninput="prevCatalogImg('s-cat-marketing-pv',this.value)">
+            <div class="upload-zone" onclick="document.getElementById('s-cat-marketing-f').click()">
+              📁 ارفع صورة من جهازك
+              <input type="file" id="s-cat-marketing-f" accept="image/*" style="display:none" onchange="upCatalogImg(this,'s-cat-marketing')">
+            </div>
+            <img id="s-cat-marketing-pv" class="port-preview" style="max-height:120px;object-fit:cover">
+          </div>
+        </div>
+      </div>
+      <div class="card">
         <div class="card-header"><div class="card-title"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/></svg>ظهور الأقسام</div></div>
         <div class="field">
           <label style="display:flex;align-items:center;gap:8px;cursor:pointer;text-transform:none;letter-spacing:0;font-size:13px;font-weight:600;color:var(--w2)">
@@ -808,6 +843,21 @@ try{
         <svg viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/></svg>
         حفظ
       </button>
+    </div>
+  </div>
+</div>
+
+<!-- PORTFOLIO GROUP MANAGER MODAL -->
+<div class="ov" id="ov-port-group" onclick="if(event.target===this)closeGroupManager()">
+  <div class="modal modal-lg">
+    <div class="mh"><span id="gm-title">مجموعة</span><button class="mx" onclick="closeGroupManager()">✕</button></div>
+    <div style="margin-bottom:16px;padding:14px;background:var(--rdim);border-radius:var(--rsm);border:1px solid rgba(232,25,44,.2)">
+      <div style="font-size:11px;color:var(--red);font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">المجموعة</div>
+      <div style="font-size:14px;color:var(--w);font-weight:600" id="gm-group-name"></div>
+    </div>
+    <div id="gm-photos" class="card-grid"></div>
+    <div class="mf">
+      <button class="btn btn-g" onclick="closeGroupManager()">إغلاق</button>
     </div>
   </div>
 </div>
@@ -1137,6 +1187,7 @@ async function loadHero(){
     :[{tag:'h1',text:data.title||''},{tag:'p',text:data.subtitle||''}];
   renderHeroBlocksEditor();
   v('h-bg',data.bg_image_url);prevHeroBg(data.bg_image_url);
+  document.getElementById('h-show-text').checked=!data.hide_text;
 }
 var HERO_TAG_LABELS={h1:'H1 — العنوان الرئيسي',h2:'H2 — عنوان فرعي',h3:'H3 — عنوان صغير',p:'فقرة نصية'};
 function renderHeroBlocksEditor(){
@@ -1175,6 +1226,7 @@ async function saveHero(){
   var{error}=await sb.from('ao_hero').upsert({id:1,
     badge:g('h-badge'),text_blocks:heroBlocks,
     bg_image_url:g('h-bg')||null,
+    hide_text:!document.getElementById('h-show-text').checked,
     updated_at:new Date().toISOString()
   });
   if(error){toast('❌ '+error.message);return}
@@ -1207,6 +1259,8 @@ async function loadSettings(){
   v('s-title',data.site_title);v('s-desc',data.site_description);v('s-footer',data.footer_text);
   v('s-logo',data.logo_url);prevBrand('s-logo-pv',data.logo_url);
   v('s-favicon',data.favicon_url);prevBrand('s-favicon-pv',data.favicon_url);
+  v('s-cat-ads',data.catalog_ads_image);prevCatalogImg('s-cat-ads-pv',data.catalog_ads_image);
+  v('s-cat-marketing',data.catalog_marketing_image);prevCatalogImg('s-cat-marketing-pv',data.catalog_marketing_image);
   document.getElementById('s-show-mkt-port').checked=data.show_marketing_portfolio!==false;
   statsData=data.stats_data||defaultStats();
   textsData=data.page_texts||{};
@@ -1269,6 +1323,7 @@ async function saveSettings(){
     facebook_url:g('s-fb'),instagram_url:g('s-ig'),tiktok_url:g('s-tk'),
     site_title:g('s-title'),site_description:g('s-desc'),footer_text:g('s-footer'),
     logo_url:g('s-logo')||null,favicon_url:g('s-favicon')||null,
+    catalog_ads_image:g('s-cat-ads')||null,catalog_marketing_image:g('s-cat-marketing')||null,
     show_marketing_portfolio:document.getElementById('s-show-mkt-port').checked,
     updated_at:new Date().toISOString()
   };
@@ -1277,6 +1332,11 @@ async function saveSettings(){
   toast('✅ تم حفظ الإعدادات!');
 }
 function prevBrand(pvId,url){
+  var pv=document.getElementById(pvId);
+  if(!pv)return;
+  if(url){pv.src=url;pv.style.display='block'}else{pv.style.display='none'}
+}
+function prevCatalogImg(pvId,url){
   var pv=document.getElementById(pvId);
   if(!pv)return;
   if(url){pv.src=url;pv.style.display='block'}else{pv.style.display='none'}
@@ -1293,6 +1353,18 @@ async function upBrand(inp,fieldId){
   toast('✅ تم رفع الصورة!');
   inp.value='';
 }
+async function upCatalogImg(inp,fieldId){
+  if(!inp.files[0])return;
+  toast('⏳ جاري الرفع...');
+  var f=inp.files[0];var ext=f.name.split('.').pop();
+  var nm='catalogs/'+fieldId+'-'+Date.now()+'.'+ext;
+  var{error}=await sb.storage.from('ao-images').upload(nm,f,{upsert:true});
+  if(error){toast('❌ '+error.message);inp.value='';return}
+  var url=sb.storage.from('ao-images').getPublicUrl(nm).data.publicUrl;
+  v(fieldId,url);prevCatalogImg(fieldId+'-pv',url);
+  toast('✅ تم رفع الصورة!');
+  inp.value='';
+}
 
 // ── PORTFOLIO ──────────────────────────────────────────
 async function loadPort(){
@@ -1304,18 +1376,7 @@ function renderPort(){
   renderGroupSummary();
   var el=document.getElementById('pl');
   if(!portfolio.length){el.className='';el.innerHTML=empty('لا توجد أعمال بعد — اضغط إضافة لإنشاء أول عمل');return}
-  var cm={digital:'b-blue',print:'b-red',branding:'b-green'};
-  var cn={digital:'تسويق رقمي',print:'دعاية وإعلان',branding:'هوية بصرية'};
-  function cardFor(p){
-    var badges='<span class="badge '+(p.catalog==='marketing'?'b-purple':'b-orange')+'">'+(p.catalog==='marketing'?'أعمالنا في التسويق':'أعمالنا في الدعاية والإعلان')+'</span>'
-      +'<span class="badge '+(cm[p.category]||'b-blue')+'">'+cn[p.category]+'</span>'
-      +(p.stat_badge?'<span class="badge b-red">'+h(p.stat_badge)+'</span>':'')
-      +'<span class="badge '+(p.is_active?'b-green':'b-off')+'">'+(p.is_active?'ظاهر':'مخفي')+'</span>';
-    var actions='<button class="btn btn-g bsm" onclick="editPort(\''+p.id+'\')">تعديل</button>'
-      +'<button class="btn btn-g bsm" onclick="togglePort(\''+p.id+'\','+(!p.is_active)+')">'+( p.is_active?'إخفاء':'إظهار')+'</button>'
-      +'<button class="btn btn-d bsm" onclick="delPort(\''+p.id+'\')">حذف</button>';
-    return liCardHtml({imgUrl:p.image_url,ph:'🖼️',title:p.title,badges:badges,actions:actions});
-  }
+
   var ads=portfolio.filter(function(p){return p.catalog!=='marketing'});
   var marketing=portfolio.filter(function(p){return p.catalog==='marketing'});
   var groups={},order=[];
@@ -1324,21 +1385,49 @@ function renderPort(){
     if(!groups[gname]){groups[gname]=[];order.push(gname)}
     groups[gname].push(p);
   });
-  var html=order.map(function(gname){
+
+  var html='<div class="card-grid">';
+  html+=order.map(function(gname){
+    var groupPhotos=groups[gname];
+    var firstImg=groupPhotos[0]&&groupPhotos[0].image_url?groupPhotos[0].image_url:'';
     var groupArg=(gname==='متنوع'?'':gname).replace(/'/g,"\\'");
     var renameArg=gname.replace(/'/g,"\\'");
-    return'<div class="port-group-block"><div class="port-group-heading">📁 '+h(gname)+' <span class="port-group-count">('+groups[gname].length+')</span>'
-      +'<button class="btn btn-g bsm port-group-btn" onclick="renameGroup(\''+renameArg+'\')">✏️ إعادة تسمية</button>'
-      +'<button class="btn btn-p bsm" onclick="openPBM(\''+groupArg+'\')">+ صور لنفس المجموعة</button>'
-      +'</div>'
-      +'<div class="card-grid">'+groups[gname].map(cardFor).join('')+'</div></div>';
+    return'<div class="li-card" onclick="openGroupManager(\''+renameArg+'\')" style="cursor:pointer">'
+      +'<div class="li-card-img'+(firstImg?'':' contain')+'"><'+(firstImg?'img src="'+h(firstImg)+'" alt=""':'/div')+'">'+(firstImg?'':'<div class="li-card-ph">📁</div>')+'</div>'
+      +'<div class="li-card-body"><div class="li-card-title">'+h(gname)+'</div>'
+      +'<div class="li-card-badges"><span class="badge b-blue">'+groupPhotos.length+' صورة</span></div></div>'
+      +'<div class="li-card-ac">'
+      +'<button class="btn btn-g bsm" onclick="openPBM(\''+groupArg+'\');event.stopPropagation()">+ صور</button>'
+      +'<button class="btn btn-g bsm" onclick="renameGroup(\''+renameArg+'\');event.stopPropagation()">إعادة تسمية</button>'
+      +'</div></div>';
   }).join('');
+  html+='</div>';
+
   if(marketing.length){
-    html+='<div class="port-group-block"><div class="port-group-heading">🎯 أعمالنا في التسويق <span class="port-group-count">('+marketing.length+')</span></div>'
-      +'<div class="card-grid">'+marketing.map(cardFor).join('')+'</div></div>';
+    html+='<div style="margin-top:24px"><div class="port-group-heading">🎯 أعمالنا في التسويق <span class="port-group-count">('+marketing.length+')</span></div><div class="card-grid">';
+    html+=marketing.map(function(p){
+      var badges='<span class="badge b-blue">تسويق</span><span class="badge '+(p.is_active?'b-green':'b-off')+'">'+(p.is_active?'ظاهر':'مخفي')+'</span>';
+      var actions='<button class="btn btn-g bsm" onclick="editPort(\''+p.id+'\')">تعديل</button>'
+        +'<button class="btn btn-d bsm" onclick="delPort(\''+p.id+'\')">حذف</button>';
+      return liCardHtml({imgUrl:p.image_url,ph:'🖼️',title:p.title,badges:badges,actions:actions});
+    }).join('')+'</div></div>';
   }
+
   el.className='';
   el.innerHTML=html;
+}
+function openGroupManager(groupName){
+  var groupPhotos=portfolio.filter(function(p){return p.catalog!=='marketing'&&(p.group_label||'متنوع')===groupName});
+  document.getElementById('gm-title').textContent=h(groupName);
+  document.getElementById('gm-group-name').textContent=h(groupName);
+  document.getElementById('gm-photos').innerHTML=groupPhotos.map(function(p){
+    var actions='<button class="btn btn-g bsm" onclick="editPort(\''+p.id+'\')">تعديل</button>'
+      +'<button class="btn btn-g bsm" onclick="togglePort(\''+p.id+'\','+(!p.is_active)+')">'+( p.is_active?'إخفاء':'إظهار')+'</button>'
+      +'<button class="btn btn-d bsm" onclick="delPort(\''+p.id+'\')">حذف</button>';
+    var badges='<span class="badge '+(p.is_active?'b-green':'b-off')+'">'+(p.is_active?'ظاهر':'مخفي')+'</span>';
+    return liCardHtml({imgUrl:p.image_url,ph:'🖼️',title:p.title,badges:badges,actions:actions});
+  }).join('');
+  document.getElementById('ov-port-group').classList.add('open');
 }
 function renderGroupSummary(){
   var ads=portfolio.filter(function(p){return p.catalog!=='marketing'});
@@ -1438,6 +1527,7 @@ async function renameGroup(oldName){
   await loadPort();updateStats();toast('✅ تم تغيير اسم المجموعة!');
 }
 function closePBM(){document.getElementById('ov-port-bulk').classList.remove('open')}
+function closeGroupManager(){document.getElementById('ov-port-group').classList.remove('open')}
 function toggleBulkGroupField(){
   var isAds=document.getElementById('pbm-catalog').value==='ads';
   document.getElementById('pbm-group-field').style.display=isAds?'block':'none';
