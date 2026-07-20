@@ -137,6 +137,21 @@ button,select,input,textarea{font-family:var(--font)}
 .field input:focus,.field textarea:focus,.field select:focus{border-color:var(--red);box-shadow:0 0 0 2px var(--rdim)}
 .field textarea{resize:vertical;min-height:80px;line-height:1.6}
 .field select option{background:var(--dk)}
+.field input[type="checkbox"]{
+  width:20px;height:20px;flex-shrink:0;padding:0;
+  appearance:none;-webkit-appearance:none;
+  border:1.5px solid var(--b2);border-radius:6px;
+  background:var(--dk);cursor:pointer;position:relative;
+  transition:.15s;
+}
+.field input[type="checkbox"]:hover{border-color:var(--red)}
+.field input[type="checkbox"]:checked{background:var(--red);border-color:var(--red)}
+.field input[type="checkbox"]:checked::after{
+  content:'';position:absolute;left:6px;top:2px;
+  width:5px;height:10px;border:solid #fff;border-width:0 2px 2px 0;
+  transform:rotate(45deg);
+}
+.field input[type="checkbox"]:focus-visible{outline:2px solid var(--red);outline-offset:2px}
 .r2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .r3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
 
@@ -945,7 +960,7 @@ try{
     </div>
     <div class="field">
       <label style="display:flex;align-items:center;gap:8px;cursor:pointer;text-transform:none;letter-spacing:0;font-size:13px;font-weight:600;color:var(--w2)">
-        <input type="checkbox" id="prm-bestseller"> ⭐ عرض المنتج في قسم "الأكثر مبيعًا" أعلى صفحة الكتالوج
+        <input type="checkbox" id="prm-bestseller"> ⭐ عرض المنتج في قسم "الأكثر طلبًا في مجال السيارات" أعلى صفحة الكتالوج
       </label>
     </div>
     <div class="field"><label>صور المنتج (أول صورة = صورة الغلاف في الكتالوج)</label></div>
@@ -1626,7 +1641,7 @@ function renderProducts(){
     var badges='<span class="badge '+(p.catalog==='marketing'?'b-purple':'b-orange')+'">'+(p.catalog==='marketing'?'كتالوج التسويق':'كتالوج الدعاية والإعلان')+'</span>'
       +'<span class="badge b-blue">'+h(prodCatNames[p.category]||p.category)+'</span>'
       +'<span class="badge b-red">'+h(price)+'</span>'
-      +(p.is_bestseller?'<span class="badge b-orange">⭐ الأكثر مبيعًا</span>':'')
+      +(p.is_bestseller?'<span class="badge b-orange">⭐ الأكثر طلبًا</span>':'')
       +'<span class="badge '+(p.is_active?'b-green':'b-off')+'">'+(p.is_active?'ظاهر':'مخفي')+'</span>';
     var actions='<button class="btn btn-g bsm" onclick="editProd(\''+p.id+'\')">تعديل</button>'
       +'<button class="btn btn-g bsm" onclick="toggleProd(\''+p.id+'\','+(!p.is_active)+')">'+(p.is_active?'إخفاء':'إظهار')+'</button>'

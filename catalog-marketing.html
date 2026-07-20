@@ -197,10 +197,13 @@ footer{border-top:1px solid var(--line);padding:24px var(--pad);display:flex;ali
       <div>جاري التحميل...</div>
     </div>
     <div class="bs-sec" id="bsSec" style="display:none">
-      <div class="bs-sec-title"><i class="bi bi-fire"></i> الأكثر مبيعًا</div>
+      <div class="bs-sec-title"><i class="bi bi-fire"></i> الأكثر طلبًا في مجال السيارات</div>
       <div class="prod-grid" id="bsGrid"></div>
     </div>
-    <div class="prod-grid" id="prodGrid" style="display:none"></div>
+    <div id="allProdSec" style="display:none">
+      <div class="bs-sec-title"><i class="bi bi-grid"></i> جميع المنتجات</div>
+      <div class="prod-grid" id="prodGrid"></div>
+    </div>
     <div class="cat-empty" id="catEmpty" style="display:none">لا توجد منتجات في هذا القسم حاليًا</div>
   </div>
 </main>
@@ -304,7 +307,7 @@ function renderGrid(){
   var g=document.getElementById('prodGrid');
   var list=activeCat==='all'?products:products.filter(function(p){return(p.category||'general')===activeCat});
   document.getElementById('catEmpty').style.display=list.length?'none':'block';
-  g.style.display=list.length?'grid':'none';
+  document.getElementById('allProdSec').style.display=list.length?'block':'none';
   g.innerHTML=list.map(function(p){return productCardHtml(p)}).join('');
   renderBestsellers();
 }
@@ -320,7 +323,7 @@ function productCardHtml(p){
     :'<div class="prod-price ask">السعر عند التواصل</div>';
   return'<div class="prod-card'+(qty>0?' in-cart':'')+'" data-id="'+esc(p.id)+'">'
     +'<a class="prod-link" href="product.html?id='+esc(p.id)+'">'
-    +'<div class="prod-img">'+img+'<div class="prod-cat">'+esc(catName(p.category))+'</div>'+(p.is_bestseller?'<div class="bs-badge"><i class="bi bi-fire"></i> الأكثر مبيعًا</div>':'')+'</div>'
+    +'<div class="prod-img">'+img+'<div class="prod-cat">'+esc(catName(p.category))+'</div>'+(p.is_bestseller?'<div class="bs-badge"><i class="bi bi-fire"></i> الأكثر طلبًا</div>':'')+'</div>'
     +'<div class="prod-body">'
     +'<div class="prod-title">'+esc(p.title)+'</div>'
     +(p.description?'<div class="prod-desc">'+esc(p.description)+'</div>':'<div class="prod-desc"></div>')
