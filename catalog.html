@@ -51,11 +51,6 @@ nav{position:fixed;top:0;width:100%;z-index:200;height:72px;padding:0 var(--pad)
 .cat-header h1 .r{color:var(--red)}
 .cat-header p{font-size:14px;color:var(--ink2);line-height:1.8}
 
-/* FILTER */
-.cat-filter{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:28px}
-.cf-btn{background:var(--p1);border:1px solid var(--line);color:var(--ink2);padding:9px 18px;border-radius:var(--rp);font-size:12.5px;font-weight:600;transition:.2s}
-.cf-btn.active,.cf-btn:hover{background:var(--red);border-color:var(--red);color:#fff}
-
 /* GRID */
 .cat-main{padding:0 0 clamp(64px,8vw,100px)}
 .prod-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:20px}
@@ -65,7 +60,6 @@ nav{position:fixed;top:0;width:100%;z-index:200;height:72px;padding:0 var(--pad)
 .prod-img img{width:100%;height:100%;object-fit:cover;transition:.4s}
 .prod-card:hover .prod-img img{transform:scale(1.04)}
 .prod-img-ph{font-size:12px;color:var(--ink3);font-weight:600}
-.prod-cat{position:absolute;top:12px;right:12px;background:rgba(24,21,15,.72);backdrop-filter:blur(6px);color:#fff;padding:5px 12px;border-radius:var(--rp);font-size:10px;font-weight:600}
 .prod-link{display:flex;flex-direction:column;flex:1;color:inherit}
 .prod-body{padding:18px;display:flex;flex-direction:column;flex:1}
 .prod-body-foot{padding:0 18px 18px}
@@ -180,7 +174,6 @@ footer{border-top:1px solid var(--line);padding:24px var(--pad);display:flex;ali
     <div class="cat-kicker">كتالوج الدعاية والإعلان</div>
     <h1>اختار منتجاتك وابعت طلبك <span class="r">واتساب</span></h1>
     <p>كل منتجات الدعاية والإعلان لمركزك في مكان واحد — ضيف اللي محتاجه للسلة وهيوصلنا طلبك على واتساب فورًا.</p>
-    <div class="cat-filter" id="catFilter"></div>
   </div>
 </header>
 
@@ -235,12 +228,9 @@ var SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI
 var _waNum='201152501056';
 var products=[];
 var cart={};       // {productId: qty}
-var activeCat='all';
 var CART_KEY='ao_cart_v1';
-var catLabels={general:'عام',signage:'يافطات وواجهات',print:'مطبوعات',uniform:'يوني فورم',accessories:'اكسسوارات',digital:'خدمات رقمية',branding:'هوية بصرية'};
 
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
-function catName(c){return catLabels[c]||c||'عام'}
 function fmtPrice(p){
   p=parseFloat(p);
   if(!p||p<=0)return null;
@@ -268,45 +258,23 @@ function showToast(msg){
 }
 
 // ── RENDER PRODUCTS ──────────────────────────────────
-function renderFilter(){
-  var cats=[];
-  products.forEach(function(p){
-    var c=p.category||'general';
-    if(cats.indexOf(c)===-1)cats.push(c);
-  });
-  var html='<button class="cf-btn'+(activeCat==='all'?' active':'')+'" data-cat="all">الكل</button>';
-  cats.forEach(function(c){
-    html+='<button class="cf-btn'+(activeCat===c?' active':'')+'" data-cat="'+esc(c)+'">'+esc(catName(c))+'</button>';
-  });
-  var f=document.getElementById('catFilter');
-  f.innerHTML=html;
-  f.querySelectorAll('.cf-btn').forEach(function(b){
-    b.onclick=function(){
-      activeCat=b.dataset.cat;
-      f.querySelectorAll('.cf-btn').forEach(function(x){x.classList.remove('active')});
-      b.classList.add('active');
-      renderGrid();
-    };
-  });
-}
-
 function renderGrid(){
   var g=document.getElementById('prodGrid');
-  var list=activeCat==='all'?products:products.filter(function(p){return(p.category||'general')===activeCat});
+  var list=products;
   document.getElementById('catEmpty').style.display=list.length?'none':'block';
   g.style.display=list.length?'grid':'none';
   g.innerHTML=list.map(function(p){
     var qty=cart[p.id]||0;
     var img=p.image_url
       ?'<img src="'+esc(p.image_url)+'" alt="'+esc(p.title)+'" loading="lazy">'
-      :'<div class="prod-img-ph">'+esc(catName(p.category))+'</div>';
+      :'<div class="prod-img-ph">لا توجد صورة</div>';
     var price=fmtPrice(p.price);
     var priceHtml=price
       ?'<div class="prod-price">'+price+(p.price_note?'<small>'+esc(p.price_note)+'</small>':'')+'</div>'
       :'<div class="prod-price ask">السعر عند التواصل</div>';
     return'<div class="prod-card'+(qty>0?' in-cart':'')+'" data-id="'+esc(p.id)+'">'
       +'<a class="prod-link" href="product.html?id='+esc(p.id)+'">'
-      +'<div class="prod-img">'+img+'<div class="prod-cat">'+esc(catName(p.category))+'</div></div>'
+      +'<div class="prod-img">'+img+'</div>'
       +'<div class="prod-body">'
       +'<div class="prod-title">'+esc(p.title)+'</div>'
       +(p.description?'<div class="prod-desc">'+esc(p.description)+'</div>':'<div class="prod-desc"></div>')
@@ -474,7 +442,6 @@ async function loadCatalog(){
     if(!products.find(function(p){return p.id===id}))delete cart[id];
   });
   saveCart();
-  renderFilter();
   updateUI();
   if(products.length){
     pxTrack('ViewContent',{content_ids:products.map(function(p){return p.id}),content_type:'product_group',currency:'EGP'});
