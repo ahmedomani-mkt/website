@@ -943,6 +943,11 @@ try{
       <div class="field"><label>السعر (اتركه فاضي = "السعر عند التواصل")</label><input type="number" id="prm-p" placeholder="1500" min="0" step="0.01"></div>
       <div class="field"><label>ملاحظة السعر (اختياري)</label><input type="text" id="prm-pn" placeholder="/ للقطعة، حسب المقاس..."></div>
     </div>
+    <div class="field">
+      <label style="display:flex;align-items:center;gap:8px;cursor:pointer;text-transform:none;letter-spacing:0;font-size:13px;font-weight:600;color:var(--w2)">
+        <input type="checkbox" id="prm-bestseller"> ⭐ عرض المنتج في قسم "الأكثر مبيعًا" أعلى صفحة الكتالوج
+      </label>
+    </div>
     <div class="field"><label>صور المنتج (أول صورة = صورة الغلاف في الكتالوج)</label></div>
     <div class="prm-imgs" id="prm-imgs"></div>
     <div class="field" style="display:flex;gap:8px;align-items:flex-end">
@@ -1621,6 +1626,7 @@ function renderProducts(){
     var badges='<span class="badge '+(p.catalog==='marketing'?'b-purple':'b-orange')+'">'+(p.catalog==='marketing'?'كتالوج التسويق':'كتالوج الدعاية والإعلان')+'</span>'
       +'<span class="badge b-blue">'+h(prodCatNames[p.category]||p.category)+'</span>'
       +'<span class="badge b-red">'+h(price)+'</span>'
+      +(p.is_bestseller?'<span class="badge b-orange">⭐ الأكثر مبيعًا</span>':'')
       +'<span class="badge '+(p.is_active?'b-green':'b-off')+'">'+(p.is_active?'ظاهر':'مخفي')+'</span>';
     var actions='<button class="btn btn-g bsm" onclick="editProd(\''+p.id+'\')">تعديل</button>'
       +'<button class="btn btn-g bsm" onclick="toggleProd(\''+p.id+'\','+(!p.is_active)+')">'+(p.is_active?'إخفاء':'إظهار')+'</button>'
@@ -1636,6 +1642,7 @@ function openPrM(item){
   document.getElementById('prm-c').value=item?item.category:'signage';
   document.getElementById('prm-catalog').value=item?(item.catalog||'ads'):'ads';
   v('prm-p',item&&item.price?item.price:'');v('prm-pn',item?item.price_note||'':'');
+  document.getElementById('prm-bestseller').checked=!!(item&&item.is_bestseller);
   v('prm-i','');
   v('prm-details',item?item.details||'':'');
   prmImages=item&&Array.isArray(item.images)&&item.images.length
@@ -1765,6 +1772,7 @@ async function savePrM(){
   var payload={title:title,description:g('prm-d'),category:document.getElementById('prm-c').value,
     catalog:document.getElementById('prm-catalog').value,
     price:priceRaw?parseFloat(priceRaw):null,price_note:g('prm-pn')||null,
+    is_bestseller:document.getElementById('prm-bestseller').checked,
     image_url:prmImages[0]||null,images:prmImages,details:g('prm-details')||null};
   var err;
   if(id){err=(await sb.from('ao_products').update(payload).eq('id',id)).error}

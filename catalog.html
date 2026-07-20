@@ -51,6 +51,12 @@ nav{position:fixed;top:0;width:100%;z-index:200;height:72px;padding:0 var(--pad)
 .cat-header h1 .r{color:var(--red)}
 .cat-header p{font-size:14px;color:var(--ink2);line-height:1.8}
 
+/* BEST SELLERS */
+.bs-sec{margin-bottom:40px;padding-bottom:36px;border-bottom:1px solid var(--line)}
+.bs-sec-title{display:flex;align-items:center;gap:8px;font-size:18px;font-weight:700;color:var(--ink);margin-bottom:18px}
+.bs-sec-title i{color:var(--red)}
+.bs-badge{position:absolute;top:12px;right:12px;background:var(--red);color:#fff;padding:5px 12px;border-radius:var(--rp);font-size:10px;font-weight:700;display:flex;align-items:center;gap:4px;z-index:1}
+
 /* GRID */
 .cat-main{padding:0 0 clamp(64px,8vw,100px)}
 .prod-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:20px}
@@ -183,6 +189,10 @@ footer{border-top:1px solid var(--line);padding:24px var(--pad);display:flex;ali
       <div class="spin"></div>
       <div>جاري التحميل...</div>
     </div>
+    <div class="bs-sec" id="bsSec" style="display:none">
+      <div class="bs-sec-title"><i class="bi bi-fire"></i> الأكثر مبيعًا</div>
+      <div class="prod-grid" id="bsGrid"></div>
+    </div>
     <div class="prod-grid" id="prodGrid" style="display:none"></div>
     <div class="cat-empty" id="catEmpty" style="display:none">لا توجد منتجات في هذا القسم حاليًا</div>
   </div>
@@ -263,34 +273,46 @@ function renderGrid(){
   var list=products;
   document.getElementById('catEmpty').style.display=list.length?'none':'block';
   g.style.display=list.length?'grid':'none';
-  g.innerHTML=list.map(function(p){
-    var qty=cart[p.id]||0;
-    var img=p.image_url
-      ?'<img src="'+esc(p.image_url)+'" alt="'+esc(p.title)+'" loading="lazy">'
-      :'<div class="prod-img-ph">لا توجد صورة</div>';
-    var price=fmtPrice(p.price);
-    var priceHtml=price
-      ?'<div class="prod-price">'+price+(p.price_note?'<small>'+esc(p.price_note)+'</small>':'')+'</div>'
-      :'<div class="prod-price ask">السعر عند التواصل</div>';
-    return'<div class="prod-card'+(qty>0?' in-cart':'')+'" data-id="'+esc(p.id)+'">'
-      +'<a class="prod-link" href="product.html?id='+esc(p.id)+'">'
-      +'<div class="prod-img">'+img+'</div>'
-      +'<div class="prod-body">'
-      +'<div class="prod-title">'+esc(p.title)+'</div>'
-      +(p.description?'<div class="prod-desc">'+esc(p.description)+'</div>':'<div class="prod-desc"></div>')
-      +'</div>'
-      +'</a>'
-      +'<div class="prod-foot-wrap">'
-      +'<div class="prod-foot">'
-      +priceHtml
-      +'<button class="add-btn" onclick="addToCart(\''+esc(p.id)+'\')">+ أضف للسلة</button>'
-      +'<div class="qty-ctrl">'
-        +'<button onclick="changeQty(\''+esc(p.id)+'\',1)">+</button>'
-        +'<span>'+qty+'</span>'
-        +'<button onclick="changeQty(\''+esc(p.id)+'\',-1)">−</button>'
-      +'</div>'
-      +'</div></div></div>';
-  }).join('');
+  g.innerHTML=list.map(function(p){return productCardHtml(p)}).join('');
+  renderBestsellers();
+}
+
+function productCardHtml(p){
+  var qty=cart[p.id]||0;
+  var img=p.image_url
+    ?'<img src="'+esc(p.image_url)+'" alt="'+esc(p.title)+'" loading="lazy">'
+    :'<div class="prod-img-ph">لا توجد صورة</div>';
+  var price=fmtPrice(p.price);
+  var priceHtml=price
+    ?'<div class="prod-price">'+price+(p.price_note?'<small>'+esc(p.price_note)+'</small>':'')+'</div>'
+    :'<div class="prod-price ask">السعر عند التواصل</div>';
+  return'<div class="prod-card'+(qty>0?' in-cart':'')+'" data-id="'+esc(p.id)+'">'
+    +'<a class="prod-link" href="product.html?id='+esc(p.id)+'">'
+    +'<div class="prod-img">'+img+(p.is_bestseller?'<div class="bs-badge"><i class="bi bi-fire"></i> الأكثر مبيعًا</div>':'')+'</div>'
+    +'<div class="prod-body">'
+    +'<div class="prod-title">'+esc(p.title)+'</div>'
+    +(p.description?'<div class="prod-desc">'+esc(p.description)+'</div>':'<div class="prod-desc"></div>')
+    +'</div>'
+    +'</a>'
+    +'<div class="prod-foot-wrap">'
+    +'<div class="prod-foot">'
+    +priceHtml
+    +'<button class="add-btn" onclick="addToCart(\''+esc(p.id)+'\')">+ أضف للسلة</button>'
+    +'<div class="qty-ctrl">'
+      +'<button onclick="changeQty(\''+esc(p.id)+'\',1)">+</button>'
+      +'<span>'+qty+'</span>'
+      +'<button onclick="changeQty(\''+esc(p.id)+'\',-1)">−</button>'
+    +'</div>'
+    +'</div></div></div>';
+}
+
+function renderBestsellers(){
+  var sec=document.getElementById('bsSec');
+  var list=products.filter(function(p){return p.is_bestseller});
+  if(!sec)return;
+  if(!list.length){sec.style.display='none';return}
+  sec.style.display='block';
+  document.getElementById('bsGrid').innerHTML=list.map(function(p){return productCardHtml(p)}).join('');
 }
 
 // ── META PIXEL ───────────────────────────────────────

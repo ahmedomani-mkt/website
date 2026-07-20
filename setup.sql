@@ -80,6 +80,7 @@ CREATE TABLE IF NOT EXISTS ao_products (
   price_note TEXT DEFAULT '',
   features JSONB DEFAULT '[]',
   is_active BOOLEAN DEFAULT TRUE,
+  is_bestseller BOOLEAN DEFAULT FALSE,
   sort_order INTEGER DEFAULT 0,
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
