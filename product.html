@@ -16,15 +16,22 @@
 :root{
   --p1:#0A0A0C; --p2:#131316; --p3:#1C1C21;
   --ink:#F5F5F8; --ink2:rgba(245,245,248,.68); --ink3:rgba(245,245,248,.46);
-  --line:rgba(245,245,248,.12); --line2:rgba(245,245,248,.2);
+  --line:rgba(245,245,248,.16); --line2:rgba(245,245,248,.26);
   --red:#E8192C; --red-d:#ff3b4e; --red-soft:rgba(232,25,44,.18);
   --wa:#25D366; --wa-d:#2ee578;
-  --card-bg:rgba(255,255,255,.055);
-  --glass-blur:blur(24px) saturate(160%);
+  --card-bg:rgba(255,255,255,.09);
+  --glass-blur:blur(28px) saturate(180%);
+  --glass-shadow:inset 0 1px 0 rgba(255,255,255,.14), 0 12px 36px rgba(0,0,0,.45);
   --font:'Rubik','Segoe UI',Tahoma,Arial,sans-serif;
   --r:18px; --rs:12px; --rp:999px;
   --pad:clamp(20px,4vw,56px);
 }
+.ambient-glow{position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none;background:var(--p1)}
+.ambient-glow span{position:absolute;border-radius:50%;filter:blur(90px);opacity:.55}
+.ambient-glow span:nth-child(1){width:52vw;height:52vw;top:-14%;right:-10%;background:radial-gradient(circle,rgba(232,25,44,.65),transparent 70%)}
+.ambient-glow span:nth-child(2){width:42vw;height:42vw;top:22%;left:-14%;background:radial-gradient(circle,rgba(255,70,70,.5),transparent 70%)}
+.ambient-glow span:nth-child(3){width:46vw;height:46vw;bottom:-16%;right:8%;background:radial-gradient(circle,rgba(120,10,25,.6),transparent 70%)}
+.ambient-glow span:nth-child(4){width:34vw;height:34vw;bottom:10%;left:6%;background:radial-gradient(circle,rgba(196,16,31,.45),transparent 70%)}
 html{scroll-behavior:smooth}
 body{font-family:var(--font);background:var(--p1);color:var(--ink);overflow-x:hidden;min-height:100vh;display:flex;flex-direction:column}
 a{text-decoration:none;color:inherit}
@@ -118,6 +125,7 @@ footer{border-top:1px solid var(--line);padding:24px var(--pad);display:flex;ali
 </head>
 <body>
 
+<div class="ambient-glow" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
 <nav>
   <a href="/" class="logo-wrap">
     <img id="navLogoImg" src="assets/logo.png" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Crect width=%27100%27 height=%27100%27 fill=%27%23E8192C%27/%3E%3Cpolygon points=%2750,22 78,68 22,68%27 fill=%27white%27/%3E%3C/svg%3E'" alt="Ahmed Omani Auto Marketing" class="logo-img">
