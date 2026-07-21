@@ -242,8 +242,13 @@ section{padding:clamp(56px,8vw,92px) 0}
 @media(max-width:600px){.ba-lb-imgs{grid-template-columns:1fr}}
 
 /* ══ CLIENTS · STATIC GRID ═════════════════════════ */
-.cl-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:12px}
-.cl-item{display:flex;align-items:center;justify-content:center;height:64px;padding:10px 16px;background:var(--card-bg);backdrop-filter:var(--glass-blur);-webkit-backdrop-filter:var(--glass-blur);border:1px solid var(--glass-border);border-radius:var(--rs);overflow:hidden;transition:.3s cubic-bezier(.16,1,.3,1);box-shadow:var(--glass-shadow)}
+.cl-marquee{overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent)}
+.cl-grid{display:flex;gap:12px;width:max-content}
+.cl-grid.marquee-run{animation:clMarquee 42s linear infinite}
+.cl-marquee:hover .cl-grid.marquee-run{animation-play-state:paused}
+@keyframes clMarquee{to{transform:translateX(-50%)}}
+@media(prefers-reduced-motion:reduce){.cl-grid.marquee-run{animation:none}}
+.cl-item{display:flex;align-items:center;justify-content:center;height:64px;min-width:150px;padding:10px 20px;background:var(--card-bg);backdrop-filter:var(--glass-blur);-webkit-backdrop-filter:var(--glass-blur);border:1px solid var(--glass-border);border-radius:var(--rs);overflow:hidden;transition:.3s cubic-bezier(.16,1,.3,1);box-shadow:var(--glass-shadow);flex-shrink:0}
 .cl-item:has(img){background:#fff;backdrop-filter:none;-webkit-backdrop-filter:none;border-color:rgba(0,0,0,.06)}
 .cl-item:hover{border-color:var(--red);transform:translateY(-4px);box-shadow:0 0 0 1px rgba(var(--red-rgb),.3),0 14px 34px rgba(var(--red-rgb),.28)}
 .cl-item img{max-height:32px;max-width:100px;object-fit:contain}
@@ -514,7 +519,8 @@ footer{padding:clamp(36px,5.5vw,56px) var(--pad) 0;border-top:1px solid var(--li
       <h2 class="sec-title" id="clTitle">ثقوا فينا</h2>
       <p class="sec-sub" id="clSub">أكثر من 30 علامة في قطاع السيارات المصري</p>
     </div>
-    <div class="cl-grid stagger" id="clientsGrid">
+    <div class="cl-marquee">
+    <div class="cl-grid" id="clientsGrid">
       <div class="cl-item"><div class="cl-name">KSH</div></div>
       <div class="cl-item"><div class="cl-name">Nakamichi</div></div>
       <div class="cl-item"><div class="cl-name">CARiMUSiC</div></div>
@@ -546,6 +552,7 @@ footer{padding:clamp(36px,5.5vw,56px) var(--pad) 0;border-top:1px solid var(--li
       <div class="cl-item"><div class="cl-name">EL-Sherif</div></div>
       <div class="cl-item"><div class="cl-name">الدمياطي</div></div>
       <div class="cl-item"><div class="cl-name">EL NASR</div></div>
+    </div>
     </div>
     <div class="clients-note">+30 علامة تجارية بمصر</div>
   </div>
@@ -681,7 +688,7 @@ function animateCounters(){
 // Note: hero-badge/.hero-text-blocks/.hero-btns/.stat-item are deliberately
 // excluded here and revealed instead from loadSite() once real Supabase data
 // has replaced the static placeholder text, to avoid a flash of stale content.
-var REVEAL_SEL='.sec-head,.cat-link-card,.pg-card,.port-card,.ba-card,.cl-item,.ft-grid';
+var REVEAL_SEL='.sec-head,.cat-link-card,.pg-card,.port-card,.ba-card,.ft-grid';
 var revealObs;
 function initReveal(){
   document.querySelectorAll(REVEAL_SEL).forEach(function(el){el.classList.add('fade-up')});
@@ -1029,11 +1036,14 @@ document.addEventListener('keydown',function(e){
 
 function renderClients(list){
   var g=document.getElementById('clientsGrid');
-  g.innerHTML=list.map(function(c){
+  var itemHtml=list.map(function(c){
     return c.logo_url
       ?'<div class="cl-item"><img src="'+esc(c.logo_url)+'" alt="'+esc(c.name)+'" loading="lazy"></div>'
       :'<div class="cl-item"><div class="cl-name">'+esc(c.name)+'</div></div>';
   }).join('');
+  var enoughForMarquee=list.length>4;
+  g.innerHTML=enoughForMarquee?itemHtml+itemHtml:itemHtml;
+  g.classList.toggle('marquee-run',enoughForMarquee);
 }
 
 var HERO_TAGS={h1:1,h2:1,h3:1,p:1};
