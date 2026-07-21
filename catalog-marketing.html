@@ -27,11 +27,13 @@
   --pad:clamp(20px,4vw,56px);
 }
 .ambient-glow{position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none;background:var(--p1)}
-.ambient-glow span{position:absolute;border-radius:50%;filter:blur(90px);opacity:.55}
-.ambient-glow span:nth-child(1){width:52vw;height:52vw;top:-14%;right:-10%;background:radial-gradient(circle,rgba(232,25,44,.65),transparent 70%)}
-.ambient-glow span:nth-child(2){width:42vw;height:42vw;top:22%;left:-14%;background:radial-gradient(circle,rgba(255,70,70,.5),transparent 70%)}
-.ambient-glow span:nth-child(3){width:46vw;height:46vw;bottom:-16%;right:8%;background:radial-gradient(circle,rgba(120,10,25,.6),transparent 70%)}
-.ambient-glow span:nth-child(4){width:34vw;height:34vw;bottom:10%;left:6%;background:radial-gradient(circle,rgba(196,16,31,.45),transparent 70%)}
+.ambient-glow span{position:absolute;border-radius:50%;filter:blur(90px);opacity:.55;animation:glowBreathe 14s ease-in-out infinite}
+.ambient-glow span:nth-child(1){width:52vw;height:52vw;top:-14%;right:-10%;background:radial-gradient(circle,rgba(232,25,44,.65),transparent 70%);animation-delay:0s}
+.ambient-glow span:nth-child(2){width:42vw;height:42vw;top:22%;left:-14%;background:radial-gradient(circle,rgba(255,70,70,.5),transparent 70%);animation-delay:-4s}
+.ambient-glow span:nth-child(3){width:46vw;height:46vw;bottom:-16%;right:8%;background:radial-gradient(circle,rgba(120,10,25,.6),transparent 70%);animation-delay:-8s}
+.ambient-glow span:nth-child(4){width:34vw;height:34vw;bottom:10%;left:6%;background:radial-gradient(circle,rgba(196,16,31,.45),transparent 70%);animation-delay:-11s}
+@keyframes glowBreathe{0%,100%{transform:scale(1) translate(0,0);opacity:.5}50%{transform:scale(1.15) translate(2%,-2%);opacity:.7}}
+@media(prefers-reduced-motion:reduce){.ambient-glow span{animation:none}}
 html{scroll-behavior:smooth}
 body{font-family:var(--font);background:var(--p1);color:var(--ink);overflow-x:hidden;min-height:100vh;display:flex;flex-direction:column}
 a{text-decoration:none;color:inherit}
@@ -47,7 +49,8 @@ nav{position:fixed;top:0;width:100%;z-index:200;height:72px;padding:0 var(--pad)
 .nav-side{display:flex;align-items:center;gap:10px}
 .nav-home{color:var(--ink2);font-size:13px;font-weight:600;transition:.2s;padding:10px 18px;border:1px solid var(--line2);border-radius:var(--rp)}
 .nav-home:hover{color:#fff;background:var(--red);border-color:var(--red)}
-.cart-btn{position:relative;display:flex;align-items:center;gap:9px;background:var(--red);color:#fff;border:none;padding:11px 20px;border-radius:var(--rp);font-weight:600;font-size:13px;transition:.2s}
+.cart-btn{position:relative;display:flex;align-items:center;gap:9px;background:var(--red);color:#fff;border:none;padding:11px 20px;border-radius:var(--rp);font-weight:600;font-size:13px;transition:.2s;box-shadow:0 6px 22px rgba(232,25,44,.4)}
+.cart-btn:hover{box-shadow:0 8px 28px rgba(232,25,44,.55)}
 .cart-btn:hover{background:var(--red-d)}
 .cart-count{background:#fff;color:var(--red);min-width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;padding:0 5px}
 
@@ -75,7 +78,7 @@ nav{position:fixed;top:0;width:100%;z-index:200;height:72px;padding:0 var(--pad)
 .cat-main{padding:0 0 clamp(64px,8vw,100px)}
 .prod-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:20px}
 .prod-card{background:var(--card-bg);backdrop-filter:var(--glass-blur);-webkit-backdrop-filter:var(--glass-blur);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;display:flex;flex-direction:column;transition:.2s;position:relative;box-shadow:var(--glass-shadow)}
-.prod-card:hover{border-color:var(--line2);transform:translateY(-3px);box-shadow:0 10px 26px rgba(24,21,15,.06)}
+.prod-card:hover{border-color:rgba(var(--red-rgb,232,25,44),.4);transform:translateY(-3px);box-shadow:0 14px 34px rgba(232,25,44,.28)}
 .prod-img{aspect-ratio:1/1;height:auto;background:var(--p3);display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative}
 .prod-img img{width:100%;height:100%;object-fit:cover;transition:.4s}
 .prod-card:hover .prod-img img{transform:scale(1.04)}
@@ -90,7 +93,7 @@ nav{position:fixed;top:0;width:100%;z-index:200;height:72px;padding:0 var(--pad)
 .prod-price{font-size:14px;font-weight:700;color:var(--ink)}
 .prod-price small{font-size:10px;color:var(--ink3);font-weight:500;display:block;margin-top:2px}
 .prod-price.ask{font-size:12px;color:var(--ink2);font-weight:500}
-.add-btn{background:var(--red);color:#fff;border:none;padding:9px 16px;border-radius:var(--rp);font-weight:600;font-size:12px;transition:.2s;white-space:nowrap}
+.add-btn{background:var(--red);color:#fff;border:none;padding:9px 16px;border-radius:var(--rp);font-weight:600;font-size:12px;transition:.2s;white-space:nowrap;box-shadow:0 4px 16px rgba(232,25,44,.35)}
 .add-btn:hover{background:var(--red-d)}
 .qty-ctrl{display:none;align-items:center;background:var(--p3);border-radius:var(--rp)}
 .qty-ctrl button{background:transparent;border:none;color:var(--ink);width:30px;height:30px;font-size:15px;transition:.2s;border-radius:50%}
@@ -136,7 +139,8 @@ nav{position:fixed;top:0;width:100%;z-index:200;height:72px;padding:0 var(--pad)
 .cart-note{width:100%;background:var(--p1);border:1px solid var(--line2);border-radius:var(--rs);color:var(--ink);font-family:var(--font);font-size:12.5px;padding:12px 14px;resize:none;margin-bottom:14px;min-height:64px}
 .cart-note:focus{outline:none;border-color:var(--ink3)}
 .cart-note::placeholder{color:var(--ink3)}
-.wa-send{width:100%;display:flex;align-items:center;justify-content:center;gap:10px;background:var(--wa);color:#fff;border:none;border-radius:var(--rp);padding:16px;font-weight:600;font-size:14px;transition:.2s}
+.wa-send{width:100%;display:flex;align-items:center;justify-content:center;gap:10px;background:var(--wa);color:#fff;border:none;border-radius:var(--rp);padding:16px;font-weight:600;font-size:14px;transition:.2s;box-shadow:0 8px 26px rgba(37,211,102,.4)}
+.wa-send:hover:not(:disabled){box-shadow:0 10px 32px rgba(37,211,102,.55)}
 .wa-send:hover{background:var(--wa-d)}
 .wa-send:disabled{opacity:.4;cursor:not-allowed}
 .wa-send svg{width:18px;height:18px;flex-shrink:0}
