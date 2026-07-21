@@ -36,6 +36,7 @@ CREATE TABLE IF NOT EXISTS ao_settings (
   show_marketing_portfolio BOOLEAN DEFAULT TRUE,
   catalog_ads_image TEXT DEFAULT '',
   catalog_marketing_image TEXT DEFAULT '',
+  site_bg_image TEXT DEFAULT '',
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 

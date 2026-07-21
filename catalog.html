@@ -28,7 +28,9 @@
   --pad:clamp(20px,4vw,56px);
 }
 .ambient-glow{position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none;background:var(--p1)}
-.ambient-glow span{position:absolute;border-radius:50%;filter:blur(90px);opacity:.55;animation:glowBreathe 14s ease-in-out infinite}
+.ambient-glow.has-image{background-size:cover;background-position:center}
+.ambient-glow.has-image::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(5,5,7,.72),rgba(5,5,7,.86));z-index:1}
+.ambient-glow span{position:absolute;border-radius:50%;filter:blur(90px);opacity:.55;animation:glowBreathe 14s ease-in-out infinite;z-index:2}
 .ambient-glow span:nth-child(1){width:52vw;height:52vw;top:-14%;right:-10%;background:radial-gradient(circle,rgba(232,25,44,.65),transparent 70%);animation-delay:0s}
 .ambient-glow span:nth-child(2){width:42vw;height:42vw;top:22%;left:-14%;background:radial-gradient(circle,rgba(255,70,70,.5),transparent 70%);animation-delay:-4s}
 .ambient-glow span:nth-child(3){width:46vw;height:46vw;bottom:-16%;right:8%;background:radial-gradient(circle,rgba(120,10,25,.6),transparent 70%);animation-delay:-8s}
@@ -257,6 +259,12 @@ var cart={};       // {productId: qty}
 var CART_KEY='ao_cart_v1';
 
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+function applySiteBg(url){
+  var glow=document.querySelector('.ambient-glow');
+  if(!glow||!url)return;
+  glow.style.backgroundImage='url('+JSON.stringify(url)+')';
+  glow.classList.add('has-image');
+}
 function fmtPrice(p){
   p=parseFloat(p);
   if(!p||p<=0)return null;
@@ -466,11 +474,12 @@ async function loadCatalog(){
   try{
     if(typeof supabase==='undefined')throw new Error('no sb');
     var sb=supabase.createClient(SB_URL,SB_KEY);
-    var cfg=(await sb.from('ao_settings').select('whatsapp,meta_pixel_id,logo_url,favicon_url').single()).data;
+    var cfg=(await sb.from('ao_settings').select('whatsapp,meta_pixel_id,logo_url,favicon_url,site_bg_image').single()).data;
     if(cfg&&cfg.whatsapp)_waNum=cfg.whatsapp;
     if(cfg&&cfg.meta_pixel_id)injectMetaPixel(cfg.meta_pixel_id);
     if(cfg&&cfg.logo_url){var nl=document.getElementById('navLogoImg');if(nl)nl.src=cfg.logo_url;}
     if(cfg&&cfg.favicon_url){var fav=document.getElementById('faviconLink');if(fav)fav.href=cfg.favicon_url;}
+    if(cfg&&cfg.site_bg_image)applySiteBg(cfg.site_bg_image);
     var res=await sb.from('ao_products').select('*').eq('is_active',true).eq('catalog','ads').order('sort_order');
     products=res.data||[];
   }catch(e){products=[]}

@@ -787,6 +787,19 @@ try{
         </div>
       </div>
       <div class="card">
+        <div class="card-header"><div class="card-title"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>خلفية الموقع الزجاجية</div></div>
+        <div class="field-hint" style="margin-bottom:12px">صورة (زي سيارة أو ورشة) تظهر خافتة خلف كل الموقع تحت تأثير الزجاج المصنفر — لو سبتها فاضية، الموقع بيفضل على الخلفية اللونية الافتراضية.</div>
+        <div class="field">
+          <label>صورة الخلفية</label>
+          <input type="url" id="s-site-bg" placeholder="https://..." oninput="prevCatalogImg('s-site-bg-pv',this.value)">
+          <div class="upload-zone" onclick="document.getElementById('s-site-bg-f').click()">
+            📁 ارفع صورة من جهازك
+            <input type="file" id="s-site-bg-f" accept="image/*" style="display:none" onchange="upCatalogImg(this,'s-site-bg')">
+          </div>
+          <img id="s-site-bg-pv" class="port-preview" style="max-height:140px;object-fit:cover">
+        </div>
+      </div>
+      <div class="card">
         <div class="card-header"><div class="card-title"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/></svg>ظهور الأقسام</div></div>
         <div class="field">
           <label style="display:flex;align-items:center;gap:8px;cursor:pointer;text-transform:none;letter-spacing:0;font-size:13px;font-weight:600;color:var(--w2)">
@@ -1282,6 +1295,7 @@ async function loadSettings(){
   v('s-favicon',data.favicon_url);prevBrand('s-favicon-pv',data.favicon_url);
   v('s-cat-ads',data.catalog_ads_image);prevCatalogImg('s-cat-ads-pv',data.catalog_ads_image);
   v('s-cat-marketing',data.catalog_marketing_image);prevCatalogImg('s-cat-marketing-pv',data.catalog_marketing_image);
+  v('s-site-bg',data.site_bg_image);prevCatalogImg('s-site-bg-pv',data.site_bg_image);
   document.getElementById('s-show-mkt-port').checked=data.show_marketing_portfolio!==false;
   statsData=data.stats_data||defaultStats();
   textsData=data.page_texts||{};
@@ -1345,6 +1359,7 @@ async function saveSettings(){
     site_title:g('s-title'),site_description:g('s-desc'),footer_text:g('s-footer'),
     logo_url:g('s-logo')||null,favicon_url:g('s-favicon')||null,
     catalog_ads_image:g('s-cat-ads')||null,catalog_marketing_image:g('s-cat-marketing')||null,
+    site_bg_image:g('s-site-bg')||null,
     show_marketing_portfolio:document.getElementById('s-show-mkt-port').checked,
     updated_at:new Date().toISOString()
   };

@@ -50,7 +50,9 @@ h1,h2,h3{font-weight:700}
 
 /* ══ AMBIENT GLOW — colorful blurred backdrop the glass cards pick up ══ */
 .ambient-glow{position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none;background:var(--p1)}
-.ambient-glow span{position:absolute;border-radius:50%;filter:blur(90px);opacity:.55;animation:glowBreathe 14s ease-in-out infinite}
+.ambient-glow.has-image{background-size:cover;background-position:center}
+.ambient-glow.has-image::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(5,5,7,.72),rgba(5,5,7,.86));z-index:1}
+.ambient-glow span{position:absolute;border-radius:50%;filter:blur(90px);opacity:.55;animation:glowBreathe 14s ease-in-out infinite;z-index:2}
 .ambient-glow span:nth-child(1){width:52vw;height:52vw;top:-14%;right:-10%;background:radial-gradient(circle,rgba(232,25,44,.65),transparent 70%);animation-delay:0s}
 .ambient-glow span:nth-child(2){width:42vw;height:42vw;top:22%;left:-14%;background:radial-gradient(circle,rgba(255,70,70,.5),transparent 70%);animation-delay:-4s}
 .ambient-glow span:nth-child(3){width:46vw;height:46vw;bottom:-16%;right:8%;background:radial-gradient(circle,rgba(120,10,25,.6),transparent 70%);animation-delay:-8s}
@@ -1093,6 +1095,12 @@ function initClientsAutoScroll(){
 }
 
 var HERO_TAGS={h1:1,h2:1,h3:1,p:1};
+function applySiteBg(url){
+  var glow=document.querySelector('.ambient-glow');
+  if(!glow||!url)return;
+  glow.style.backgroundImage='url('+JSON.stringify(url)+')';
+  glow.classList.add('has-image');
+}
 function applyHero(h){
   if(h.hide_text){document.getElementById('home').classList.add('hide-text')}
   if(h.badge){var b=document.getElementById('heroBadge');if(b)b.innerHTML='<span class="hero-badge-dot"></span>'+esc(h.badge);}
@@ -1151,6 +1159,7 @@ async function loadSite(){
       if(cfg.show_marketing_portfolio===false){var pm=document.getElementById('portfolioMarketing');if(pm)pm.style.display='none';}
       if(cfg.catalog_ads_image){document.getElementById('catImgAds').src=cfg.catalog_ads_image;}
       if(cfg.catalog_marketing_image){document.getElementById('catImgMarketing').src=cfg.catalog_marketing_image;}
+      applySiteBg(cfg.site_bg_image);
       renderSocial(cfg);
     }
     var hero=(await sb.from('ao_hero').select('*').single()).data;
