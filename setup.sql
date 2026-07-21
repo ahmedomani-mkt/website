@@ -37,6 +37,7 @@ CREATE TABLE IF NOT EXISTS ao_settings (
   catalog_ads_image TEXT DEFAULT '',
   catalog_marketing_image TEXT DEFAULT '',
   site_bg_image TEXT DEFAULT '',
+  site_theme_mode TEXT DEFAULT 'dark', -- 'dark' | 'light'
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
