@@ -242,12 +242,10 @@ section{padding:clamp(56px,8vw,92px) 0}
 @media(max-width:600px){.ba-lb-imgs{grid-template-columns:1fr}}
 
 /* ══ CLIENTS · STATIC GRID ═════════════════════════ */
-.cl-marquee{overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent)}
+.cl-marquee{overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;cursor:grab;-webkit-mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent)}
+.cl-marquee::-webkit-scrollbar{display:none}
+.cl-marquee.dragging{cursor:grabbing;scroll-behavior:auto;user-select:none}
 .cl-grid{display:flex;gap:12px;width:max-content}
-.cl-grid.marquee-run{animation:clMarquee 42s linear infinite}
-.cl-marquee:hover .cl-grid.marquee-run{animation-play-state:paused}
-@keyframes clMarquee{to{transform:translateX(-50%)}}
-@media(prefers-reduced-motion:reduce){.cl-grid.marquee-run{animation:none}}
 .cl-item{display:flex;align-items:center;justify-content:center;height:64px;min-width:150px;padding:10px 20px;background:var(--card-bg);backdrop-filter:var(--glass-blur);-webkit-backdrop-filter:var(--glass-blur);border:1px solid var(--glass-border);border-radius:var(--rs);overflow:hidden;transition:.3s cubic-bezier(.16,1,.3,1);box-shadow:var(--glass-shadow);flex-shrink:0}
 .cl-item:has(img){background:#fff;backdrop-filter:none;-webkit-backdrop-filter:none;border-color:rgba(0,0,0,.06)}
 .cl-item:hover{border-color:var(--red);transform:translateY(-4px);box-shadow:0 0 0 1px rgba(var(--red-rgb),.3),0 14px 34px rgba(var(--red-rgb),.28)}
@@ -717,6 +715,7 @@ function showToast(msg){
 
 document.addEventListener('DOMContentLoaded',function(){
   initReveal();
+  if(typeof initClientsAutoScroll==='function')initClientsAutoScroll();
 });
 </script>
 
@@ -1036,14 +1035,61 @@ document.addEventListener('keydown',function(e){
 
 function renderClients(list){
   var g=document.getElementById('clientsGrid');
-  var itemHtml=list.map(function(c){
+  g.innerHTML=list.map(function(c){
     return c.logo_url
       ?'<div class="cl-item"><img src="'+esc(c.logo_url)+'" alt="'+esc(c.name)+'" loading="lazy"></div>'
       :'<div class="cl-item"><div class="cl-name">'+esc(c.name)+'</div></div>';
   }).join('');
-  var enoughForMarquee=list.length>4;
-  g.innerHTML=enoughForMarquee?itemHtml+itemHtml:itemHtml;
-  g.classList.toggle('marquee-run',enoughForMarquee);
+  initClientsAutoScroll();
+}
+
+// ── CLIENTS TRACK — auto-scrolls back and forth, pauses on any user
+// interaction (drag/touch/wheel) and lets the user scroll it freely.
+function initClientsAutoScroll(){
+  var wrap=document.querySelector('.cl-marquee');
+  if(!wrap||wrap.dataset.autoScrollBound)return;
+  wrap.dataset.autoScrollBound='1';
+  var reduceMotion=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var sign=rtlAdvanceSign();
+  var dir=1,paused=false,dragging=false,resumeTimer=null;
+  var dragStartX=0,dragStartScroll=0;
+
+  function pause(){paused=true;clearTimeout(resumeTimer)}
+  function scheduleResume(){clearTimeout(resumeTimer);resumeTimer=setTimeout(function(){paused=false},2200)}
+
+  function tick(){
+    if(!paused&&!dragging&&!reduceMotion){
+      var max=wrap.scrollWidth-wrap.clientWidth;
+      if(max>1){
+        wrap.scrollLeft+=dir*sign*0.6;
+        var pos=sign*wrap.scrollLeft;
+        if(pos>=max){dir=-1;wrap.scrollLeft=sign*max}
+        else if(pos<=0){dir=1;wrap.scrollLeft=0}
+      }
+    }
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+
+  wrap.addEventListener('pointerdown',function(e){
+    dragging=true;pause();wrap.classList.add('dragging');
+    dragStartX=e.clientX;dragStartScroll=wrap.scrollLeft;
+    wrap.setPointerCapture(e.pointerId);
+  });
+  wrap.addEventListener('pointermove',function(e){
+    if(!dragging)return;
+    wrap.scrollLeft=dragStartScroll-(e.clientX-dragStartX);
+  });
+  function endDrag(){
+    if(!dragging)return;
+    dragging=false;wrap.classList.remove('dragging');scheduleResume();
+  }
+  wrap.addEventListener('pointerup',endDrag);
+  wrap.addEventListener('pointercancel',endDrag);
+  wrap.addEventListener('pointerleave',function(){if(dragging)endDrag()});
+  wrap.addEventListener('wheel',function(){pause();scheduleResume()},{passive:true});
+  wrap.addEventListener('touchstart',function(){pause()},{passive:true});
+  wrap.addEventListener('touchend',function(){scheduleResume()},{passive:true});
 }
 
 var HERO_TAGS={h1:1,h2:1,h3:1,p:1};
