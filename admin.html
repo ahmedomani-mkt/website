@@ -815,6 +815,7 @@ try{
             <input type="file" id="s-site-bg-f" accept="image/*" style="display:none" onchange="upCatalogImg(this,'s-site-bg')">
           </div>
           <img id="s-site-bg-pv" class="port-preview" style="max-height:140px;object-fit:cover">
+          <button type="button" class="btn btn-d bsm" onclick="clearSiteBg()">🗑 حذف صورة الخلفية</button>
         </div>
       </div>
       <div class="card">
@@ -2172,6 +2173,11 @@ async function togglePage(id,val){
 }
 
 // ── UTILS ─────────────────────────────────────────────
+function clearSiteBg(){
+  v('s-site-bg','');
+  prevCatalogImg('s-site-bg-pv','');
+  toast('🗑 هتتشال بعد ما تدوس حفظ الإعدادات');
+}
 function g(id){return(document.getElementById(id)||{value:''}).value}
 function v(id,val){var el=document.getElementById(id);if(el)el.value=val||''}
 function h(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
