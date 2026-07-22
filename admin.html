@@ -718,7 +718,17 @@ try{
               <input type="file" id="s-logo-f" accept="image/*" style="display:none" onchange="upBrand(this,'s-logo')">
             </div>
             <img id="s-logo-pv" class="port-preview" style="max-height:70px;object-fit:contain;background:var(--s2);padding:8px">
-            <div class="field-hint">يظهر في الشريط العلوي والفوتر بدل الأيقونة والاسم المنفصلين — ارفع اللوجو النهائي كامل (زي أي لوجو جاهز فيه الأيقونة واسم البراند مع بعض).</div>
+            <div class="field-hint">يظهر في الشريط العلوي والفوتر — ده اللوجو المستخدم في الوضع الفاتح، وبرضو الافتراضي للوضع الداكن لو مفيش لوجو تاني مخصص له.</div>
+          </div>
+          <div class="field">
+            <label>لوجو الوضع الداكن (اختياري)</label>
+            <input type="url" id="s-logo-dark" placeholder="https://..." oninput="prevBrand('s-logo-dark-pv',this.value)">
+            <div class="upload-zone" onclick="document.getElementById('s-logo-dark-f').click()">
+              📁 أو ارفع صورة من جهازك
+              <input type="file" id="s-logo-dark-f" accept="image/*" style="display:none" onchange="upBrand(this,'s-logo-dark')">
+            </div>
+            <img id="s-logo-dark-pv" class="port-preview" style="max-height:70px;object-fit:contain;background:var(--s2);padding:8px">
+            <div class="field-hint">لو اللوجو الأساسي غامق اللون ومش واضح على الخلفية الزجاجية السودا، ارفع هنا نسخة فاتحة/أبيض تظهر بس لما الموقع في الوضع الداكن.</div>
           </div>
           <div class="field">
             <label>أيقونة التبويب Favicon</label>
@@ -1300,6 +1310,7 @@ async function loadSettings(){
   v('s-fb',data.facebook_url);v('s-ig',data.instagram_url);v('s-tk',data.tiktok_url);
   v('s-title',data.site_title);v('s-desc',data.site_description);v('s-footer',data.footer_text);
   v('s-logo',data.logo_url);prevBrand('s-logo-pv',data.logo_url);
+  v('s-logo-dark',data.logo_dark_url);prevBrand('s-logo-dark-pv',data.logo_dark_url);
   v('s-favicon',data.favicon_url);prevBrand('s-favicon-pv',data.favicon_url);
   v('s-cat-ads',data.catalog_ads_image);prevCatalogImg('s-cat-ads-pv',data.catalog_ads_image);
   v('s-cat-marketing',data.catalog_marketing_image);prevCatalogImg('s-cat-marketing-pv',data.catalog_marketing_image);
@@ -1366,7 +1377,7 @@ async function saveSettings(){
     meta_pixel_id:g('s-px'),google_tag_id:g('s-gt'),tiktok_pixel_id:g('s-tt'),
     facebook_url:g('s-fb'),instagram_url:g('s-ig'),tiktok_url:g('s-tk'),
     site_title:g('s-title'),site_description:g('s-desc'),footer_text:g('s-footer'),
-    logo_url:g('s-logo')||null,favicon_url:g('s-favicon')||null,
+    logo_url:g('s-logo')||null,logo_dark_url:g('s-logo-dark')||null,favicon_url:g('s-favicon')||null,
     catalog_ads_image:g('s-cat-ads')||null,catalog_marketing_image:g('s-cat-marketing')||null,
     site_bg_image:g('s-site-bg')||null,
     site_theme_mode:document.getElementById('s-theme-mode').value,

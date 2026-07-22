@@ -1185,9 +1185,10 @@ async function loadSite(){
       if(cfg.footer_text){var fc=document.getElementById('ftCopy');if(fc)fc.textContent=cfg.footer_text;}
       if(cfg.site_title){document.title=cfg.site_title;}
       if(cfg.site_description){var md=document.querySelector('meta[name="description"]');if(md)md.content=cfg.site_description;}
-      if(cfg.logo_url){
-        var nl=document.getElementById('navLogoImg');if(nl)nl.src=cfg.logo_url;
-        var fl=document.getElementById('ftLogoImg');if(fl)fl.src=cfg.logo_url;
+      var activeLogo=(cfg.site_theme_mode==='light')?cfg.logo_url:(cfg.logo_dark_url||cfg.logo_url);
+      if(activeLogo){
+        var nl=document.getElementById('navLogoImg');if(nl)nl.src=activeLogo;
+        var fl=document.getElementById('ftLogoImg');if(fl)fl.src=activeLogo;
       }
       if(cfg.favicon_url){var fav=document.getElementById('faviconLink');if(fav)fav.href=cfg.favicon_url;}
       if(cfg.page_texts)applyPageTexts(cfg.page_texts);

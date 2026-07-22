@@ -500,10 +500,10 @@ async function loadCatalog(){
   try{
     if(typeof supabase==='undefined')throw new Error('no sb');
     var sb=supabase.createClient(SB_URL,SB_KEY);
-    var cfg=(await sb.from('ao_settings').select('whatsapp,meta_pixel_id,logo_url,favicon_url,site_bg_image,site_theme_mode').single()).data;
+    var cfg=(await sb.from('ao_settings').select('whatsapp,meta_pixel_id,logo_url,logo_dark_url,favicon_url,site_bg_image,site_theme_mode').single()).data;
     if(cfg&&cfg.whatsapp)_waNum=cfg.whatsapp;
     if(cfg&&cfg.meta_pixel_id)injectMetaPixel(cfg.meta_pixel_id);
-    if(cfg&&cfg.logo_url){var nl=document.getElementById('navLogoImg');if(nl)nl.src=cfg.logo_url;}
+    if(cfg){var activeLogo=(cfg.site_theme_mode==='light')?cfg.logo_url:(cfg.logo_dark_url||cfg.logo_url);if(activeLogo){var nl=document.getElementById('navLogoImg');if(nl)nl.src=activeLogo;}}
     if(cfg&&cfg.favicon_url){var fav=document.getElementById('faviconLink');if(fav)fav.href=cfg.favicon_url;}
     if(cfg&&cfg.site_bg_image)applySiteBg(cfg.site_bg_image);
     if(cfg)applySiteTheme(cfg.site_theme_mode);

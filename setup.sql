@@ -25,6 +25,7 @@ CREATE TABLE IF NOT EXISTS ao_settings (
   site_description TEXT DEFAULT '',
   footer_text TEXT DEFAULT '',
   logo_url TEXT DEFAULT '',
+  logo_dark_url TEXT DEFAULT '',
   favicon_url TEXT DEFAULT '',
   stats_data JSONB DEFAULT '[]',
   page_texts JSONB DEFAULT '{}',
