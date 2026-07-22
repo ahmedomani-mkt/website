@@ -31,7 +31,7 @@
   --glass-border:rgba(255,255,255,.28);
   --glass-shadow:inset 0 1.5px 0 rgba(255,255,255,.3), inset 0 0 0 1px rgba(255,255,255,.06), 0 24px 50px -16px rgba(0,0,0,.6);
   --font:'Rubik','Segoe UI',Tahoma,Arial,sans-serif;
-  --r:18px; --rs:12px; --rp:999px;
+  --r:22px; --rs:14px; --rp:999px;
   --pad:clamp(20px,4vw,56px);
 }
 /* ══ TOKENS — light glass (admin-toggled) ═══════════ */
@@ -141,23 +141,28 @@ nav.solid{box-shadow:0 2px 16px rgba(24,21,15,.06)}
 .hero.has-bg .btn-secondary{background:var(--p1);border-color:var(--red);color:var(--red)}
 .hero.has-bg .btn-secondary:hover{background:var(--red-soft)}
 .hero.hide-text .hero-inner{display:none}
-.hero.hide-text{padding:0;min-height:64vh}
+.hero.hide-text{padding:0 0 60px;min-height:64vh}
 .hero.hide-text.has-bg{padding-top:0}
 .hero.hide-text .hero-bg::after{display:none}
-@media(max-width:767px){.hero.hide-text{min-height:340px}}
+@media(max-width:767px){.hero.hide-text{min-height:340px;padding-bottom:80px}}
 
-/* ══ TRUST STATS · RED ════════════════════════════ */
-.stats-bar{padding:0}
-.stats-grid{display:grid;grid-template-columns:repeat(4,1fr)}
-.stat-item{padding:clamp(30px,4.2vw,48px) 20px;text-align:center}
-.stat-icon{font-size:22px;margin-bottom:10px;opacity:.9;color:var(--icon-color);text-shadow:0 0 18px rgba(255,255,255,.4)}
-.stat-num{font-size:clamp(28px,4vw,44px);font-weight:700;color:var(--ink);line-height:1;margin-bottom:6px}
+/* ══ TRUST STATS — floating glass strip straddling the hero's bottom edge ══ */
+.stats-bar{position:relative;z-index:3;width:min(640px,92vw);margin:-56px auto 0}
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);background:var(--card-bg);backdrop-filter:var(--glass-blur);-webkit-backdrop-filter:var(--glass-blur);border:1px solid var(--glass-border);border-radius:22px;box-shadow:var(--glass-shadow);overflow:hidden}
+.stat-item{padding:16px 8px;text-align:center;position:relative}
+.stat-item:not(:first-child){border-inline-start:1px solid var(--line)}
+.stat-icon{font-size:17px;margin-bottom:6px;color:var(--icon-color)}
+.stat-num{font-size:clamp(16px,2vw,22px);font-weight:700;color:var(--ink);line-height:1;margin-bottom:4px}
 .stat-num span{color:rgba(var(--ink-rgb),.8)}
-.stat-label{font-size:12px;color:rgba(var(--ink-rgb),.85);line-height:1.5;font-weight:500}
+.stat-label{font-size:9.5px;color:var(--ink3);line-height:1.35;font-weight:500}
+@media(max-width:560px){.stats-grid{grid-template-columns:repeat(2,1fr)}.stat-item:nth-child(3){border-inline-start:none}}
 
 /* ══ SECTION HEAD ═════════════════════════════════ */
 section{padding:clamp(56px,8vw,92px) 0}
 .sec-head{text-align:center;max-width:640px;margin:0 auto clamp(40px,5.5vw,64px)}
+.eyebrow{display:inline-flex;align-items:center;gap:7px;background:var(--card);border:1px solid var(--line2);color:var(--ink2);padding:7px 16px;border-radius:var(--rp);font-size:11.5px;font-weight:600;letter-spacing:.02em;margin-bottom:14px}
+.eyebrow i{color:var(--red);font-size:9px}
+.sec-head[style*="text-align:right"] .eyebrow,.port-head-text .eyebrow{margin-inline:0}
 .sec-title{font-size:clamp(32px,4.6vw,50px);font-weight:800;line-height:1.22;letter-spacing:-.02em;color:var(--ink)}
 .sec-sub{font-size:14.5px;color:var(--ink2);line-height:1.7;margin-top:14px;font-weight:400}
 
@@ -196,9 +201,10 @@ section{padding:clamp(56px,8vw,92px) 0}
 /* ══ PORTFOLIO GROUP CARDS — fixed-height row, any group count ═ */
 .pg-cards-row{display:flex;gap:16px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;scroll-snap-type:x proximity;padding:4px var(--pad) 10px}
 .pg-cards-row::-webkit-scrollbar{display:none}
-.pg-card{flex-shrink:0;width:270px;height:330px;border-radius:18px;overflow:hidden;position:relative;cursor:pointer;scroll-snap-align:start;transition:transform .25s,box-shadow .25s;border:1px solid var(--glass-border);box-shadow:var(--glass-shadow)}
+.pg-card{flex-shrink:0;width:270px;height:330px;border-radius:var(--r);overflow:hidden;position:relative;cursor:pointer;scroll-snap-align:start;transition:transform .25s,box-shadow .25s;border:1px solid var(--glass-border);box-shadow:var(--glass-shadow)}
 .pg-card:hover{transform:translateY(-5px);box-shadow:0 18px 40px rgba(var(--red-rgb),.35)}
 .pg-card img{width:100%;height:100%;object-fit:cover;display:block}
+.pg-card-index{position:absolute;top:12px;right:12px;z-index:2;background:rgba(15,13,10,.55);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.2);color:#fff;font-size:11px;font-weight:700;letter-spacing:.03em;padding:5px 10px;border-radius:var(--rp)}
 .pg-card-overlay{position:absolute;inset:auto 0 0 0;padding:18px 16px;background:linear-gradient(to top,rgba(15,13,10,.85),transparent 70%);color:#fff}
 .pg-card-name{display:inline-block;font-size:13px;font-weight:700;margin-bottom:6px;background:var(--red);color:#fff;padding:4px 10px;border-radius:6px}
 .pg-card-count{font-size:11.5px;opacity:.88;display:flex;align-items:center;gap:5px}
@@ -322,13 +328,11 @@ footer{padding:clamp(36px,5.5vw,56px) var(--pad) 0;border-top:1px solid var(--li
 }
 
 /* ══ RESPONSIVE ═══════════════════════════════════ */
-@media(max-width:1023px){
-  .stats-grid{grid-template-columns:1fr 1fr}
-}
 @media(max-width:767px){
   .nav-links,.nav-cta{display:none}
   .burger{display:flex}
   .hero{padding:116px 0 60px}
+  .stats-bar{margin-top:-40px}
   .hero.has-bg{padding-top:150px}
   .btn-primary,.btn-secondary{width:100%;justify-content:center}
   .hero-btns{flex-direction:column}
@@ -397,30 +401,28 @@ footer{padding:clamp(36px,5.5vw,56px) var(--pad) 0;border-top:1px solid var(--li
   </div>
 </section>
 
-<!-- ══ 2 · TRUST STATS — red ═════════════════════════ -->
-<div class="stats-bar bg-red" id="secStats">
-  <div class="container">
-    <div class="stats-grid stagger" id="statsGrid">
-      <div class="stat-item fade-up" data-reveal-bound="1">
-        <div class="stat-icon"><i class="bi bi-trophy"></i></div>
-        <div class="stat-num" data-count>10+</div>
-        <div class="stat-label">سنوات في السوق المصري</div>
-      </div>
-      <div class="stat-item fade-up" data-reveal-bound="1">
-        <div class="stat-icon"><i class="bi bi-people"></i></div>
-        <div class="stat-num" data-count>30+</div>
-        <div class="stat-label">عميل في قطاع السيارات</div>
-      </div>
-      <div class="stat-item fade-up" data-reveal-bound="1">
-        <div class="stat-icon"><i class="bi bi-rocket-takeoff"></i></div>
-        <div class="stat-num" data-count>500+</div>
-        <div class="stat-label">مشروع منجز بنجاح</div>
-      </div>
-      <div class="stat-item fade-up" data-reveal-bound="1">
-        <div class="stat-icon"><i class="bi bi-lightbulb"></i></div>
-        <div class="stat-num" data-count>5x</div>
-        <div class="stat-label">متوسط عائد الاستثمار</div>
-      </div>
+<!-- ══ TRUST STATS — floating glass strip straddling the hero's bottom edge ══ -->
+<div class="stats-bar" id="secStats">
+  <div class="stats-grid stagger" id="statsGrid">
+    <div class="stat-item fade-up" data-reveal-bound="1">
+      <div class="stat-icon"><i class="bi bi-trophy"></i></div>
+      <div class="stat-num" data-count>10+</div>
+      <div class="stat-label">سنوات في السوق المصري</div>
+    </div>
+    <div class="stat-item fade-up" data-reveal-bound="1">
+      <div class="stat-icon"><i class="bi bi-people"></i></div>
+      <div class="stat-num" data-count>30+</div>
+      <div class="stat-label">عميل في قطاع السيارات</div>
+    </div>
+    <div class="stat-item fade-up" data-reveal-bound="1">
+      <div class="stat-icon"><i class="bi bi-rocket-takeoff"></i></div>
+      <div class="stat-num" data-count>500+</div>
+      <div class="stat-label">مشروع منجز بنجاح</div>
+    </div>
+    <div class="stat-item fade-up" data-reveal-bound="1">
+      <div class="stat-icon"><i class="bi bi-lightbulb"></i></div>
+      <div class="stat-num" data-count>5x</div>
+      <div class="stat-label">متوسط عائد الاستثمار</div>
     </div>
   </div>
 </div>
@@ -429,6 +431,7 @@ footer{padding:clamp(36px,5.5vw,56px) var(--pad) 0;border-top:1px solid var(--li
 <section id="secCatalogs" class="bg-1">
   <div class="container">
     <div class="sec-head">
+      <div class="eyebrow"><i class="bi bi-diamond-fill"></i> الكتالوجات</div>
       <h2 class="sec-title">تصفح كتالوجاتنا</h2>
     </div>
     <div class="cat-links-grid stagger">
@@ -454,6 +457,7 @@ footer{padding:clamp(36px,5.5vw,56px) var(--pad) 0;border-top:1px solid var(--li
 <section id="portfolio" class="bg-2">
   <div class="container">
     <div class="sec-head" style="text-align:right">
+      <div class="eyebrow"><i class="bi bi-diamond-fill"></i> أعمالنا المميزة</div>
       <h2 class="sec-title" id="portTitle">أعمالنا في الدعاية والإعلان</h2>
     </div>
   </div>
@@ -468,6 +472,7 @@ footer{padding:clamp(36px,5.5vw,56px) var(--pad) 0;border-top:1px solid var(--li
   <div class="container">
     <div class="port-head">
       <div class="port-head-text sec-head" style="margin:0;text-align:right">
+        <div class="eyebrow"><i class="bi bi-diamond-fill"></i> أعمالنا المميزة</div>
         <h2 class="sec-title" id="portTitleMarketing">أعمالنا في التسويق</h2>
       </div>
       <div class="port-nav-btns">
@@ -487,6 +492,7 @@ footer{padding:clamp(36px,5.5vw,56px) var(--pad) 0;border-top:1px solid var(--li
   <div class="container">
     <div class="port-head">
       <div class="port-head-text sec-head" style="margin:0;text-align:right">
+        <div class="eyebrow"><i class="bi bi-diamond-fill"></i> نتائج ملموسة</div>
         <h2 class="sec-title">قبل وبعد</h2>
         <p class="sec-sub" style="margin-top:8px">شوف الفرق اللي بنعمله في هوية عملائنا</p>
       </div>
@@ -539,6 +545,7 @@ footer{padding:clamp(36px,5.5vw,56px) var(--pad) 0;border-top:1px solid var(--li
 <section id="clients" class="clients-sec bg-1">
   <div class="container">
     <div class="sec-head">
+      <div class="eyebrow"><i class="bi bi-diamond-fill"></i> عملاؤنا</div>
       <h2 class="sec-title" id="clTitle">ثقوا فينا</h2>
       <p class="sec-sub" id="clSub">أكثر من 30 علامة في قطاع السيارات المصري</p>
     </div>
@@ -930,9 +937,10 @@ function renderAdsGroups(list){
   });
   pgGroupsData=groups;
   wrap.innerHTML='<div class="pg-cards-row stagger">'
-    +order.map(function(gname){
+    +order.map(function(gname,i){
       var items=groups[gname];
       return'<div class="pg-card" onclick="openPgGallery(\''+gname.replace(/'/g,"\\'")+'\')">'
+        +'<div class="pg-card-index">'+String(i+1).padStart(2,'0')+'</div>'
         +'<img src="'+esc(items[0].image_url)+'" alt="'+esc(gname)+'" loading="lazy">'
         +'<div class="pg-card-overlay"><div class="pg-card-name">'+esc(gname)+'</div>'
         +'<div class="pg-card-count"><i class="bi bi-images"></i> '+items.length+' صورة</div></div>'
