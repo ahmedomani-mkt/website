@@ -7,7 +7,7 @@ B2B automotive marketing portfolio/catalog website for Ahmed Omani (automotive m
 - **Live Site**: Deployed on Vercel, auto-deploy from GitHub branch `claude/portfolio-website-redesign-y8p4kd`
 - **Tech Stack**: Plain HTML/CSS/JS (no framework, no bundler) + Supabase (Postgres + Storage + Auth) + Vercel
 - **Language**: Arabic (RTL) with Noto Kufi Arabic / Rubik fonts
-- **Branding**: Red accent (`#E8192C`), light theme on the public site, light/dark toggle in admin
+- **Branding**: Red accent (`#E8192C`) on a black-glass (iOS-style glassmorphism) public site, with a switchable light-glass variant — admin picks which one is live site-wide via `ao_settings.site_theme_mode`. Admin panel has its own separate light/dark toggle (unrelated to the public site's theme).
 
 ---
 
@@ -50,7 +50,11 @@ Every `ao_*` table: **public SELECT**, **writes (INSERT/UPDATE/DELETE) restricte
 - `stats_data` (jsonb) — trust-stats bar entries
 - `page_texts` (jsonb) — section heading overrides
 - `section_colors`, `global_colors` (jsonb)
-- `logo_url`, `favicon_url`
+- `logo_url` (main logo; also the dark-mode fallback), `logo_dark_url` (optional, used only when `site_theme_mode='dark'`), `favicon_url`
+- `site_theme_mode` (`'dark'|'light'`, default `'dark'`) — site-wide glass theme switch, read by every public page
+- `site_bg_image` — optional ambient background photo shown blurred behind the glass panels (admin can also clear it back to the plain color background)
+- `show_marketing_portfolio` — toggles the "أعمالنا في التسويق" section on index.html
+- `catalog_ads_image`, `catalog_marketing_image` — cover images for the two catalog link-cards on index.html
 - `wa_digital`, `wa_offline`, `wa_full` — WhatsApp message templates
 - **No password column** — admin auth is handled entirely by Supabase Auth (`auth.users`), not this table.
 
@@ -58,12 +62,13 @@ Every `ao_*` table: **public SELECT**, **writes (INSERT/UPDATE/DELETE) restricte
 - `badge`, `title`, `subtitle` (legacy fallback fields, still read if `text_blocks` is empty)
 - `text_blocks` (jsonb) — ordered array of `{tag:'h1'|'h2'|'h3'|'p', text}`, the primary hero content source
 - `bg_image_url`
+- `hide_text` — hides the hero's text block entirely (image-only hero), admin checkbox is inverted ("إظهار النص")
 
 #### `ao_portfolio`
 - `title`, `image_url`, `catalog` (`'ads'|'marketing'`), `category`, `group_label` (client/collection grouping for the ads collage — index.html renders one horizontal track per distinct `group_label`), `stat_badge`, `description`, `is_active`, `sort_order`
 
 #### `ao_products`
-- Product catalog rows: `title`, `image_url`, `price`, `price_note`, `category`, `catalog`, `description`, `details` (text), `images` (jsonb array of extra gallery URLs), `is_active`, `sort_order`
+- Product catalog rows: `title`, `image_url`, `price`, `price_note`, `category`, `catalog`, `description`, `details` (text), `images` (jsonb array of extra gallery URLs), `is_active`, `is_bestseller` (surfaces the product in the "الأكثر طلبًا" section on the catalog pages), `sort_order`
 
 #### `ao_clients`
 - `name`, `logo_url`, `is_active`, `sort_order`
@@ -105,22 +110,23 @@ Local testing hits the real, live Supabase project (there's no separate dev DB) 
 2. Test against live Supabase.
 3. Commit to `claude/portfolio-website-redesign-y8p4kd`.
 4. Push to GitHub — Vercel auto-deploys.
-5. New Supabase columns/tables: apply via migration (Supabase MCP `apply_migration` or the dashboard), then update this file and `setup.sql`.
+5. New Supabase columns/tables: the Supabase MCP connector available in this environment is tied to a different account than the one hosting this project (`lhunamvderddsplishtg`) — it cannot see or migrate this database. Give the client an exact `ALTER TABLE ... ADD COLUMN IF NOT EXISTS ...` statement to run themselves in the Supabase SQL Editor (dashboard → SQL Editor, on project `lhunamvderddsplishtg` specifically — easy to run it against the wrong project by mistake if they have more than one). Then update this file and `setup.sql` to match.
 
 ---
 
 ## Design & Styling
 
-### Color Palette (public site)
-```css
---red: #E8192C
---red-d: #C0111F
-```
-Admin panel uses a separate CSS-custom-property theme system with a `:root[data-theme="light"]` override block for its light/dark toggle.
+### Public site: glassmorphism theme
+`index.html`, `catalog.html`, `catalog-marketing.html`, `product.html` share the same token-based dark/light glass design system (`admin.html` and `page.html` are NOT part of it — they keep their own separate look):
+- CSS custom properties (`--p1/p2/p3` backgrounds, `--ink-rgb`/`--ink`/`--ink2`/`--ink3` text, `--line`/`--line2` borders, `--red-rgb`/`--red`/`--red-d` accent, `--card-bg`/`--glass-blur`/`--glass-border`/`--glass-shadow` for the frosted-glass cards) defined in `:root`, overridden by a `:root[data-theme="light"]` block for the light variant.
+- Which variant is live is controlled entirely by `ao_settings.site_theme_mode` (admin dropdown) — resolved theme is cached to `localStorage` and applied via an early inline `<head>` script on every page to avoid a flash of the wrong theme on load.
+- A fixed `.ambient-glow` layer with animated blurred color blobs sits behind every section (sections use translucent backgrounds) — this is what makes the `backdrop-filter: blur()` glass cards actually read as glass instead of flat color. Admin can optionally set `site_bg_image` to put a real photo behind the blur instead of the plain color blobs.
+- Accent red is constant across both themes (`--red: #E8192C` / `rgb(232,25,44)`); the hover shade `--red-d` differs per theme (brighter on dark, darker on light) since it needs to stay visible against the theme's background.
+- Border-radius tokens: `--r:22px` (cards), `--rs:14px` (small elements), `--rp:999px` (pills).
 
 ### Layout
 - RTL (`dir="rtl"`), mobile-first responsive breakpoints at 768px/560px.
-- `.container` centers content at a constrained max-width; a few elements (the ads-portfolio tracks) deliberately break out to the full viewport edge for a full-bleed slider look.
+- `.container` centers content at a constrained max-width; a few elements (the ads-portfolio tracks, the floating trust-stats strip that straddles the hero's bottom edge) deliberately break out of normal flow for a full-bleed/overlapping look.
 
 ### Typography
 - Public site: Rubik. Admin: Noto Kufi Arabic.
@@ -147,7 +153,7 @@ Centralized WhatsApp number in `_waNum`, loaded from `ao_settings.whatsapp`. Mes
 - Deleting a portfolio/product/client row only deletes the DB row, not the underlying Supabase Storage object — uploaded images become orphaned in storage over time (harmless, but wastes storage quota).
 - No contact form — WhatsApp only.
 - Arabic only (no i18n).
-- `setup.sql` is a best-effort reference snapshot of the schema, not a source of truth — the live Supabase schema (via `list_tables`/`get_advisors` MCP tools) is authoritative.
+- `setup.sql` is a best-effort reference snapshot of the schema, not a source of truth. The Supabase MCP tools in this environment cannot see this project (see Development Workflow), so there is no automated way to introspect the live schema — when in doubt, ask the client to confirm via the Supabase dashboard, or infer it from what `admin.html`/the public pages actually read and write.
 
 ---
 
@@ -158,16 +164,6 @@ Centralized WhatsApp number in `_waNum`, loaded from `ao_settings.whatsapp`. Mes
 - **Tracking pixel IDs**: user-editable via admin Settings, then interpolated into an inline `<script>` on every public page load. `safeTrackId()` (defined in `index.html`, `catalog.html`, `catalog-marketing.html`, `product.html`) must run before any pixel ID is used this way — it's the last line of defense if `ao_settings` write access were ever compromised again.
 - **Storage bucket** `ao-images` is public for object *reads* (that's required for image URLs to render) but the storage API itself (listing, uploading, deleting) is admin-gated — don't loosen this back to a blanket policy.
 - **Image URLs from the old project**: some `image_url`/`logo_url` values still point at the old `knwnviglquxvvwknxbqa.supabase.co` bucket (images weren't re-uploaded during the project migration, only the database was). Any *new* upload through admin.html lands in the current project's bucket automatically — this only affects images uploaded before the migration.
-
----
-
-## Getting Started (New Dev)
-
-1. **Clone**: `git clone ... && cd website`
-2. **Run locally**: `python -m http.server 8000` → `localhost:8000/index.html`
-3. **Edit**: landing page `index.html`, catalogs `catalog.html`/`catalog-marketing.html`/`product.html`, generic pages `page.html`, admin CMS `admin.html`.
-4. **Test with live Supabase** — there is no separate dev database.
-5. **Commit & push** to `claude/portfolio-website-redesign-y8p4kd` — Vercel deploys automatically.
 
 ---
 
