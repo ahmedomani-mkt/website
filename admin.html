@@ -372,6 +372,14 @@ try{
       <div class="ni-ic"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="18" rx="1"/><rect x="14" y="3" width="7" height="18" rx="1"/><path d="M10 12h4"/><path d="M12 10v4"/></svg></div>
       قبل وبعد
     </div>
+    <div class="ni" data-s="videos" onclick="go('videos',this)">
+      <div class="ni-ic"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><polygon points="10 9 15 12 10 15"/></svg></div>
+      الفيديوهات
+    </div>
+    <div class="ni" data-s="cases" onclick="go('cases',this)">
+      <div class="ni-ic"><svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/><path d="M2 20h20"/></svg></div>
+      النتائج
+    </div>
     <div class="ni" data-s="pages" onclick="go('pages',this)">
       <div class="ni-ic"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></div>
       صفحات جديدة
@@ -623,6 +631,42 @@ try{
           </button>
         </div>
         <div id="bal"></div>
+      </div>
+    </div>
+
+    <!-- VIDEOS -->
+    <div class="sec" id="sec-videos">
+      <div class="sec-header">
+        <div class="sec-title">الفيديوهات</div>
+        <div class="sec-sub">ريلز وفيديوهات من يوتيوب / تيك توك / انستجرام / فيسبوك — تظهر في سيكشن "فيديوهاتنا" بالموقع (يظهر تلقائيًا لما يكون فيه فيديو واحد على الأقل)</div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><polygon points="10 9 15 12 10 15"/></svg>الفيديوهات (<span id="vdc">0</span>)</div>
+          <button class="btn btn-p bsm" onclick="openVidM()">
+            <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            إضافة
+          </button>
+        </div>
+        <div id="vdl"></div>
+      </div>
+    </div>
+
+    <!-- CASE STUDIES -->
+    <div class="sec" id="sec-cases">
+      <div class="sec-header">
+        <div class="sec-title">النتائج</div>
+        <div class="sec-sub">نتائج حقيقية لحملات ممولة وأورجانيك بالأرقام وسكرينات الإثبات — تظهر في سيكشن "نتائج حقيقية بالأرقام" بالموقع (يظهر تلقائيًا لما تكون فيه نتيجة واحدة على الأقل)</div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>النتائج (<span id="csc">0</span>)</div>
+          <button class="btn btn-p bsm" onclick="openCsM()">
+            <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            إضافة
+          </button>
+        </div>
+        <div id="csl"></div>
       </div>
     </div>
 
@@ -1076,6 +1120,80 @@ try{
   </div>
 </div>
 
+<!-- VIDEO MODAL -->
+<div class="ov" id="ov-vid" onclick="if(event.target===this)closeVidM()">
+  <div class="modal">
+    <div class="mh"><span id="vidm-ttl">إضافة فيديو</span><button class="mx" onclick="closeVidM()">✕</button></div>
+    <input type="hidden" id="vidm-id">
+    <div class="field"><label>عنوان الفيديو (اختياري)</label><input type="text" id="vidm-t" placeholder="ريل معرض الأسطورة — وصل 1M مشاهدة"></div>
+    <div class="field">
+      <label>لينك الفيديو</label>
+      <input type="url" id="vidm-u" placeholder="https://..." oninput="vidUrlHint()">
+      <div class="field-hint" id="vidm-hint">الصق لينك من: يوتيوب (فيديو أو Shorts) · تيك توك · انستجرام (ريل أو بوست فيديو) · فيسبوك (فيديو أو fb.watch)</div>
+    </div>
+    <div class="field">
+      <label>صورة الغلاف (اختياري)</label>
+      <div class="upload-zone" onclick="document.getElementById('vidm-f').click()">
+        📁 ارفع صورة غلاف
+        <input type="file" id="vidm-f" accept="image/*" style="display:none" onchange="upVidThumb(this)">
+      </div>
+      <img id="vidm-pv" class="port-preview" style="max-height:110px;object-fit:cover">
+      <div class="field-hint">فيديوهات يوتيوب بتجيب غلافها تلقائيًا لو سيبت الحقل ده فاضي — تيك توك وانستجرام وفيسبوك محتاجين صورة غلاف مرفوعة عشان الكارت يبان أحسن (سكرين شوت من الفيديو مثلًا).</div>
+    </div>
+    <div class="mf">
+      <button class="btn btn-g" onclick="closeVidM()">إلغاء</button>
+      <button class="btn btn-p" onclick="saveVidM()">حفظ</button>
+    </div>
+  </div>
+</div>
+
+<!-- CASE STUDY MODAL -->
+<div class="ov" id="ov-cs" onclick="if(event.target===this)closeCsM()">
+  <div class="modal modal-lg">
+    <div class="mh"><span id="csm-ttl">إضافة نتيجة</span><button class="mx" onclick="closeCsM()">✕</button></div>
+    <input type="hidden" id="csm-id">
+    <div class="r2">
+      <div class="field"><label>اسم العميل</label><input type="text" id="csm-n" placeholder="معرض الأسطورة للسيارات"></div>
+      <div class="field"><label>نوع الحملة</label>
+        <select id="csm-type">
+          <option value="paid">إعلان ممول</option>
+          <option value="organic">أورجانيك</option>
+        </select>
+      </div>
+    </div>
+    <div class="field">
+      <label>الأرقام (حتى 3 أرقام — سيبها فاضية لو مش محتاجها)</label>
+      <div class="r2" style="grid-template-columns:1fr 1.4fr;margin-bottom:8px">
+        <input type="text" id="csm-m1n" placeholder="الرقم — مثال: 1.8M">
+        <input type="text" id="csm-m1l" placeholder="الوصف — مثال: الوصول الكلي">
+      </div>
+      <div class="r2" style="grid-template-columns:1fr 1.4fr;margin-bottom:8px">
+        <input type="text" id="csm-m2n" placeholder="3,200+">
+        <input type="text" id="csm-m2l" placeholder="رسالة واتساب">
+      </div>
+      <div class="r2" style="grid-template-columns:1fr 1.4fr">
+        <input type="text" id="csm-m3n" placeholder="4.2ج">
+        <input type="text" id="csm-m3l" placeholder="تكلفة الرسالة">
+      </div>
+      <div class="field-hint">الأرقام الصحيحة (زي 3,200+ أو 60%) بتتعد قدام الزائر بأنيميشن — الأرقام العشرية (زي 1.8M) بتظهر ثابتة.</div>
+    </div>
+    <div class="field"><label>وصف مختصر (اختياري)</label><textarea id="csm-d" rows="2" placeholder="حملة رسائل واتساب لمعرض سيارات في القاهرة على مدار 3 شهور..."></textarea></div>
+    <div class="field">
+      <label>سكرينات الإثبات (من Ads Manager أو الانسايتس)</label>
+      <div class="upload-zone" onclick="document.getElementById('csm-f').click()">
+        📁 ارفع سكرين شوت أو أكتر (ينفع تختار أكتر من صورة مرة واحدة)
+        <input type="file" id="csm-f" accept="image/*" multiple style="display:none" onchange="upCsProof(this)">
+      </div>
+      <div id="csm-proofs" style="display:flex;gap:8px;flex-wrap:wrap"></div>
+      <div class="field-hint">هتظهر كمصغرات على الكارت وبتتفتح بحجمها الكامل لما الزائر يدوس عليها — بلاش تظهر فيها بيانات حساسة (أرقام فيزا، إيميلات عملاء...).</div>
+    </div>
+    <div class="mf">
+      <button class="btn btn-g" onclick="closeCsM()">إلغاء</button>
+      <button class="btn btn-p" onclick="saveCsM()">حفظ</button>
+    </div>
+  </div>
+</div>
+
 <!-- PAGE MODAL -->
 <div class="ov" id="ov-pg" onclick="if(event.target===this)closePgM()">
   <div class="modal modal-lg">
@@ -1213,7 +1331,7 @@ function qni(s){return document.querySelector('[data-s='+s+']')}
 // ── LOAD ALL ────────────────────────────────────────────
 async function loadAll(){
   try{
-    await Promise.all([loadHero(),loadPort(),loadProducts(),loadClients(),loadBA(),loadPages(),loadSettings()]);
+    await Promise.all([loadHero(),loadPort(),loadProducts(),loadClients(),loadBA(),loadVideos(),loadCases(),loadPages(),loadSettings()]);
     updateStats();
     document.getElementById('cdot').className='dot';
     document.getElementById('clbl').textContent='متصل';
@@ -1950,6 +2068,172 @@ async function delBA(id){
   if(!confirm('تأكيد الحذف؟'))return;
   await sb.from('ao_before_after').delete().eq('id',id);
   await loadBA();toast('🗑 تم الحذف');
+}
+
+// ── VIDEOS ─────────────────────────────────────────────
+var videosList=[];
+function parseVideoAdmin(url){
+  url=String(url||'').trim();
+  var m;
+  if(m=url.match(/(?:youtube\.com\/(?:watch\?[^#\s]*v=|shorts\/|embed\/)|youtu\.be\/)([A-Za-z0-9_-]{6,20})/))
+    return{label:'YouTube',thumb:'https://i.ytimg.com/vi/'+m[1]+'/hqdefault.jpg'};
+  if(/tiktok\.com\/[^\s]*\/video\/\d+/.test(url))return{label:'TikTok',thumb:''};
+  if(/instagram\.com\/(reel|reels|p|tv)\//.test(url))return{label:'Instagram',thumb:''};
+  if(/^https:\/\/(www\.|web\.|m\.)?(facebook\.com|fb\.watch)\//.test(url))return{label:'Facebook',thumb:''};
+  return null;
+}
+function vidUrlHint(){
+  var p=parseVideoAdmin(g('vidm-u'));
+  var h=document.getElementById('vidm-hint');
+  if(!g('vidm-u').trim()){h.textContent='الصق لينك من: يوتيوب (فيديو أو Shorts) · تيك توك · انستجرام (ريل أو بوست فيديو) · فيسبوك (فيديو أو fb.watch)';h.style.color='';return}
+  if(p){h.textContent='✅ لينك '+p.label+' سليم';h.style.color='var(--green)'}
+  else{h.textContent='❌ اللينك مش مدعوم — لازم يكون من يوتيوب أو تيك توك أو انستجرام أو فيسبوك';h.style.color='var(--del-text)'}
+}
+async function loadVideos(){
+  var{data}=await sb.from('ao_videos').select('*').order('sort_order');
+  videosList=data||[];renderVideosAdmin();
+}
+function renderVideosAdmin(){
+  document.getElementById('vdc').textContent=videosList.length;
+  var el=document.getElementById('vdl');
+  if(!videosList.length){el.className='';el.innerHTML=empty('لا توجد فيديوهات بعد — اضغط إضافة والصق لينك الفيديو');return}
+  el.className='card-grid';
+  el.innerHTML=videosList.map(function(v){
+    var p=parseVideoAdmin(v.video_url);
+    var badges='<span class="badge '+(v.is_active?'b-green':'b-off')+'">'+(v.is_active?'ظاهر':'مخفي')+'</span>'
+      +(p?'<span class="badge b-orange">'+p.label+'</span>':'<span class="badge b-off">لينك غير مدعوم</span>');
+    var actions='<button class="btn btn-g bsm" onclick="editVid(\''+v.id+'\')">تعديل</button>'
+      +'<button class="btn btn-g bsm" onclick="toggleVid(\''+v.id+'\','+(!v.is_active)+')">'+(v.is_active?'إخفاء':'إظهار')+'</button>'
+      +'<button class="btn btn-d bsm" onclick="delVid(\''+v.id+'\')">حذف</button>';
+    return liCardHtml({imgUrl:v.thumb_url||(p?p.thumb:''),ph:'🎬',title:v.title||v.video_url,badges:badges,actions:actions});
+  }).join('');
+}
+function openVidM(item){
+  document.getElementById('vidm-ttl').textContent=item?'تعديل فيديو':'إضافة فيديو';
+  document.getElementById('vidm-id').value=item?item.id:'';
+  v('vidm-t',item?item.title||'':'');v('vidm-u',item?item.video_url:'');
+  var pv=document.getElementById('vidm-pv');
+  if(item&&item.thumb_url){pv.src=item.thumb_url;pv.dataset.url=item.thumb_url;pv.style.display='block'}
+  else{pv.src='';pv.dataset.url='';pv.style.display='none'}
+  document.getElementById('vidm-f').value='';
+  vidUrlHint();
+  document.getElementById('ov-vid').classList.add('open');
+}
+function closeVidM(){document.getElementById('ov-vid').classList.remove('open')}
+function editVid(id){openVidM(videosList.find(function(x){return x.id===id}))}
+async function upVidThumb(inp){
+  if(!inp.files[0])return;
+  toast('⏳ جاري الرفع...');
+  var f=inp.files[0];var ext=f.name.split('.').pop();
+  var nm='videos/thumb-'+Date.now()+'.'+ext;
+  var{error}=await sb.storage.from('ao-images').upload(nm,f,{upsert:true});
+  if(error){toast('❌ '+error.message);inp.value='';return}
+  var url=sb.storage.from('ao-images').getPublicUrl(nm).data.publicUrl;
+  var pv=document.getElementById('vidm-pv');
+  pv.src=url;pv.dataset.url=url;pv.style.display='block';
+  toast('✅ تم رفع الصورة!');inp.value='';
+}
+async function saveVidM(){
+  var id=document.getElementById('vidm-id').value;
+  var url=g('vidm-u').trim();
+  if(!url){toast('الصق لينك الفيديو');return}
+  if(!parseVideoAdmin(url)){toast('❌ اللينك مش مدعوم — يوتيوب / تيك توك / انستجرام / فيسبوك بس');return}
+  var payload={title:g('vidm-t').trim()||null,video_url:url,thumb_url:document.getElementById('vidm-pv').dataset.url||null};
+  var err;
+  if(id){err=(await sb.from('ao_videos').update(payload).eq('id',id)).error}
+  else{payload.is_active=true;payload.sort_order=videosList.length;err=(await sb.from('ao_videos').insert(payload)).error}
+  if(err){toast('❌ '+err.message);return}
+  closeVidM();await loadVideos();toast('✅ تم الحفظ!');
+}
+async function toggleVid(id,val){await sb.from('ao_videos').update({is_active:val}).eq('id',id);await loadVideos()}
+async function delVid(id){
+  if(!confirm('تأكيد الحذف؟'))return;
+  await sb.from('ao_videos').delete().eq('id',id);
+  await loadVideos();toast('🗑 تم الحذف');
+}
+
+// ── CASE STUDIES (النتائج) ─────────────────────────────
+var casesList=[],csmProofs=[];
+async function loadCases(){
+  var{data}=await sb.from('ao_case_studies').select('*').order('sort_order');
+  casesList=data||[];renderCasesAdmin();
+}
+function renderCasesAdmin(){
+  document.getElementById('csc').textContent=casesList.length;
+  var el=document.getElementById('csl');
+  if(!casesList.length){el.className='';el.innerHTML=empty('لا توجد نتائج بعد — اضغط إضافة وسجّل أول نتيجة حقيقية');return}
+  el.className='card-grid';
+  el.innerHTML=casesList.map(function(c){
+    var proofs=Array.isArray(c.proof_images)?c.proof_images.filter(Boolean):[];
+    var badges='<span class="badge '+(c.is_active?'b-green':'b-off')+'">'+(c.is_active?'ظاهر':'مخفي')+'</span>'
+      +'<span class="badge b-orange">'+(c.campaign_type==='organic'?'أورجانيك':'ممول')+'</span>'
+      +(proofs.length?'<span class="badge b-green">'+proofs.length+' سكرين</span>':'');
+    var actions='<button class="btn btn-g bsm" onclick="editCs(\''+c.id+'\')">تعديل</button>'
+      +'<button class="btn btn-g bsm" onclick="toggleCs(\''+c.id+'\','+(!c.is_active)+')">'+(c.is_active?'إخفاء':'إظهار')+'</button>'
+      +'<button class="btn btn-d bsm" onclick="delCs(\''+c.id+'\')">حذف</button>';
+    return liCardHtml({imgUrl:proofs[0]||'',ph:'📊',title:c.client_name,badges:badges,actions:actions});
+  }).join('');
+}
+function renderCsmProofs(){
+  document.getElementById('csm-proofs').innerHTML=csmProofs.map(function(u,i){
+    return'<div style="position:relative">'
+      +'<img src="'+h(u)+'" style="width:84px;height:60px;object-fit:cover;border-radius:8px;border:1px solid var(--b)">'
+      +'<button onclick="csmProofs.splice('+i+',1);renderCsmProofs()" style="position:absolute;top:-6px;left:-6px;width:20px;height:20px;border-radius:50%;border:none;background:var(--red);color:#fff;font-size:11px;cursor:pointer;line-height:1">✕</button>'
+    +'</div>';
+  }).join('');
+}
+function openCsM(item){
+  document.getElementById('csm-ttl').textContent=item?'تعديل نتيجة':'إضافة نتيجة';
+  document.getElementById('csm-id').value=item?item.id:'';
+  v('csm-n',item?item.client_name:'');v('csm-d',item?item.description||'':'');
+  document.getElementById('csm-type').value=item&&item.campaign_type==='organic'?'organic':'paid';
+  var mets=item&&Array.isArray(item.metrics)?item.metrics:[];
+  for(var i=0;i<3;i++){
+    v('csm-m'+(i+1)+'n',mets[i]?mets[i].num||'':'');
+    v('csm-m'+(i+1)+'l',mets[i]?mets[i].label||'':'');
+  }
+  csmProofs=item&&Array.isArray(item.proof_images)?item.proof_images.filter(Boolean).slice():[];
+  renderCsmProofs();
+  document.getElementById('csm-f').value='';
+  document.getElementById('ov-cs').classList.add('open');
+}
+function closeCsM(){document.getElementById('ov-cs').classList.remove('open')}
+function editCs(id){openCsM(casesList.find(function(x){return x.id===id}))}
+async function upCsProof(inp){
+  if(!inp.files.length)return;
+  toast('⏳ جاري رفع '+inp.files.length+' صورة...');
+  for(var i=0;i<inp.files.length;i++){
+    var f=inp.files[i];var ext=f.name.split('.').pop();
+    var nm='case-studies/proof-'+Date.now()+'-'+i+'.'+ext;
+    var{error}=await sb.storage.from('ao-images').upload(nm,f,{upsert:true});
+    if(error){toast('❌ '+error.message);continue}
+    csmProofs.push(sb.storage.from('ao-images').getPublicUrl(nm).data.publicUrl);
+  }
+  renderCsmProofs();
+  toast('✅ تم رفع السكرينات!');inp.value='';
+}
+async function saveCsM(){
+  var id=document.getElementById('csm-id').value;
+  var name=g('csm-n').trim();
+  if(!name){toast('اكتب اسم العميل');return}
+  var metrics=[];
+  for(var i=1;i<=3;i++){
+    var num=g('csm-m'+i+'n').trim(),label=g('csm-m'+i+'l').trim();
+    if(num)metrics.push({num:num,label:label});
+  }
+  var payload={client_name:name,campaign_type:document.getElementById('csm-type').value,
+    metrics:metrics,description:g('csm-d')||null,proof_images:csmProofs};
+  var err;
+  if(id){err=(await sb.from('ao_case_studies').update(payload).eq('id',id)).error}
+  else{payload.is_active=true;payload.sort_order=casesList.length;err=(await sb.from('ao_case_studies').insert(payload)).error}
+  if(err){toast('❌ '+err.message);return}
+  closeCsM();await loadCases();toast('✅ تم الحفظ!');
+}
+async function toggleCs(id,val){await sb.from('ao_case_studies').update({is_active:val}).eq('id',id);await loadCases()}
+async function delCs(id){
+  if(!confirm('تأكيد الحذف؟'))return;
+  await sb.from('ao_case_studies').delete().eq('id',id);
+  await loadCases();toast('🗑 تم الحذف');
 }
 
 // ── PAGES ──────────────────────────────────────────────

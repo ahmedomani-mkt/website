@@ -131,6 +131,30 @@ CREATE TABLE IF NOT EXISTS ao_pages (
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
+-- ── VIDEOS (فيديوهاتنا) ──────────────────────────────
+CREATE TABLE IF NOT EXISTS ao_videos (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  title TEXT DEFAULT '',
+  video_url TEXT NOT NULL,   -- YouTube / TikTok / Instagram / Facebook link
+  thumb_url TEXT DEFAULT '', -- optional cover; YouTube auto-derives when empty
+  is_active BOOLEAN DEFAULT true,
+  sort_order INT DEFAULT 0,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- ── CASE STUDIES (نتائج حقيقية بالأرقام) ─────────────
+CREATE TABLE IF NOT EXISTS ao_case_studies (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  client_name TEXT NOT NULL,
+  campaign_type TEXT DEFAULT 'paid', -- 'paid' | 'organic'
+  metrics JSONB DEFAULT '[]',        -- up to 3 of {num, label}
+  description TEXT DEFAULT '',
+  proof_images JSONB DEFAULT '[]',   -- screenshot URLs (Ads Manager / Insights)
+  is_active BOOLEAN DEFAULT true,
+  sort_order INT DEFAULT 0,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
 -- ── ADMIN USER ───────────────────────────────────────
 -- Create exactly ONE dedicated Supabase Auth user for this site's admin
 -- (do NOT gate write policies on "any authenticated user" if this project
@@ -167,13 +191,15 @@ ALTER TABLE ao_clients ENABLE ROW LEVEL SECURITY;
 ALTER TABLE ao_before_after ENABLE ROW LEVEL SECURITY;
 ALTER TABLE ao_faq ENABLE ROW LEVEL SECURITY; -- no policies created for this one — fully locked
 ALTER TABLE ao_pages ENABLE ROW LEVEL SECURITY;
+ALTER TABLE ao_videos ENABLE ROW LEVEL SECURITY;
+ALTER TABLE ao_case_studies ENABLE ROW LEVEL SECURITY;
 
 DO $$
 DECLARE
   t text;
   admin_id uuid := '<ADMIN_UID>';
 BEGIN
-  FOREACH t IN ARRAY ARRAY['ao_settings','ao_hero','ao_portfolio','ao_products','ao_clients','ao_before_after','ao_pages'] LOOP
+  FOREACH t IN ARRAY ARRAY['ao_settings','ao_hero','ao_portfolio','ao_products','ao_clients','ao_before_after','ao_pages','ao_videos','ao_case_studies'] LOOP
     EXECUTE format('CREATE POLICY %I ON public.%I FOR SELECT USING (true)', t || '_select', t);
     EXECUTE format('CREATE POLICY %I ON public.%I FOR INSERT WITH CHECK (auth.uid() = %L)', t || '_insert', t, admin_id);
     EXECUTE format('CREATE POLICY %I ON public.%I FOR UPDATE USING (auth.uid() = %L) WITH CHECK (auth.uid() = %L)', t || '_update', t, admin_id, admin_id);

@@ -268,6 +268,31 @@ section{padding:clamp(56px,8vw,92px) 0}
 .ba-lb-desc{font-size:13.5px;color:var(--card-ink3);line-height:1.8}
 @media(max-width:600px){.ba-lb-imgs{grid-template-columns:1fr}}
 
+/* ══ VIDEOS ════════════════════════════════════════ */
+.vid-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.vid-card{position:relative;border-radius:var(--r);overflow:hidden;cursor:pointer;aspect-ratio:3/4;background:var(--p3);border:1px solid var(--glass-border);box-shadow:var(--glass-shadow);transition:.3s cubic-bezier(.16,1,.3,1)}
+.vid-card:hover{transform:translateY(-5px);border-color:rgba(var(--red-rgb),.4);box-shadow:0 18px 40px rgba(var(--red-rgb),.3)}
+.vid-card>img{width:100%;height:100%;object-fit:cover;display:block;transition:.4s}
+.vid-card:hover>img{transform:scale(1.05)}
+.vid-thumb-ph{width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:linear-gradient(150deg,var(--p3),rgba(var(--red-rgb),.14))}
+.vid-thumb-ph i{font-size:44px;color:rgba(var(--ink-rgb),.28)}
+.vid-badge{position:absolute;top:12px;right:12px;z-index:2;display:inline-flex;align-items:center;gap:6px;background:rgba(15,13,10,.6);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.2);color:#fff;font-size:10.5px;font-weight:600;padding:5px 11px;border-radius:var(--rp)}
+.vid-play{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:2;width:56px;height:56px;border-radius:50%;background:rgba(var(--red-rgb),.92);display:flex;align-items:center;justify-content:center;color:#fff;font-size:26px;box-shadow:0 8px 30px rgba(var(--red-rgb),.55);transition:.25s;padding-inline-start:4px}
+.vid-card:hover .vid-play{transform:translate(-50%,-50%) scale(1.12);background:var(--red)}
+.vid-title{position:absolute;inset:auto 0 0 0;z-index:2;padding:34px 14px 13px;background:linear-gradient(to top,rgba(15,13,10,.85),transparent);color:#fff;font-size:12.5px;font-weight:600;line-height:1.5}
+@media(max-width:1023px){.vid-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:640px){.vid-grid{grid-template-columns:1fr 1fr;gap:10px}.vid-play{width:44px;height:44px;font-size:20px}}
+
+/* ══ VIDEO PLAYER MODAL ════════════════════════════ */
+.vid-ov{position:fixed;inset:0;z-index:700;background:rgba(8,7,6,.92);display:flex;align-items:center;justify-content:center;padding:16px;opacity:0;pointer-events:none;transition:opacity .25s}
+.vid-ov.open{opacity:1;pointer-events:all}
+.vid-close{position:absolute;top:18px;left:18px;width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,.12);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.25);color:#fff;font-size:17px;cursor:pointer;z-index:2;transition:.2s}
+.vid-close:hover{background:rgba(255,255,255,.24)}
+.vid-frame-wrap{background:#000;border-radius:16px;overflow:hidden;box-shadow:0 24px 70px rgba(0,0,0,.6)}
+.vid-frame-wrap.landscape{width:min(92vw,960px);aspect-ratio:16/9}
+.vid-frame-wrap.portrait{height:min(86vh,780px);aspect-ratio:9/16;max-width:92vw}
+.vid-frame-wrap iframe{width:100%;height:100%;display:block;border:0}
+
 /* ══ RESULTS / CASE STUDIES ════════════════════════ */
 .cs-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
 .cs-card{background:var(--card-bg);backdrop-filter:var(--glass-blur);-webkit-backdrop-filter:var(--glass-blur);border:1px solid var(--glass-border);border-radius:var(--r);box-shadow:var(--glass-shadow);padding:22px;display:flex;flex-direction:column;gap:15px;transition:.3s cubic-bezier(.16,1,.3,1)}
@@ -504,6 +529,17 @@ footer{padding:clamp(36px,5.5vw,56px) var(--pad) 0;border-top:1px solid var(--li
   </div>
 </section>
 
+<!-- ══ 4.15 · VIDEOS — admin-managed, hidden when empty ══ -->
+<section id="videos" class="bg-2" style="display:none">
+  <div class="container">
+    <div class="sec-head">
+      <h2 class="sec-title">فيديوهاتنا</h2>
+      <p class="sec-sub">ريلز وفيديوهات من شغلنا لعملائنا على السوشيال ميديا</p>
+    </div>
+    <div class="vid-grid stagger" id="vidGrid"></div>
+  </div>
+</section>
+
 <!-- ══ 4.2 · BEFORE / AFTER — off-white ══════════════ -->
 <section id="secBeforeAfter" class="bg-2" style="display:none">
   <div class="container">
@@ -557,63 +593,14 @@ footer{padding:clamp(36px,5.5vw,56px) var(--pad) 0;border-top:1px solid var(--li
   </div>
 </div>
 
-<!-- ══ 4.5 · RESULTS / CASE STUDIES — DEMO (hidden until approved; preview with ?preview=results) ══ -->
+<!-- ══ 4.5 · RESULTS / CASE STUDIES — admin-managed, hidden when empty ══ -->
 <section id="secResults" class="bg-2" style="display:none">
   <div class="container">
     <div class="sec-head">
       <h2 class="sec-title">نتائج حقيقية بالأرقام</h2>
       <p class="sec-sub">مش بس تصميمات — حملات ممولة وأورجانيك بتجيب رسائل ومبيعات فعلية لعملائنا</p>
     </div>
-    <div class="cs-grid stagger" id="csGrid">
-      <div class="cs-card fade-up">
-        <div class="cs-top">
-          <div class="cs-client">معرض الأسطورة للسيارات</div>
-          <span class="cs-type cs-type-paid">إعلان ممول</span>
-        </div>
-        <div class="cs-metrics">
-          <div class="cs-m"><div class="cs-m-num">1.8M</div><div class="cs-m-label">الوصول الكلي</div></div>
-          <div class="cs-m"><div class="cs-m-num" data-count>3,200+</div><div class="cs-m-label">رسالة واتساب</div></div>
-          <div class="cs-m"><div class="cs-m-num">4.2ج</div><div class="cs-m-label">تكلفة الرسالة</div></div>
-        </div>
-        <div class="cs-desc">حملة رسائل واتساب لمعرض سيارات في القاهرة على مدار 3 شهور — استهداف مهتمين بشراء سيارات مستعملة.</div>
-        <div class="cs-proof">
-          <img class="cs-proof-thumb" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 280'%3E%3Crect width='400' height='280' fill='%2318181d'/%3E%3Crect x='36' y='150' width='42' height='94' rx='5' fill='%23555'/%3E%3Crect x='96' y='118' width='42' height='126' rx='5' fill='%23777'/%3E%3Crect x='156' y='88' width='42' height='156' rx='5' fill='%23E8192C'/%3E%3Crect x='216' y='64' width='42' height='180' rx='5' fill='%23E8192C'/%3E%3Crect x='276' y='36' width='42' height='208' rx='5' fill='%23ff3b4e'/%3E%3Ctext x='364' y='28' font-size='16' fill='%23999' font-family='Arial' text-anchor='end'%3EAds Manager%3C/text%3E%3C/svg%3E" alt="إثبات النتائج" onclick="openCsProof(this)">
-          <div class="cs-proof-label"><i class="bi bi-patch-check-fill"></i> سكرين شوت من Ads Manager</div>
-        </div>
-      </div>
-      <div class="cs-card fade-up">
-        <div class="cs-top">
-          <div class="cs-client">CARiMUSiC</div>
-          <span class="cs-type cs-type-organic">أورجانيك</span>
-        </div>
-        <div class="cs-metrics">
-          <div class="cs-m"><div class="cs-m-num" data-count>950K+</div><div class="cs-m-label">وصول شهري أورجانيك</div></div>
-          <div class="cs-m"><div class="cs-m-num" data-count>240%+</div><div class="cs-m-label">نمو المتابعين</div></div>
-          <div class="cs-m"><div class="cs-m-num" data-count>120K+</div><div class="cs-m-label">متوسط مشاهدات الريل</div></div>
-        </div>
-        <div class="cs-desc">إدارة محتوى كاملة — ريلز أسبوعية وخطة محتوى ثابتة خلت البراند يوصل بدون جنيه إعلانات.</div>
-        <div class="cs-proof">
-          <img class="cs-proof-thumb" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 280'%3E%3Crect width='400' height='280' fill='%2318181d'/%3E%3Cpath d='M30 220 L110 170 L190 190 L270 100 L370 40' stroke='%2325D366' stroke-width='9' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3Ctext x='364' y='28' font-size='16' fill='%23999' font-family='Arial' text-anchor='end'%3EInsights%3C/text%3E%3C/svg%3E" alt="إثبات النتائج" onclick="openCsProof(this)">
-          <div class="cs-proof-label"><i class="bi bi-patch-check-fill"></i> سكرين شوت من الانسايتس</div>
-        </div>
-      </div>
-      <div class="cs-card fade-up">
-        <div class="cs-top">
-          <div class="cs-client">مركز الخليفة لزينة السيارات</div>
-          <span class="cs-type cs-type-paid">إعلان ممول</span>
-        </div>
-        <div class="cs-metrics">
-          <div class="cs-m"><div class="cs-m-num" data-count>5x</div><div class="cs-m-label">عائد الإعلان ROAS</div></div>
-          <div class="cs-m"><div class="cs-m-num" data-count>1,450+</div><div class="cs-m-label">عميل محتمل</div></div>
-          <div class="cs-m"><div class="cs-m-num" data-count>60%</div><div class="cs-m-label">خفض تكلفة النتيجة</div></div>
-        </div>
-        <div class="cs-desc">إعادة هيكلة الحملات والاستهداف لمركز زينة وأنظمة صوت — نفس الميزانية، نتيجة أضعاف.</div>
-        <div class="cs-proof">
-          <img class="cs-proof-thumb" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 280'%3E%3Crect width='400' height='280' fill='%2318181d'/%3E%3Crect x='36' y='170' width='42' height='74' rx='5' fill='%23555'/%3E%3Crect x='96' y='140' width='42' height='104' rx='5' fill='%23777'/%3E%3Crect x='156' y='110' width='42' height='134' rx='5' fill='%23E8192C'/%3E%3Crect x='216' y='70' width='42' height='174' rx='5' fill='%23E8192C'/%3E%3Crect x='276' y='40' width='42' height='204' rx='5' fill='%23ff3b4e'/%3E%3Ctext x='364' y='28' font-size='16' fill='%23999' font-family='Arial' text-anchor='end'%3EAds Manager%3C/text%3E%3C/svg%3E" alt="إثبات النتائج" onclick="openCsProof(this)">
-          <div class="cs-proof-label"><i class="bi bi-patch-check-fill"></i> سكرين شوت من Ads Manager</div>
-        </div>
-      </div>
-    </div>
+    <div class="cs-grid stagger" id="csGrid"></div>
   </div>
 </section>
 
@@ -702,6 +689,12 @@ footer{padding:clamp(36px,5.5vw,56px) var(--pad) 0;border-top:1px solid var(--li
     </svg>
     واتساب مباشر
   </a>
+</div>
+
+<!-- VIDEO PLAYER MODAL -->
+<div class="vid-ov" id="vidModal" onclick="if(event.target===this)closeVideo()">
+  <button class="vid-close" onclick="closeVideo()" aria-label="إغلاق">✕</button>
+  <div class="vid-frame-wrap" id="vidFrameWrap"></div>
 </div>
 
 <div class="toast" id="toastEl"></div>
@@ -793,7 +786,7 @@ function animateCounters(){
 // Note: hero-badge/.hero-text-blocks/.hero-btns/.stat-item are deliberately
 // excluded here and revealed instead from loadSite() once real Supabase data
 // has replaced the static placeholder text, to avoid a flash of stale content.
-var REVEAL_SEL='.sec-head,.cat-link-card,.pg-card,.port-card,.ba-card,.cs-card,.ft-grid';
+var REVEAL_SEL='.sec-head,.cat-link-card,.pg-card,.port-card,.ba-card,.cs-card,.vid-card,.ft-grid';
 var revealObs;
 function initReveal(){
   document.querySelectorAll(REVEAL_SEL).forEach(function(el){el.classList.add('fade-up')});
@@ -1088,17 +1081,103 @@ function lbPrev(){lbShow(lbIndex-1)}
     if(dx<0)lbNext();else lbPrev();
   },{passive:true});
 })();
-function openCsProof(img){
-  lbImages=[img.src];
-  openCollageLightbox(0);
+// ── CASE STUDIES (النتائج) ───────────────────────────
+var csProofData={};
+function openCsProof(ci,pi){
+  var urls=csProofData[ci];
+  if(!urls||!urls.length)return;
+  lbImages=urls;
+  openCollageLightbox(pi||0);
 }
-// Demo case-studies section stays hidden from real visitors (numbers are
-// placeholders) — visible only via ?preview=results until it's wired to
-// real data from the admin panel.
-if(new URLSearchParams(location.search).get('preview')==='results'){
-  var _csSec=document.getElementById('secResults');
-  if(_csSec)_csSec.style.display='';
+function renderCaseStudies(list){
+  var sec=document.getElementById('secResults');
+  if(!sec)return;
+  var rows=(list||[]).filter(function(c){return c&&c.client_name});
+  if(!rows.length){sec.style.display='none';return}
+  csProofData={};
+  document.getElementById('csGrid').innerHTML=rows.map(function(c,ci){
+    var type=c.campaign_type==='organic'
+      ?'<span class="cs-type cs-type-organic">أورجانيك</span>'
+      :'<span class="cs-type cs-type-paid">إعلان ممول</span>';
+    var mets=(Array.isArray(c.metrics)?c.metrics:[]).filter(function(m){return m&&m.num}).slice(0,3);
+    var metsHtml=mets.map(function(m){
+      // animate only clean integers — decimals like "1.8M" would get
+      // rounded mid-count by the counter and end on the wrong value
+      var dc=/^[\d,]+\D*$/.test(String(m.num))?' data-count':'';
+      return'<div class="cs-m"><div class="cs-m-num"'+dc+'>'+esc(m.num)+'</div><div class="cs-m-label">'+esc(m.label||'')+'</div></div>';
+    }).join('');
+    var proofs=(Array.isArray(c.proof_images)?c.proof_images:[]).filter(Boolean);
+    var proofHtml='';
+    if(proofs.length){
+      csProofData[ci]=proofs;
+      proofHtml='<div class="cs-proof">'
+        +proofs.slice(0,3).map(function(u,pi){return'<img class="cs-proof-thumb" src="'+esc(u)+'" alt="إثبات النتائج" loading="lazy" onclick="openCsProof('+ci+','+pi+')">'}).join('')
+        +'<div class="cs-proof-label"><i class="bi bi-patch-check-fill"></i> سكرينات حقيقية من النتائج</div>'
+      +'</div>';
+    }
+    return'<div class="cs-card fade-up">'
+      +'<div class="cs-top"><div class="cs-client">'+esc(c.client_name)+'</div>'+type+'</div>'
+      +(metsHtml?'<div class="cs-metrics" style="grid-template-columns:repeat('+mets.length+',1fr)">'+metsHtml+'</div>':'')
+      +(c.description?'<div class="cs-desc">'+esc(c.description)+'</div>':'')
+      +proofHtml
+    +'</div>';
+  }).join('');
+  sec.style.display='';
 }
+
+// ── VIDEOS (فيديوهاتنا) ──────────────────────────────
+function parseVideo(url){
+  url=String(url||'').trim();
+  var m;
+  if(m=url.match(/(?:youtube\.com\/(?:watch\?[^#\s]*v=|shorts\/|embed\/)|youtu\.be\/)([A-Za-z0-9_-]{6,20})/))
+    return{portrait:/\/shorts\//.test(url),embed:'https://www.youtube.com/embed/'+m[1]+'?autoplay=1',thumb:'https://i.ytimg.com/vi/'+m[1]+'/hqdefault.jpg',icon:'bi-youtube',label:'YouTube'};
+  if(m=url.match(/tiktok\.com\/[^\s]*\/video\/(\d+)/))
+    return{portrait:true,embed:'https://www.tiktok.com/embed/v2/'+m[1],thumb:'',icon:'bi-tiktok',label:'TikTok'};
+  if(m=url.match(/instagram\.com\/(reel|reels|p|tv)\/([A-Za-z0-9_-]+)/))
+    return{portrait:true,embed:'https://www.instagram.com/'+(m[1]==='reels'?'reel':m[1])+'/'+m[2]+'/embed/',thumb:'',icon:'bi-instagram',label:'Instagram'};
+  if(/^https:\/\/(www\.|web\.|m\.)?(facebook\.com|fb\.watch)\//.test(url))
+    return{portrait:false,embed:'https://www.facebook.com/plugins/video.php?show_text=false&href='+encodeURIComponent(url),thumb:'',icon:'bi-facebook',label:'Facebook'};
+  return null;
+}
+var videosData=[];
+function renderVideos(list){
+  var sec=document.getElementById('videos');
+  if(!sec)return;
+  videosData=[];
+  var cards=[];
+  (list||[]).forEach(function(v){
+    var p=parseVideo(v.video_url);
+    if(!p)return;
+    var idx=videosData.length;
+    videosData.push(p);
+    var thumb=v.thumb_url||p.thumb;
+    cards.push('<div class="vid-card fade-up" onclick="openVideo('+idx+')">'
+      +(thumb?'<img src="'+esc(thumb)+'" alt="'+esc(v.title||'فيديو')+'" loading="lazy">':'<div class="vid-thumb-ph"><i class="bi '+p.icon+'"></i></div>')
+      +'<span class="vid-badge"><i class="bi '+p.icon+'"></i> '+p.label+'</span>'
+      +'<span class="vid-play"><i class="bi bi-play-fill"></i></span>'
+      +(v.title?'<div class="vid-title">'+esc(v.title)+'</div>':'')
+    +'</div>');
+  });
+  if(!cards.length){sec.style.display='none';return}
+  document.getElementById('vidGrid').innerHTML=cards.join('');
+  sec.style.display='';
+}
+function openVideo(i){
+  var p=videosData[i];
+  if(!p)return;
+  var wrap=document.getElementById('vidFrameWrap');
+  wrap.className='vid-frame-wrap '+(p.portrait?'portrait':'landscape');
+  wrap.innerHTML='<iframe src="'+esc(p.embed)+'" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>';
+  document.getElementById('vidModal').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeVideo(){
+  document.getElementById('vidModal').classList.remove('open');
+  document.getElementById('vidFrameWrap').innerHTML='';
+  document.body.style.overflow='';
+}
+window.openVideo=openVideo;
+window.closeVideo=closeVideo;
 window.openCsProof=openCsProof;
 window.openCollageLightbox=openCollageLightbox;
 window.closeCollageLightbox=closeCollageLightbox;
@@ -1297,6 +1376,11 @@ async function loadSite(){
     if(clients&&clients.length)renderClients(clients);
     var beforeAfter=(await sb.from('ao_before_after').select('*').eq('is_active',true).order('sort_order')).data;
     renderBeforeAfter(beforeAfter||[]);
+    var vids=(await sb.from('ao_videos').select('*').eq('is_active',true).order('sort_order')).data;
+    renderVideos(vids||[]);
+    var cases=(await sb.from('ao_case_studies').select('*').eq('is_active',true).order('sort_order')).data;
+    renderCaseStudies(cases||[]);
+    animateCounters();
     var pglist=(await sb.from('ao_pages').select('title,slug').eq('is_published',true).order('created_at')).data;
     if(pglist&&pglist.length)renderPagesLinks(pglist);
     initReveal();
