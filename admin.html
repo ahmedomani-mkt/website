@@ -2106,7 +2106,8 @@ function vidUrlHint(){
   var p=parseVideoAdmin(g('vidm-u'));
   var h=document.getElementById('vidm-hint');
   if(!g('vidm-u').trim()){h.textContent='الصق لينك من: يوتيوب (فيديو أو Shorts) · تيك توك · انستجرام (ريل أو بوست فيديو) · فيسبوك (فيديو أو fb.watch)';h.style.color='';return}
-  if(p){h.textContent='✅ لينك '+p.label+' سليم';h.style.color='var(--green)'}
+  if(p&&p.label==='Facebook'){h.innerHTML='✅ لينك فيسبوك سليم — لكن فيسبوك بيرفض عرض فيديوهات كتير جوا مواقع تانية. شرط تشتغل: الفيديو يكون منشور على <b>صفحة</b> (مش بروفايل شخصي)، والخصوصية <b>عام</b>، والمنشور نفسه ميكونش متعمل له تعطيل للـ Embedding. لو ظهر "الفيديو غير متوفر" بعد الحفظ، جرب تاكد من الشروط دي.';h.style.color='var(--orange,#f59e0b)'}
+  else if(p){h.textContent='✅ لينك '+p.label+' سليم';h.style.color='var(--green)'}
   else{h.textContent='❌ اللينك مش مدعوم — لازم يكون من يوتيوب أو تيك توك أو انستجرام أو فيسبوك';h.style.color='var(--del-text)'}
 }
 async function loadVideos(){
