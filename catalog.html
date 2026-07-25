@@ -274,6 +274,7 @@ footer{border-top:1px solid var(--line);padding:24px var(--pad);display:flex;ali
 var SB_URL='https://lhunamvderddsplishtg.supabase.co';
 var SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxodW5hbXZkZXJkZHNwbGlzaHRnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI1OTEzNzMsImV4cCI6MjA5ODE2NzM3M30.AUjhZ4Qtw3hfX-HCIlsdAJpzSutW-GxjQ0D9S11W0vw';
 var _waNum='201152501056';
+var _waOrderGreeting='مرحبًا، أريد طلب المنتجات التالية من الكتالوج:';
 var products=[];
 var cart={};       // {productId: qty}
 var CART_KEY='ao_cart_v1';
@@ -376,6 +377,9 @@ function injectMetaPixel(id){
 function pxTrack(name,params){
   if(typeof fbq==='function')fbq('track',name,params||{});
 }
+function pxTrackCustom(name,params){
+  if(typeof fbq==='function')fbq('trackCustom',name,params||{});
+}
 function cartValue(){
   return Object.keys(cart).reduce(function(sum,id){
     var p=products.find(function(x){return x.id===id});
@@ -472,7 +476,7 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeCart()}
 function sendOrder(){
   var ids=Object.keys(cart);
   if(!ids.length)return;
-  var lines=['مرحبًا، أريد طلب المنتجات التالية من الكتالوج:',''];
+  var lines=[_waOrderGreeting,''];
   var i=1,total=0,hasUnpriced=false;
   ids.forEach(function(id){
     var p=products.find(function(x){return x.id===id});
@@ -490,8 +494,17 @@ function sendOrder(){
   var note=document.getElementById('cartNote').value.trim();
   if(note){lines.push('');lines.push('ملاحظات: '+note);}
   var msg=lines.join('\n');
-  pxTrack('Contact',{content_ids:ids,content_type:'product',currency:'EGP',value:total,num_items:ids.reduce(function(s,id){return s+cart[id]},0)});
-  window.open('https://wa.me/'+_waNum+'?text='+encodeURIComponent(msg),'_blank','noopener');
+  var numItems=ids.reduce(function(s,id){return s+cart[id]},0);
+  var evt={content_ids:ids,content_type:'product',currency:'EGP',value:total,num_items:numItems};
+  pxTrack('Lead',evt);
+  pxTrackCustom('WhatsAppOrder',evt);
+  var waUrl='https://wa.me/'+_waNum+'?text='+encodeURIComponent(msg);
+  // small delay so the pixel requests flush before leaving the page;
+  // still within the browser's user-activation window so the popup isn't blocked
+  setTimeout(function(){
+    var w=window.open(waUrl,'_blank','noopener');
+    if(!w)location.href=waUrl;
+  },400);
 }
 
 // ── LOAD ─────────────────────────────────────────────
@@ -500,8 +513,9 @@ async function loadCatalog(){
   try{
     if(typeof supabase==='undefined')throw new Error('no sb');
     var sb=supabase.createClient(SB_URL,SB_KEY);
-    var cfg=(await sb.from('ao_settings').select('whatsapp,meta_pixel_id,logo_url,logo_dark_url,favicon_url,site_bg_image,site_theme_mode').single()).data;
+    var cfg=(await sb.from('ao_settings').select('whatsapp,wa_offline,meta_pixel_id,logo_url,logo_dark_url,favicon_url,site_bg_image,site_theme_mode').single()).data;
     if(cfg&&cfg.whatsapp)_waNum=cfg.whatsapp;
+    if(cfg&&cfg.wa_offline&&cfg.wa_offline.trim())_waOrderGreeting=cfg.wa_offline.trim();
     if(cfg&&cfg.meta_pixel_id)injectMetaPixel(cfg.meta_pixel_id);
     if(cfg){var activeLogo=(cfg.site_theme_mode==='light')?cfg.logo_url:(cfg.logo_dark_url||cfg.logo_url);if(activeLogo){var nl=document.getElementById('navLogoImg');if(nl)nl.src=activeLogo;}}
     if(cfg&&cfg.favicon_url){var fav=document.getElementById('faviconLink');if(fav)fav.href=cfg.favicon_url;}

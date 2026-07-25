@@ -31,9 +31,9 @@ CREATE TABLE IF NOT EXISTS ao_settings (
   page_texts JSONB DEFAULT '{}',
   section_colors JSONB DEFAULT '{}',
   global_colors JSONB DEFAULT '{}',
-  wa_digital TEXT DEFAULT '',
-  wa_offline TEXT DEFAULT '',
-  wa_full TEXT DEFAULT '',
+  wa_digital TEXT DEFAULT '', -- WhatsApp cart-order greeting, marketing catalog
+  wa_offline TEXT DEFAULT '', -- WhatsApp cart-order greeting, ads catalog
+  wa_full TEXT DEFAULT '',    -- WhatsApp single-product inquiry template ({product} placeholder)
   show_marketing_portfolio BOOLEAN DEFAULT TRUE,
   catalog_ads_image TEXT DEFAULT '',
   catalog_marketing_image TEXT DEFAULT '',

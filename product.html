@@ -236,6 +236,7 @@ footer{border-top:1px solid var(--line);padding:24px var(--pad);display:flex;ali
 var SB_URL='https://lhunamvderddsplishtg.supabase.co';
 var SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxodW5hbXZkZXJkZHNwbGlzaHRnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI1OTEzNzMsImV4cCI6MjA5ODE2NzM3M30.AUjhZ4Qtw3hfX-HCIlsdAJpzSutW-GxjQ0D9S11W0vw';
 var _waNum='201152501056';
+var _waInquiryTpl='مرحبًا، أريد الاستفسار عن: {product}';
 var CART_KEY='ao_cart_v1';
 var catalogPage='catalog.html';
 var product=null;
@@ -347,7 +348,8 @@ function renderProduct(p){
     document.getElementById('pdPrice').textContent='السعر عند التواصل';
     document.getElementById('pdPrice').classList.add('ask');
   }
-  var waMsg='مرحبًا، أريد الاستفسار عن: '+p.title+(price?' ('+price+')':'');
+  var prodLabel=p.title+(price?' ('+price+')':'');
+  var waMsg=_waInquiryTpl.indexOf('{product}')>-1?_waInquiryTpl.replace('{product}',prodLabel):_waInquiryTpl+' '+prodLabel;
   document.getElementById('pdWaBtn').onclick=function(){
     pxTrack('Contact',{content_ids:[p.id],content_name:p.title,content_type:'product',currency:'EGP',value:parseFloat(p.price)||0});
     window.open('https://wa.me/'+_waNum+'?text='+encodeURIComponent(waMsg),'_blank','noopener');
@@ -374,8 +376,9 @@ async function loadProduct(){
   try{
     if(typeof supabase==='undefined')throw new Error('no sb');
     var sb=supabase.createClient(SB_URL,SB_KEY);
-    var cfg=(await sb.from('ao_settings').select('whatsapp,meta_pixel_id,logo_url,logo_dark_url,favicon_url,site_bg_image,site_theme_mode').single()).data;
+    var cfg=(await sb.from('ao_settings').select('whatsapp,wa_full,meta_pixel_id,logo_url,logo_dark_url,favicon_url,site_bg_image,site_theme_mode').single()).data;
     if(cfg&&cfg.whatsapp)_waNum=cfg.whatsapp;
+    if(cfg&&cfg.wa_full&&cfg.wa_full.trim())_waInquiryTpl=cfg.wa_full.trim();
     if(cfg&&cfg.meta_pixel_id)injectMetaPixel(cfg.meta_pixel_id);
     if(cfg){var activeLogo=(cfg.site_theme_mode==='light')?cfg.logo_url:(cfg.logo_dark_url||cfg.logo_url);if(activeLogo){var nl=document.getElementById('navLogoImg');if(nl)nl.src=activeLogo;}}
     if(cfg&&cfg.favicon_url){var fav=document.getElementById('faviconLink');if(fav)fav.href=cfg.favicon_url;}
