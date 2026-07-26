@@ -263,10 +263,10 @@ footer{border-top:1px solid var(--line);padding:24px var(--pad);display:flex;ali
     </div>
     <div class="cart-total-note">* السعر النهائي بيتأكد معاك على واتساب</div>
     <textarea class="cart-note" id="cartNote" placeholder="ملاحظات على الطلب (اختياري) — مقاسات، ألوان، تفاصيل مركزك…"></textarea>
-    <button class="wa-send" id="waSend" onclick="sendOrder()">
+    <a class="wa-send" id="waSend" href="#" target="_blank" rel="noopener noreferrer" onclick="return sendOrder()">
       <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347zM12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0012.04 2z"/></svg>
       إرسال الطلب واتساب
-    </button>
+    </a>
     <button class="cart-clear" onclick="clearCart()">تفريغ السلة</button>
   </div>
 </aside>
@@ -516,7 +516,7 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeCart()}
 // ── SEND ORDER ───────────────────────────────────────
 function sendOrder(){
   var ids=Object.keys(cart);
-  if(!ids.length)return;
+  if(!ids.length)return false;
   var lines=[_waOrderGreeting,''];
   var i=1,total=0,hasUnpriced=false;
   ids.forEach(function(id){
@@ -540,14 +540,15 @@ function sendOrder(){
   pxTrack('Lead',evt);
   pxTrackCustom('WhatsAppOrder',evt);
   var waUrl='https://wa.me/'+_waNum+'?text='+encodeURIComponent(msg);
-  // must call window.open synchronously in the same click handler tick —
-  // any delay (even a short setTimeout) loses the browser's "trusted click"
-  // window, so strict popup blockers (notably Safari/iOS) silently fall back
-  // to navigating the current tab instead of opening a new one. Opening a
-  // new tab never unloads this page, so the pixel calls above always have
-  // time to complete regardless of timing.
-  var w=window.open(waUrl,'_blank','noopener');
-  if(!w)location.href=waUrl;
+  // #waSend is a real <a target="_blank"> element — set its href here and
+  // let the browser follow its own link natively instead of calling
+  // window.open() from script. Mobile Safari and most in-app webviews
+  // (Instagram/Facebook/TikTok browsers) are far more likely to honor a
+  // genuine anchor's target="_blank" as "open a new tab" than a
+  // script-triggered window.open(), which they frequently downgrade to a
+  // same-tab navigation instead of silently blocking it outright.
+  document.getElementById('waSend').href=waUrl;
+  return true; // let the anchor's default navigation (new tab) proceed
 }
 
 // ── LOAD ─────────────────────────────────────────────
