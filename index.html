@@ -1142,9 +1142,18 @@ function parseVideo(url){
     var src=iframeSrc[1].replace(/&amp;/g,'&');
     var hrefParam=src.match(/[?&]href=([^&]+)/);
     var orig=hrefParam?decodeURIComponent(hrefParam[1]):src;
+    // Facebook's "embed full post" option adds a like/comment/share bar below
+    // the video, which needs more height than the video alone — the src's own
+    // ?height= param only covers the video area, so the real proportions live
+    // on the <iframe> tag's own width/height attributes. Forcing our usual
+    // guessed 9:16 box here would crop that bar off the bottom, so use the
+    // real ratio from the pasted code when we have it.
+    var wAttr=url.match(/<iframe[^>]+\swidth=["']?(\d+)/i);
+    var hAttr=url.match(/<iframe[^>]+\sheight=["']?(\d+)/i);
+    var ratio=(wAttr&&hAttr)?(wAttr[1]+'/'+hAttr[1]):null;
     if(/facebook\.com\/plugins\//.test(src))
-      return{portrait:/facebook\.com\/reel\//.test(orig),embed:src,thumb:'',icon:'bi-facebook',label:'Facebook',origUrl:orig};
-    return{portrait:false,embed:src,thumb:'',icon:'bi-play-circle',label:'فيديو',origUrl:orig};
+      return{portrait:/facebook\.com\/reel\//.test(orig),ratio:ratio,embed:src,thumb:'',icon:'bi-facebook',label:'Facebook',origUrl:orig};
+    return{portrait:false,ratio:ratio,embed:src,thumb:'',icon:'bi-play-circle',label:'فيديو',origUrl:orig};
   }
   if(m=url.match(/(?:youtube\.com\/(?:watch\?[^#\s]*v=|shorts\/|embed\/)|youtu\.be\/)([A-Za-z0-9_-]{6,20})/))
     return{portrait:/\/shorts\//.test(url),embed:'https://www.youtube.com/embed/'+m[1]+'?autoplay=1',thumb:'https://i.ytimg.com/vi/'+m[1]+'/hqdefault.jpg',icon:'bi-youtube',label:'YouTube',origUrl:url};
@@ -1184,6 +1193,7 @@ function openVideo(i){
   if(!p)return;
   var wrap=document.getElementById('vidFrameWrap');
   wrap.className='vid-frame-wrap '+(p.portrait?'portrait':'landscape');
+  wrap.style.aspectRatio=p.ratio||'';
   wrap.innerHTML='<iframe src="'+esc(p.embed)+'" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>';
   var fb=document.getElementById('vidFallback');
   fb.href=p.origUrl;
