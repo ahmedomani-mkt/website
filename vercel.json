@@ -1,4 +1,7 @@
 {
+  "rewrites": [
+    { "source": "/product-feed.csv", "destination": "/api/product-feed" }
+  ],
   "headers": [
     {
       "source": "/(.*)",

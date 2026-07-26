@@ -489,12 +489,21 @@ function renderCartItems(){
 }
 
 // ── DRAWER ───────────────────────────────────────────
+var _lastCheckoutSig=null;
 function openCart(){
   document.getElementById('cartOverlay').classList.add('open');
   document.getElementById('cartDrawer').classList.add('open');
   document.body.style.overflow='hidden';
-  if(Object.keys(cart).length){
-    pxTrack('InitiateCheckout',{content_ids:Object.keys(cart),content_type:'product',currency:'EGP',value:cartValue(),num_items:cartQty()});
+  var ids=Object.keys(cart);
+  if(ids.length){
+    // only re-fire when the cart actually changed since the last time this
+    // fired — opening/closing the drawer repeatedly on an unchanged cart
+    // shouldn't spam duplicate InitiateCheckout events
+    var sig=ids.sort().map(function(id){return id+':'+cart[id]}).join(',');
+    if(sig!==_lastCheckoutSig){
+      _lastCheckoutSig=sig;
+      pxTrack('InitiateCheckout',{content_ids:ids,content_type:'product',currency:'EGP',value:cartValue(),num_items:cartQty()});
+    }
   }
 }
 function closeCart(){

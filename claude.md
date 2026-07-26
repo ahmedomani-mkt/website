@@ -27,7 +27,8 @@ B2B automotive marketing portfolio/catalog website for Ahmed Omani (automotive m
 
 ### SEO / infra
 - **`robots.txt`**, **`sitemap.xml`** — basic crawl directives (admin.html disallowed).
-- **`vercel.json`** — security response headers (CSP, X-Frame-Options, etc.) applied to every route.
+- **`vercel.json`** — security response headers (CSP, X-Frame-Options, etc.) applied to every route; also rewrites `/product-feed.csv` → `/api/product-feed`.
+- **`api/product-feed.js`** — Vercel serverless function (Node, zero npm dependencies — uses the platform's built-in `fetch`). Generates the Meta Commerce Catalog product feed as CSV on every request, live from `ao_products`/`ao_settings` via Supabase's REST API (same anon key already public in every page — no new secret). Public, unauthenticated GET. See "Meta Commerce Catalog Feed" below.
 
 ---
 
@@ -139,6 +140,21 @@ Centralized WhatsApp number in `_waNum`, loaded from `ao_settings.whatsapp`. Mes
 
 ---
 
+## Meta Commerce Catalog Feed
+
+`api/product-feed.js` is a Vercel serverless function (also reachable at `/product-feed.csv` via a `vercel.json` rewrite) that generates a Meta Commerce Catalog-compatible CSV **live** from `ao_products`/`ao_settings` on every request — there is no static/manually-edited feed file. It calls Supabase's REST API directly with `fetch` (no `@supabase/supabase-js`, no npm dependency, no build step — consistent with the rest of this project).
+
+- **Included rows**: only `is_active=true` products that have both a numeric `price > 0` and an `image_url` — Meta rejects rows missing either, so those are silently excluded rather than fed with fake data. The response headers `X-Feed-Included` / `X-Feed-Skipped-No-Price` / `X-Feed-Skipped-No-Image` report the counts on every request, useful for debugging why a product isn't in the feed.
+- **Columns**: `id, title, description, availability, condition, price, link, image_link, additional_image_link, brand, product_type`. `availability` is hardcoded `"in stock"` and `condition` `"new"` for every row — this is a made-to-order service/signage catalog with no stock-tracking field, not real inventory data.
+- **`id` = `ao_products.id`** (the same UUID string), unmodified — this is deliberate: it's the exact same value already used as `content_ids` in every Meta Pixel event across `catalog.html`/`catalog-marketing.html`/`product.html`, which is what lets Meta match pixel events (ViewContent/AddToCart/Lead) back to catalog rows for dynamic ads and catalog-based optimization.
+- **`link`** is built from the incoming request's own host header (`https://<host>/product.html?id=<uuid>`), so it resolves correctly on the production domain, a Vercel preview URL, or any future custom domain without code changes.
+- **`brand`** comes from `ao_settings.site_title` (falls back to a hardcoded default only if that's empty).
+- Uses the same public anon key already embedded in every page's HTML — safe for the same reason noted in Security Notes (RLS enforces public-read).
+
+**Meta Commerce Manager setup** (manual, one-time, done by the client): Commerce Manager → Catalog → Data Sources → Add Items → Scheduled Feed → paste the feed URL → set fetch frequency (daily is enough; hourly wastes Meta's fetch quota since product data doesn't change that often) → Save.
+
+---
+
 ## Deployment
 
 - **Branch**: `claude/portfolio-website-redesign-y8p4kd` → Vercel auto-deploy.
@@ -177,9 +193,11 @@ website/
 ├── product.html             Single product detail page
 ├── page.html                Generic published-page template
 ├── admin.html               Admin CMS (Supabase Auth-gated)
+├── api/
+│   └── product-feed.js       Meta Commerce Catalog CSV feed (serverless)
 ├── robots.txt
 ├── sitemap.xml
-├── vercel.json               Security headers config
+├── vercel.json               Security headers + /product-feed.csv rewrite
 ├── setup.sql                 Best-effort schema reference (not authoritative)
 ├── claude.md                 This file
 ├── .agents/skills/gsap-animated-frontend/
