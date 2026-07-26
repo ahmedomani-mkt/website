@@ -1146,8 +1146,8 @@ try{
     <div class="field"><label>عنوان الفيديو (اختياري)</label><input type="text" id="vidm-t" placeholder="ريل معرض الأسطورة — وصل 1M مشاهدة"></div>
     <div class="field">
       <label>لينك الفيديو</label>
-      <input type="url" id="vidm-u" placeholder="https://..." oninput="vidUrlHint()">
-      <div class="field-hint" id="vidm-hint">الصق لينك من: يوتيوب (فيديو أو Shorts) · تيك توك · انستجرام (ريل أو بوست فيديو) · فيسبوك (فيديو أو fb.watch)</div>
+      <textarea id="vidm-u" rows="2" placeholder="https://... أو الصق كود التضمين <iframe> كامل" oninput="vidUrlHint()"></textarea>
+      <div class="field-hint" id="vidm-hint">الصق لينك من: يوتيوب (فيديو أو Shorts) · تيك توك · انستجرام (ريل أو بوست فيديو) · فيسبوك (فيديو أو fb.watch). لو اللينك العادي لفيسبوك مش بيشتغل، روح على الفيديو في فيسبوك → ⋯ → "تضمين" (Embed) وانسخ كود الـ &lt;iframe&gt; كامل والصقه هنا بدل اللينك.</div>
     </div>
     <div class="field">
       <label>صورة الغلاف (اختياري)</label>
@@ -2095,6 +2095,12 @@ var videosList=[];
 function parseVideoAdmin(url){
   url=String(url||'').trim();
   var m;
+  var iframeSrc=url.match(/<iframe[^>]+src=["']([^"']+)["']/i);
+  if(iframeSrc){
+    var src=iframeSrc[1].replace(/&amp;/g,'&');
+    if(/facebook\.com\/plugins\//.test(src))return{label:'Facebook (كود تضمين)',thumb:''};
+    return{label:'فيديو (كود تضمين)',thumb:''};
+  }
   if(m=url.match(/(?:youtube\.com\/(?:watch\?[^#\s]*v=|shorts\/|embed\/)|youtu\.be\/)([A-Za-z0-9_-]{6,20})/))
     return{label:'YouTube',thumb:'https://i.ytimg.com/vi/'+m[1]+'/hqdefault.jpg'};
   if(/tiktok\.com\/[^\s]*\/video\/\d+/.test(url))return{label:'TikTok',thumb:''};

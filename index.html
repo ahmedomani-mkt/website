@@ -1132,6 +1132,20 @@ function renderCaseStudies(list){
 function parseVideo(url){
   url=String(url||'').trim();
   var m;
+  // Accept a pasted <iframe> embed code too (e.g. Facebook's official
+  // "Embed Video" tool output) — extract the iframe's own src and use it
+  // directly, since Facebook only ever hands out that code for posts it has
+  // actually decided are embeddable (more reliable than us rebuilding a
+  // plugins/video.php URL from a plain link ourselves).
+  var iframeSrc=url.match(/<iframe[^>]+src=["']([^"']+)["']/i);
+  if(iframeSrc){
+    var src=iframeSrc[1].replace(/&amp;/g,'&');
+    var hrefParam=src.match(/[?&]href=([^&]+)/);
+    var orig=hrefParam?decodeURIComponent(hrefParam[1]):src;
+    if(/facebook\.com\/plugins\//.test(src))
+      return{portrait:/facebook\.com\/reel\//.test(orig),embed:src,thumb:'',icon:'bi-facebook',label:'Facebook',origUrl:orig};
+    return{portrait:false,embed:src,thumb:'',icon:'bi-play-circle',label:'فيديو',origUrl:orig};
+  }
   if(m=url.match(/(?:youtube\.com\/(?:watch\?[^#\s]*v=|shorts\/|embed\/)|youtu\.be\/)([A-Za-z0-9_-]{6,20})/))
     return{portrait:/\/shorts\//.test(url),embed:'https://www.youtube.com/embed/'+m[1]+'?autoplay=1',thumb:'https://i.ytimg.com/vi/'+m[1]+'/hqdefault.jpg',icon:'bi-youtube',label:'YouTube',origUrl:url};
   if(m=url.match(/tiktok\.com\/[^\s]*\/video\/(\d+)/))
