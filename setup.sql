@@ -155,6 +155,22 @@ CREATE TABLE IF NOT EXISTS ao_case_studies (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
+-- ── ANALYTICS EVENTS (dashboard: visits / cart-adds / orders) ────
+-- Lightweight event log, NOT a full analytics product. Anyone (including
+-- anonymous site visitors) may INSERT an event, but only the admin may
+-- SELECT/DELETE — this is the opposite of every other table's RLS shape
+-- above (public-read/admin-write), so it is NOT part of the generic
+-- DO $$ loop below and gets its own policies.
+CREATE TABLE IF NOT EXISTS ao_analytics_events (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  event_type TEXT NOT NULL CHECK (event_type IN ('visit','add_to_cart','order')),
+  product_id UUID REFERENCES ao_products(id) ON DELETE SET NULL,
+  page TEXT DEFAULT '', -- 'index' | 'catalog' | 'catalog-marketing' | 'product'
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+CREATE INDEX IF NOT EXISTS ao_analytics_events_type_idx ON ao_analytics_events(event_type);
+CREATE INDEX IF NOT EXISTS ao_analytics_events_product_idx ON ao_analytics_events(product_id);
+
 -- ── ADMIN USER ───────────────────────────────────────
 -- Create exactly ONE dedicated Supabase Auth user for this site's admin
 -- (do NOT gate write policies on "any authenticated user" if this project
@@ -193,6 +209,15 @@ ALTER TABLE ao_faq ENABLE ROW LEVEL SECURITY; -- no policies created for this on
 ALTER TABLE ao_pages ENABLE ROW LEVEL SECURITY;
 ALTER TABLE ao_videos ENABLE ROW LEVEL SECURITY;
 ALTER TABLE ao_case_studies ENABLE ROW LEVEL SECURITY;
+ALTER TABLE ao_analytics_events ENABLE ROW LEVEL SECURITY;
+
+DO $$
+DECLARE admin_id uuid := '<ADMIN_UID>';
+BEGIN
+  EXECUTE format('CREATE POLICY ao_analytics_events_insert ON public.ao_analytics_events FOR INSERT WITH CHECK (true)');
+  EXECUTE format('CREATE POLICY ao_analytics_events_select ON public.ao_analytics_events FOR SELECT USING (auth.uid() = %L)', admin_id);
+  EXECUTE format('CREATE POLICY ao_analytics_events_delete ON public.ao_analytics_events FOR DELETE USING (auth.uid() = %L)', admin_id);
+END $$;
 
 DO $$
 DECLARE

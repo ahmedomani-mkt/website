@@ -1374,10 +1374,25 @@ function revealHeroStats(){
   animateCounters();
 }
 
+var sb=null;
+function logEvent(type,productId){
+  try{
+    if(!sb)return;
+    sb.from('ao_analytics_events').insert({event_type:type,product_id:productId||null,page:'index'}).then(function(){},function(){});
+  }catch(e){}
+}
+function logVisitOnce(){
+  try{
+    if(sessionStorage.getItem('ao_visit_logged'))return;
+    sessionStorage.setItem('ao_visit_logged','1');
+    logEvent('visit',null);
+  }catch(e){}
+}
 async function loadSite(){
   if(typeof supabase==='undefined'){revealHeroStats();return;}
   try{
-    var sb=supabase.createClient(SB_URL,SB_KEY);
+    sb=supabase.createClient(SB_URL,SB_KEY);
+    logVisitOnce();
     var cfg=(await sb.from('ao_settings').select('*').single()).data;
     if(cfg){
       if(cfg.whatsapp)updateWaLinks(cfg.whatsapp);

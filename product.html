@@ -241,6 +241,20 @@ var CART_KEY='ao_cart_v1';
 var catalogPage='catalog.html';
 var product=null;
 var catLabels={general:'عام',signage:'يافطات وواجهات',print:'مطبوعات',uniform:'يوني فورم',accessories:'اكسسوارات',digital:'خدمات رقمية',branding:'هوية بصرية'};
+var sb=null;
+function logEvent(type,productId){
+  try{
+    if(!sb)return;
+    sb.from('ao_analytics_events').insert({event_type:type,product_id:productId||null,page:'product'}).then(function(){},function(){});
+  }catch(e){}
+}
+function logVisitOnce(){
+  try{
+    if(sessionStorage.getItem('ao_visit_logged'))return;
+    sessionStorage.setItem('ao_visit_logged','1');
+    logEvent('visit',null);
+  }catch(e){}
+}
 
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
 function applySiteTheme(mode){
@@ -352,6 +366,7 @@ function renderProduct(p){
   var waMsg=_waInquiryTpl.indexOf('{product}')>-1?_waInquiryTpl.replace('{product}',prodLabel):_waInquiryTpl+' '+prodLabel;
   document.getElementById('pdWaBtn').onclick=function(){
     pxTrack('Contact',{content_ids:[p.id],content_name:p.title,content_type:'product',currency:'EGP',value:parseFloat(p.price)||0});
+    logEvent('order',p.id);
     window.open('https://wa.me/'+_waNum+'?text='+encodeURIComponent(waMsg),'_blank','noopener');
   };
   if(p.details){
@@ -375,7 +390,8 @@ async function loadProduct(){
   if(!id){showNotFound();return}
   try{
     if(typeof supabase==='undefined')throw new Error('no sb');
-    var sb=supabase.createClient(SB_URL,SB_KEY);
+    sb=supabase.createClient(SB_URL,SB_KEY);
+    logVisitOnce();
     var cfg=(await sb.from('ao_settings').select('whatsapp,wa_full,meta_pixel_id,logo_url,logo_dark_url,favicon_url,site_bg_image,site_theme_mode').single()).data;
     if(cfg&&cfg.whatsapp)_waNum=cfg.whatsapp;
     if(cfg&&cfg.wa_full&&cfg.wa_full.trim())_waInquiryTpl=cfg.wa_full.trim();

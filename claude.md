@@ -81,6 +81,12 @@ Every `ao_*` table: **public SELECT**, **writes (INSERT/UPDATE/DELETE) restricte
 
 #### `ao_faq` — orphaned, locked (see RLS note above), not read by any live page.
 
+#### `ao_analytics_events` — dashboard analytics (visits / cart-adds / orders)
+- `event_type` (`'visit'|'add_to_cart'|'order'`), `product_id` (nullable FK → `ao_products.id`), `page` (`'index'|'catalog'|'catalog-marketing'|'product'|'page'`), `created_at`
+- **RLS is inverted from every other table**: public **INSERT** (any visitor, including anonymous, can log an event), **SELECT/DELETE restricted to the admin** — the opposite of the public-read/admin-write pattern used everywhere else, because this table holds write-only telemetry, not editable content.
+- Written by a fire-and-forget `logEvent(type, productId)` helper on every public page (`index.html`, `catalog.html`, `catalog-marketing.html`, `product.html`, `page.html`): one `'visit'` event per browser session (deduped via `sessionStorage['ao_visit_logged']`), one `'add_to_cart'` per `addToCart()` call on the catalog pages, one `'order'` per WhatsApp send (cart checkout on the catalog pages, or the single-product inquiry button on `product.html`).
+- Read by `admin.html`'s dashboard (`loadAnalytics()`) — fetches all rows client-side and aggregates counts + a top-5-by-cart-adds product list in JS. This is a lightweight event log, not a real analytics product; if row volume ever becomes a real concern, move the aggregation into a Postgres view/RPC instead of pulling all rows client-side.
+
 ### Storage
 - **Bucket**: `ao-images` (public read via direct object URL; API access — list/upload/update/delete — restricted to the admin user)
 - **Paths**: `portfolio/`, `products/`, `clients/`, `hero/`, `branding/`

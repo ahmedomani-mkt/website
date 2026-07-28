@@ -278,6 +278,20 @@ var _waOrderGreeting='مرحبًا، أريد طلب المنتجات التال
 var products=[];
 var cart={};       // {productId: qty}
 var CART_KEY='ao_cart_v1';
+var sb=null;
+function logEvent(type,productId){
+  try{
+    if(!sb)return;
+    sb.from('ao_analytics_events').insert({event_type:type,product_id:productId||null,page:'catalog'}).then(function(){},function(){});
+  }catch(e){}
+}
+function logVisitOnce(){
+  try{
+    if(sessionStorage.getItem('ao_visit_logged'))return;
+    sessionStorage.setItem('ao_visit_logged','1');
+    logEvent('visit',null);
+  }catch(e){}
+}
 
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
 function applySiteTheme(mode){
@@ -395,6 +409,7 @@ function addToCart(id){
   showToast('اتضاف للسلة ✓');
   var p=products.find(function(x){return x.id===id});
   if(p)pxTrack('AddToCart',{content_ids:[id],content_name:p.title,content_type:'product',currency:'EGP',value:parseFloat(p.price)||0});
+  logEvent('add_to_cart',id);
 }
 function changeQty(id,d){
   cart[id]=(cart[id]||0)+d;
@@ -507,6 +522,7 @@ function sendOrder(){
   var evt={content_ids:ids,content_type:'product',currency:'EGP',value:total,num_items:numItems};
   pxTrack('Lead',evt);
   pxTrackCustom('WhatsAppOrder',evt);
+  logEvent('order',null);
   var waUrl='https://wa.me/'+_waNum+'?text='+encodeURIComponent(msg);
   // #waSend is a real <a target="_blank"> element — set its href here and
   // let the browser follow its own link natively instead of calling
@@ -524,7 +540,8 @@ async function loadCatalog(){
   loadCart();
   try{
     if(typeof supabase==='undefined')throw new Error('no sb');
-    var sb=supabase.createClient(SB_URL,SB_KEY);
+    sb=supabase.createClient(SB_URL,SB_KEY);
+    logVisitOnce();
     var cfg=(await sb.from('ao_settings').select('whatsapp,wa_offline,meta_pixel_id,logo_url,logo_dark_url,favicon_url,site_bg_image,site_theme_mode').single()).data;
     if(cfg&&cfg.whatsapp)_waNum=cfg.whatsapp;
     if(cfg&&cfg.wa_offline&&cfg.wa_offline.trim())_waOrderGreeting=cfg.wa_offline.trim();

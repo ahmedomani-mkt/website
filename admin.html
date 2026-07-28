@@ -118,6 +118,7 @@ button,select,input,textarea{font-family:var(--font)}
 
 /* ── STATS DASHBOARD ─────────────────────────────────── */
 .dash-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
+.dash-stats-alt{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}
 .ds-card{background:var(--s);border:1px solid var(--b);border-radius:var(--r);padding:16px 18px;position:relative;overflow:hidden;transition:.2s;box-shadow:var(--panel-shadow)}
 .ds-card::after{content:'';position:absolute;top:0;left:0;width:3px;height:100%;background:var(--red);border-radius:0}
 .ds-card.green::after{background:var(--green)}
@@ -304,7 +305,7 @@ button,select,input,textarea{font-family:var(--font)}
   .tb-sep{display:none}
   .main{padding:12px}
   .sec-title{font-size:18px}
-  .dash-stats{grid-template-columns:repeat(2,1fr);gap:10px}
+  .dash-stats,.dash-stats-alt{grid-template-columns:repeat(2,1fr);gap:10px}
   .dash-quick{grid-template-columns:1fr}
   .r2,.r3{grid-template-columns:1fr}
   .card-grid{grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}
@@ -315,7 +316,7 @@ button,select,input,textarea{font-family:var(--font)}
   .li-ac{width:100%;justify-content:flex-end}
 }
 @media (max-width:400px){
-  .dash-stats{grid-template-columns:1fr}
+  .dash-stats,.dash-stats-alt{grid-template-columns:1fr}
 }
 </style>
 <script>
@@ -505,6 +506,32 @@ try{
           <div class="ds-num" id="st-pg">—</div>
           <div class="ds-label">صفحة منشورة</div>
         </div>
+      </div>
+      <div class="dash-stats-alt">
+        <div class="ds-card">
+          <div class="ds-icon">👁️</div>
+          <div class="ds-num" id="st-visits">—</div>
+          <div class="ds-label">زيارات الموقع</div>
+        </div>
+        <div class="ds-card blue">
+          <div class="ds-icon">🛒</div>
+          <div class="ds-num" id="st-cartadds">—</div>
+          <div class="ds-label">إضافات للسلة</div>
+        </div>
+        <div class="ds-card green">
+          <div class="ds-icon">✅</div>
+          <div class="ds-num" id="st-orders">—</div>
+          <div class="ds-label">طلبات واتساب</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+            أكثر المنتجات إضافة للسلة
+          </div>
+        </div>
+        <div id="topProductsList"><div class="info-box">جارٍ التحميل…</div></div>
       </div>
       <div class="dash-quick">
         <div class="dq-btn" onclick="go('hero',qni('hero'))">
@@ -1474,6 +1501,7 @@ async function loadAll(){
     updateStats();
     document.getElementById('cdot').className='dot';
     document.getElementById('clbl').textContent='متصل';
+    loadAnalytics();
   }catch(e){
     document.getElementById('cdot').className='dot off';
     document.getElementById('clbl').textContent='غير متصل';
@@ -1485,6 +1513,48 @@ function updateStats(){
   document.getElementById('st-c').textContent=clients.filter(function(x){return x.is_active}).length;
   document.getElementById('st-f').textContent=products.filter(function(x){return x.is_active}).length;
   document.getElementById('st-pg').textContent=pages.filter(function(x){return x.is_published}).length;
+}
+
+// ── ANALYTICS (visits / cart-adds / orders) ─────────────
+async function loadAnalytics(){
+  try{
+    var res=await sb.from('ao_analytics_events').select('event_type,product_id');
+    if(res.error)throw res.error;
+    var rows=res.data||[];
+    var visits=0,orders=0,cartAdds=0,byProduct={};
+    rows.forEach(function(r){
+      if(r.event_type==='visit')visits++;
+      else if(r.event_type==='order')orders++;
+      else if(r.event_type==='add_to_cart'){
+        cartAdds++;
+        if(r.product_id)byProduct[r.product_id]=(byProduct[r.product_id]||0)+1;
+      }
+    });
+    var top=Object.keys(byProduct).map(function(id){
+      var p=products.find(function(x){return x.id===id});
+      return{title:p?p.title:'منتج محذوف',count:byProduct[id]};
+    }).sort(function(a,b){return b.count-a.count}).slice(0,5);
+    renderAnalytics({visits:visits,orders:orders,cartAdds:cartAdds,top:top});
+  }catch(e){
+    renderAnalytics(null);
+  }
+}
+function renderAnalytics(a){
+  document.getElementById('st-visits').textContent=a?a.visits:'—';
+  document.getElementById('st-orders').textContent=a?a.orders:'—';
+  document.getElementById('st-cartadds').textContent=a?a.cartAdds:'—';
+  var wrap=document.getElementById('topProductsList');
+  if(!a){
+    wrap.innerHTML='<div class="info-box">تعذر تحميل بيانات التحليلات</div>';
+    return;
+  }
+  if(!a.top.length){
+    wrap.innerHTML='<div class="info-box">لا توجد إضافات للسلة مسجلة بعد</div>';
+    return;
+  }
+  wrap.innerHTML=a.top.map(function(t,i){
+    return'<div class="li"><div class="li-thumb">#'+(i+1)+'</div><div class="li-b"><div class="li-t">'+h(t.title)+'</div></div><span class="badge b-blue">'+t.count+' إضافة</span></div>';
+  }).join('');
 }
 
 // ── HERO ───────────────────────────────────────────────

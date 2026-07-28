@@ -123,6 +123,20 @@ footer{border-top:1px solid var(--line);padding:24px var(--pad);display:flex;ali
 var SB_URL='https://lhunamvderddsplishtg.supabase.co';
 var SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxodW5hbXZkZXJkZHNwbGlzaHRnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI1OTEzNzMsImV4cCI6MjA5ODE2NzM3M30.AUjhZ4Qtw3hfX-HCIlsdAJpzSutW-GxjQ0D9S11W0vw';
 var _waNum='201152501056';
+var sb=null;
+function logEvent(type,productId){
+  try{
+    if(!sb)return;
+    sb.from('ao_analytics_events').insert({event_type:type,product_id:productId||null,page:'page'}).then(function(){},function(){});
+  }catch(e){}
+}
+function logVisitOnce(){
+  try{
+    if(sessionStorage.getItem('ao_visit_logged'))return;
+    sessionStorage.setItem('ao_visit_logged','1');
+    logEvent('visit',null);
+  }catch(e){}
+}
 
 function esc(s){
   return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
@@ -216,7 +230,8 @@ async function loadPage(){
 
   try{
     if(typeof supabase==='undefined'){show404();return;}
-    var sb=supabase.createClient(SB_URL,SB_KEY);
+    sb=supabase.createClient(SB_URL,SB_KEY);
+    logVisitOnce();
 
     var cfg=(await sb.from('ao_settings').select('whatsapp,logo_url,favicon_url,footer_text').single()).data;
     if(cfg&&cfg.whatsapp)_waNum=cfg.whatsapp;
