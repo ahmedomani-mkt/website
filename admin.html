@@ -965,6 +965,20 @@ try{
         </div>
       </div>
       <div class="card">
+        <div class="card-header"><div class="card-title"><svg viewBox="0 0 24 24"><path d="M12 2l8 4v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6z"/></svg>استبعاد جهازك من الإحصائيات</div></div>
+        <div class="field">
+          <label style="display:flex;align-items:center;gap:10px;cursor:pointer;text-transform:none;font-size:13px;color:var(--w2);font-weight:600">
+            <input type="checkbox" id="s-notrack" onchange="toggleNoTrack(this.checked)">
+            استبعاد هذا المتصفح/الجهاز من عدّاد الزيارات وإضافات السلة والطلبات
+          </label>
+          <div class="field-hint">
+            تفعيل الخيار ده بيمنع تسجيل زياراتك وأي إضافة للسلة أو طلب واتساب تعمله من نفس المتصفح ده (على أي صفحة من صفحات الموقع) عشان مايتحسبوش ضمن أرقام لوحة التحكم — الإعداد محفوظ في المتصفح نفسه فقط (مش في قاعدة البيانات) فمينفعش يأثر على أي زائر تاني.
+            <br><br>
+            لو بتستخدم أكتر من جهاز/متصفح (موبايل مثلًا) وعايز تستبعده برضه من غير ما تسجّل دخول للوحة التحكم عليه، افتح أي صفحة من صفحات الموقع من نفس الجهاز ده مع إضافة <code dir="ltr">?notrack=1</code> في آخر الرابط مرة واحدة بس، وهيفضل مستبعد تلقائيًا بعد كده. ولإلغاء الاستبعاد من جهاز زي ده، افتح رابط فيه <code dir="ltr">?notrack=0</code>.
+          </div>
+        </div>
+      </div>
+      <div class="card">
         <div class="card-header"><div class="card-title"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>خلفية الموقع الزجاجية</div></div>
         <div class="field">
           <label>وضع التصميم الزجاجي</label>
@@ -1427,6 +1441,12 @@ function toggleTheme(){
   else{document.documentElement.dataset.theme='light';localStorage.setItem('ao-theme','light')}
   syncThemeIcon();
 }
+function toggleNoTrack(checked){
+  try{
+    if(checked)localStorage.setItem('ao_no_track','1');
+    else localStorage.removeItem('ao_no_track');
+  }catch(e){}
+}
 function syncThemeIcon(){
   var isLight=document.documentElement.dataset.theme==='light';
   document.getElementById('themeIconMoon').style.display=isLight?'none':'block';
@@ -1646,6 +1666,7 @@ async function loadSettings(){
   v('s-wa-offline',data.wa_offline);v('s-wa-digital',data.wa_digital);v('s-wa-product',data.wa_full);
   document.getElementById('s-theme-mode').value=data.site_theme_mode==='light'?'light':'dark';
   document.getElementById('s-show-mkt-port').checked=data.show_marketing_portfolio!==false;
+  try{document.getElementById('s-notrack').checked=localStorage.getItem('ao_no_track')==='1'}catch(e){}
   statsData=data.stats_data||defaultStats();
   textsData=data.page_texts||{};
   renderStatsEditor();

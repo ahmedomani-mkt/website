@@ -242,9 +242,19 @@ var catalogPage='catalog.html';
 var product=null;
 var catLabels={general:'عام',signage:'يافطات وواجهات',print:'مطبوعات',uniform:'يوني فورم',accessories:'اكسسوارات',digital:'خدمات رقمية',branding:'هوية بصرية'};
 var sb=null;
+(function(){
+  try{
+    var qp=new URLSearchParams(location.search);
+    if(qp.has('notrack')){
+      if(qp.get('notrack')==='0')localStorage.removeItem('ao_no_track');
+      else localStorage.setItem('ao_no_track','1');
+    }
+  }catch(e){}
+})();
 function logEvent(type,productId){
   try{
     if(!sb)return;
+    if(localStorage.getItem('ao_no_track')==='1')return;
     sb.from('ao_analytics_events').insert({event_type:type,product_id:productId||null,page:'product'}).then(function(){},function(){});
   }catch(e){}
 }

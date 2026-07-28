@@ -124,9 +124,19 @@ var SB_URL='https://lhunamvderddsplishtg.supabase.co';
 var SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxodW5hbXZkZXJkZHNwbGlzaHRnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI1OTEzNzMsImV4cCI6MjA5ODE2NzM3M30.AUjhZ4Qtw3hfX-HCIlsdAJpzSutW-GxjQ0D9S11W0vw';
 var _waNum='201152501056';
 var sb=null;
+(function(){
+  try{
+    var qp=new URLSearchParams(location.search);
+    if(qp.has('notrack')){
+      if(qp.get('notrack')==='0')localStorage.removeItem('ao_no_track');
+      else localStorage.setItem('ao_no_track','1');
+    }
+  }catch(e){}
+})();
 function logEvent(type,productId){
   try{
     if(!sb)return;
+    if(localStorage.getItem('ao_no_track')==='1')return;
     sb.from('ao_analytics_events').insert({event_type:type,product_id:productId||null,page:'page'}).then(function(){},function(){});
   }catch(e){}
 }
