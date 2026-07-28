@@ -23,7 +23,6 @@ B2B automotive marketing portfolio/catalog website for Ahmed Omani (automotive m
 
 ### Assets
 - **`assets/logo.png`** — Brand logo, used as favicon, nav/footer logo, and `og:image`.
-- **`assets/logo.svg`** — Vector variant (kept for potential future use; not currently referenced by any page).
 
 ### SEO / infra
 - **`robots.txt`**, **`sitemap.xml`** — basic crawl directives (admin.html disallowed).
@@ -200,11 +199,8 @@ website/
 ├── vercel.json               Security headers + /product-feed.csv rewrite
 ├── setup.sql                 Best-effort schema reference (not authoritative)
 ├── claude.md                 This file
-├── .agents/skills/gsap-animated-frontend/
-├── skills-lock.json
 └── assets/
-    ├── logo.png              Brand logo (favicon, og:image, nav/footer)
-    └── logo.svg
+    └── logo.png              Brand logo (favicon, og:image, nav/footer)
 ```
 
 ---
