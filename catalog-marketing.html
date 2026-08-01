@@ -27,6 +27,7 @@
   --font:'Rubik','Segoe UI',Tahoma,Arial,sans-serif;
   --r:22px; --rs:14px; --rp:999px;
   --pad:clamp(20px,4vw,56px);
+  --nav-hover:rgba(255,255,255,.06); --nav-active:rgba(255,255,255,.11);
 }
 :root[data-theme="light"]{
   --p1:#F6F6F8; --p2:#EFEFF3; --p3:#E6E6EC;
@@ -34,6 +35,7 @@
   --line:rgba(20,20,26,.12); --line2:rgba(20,20,26,.2);
   --red-d:#c4101f; --red-soft:rgba(232,25,44,.1);
   --wa-d:#1dba58;
+  --nav-hover:rgba(20,20,26,.035); --nav-active:rgba(20,20,26,.06);
   --card-bg:linear-gradient(155deg,rgba(255,255,255,.8),rgba(255,255,255,.4) 55%);
   --glass-border:rgba(20,20,26,.14);
   --glass-shadow:inset 0 1.5px 0 rgba(255,255,255,.9), inset 0 0 0 1px rgba(255,255,255,.5), 0 20px 44px -18px rgba(20,20,26,.2);
@@ -73,6 +75,27 @@ nav{position:fixed;top:0;width:100%;z-index:200;height:72px;padding:0 var(--pad)
 .cart-btn{position:relative;display:flex;align-items:center;gap:9px;background:var(--red);color:#fff;border:none;padding:11px 20px;border-radius:var(--rp);font-weight:600;font-size:13px;transition:.2s;box-shadow:0 6px 22px rgba(232,25,44,.4)}
 .cart-btn:hover{background:var(--red-d);box-shadow:0 8px 28px rgba(232,25,44,.55)}
 .cart-count{background:#fff;color:var(--red);min-width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;padding:0 5px}
+.nav-links{display:flex;gap:4px;list-style:none}
+.nav-links a{display:block;color:var(--ink2);font-size:14px;font-weight:500;transition:.2s;padding:9px 15px;border-radius:var(--rp)}
+.nav-links a:hover{color:var(--ink);background:var(--nav-hover)}
+.nav-links a.active{color:var(--ink);background:var(--nav-active)}
+.nav-cta{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:#fff;background:var(--wa);padding:11px 22px;border-radius:var(--rp);transition:.25s;box-shadow:0 6px 22px rgba(37,211,102,.4)}
+.nav-cta:hover{background:var(--wa-d);transform:translateY(-1px);box-shadow:0 8px 28px rgba(37,211,102,.55)}
+.burger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:6px;background:none;border:none;z-index:460}
+.burger span{width:22px;height:2px;background:var(--ink);border-radius:2px;transition:.3s;display:block}
+.burger.open span:nth-child(1){transform:rotate(45deg) translate(5px,5px)}
+.burger.open span:nth-child(2){opacity:0}
+.burger.open span:nth-child(3){transform:rotate(-45deg) translate(6px,-6px)}
+.mobile-nav{position:fixed;inset:0;background:var(--p1);z-index:450;display:flex;flex-direction:column;justify-content:center;padding:80px var(--pad) 40px;opacity:0;pointer-events:none;transition:opacity .3s}
+.mobile-nav.open{opacity:1;pointer-events:all}
+.mobile-nav ul{list-style:none}
+.mobile-nav ul li a{display:block;padding:15px 4px;font-size:23px;font-weight:600;color:var(--ink);border-bottom:1px solid var(--line);transition:.2s}
+.mobile-nav ul li a:active,.mobile-nav ul li a:hover{color:var(--red)}
+.m-cta{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:28px;background:var(--wa);color:#fff;padding:16px;border-radius:var(--rs);font-weight:600;font-size:15px}
+@media(max-width:900px){
+  .nav-links,.nav-cta{display:none}
+  .burger{display:flex}
+}
 
 /* HEADER */
 .cat-header{padding:150px 0 48px;text-align:center}
@@ -202,19 +225,38 @@ footer{border-top:1px solid var(--line);padding:24px var(--pad);display:flex;ali
 <body>
 
 <div class="ambient-glow" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
-<nav>
-  <a href="/" class="logo-wrap">
-    <img id="navLogoImg" src="assets/logo.png" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Crect width=%27100%27 height=%27100%27 fill=%27%23E8192C%27/%3E%3Cpolygon points=%2750,22 78,68 22,68%27 fill=%27white%27/%3E%3C/svg%3E'" alt="Ahmed Omani Auto Marketing" class="logo-img">
-  </a>
+<nav id="mainNav">
   <div class="nav-side">
-    <a href="catalog.html" class="nav-home">كتالوج الدعاية والإعلان</a>
-    <a href="/" class="nav-home">← HOME</a>
+    <a href="https://wa.me/201152501056?text=مرحبا،%20أريد%20الاستفسار%20عن%20خدماتكم" class="nav-cta" id="navCta" target="_blank" rel="noopener"><i class="bi bi-whatsapp"></i> واتساب مباشر</a>
     <button class="cart-btn" onclick="openCart()">
       <span class="cart-btn-txt">السلة</span>
       <span class="cart-count" id="cartCount">0</span>
     </button>
   </div>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="index.html">الرئيسية</a></li>
+    <li><a href="index.html#portfolio">أعمالنا</a></li>
+    <li><a href="catalog.html">كتالوج الدعاية والإعلان</a></li>
+    <li><a href="catalog-marketing.html" class="active">كتالوج التسويق</a></li>
+  </ul>
+  <button class="burger" id="burger" onclick="toggleMenu()" aria-label="القائمة">
+    <span></span><span></span><span></span>
+  </button>
+  <a href="index.html" class="logo-wrap">
+    <img id="navLogoImg" src="assets/logo.png" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Crect width=%27100%27 height=%27100%27 fill=%27%23E8192C%27/%3E%3Cpolygon points=%2750,22 78,68 22,68%27 fill=%27white%27/%3E%3C/svg%3E'" alt="Ahmed Omani Auto Marketing" class="logo-img">
+  </a>
 </nav>
+
+<div class="mobile-nav" id="mobileNav">
+  <ul>
+    <li><a href="index.html" onclick="closeMenu()">الرئيسية</a></li>
+    <li><a href="index.html#portfolio" onclick="closeMenu()">أعمالنا</a></li>
+    <li><a href="catalog.html" onclick="closeMenu()">كتالوج الدعاية والإعلان</a></li>
+    <li><a href="catalog-marketing.html" onclick="closeMenu()">كتالوج التسويق</a></li>
+    <li><a href="index.html#clients" onclick="closeMenu()">عملاؤنا</a></li>
+  </ul>
+  <a href="https://wa.me/201152501056?text=مرحبا،%20أريد%20الاستفسار%20عن%20خدماتكم" class="m-cta" id="mCta" target="_blank" rel="noopener">واتساب مباشر</a>
+</div>
 
 <header class="cat-header">
   <div class="container cat-header-inner">
@@ -313,6 +355,14 @@ function logVisitOnce(){
 }
 
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+function toggleMenu(){
+  document.getElementById('burger').classList.toggle('open');
+  document.getElementById('mobileNav').classList.toggle('open');
+}
+function closeMenu(){
+  document.getElementById('burger').classList.remove('open');
+  document.getElementById('mobileNav').classList.remove('open');
+}
 function applySiteTheme(mode){
   var isLight=mode==='light';
   if(isLight)document.documentElement.dataset.theme='light';
@@ -586,6 +636,8 @@ async function loadCatalog(){
     logVisitOnce();
     var cfg=(await sb.from('ao_settings').select('whatsapp,wa_digital,meta_pixel_id,logo_url,logo_dark_url,favicon_url,site_bg_image,site_theme_mode').single()).data;
     if(cfg&&cfg.whatsapp)_waNum=cfg.whatsapp;
+    var waHref='https://wa.me/'+_waNum+'?text='+encodeURIComponent('مرحبا، أريد الاستفسار عن خدماتكم');
+    document.querySelectorAll('#navCta,#mCta').forEach(function(a){a.href=waHref});
     if(cfg&&cfg.wa_digital&&cfg.wa_digital.trim())_waOrderGreeting=cfg.wa_digital.trim();
     if(cfg&&cfg.meta_pixel_id)injectMetaPixel(cfg.meta_pixel_id);
     if(cfg){var activeLogo=(cfg.site_theme_mode==='light')?cfg.logo_url:(cfg.logo_dark_url||cfg.logo_url);if(activeLogo){var nl=document.getElementById('navLogoImg');if(nl)nl.src=activeLogo;}}
