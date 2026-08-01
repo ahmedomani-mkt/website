@@ -407,6 +407,10 @@ try{
         <div class="ni-ic"><svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></div>
         الشريط الإحصائي
       </div>
+      <div class="ni" data-s="faq" onclick="go('faq',this)">
+        <div class="ni-ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
+        الأسئلة الشائعة
+      </div>
     </div>
 
     <div class="sb-group" data-g="works" onclick="toggleSbGroup('works',this)">الأعمال والنتائج<svg class="sb-group-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
@@ -565,6 +569,10 @@ try{
         <div class="dq-btn" onclick="go('ba',qni('ba'))">
           <div class="dq-ic"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="18" rx="1"/><rect x="14" y="3" width="7" height="18" rx="1"/><path d="M10 12h4"/><path d="M12 10v4"/></svg></div>
           <div><div class="dq-title">قبل وبعد</div><div class="dq-sub">مقارنة نتائج العميل</div></div>
+        </div>
+        <div class="dq-btn" onclick="go('faq',qni('faq'))">
+          <div class="dq-ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
+          <div><div class="dq-title">إضافة سؤال شائع</div><div class="dq-sub">عام أو عن التسويق</div></div>
         </div>
         <div class="dq-btn" onclick="go('colors',qni('colors'))">
           <div class="dq-ic"><svg viewBox="0 0 24 24"><circle cx="13.5" cy="6.5" r=".5"/><circle cx="17.5" cy="10.5" r=".5"/><circle cx="8.5" cy="7.5" r=".5"/><circle cx="6.5" cy="12.5" r=".5"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 011.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/></svg></div>
@@ -776,6 +784,24 @@ try{
       </div>
     </div>
 
+    <!-- FAQ -->
+    <div class="sec" id="sec-faq">
+      <div class="sec-header">
+        <div class="sec-title">الأسئلة الشائعة</div>
+        <div class="sec-sub">تظهر في سيكشن "الأسئلة الشائعة" بالصفحة الرئيسية (رابط مباشر: <code dir="ltr">/#faq</code>) — قسّم الأسئلة "عامة" أو "عن التسويق وإدارة السوشيال ميديا" وهتتجمع تلقائيًا تحت عنوانها في الموقع</div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>الأسئلة (<span id="fqc">0</span>)</div>
+          <button class="btn btn-p bsm" onclick="openFaqM()">
+            <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            إضافة
+          </button>
+        </div>
+        <div id="fql"></div>
+      </div>
+    </div>
+
     <!-- PAGES -->
     <div class="sec" id="sec-pages">
       <div class="sec-header">
@@ -945,6 +971,17 @@ try{
             <img id="s-cat-marketing-pv" class="port-preview" style="max-height:120px;object-fit:cover">
           </div>
         </div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>بادجات كتالوج الدعاية والإعلان</div>
+          <button class="btn btn-g bsm" onclick="addAdsBadge()">
+            <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            إضافة بادج
+          </button>
+        </div>
+        <div class="field-hint" style="margin-bottom:12px">شريط صغير من نقاط ثقة تحت عنوان كتالوج الدعاية والإعلان مباشرة (مثال: توصيل لحد مكانك، تنفيذ وتسليم خلال 7-10 أيام عمل، تصميم مجاني). سيبه فاضي لو مش عايز يظهر.</div>
+        <div class="edit-grid" id="adsBadgesEditor"></div>
       </div>
       <div class="card">
         <div class="card-header"><div class="card-title"><svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8z"/></svg>رسائل واتساب التلقائية</div></div>
@@ -1332,6 +1369,26 @@ try{
   </div>
 </div>
 
+<!-- FAQ MODAL -->
+<div class="ov" id="ov-faq" onclick="if(event.target===this)closeFaqM()">
+  <div class="modal">
+    <div class="mh"><span id="faqm-ttl">إضافة سؤال</span><button class="mx" onclick="closeFaqM()">✕</button></div>
+    <input type="hidden" id="faqm-id">
+    <div class="field"><label>التصنيف</label>
+      <select id="faqm-cat">
+        <option value="عام">سؤال عام</option>
+        <option value="تسويق">عن التسويق وإدارة السوشيال ميديا</option>
+      </select>
+    </div>
+    <div class="field"><label>السؤال</label><input type="text" id="faqm-q" placeholder="إزاي بندير صفحتنا على السوشيال ميديا؟"></div>
+    <div class="field"><label>الإجابة</label><textarea id="faqm-a" rows="4" placeholder="بنبدأ بجلسة تعرّف على نشاطك وجمهورك..."></textarea></div>
+    <div class="mf">
+      <button class="btn btn-g" onclick="closeFaqM()">إلغاء</button>
+      <button class="btn btn-p" onclick="saveFaqM()">حفظ</button>
+    </div>
+  </div>
+</div>
+
 <!-- PAGE MODAL -->
 <div class="ov" id="ov-pg" onclick="if(event.target===this)closePgM()">
   <div class="modal modal-lg">
@@ -1384,7 +1441,7 @@ var portfolio=[],clients=[],pages=[],pageSecs=[],products=[],beforeAfters=[];
 var statsData=[],textsData={};
 
 // ── BREADCRUMB MAP ────────────────────────────────────
-var secNames={dash:'الرئيسية',hero:'الصفحة الرئيسية',stats:'الشريط الإحصائي',port:'الأعمال',products:'الكتالوج',clients:'العملاء',ba:'قبل وبعد',pages:'الصفحات',texts:'نصوص الأقسام',colors:'ألوان الأقسام',settings:'الإعدادات'};
+var secNames={dash:'الرئيسية',hero:'الصفحة الرئيسية',stats:'الشريط الإحصائي',port:'الأعمال',products:'الكتالوج',clients:'العملاء',ba:'قبل وبعد',videos:'الفيديوهات',cases:'النتائج',faq:'الأسئلة الشائعة',pages:'الصفحات',texts:'نصوص الأقسام',colors:'ألوان الأقسام',settings:'الإعدادات'};
 
 // ── ICON PICKER (flat modern icon library) ──────────────
 var ICON_LIB=['car-front','car-front-fill','truck','truck-front','wrench','wrench-adjustable','tools','gear','gear-fill','nut','fuel-pump','fuel-pump-fill','speedometer','speedometer2','battery-charging','cone-striped','signpost','signpost-2','map','geo-alt','geo-alt-fill','compass',
@@ -1517,7 +1574,7 @@ function closeMobileSidebar(){
 // ── LOAD ALL ────────────────────────────────────────────
 async function loadAll(){
   try{
-    await Promise.all([loadHero(),loadPort(),loadProducts(),loadClients(),loadBA(),loadVideos(),loadCases(),loadPages(),loadSettings()]);
+    await Promise.all([loadHero(),loadPort(),loadProducts(),loadClients(),loadBA(),loadVideos(),loadCases(),loadFaq(),loadPages(),loadSettings()]);
     updateStats();
     document.getElementById('cdot').className='dot';
     document.getElementById('clbl').textContent='متصل';
@@ -1669,7 +1726,9 @@ async function loadSettings(){
   try{document.getElementById('s-notrack').checked=localStorage.getItem('ao_no_track')==='1'}catch(e){}
   statsData=data.stats_data||defaultStats();
   textsData=data.page_texts||{};
+  adsBadges=Array.isArray(data.ads_catalog_badges)?data.ads_catalog_badges:[];
   renderStatsEditor();
+  renderAdsBadgesEditor();
   loadTextsEditor();
   sectionColorsData=data.section_colors||{};
   Object.keys(sectionColorsData).forEach(function(k){
@@ -1713,6 +1772,29 @@ async function saveStats(){
   toast('✅ تم حفظ الإحصائيات!');
 }
 
+// ── ADS CATALOG TRUST BADGES ─────────────────────────────
+var adsBadges=[];
+function renderAdsBadgesEditor(){
+  var el=document.getElementById('adsBadgesEditor');
+  if(!adsBadges.length){el.innerHTML=empty('لا توجد بادجات — اضغط "إضافة بادج"');return}
+  el.innerHTML=adsBadges.map(function(b,i){
+    return'<div class="edit-row">'
+      +'<div class="edit-row-head"><div class="edit-row-num">'+(i+1)+'</div> بادج '+(i+1)+'<button class="btn btn-d bsm" style="margin-inline-start:auto" onclick="removeAdsBadge('+i+')">حذف</button></div>'
+      +'<div style="display:grid;grid-template-columns:120px 1fr;gap:10px">'
+        +'<div><div style="font-size:10px;color:var(--g);margin-bottom:4px;font-weight:700;text-transform:uppercase;letter-spacing:.5px">أيقونة</div>'
+          +'<div style="display:flex;gap:6px">'
+          +'<div class="icon-pick-btn" onclick="openIconPicker(function(n){adsBadges['+i+'].icon=n;renderAdsBadgesEditor()})"><i class="bi bi-'+h(b.icon||'check-circle')+'"></i></div>'
+          +'<input class="fi" value="'+h(b.icon||'')+'" oninput="adsBadges['+i+'].icon=this.value" placeholder="truck">'
+          +'</div></div>'
+        +'<div><div style="font-size:10px;color:var(--g);margin-bottom:4px;font-weight:700;text-transform:uppercase;letter-spacing:.5px">النص</div>'
+          +'<input class="fi" value="'+h(b.text||'')+'" oninput="adsBadges['+i+'].text=this.value" placeholder="توصيل لحد مكانك"></div>'
+      +'</div>'
+      +'</div>';
+  }).join('');
+}
+function addAdsBadge(){adsBadges.push({icon:'check-circle',text:''});renderAdsBadgesEditor()}
+function removeAdsBadge(i){adsBadges.splice(i,1);renderAdsBadgesEditor()}
+
 async function saveSettings(){
   var p1=g('s-p1'),p2=g('s-p2');
   if(p1&&p1!==p2){toast('❌ كلمات المرور غير متطابقة');return}
@@ -1730,6 +1812,7 @@ async function saveSettings(){
     logo_url:g('s-logo')||null,logo_dark_url:g('s-logo-dark')||null,favicon_url:g('s-favicon')||null,
     catalog_ads_image:g('s-cat-ads')||null,catalog_marketing_image:g('s-cat-marketing')||null,
     site_bg_image:g('s-site-bg')||null,
+    ads_catalog_badges:adsBadges.filter(function(b){return b.text&&b.text.trim()}),
     wa_offline:g('s-wa-offline').trim()||null,wa_digital:g('s-wa-digital').trim()||null,wa_full:g('s-wa-product').trim()||null,
     site_theme_mode:document.getElementById('s-theme-mode').value,
     show_marketing_portfolio:document.getElementById('s-show-mkt-port').checked,
@@ -2473,6 +2556,56 @@ async function delCs(id){
   if(!confirm('تأكيد الحذف؟'))return;
   await sb.from('ao_case_studies').delete().eq('id',id);
   await loadCases();toast('🗑 تم الحذف');
+}
+
+// ── FAQ (الأسئلة الشائعة) ────────────────────────────────
+var faqList=[];
+async function loadFaq(){
+  var{data}=await sb.from('ao_faq').select('*').order('sort_order');
+  faqList=data||[];renderFaqAdmin();
+}
+function renderFaqAdmin(){
+  document.getElementById('fqc').textContent=faqList.length;
+  var el=document.getElementById('fql');
+  if(!faqList.length){el.innerHTML=empty('لا توجد أسئلة بعد — اضغط إضافة وسجّل أول سؤال');return}
+  el.innerHTML=faqList.map(function(f){
+    return'<div class="li">'
+      +'<div class="li-thumb">❓</div>'
+      +'<div class="li-b"><div class="li-t">'+h(f.question)+'</div>'
+      +'<div class="li-s"><span class="badge '+(f.category==='تسويق'?'b-purple':'b-blue')+'">'+(f.category==='تسويق'?'تسويق':'عام')+'</span>'
+      +'<span class="badge '+(f.is_active?'b-green':'b-off')+'">'+(f.is_active?'ظاهر':'مخفي')+'</span></div></div>'
+      +'<div class="li-ac">'
+      +'<button class="btn btn-g bsm" onclick="editFaq(\''+f.id+'\')">تعديل</button>'
+      +'<button class="btn btn-g bsm" onclick="toggleFaq(\''+f.id+'\','+(!f.is_active)+')">'+(f.is_active?'إخفاء':'إظهار')+'</button>'
+      +'<button class="btn btn-d bsm" onclick="delFaq(\''+f.id+'\')">حذف</button>'
+      +'</div></div>';
+  }).join('');
+}
+function openFaqM(item){
+  document.getElementById('faqm-ttl').textContent=item?'تعديل سؤال':'إضافة سؤال';
+  document.getElementById('faqm-id').value=item?item.id:'';
+  v('faqm-q',item?item.question:'');v('faqm-a',item?item.answer:'');
+  document.getElementById('faqm-cat').value=item&&item.category==='تسويق'?'تسويق':'عام';
+  document.getElementById('ov-faq').classList.add('open');
+}
+function closeFaqM(){document.getElementById('ov-faq').classList.remove('open')}
+function editFaq(id){openFaqM(faqList.find(function(x){return x.id===id}))}
+async function saveFaqM(){
+  var id=document.getElementById('faqm-id').value;
+  var q=g('faqm-q').trim(),a=g('faqm-a').trim();
+  if(!q||!a){toast('اكتب السؤال والإجابة');return}
+  var payload={question:q,answer:a,category:document.getElementById('faqm-cat').value};
+  var err;
+  if(id){err=(await sb.from('ao_faq').update(payload).eq('id',id)).error}
+  else{payload.is_active=true;payload.sort_order=faqList.length;err=(await sb.from('ao_faq').insert(payload)).error}
+  if(err){toast('❌ '+err.message);return}
+  closeFaqM();await loadFaq();toast('✅ تم الحفظ!');
+}
+async function toggleFaq(id,val){await sb.from('ao_faq').update({is_active:val}).eq('id',id);await loadFaq()}
+async function delFaq(id){
+  if(!confirm('تأكيد الحذف؟'))return;
+  await sb.from('ao_faq').delete().eq('id',id);
+  await loadFaq();toast('🗑 تم الحذف');
 }
 
 // ── PAGES ──────────────────────────────────────────────

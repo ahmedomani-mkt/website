@@ -56,6 +56,7 @@ Every `ao_*` table: **public SELECT**, **writes (INSERT/UPDATE/DELETE) restricte
 - `show_marketing_portfolio` — toggles the "أعمالنا في التسويق" section on index.html
 - `catalog_ads_image`, `catalog_marketing_image` — cover images for the two catalog link-cards on index.html
 - `wa_digital`, `wa_offline`, `wa_full` — WhatsApp message templates
+- `ads_catalog_badges` (jsonb array of `{icon, text}`) — trust-badge pill row under `catalog.html`'s header (e.g. delivery/turnaround-time/free-design); `icon` is a bootstrap-icons name, empty array hides the row
 - **No password column** — admin auth is handled entirely by Supabase Auth (`auth.users`), not this table.
 
 #### `ao_hero` (single row, id=1)
@@ -79,7 +80,9 @@ Every `ao_*` table: **public SELECT**, **writes (INSERT/UPDATE/DELETE) restricte
 #### `ao_pages`
 - `title`, `slug`, `meta_description`, `sections` (jsonb array of `{type:'hero'|'text'|'cta', data:{...}}`), `is_published`
 
-#### `ao_faq` — orphaned, locked (see RLS note above), not read by any live page.
+#### `ao_faq`
+- `question`, `answer`, `category` (`'عام'|'تسويق'`), `is_active`, `sort_order`
+- Rendered as an accordion section on `index.html` (`id="faq"`, direct link `/#faq`), grouped under a sub-heading per category — `'تسويق'` questions are meant to answer how the social-media-management service works (how we run the page, how to get started, etc.), kept in the same section rather than a separate page. Standard public-read/admin-write RLS (this table previously had zero policies/was fully locked when the FAQ feature had been removed from the site; it was reactivated and re-added to the standard RLS loop).
 
 #### `ao_analytics_events` — dashboard analytics (visits / cart-adds / orders)
 - `event_type` (`'visit'|'add_to_cart'|'order'`), `product_id` (nullable FK → `ao_products.id`), `page` (`'index'|'catalog'|'catalog-marketing'|'product'|'page'`), `created_at`

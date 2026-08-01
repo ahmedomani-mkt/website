@@ -39,6 +39,7 @@ CREATE TABLE IF NOT EXISTS ao_settings (
   catalog_marketing_image TEXT DEFAULT '',
   site_bg_image TEXT DEFAULT '',
   site_theme_mode TEXT DEFAULT 'dark', -- 'dark' | 'light'
+  ads_catalog_badges JSONB DEFAULT '[{"icon":"truck","text":"توصيل لحد مكانك"},{"icon":"clock-history","text":"تنفيذ وتسليم خلال 7-10 أيام عمل"},{"icon":"gift","text":"تصميم مجاني"}]', -- trust badges row under catalog.html's header: [{icon, text}]
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
@@ -108,13 +109,13 @@ CREATE TABLE IF NOT EXISTS ao_before_after (
   sort_order INTEGER DEFAULT 0
 );
 
--- FAQ — feature removed from the live site. Table kept for history but
--- intentionally has NO RLS policy at all (see below), so it's fully
--- locked/orphaned rather than deleted.
+-- FAQ (الأسئلة الشائعة) — rendered as an accordion section on index.html
+-- (#faq), grouped by `category` ('عام' | 'تسويق').
 CREATE TABLE IF NOT EXISTS ao_faq (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   question TEXT NOT NULL,
   answer TEXT NOT NULL,
+  category TEXT DEFAULT 'عام', -- 'عام' | 'تسويق'
   is_active BOOLEAN DEFAULT TRUE,
   sort_order INTEGER DEFAULT 0
 );
@@ -205,7 +206,7 @@ ALTER TABLE ao_portfolio ENABLE ROW LEVEL SECURITY;
 ALTER TABLE ao_products ENABLE ROW LEVEL SECURITY;
 ALTER TABLE ao_clients ENABLE ROW LEVEL SECURITY;
 ALTER TABLE ao_before_after ENABLE ROW LEVEL SECURITY;
-ALTER TABLE ao_faq ENABLE ROW LEVEL SECURITY; -- no policies created for this one — fully locked
+ALTER TABLE ao_faq ENABLE ROW LEVEL SECURITY;
 ALTER TABLE ao_pages ENABLE ROW LEVEL SECURITY;
 ALTER TABLE ao_videos ENABLE ROW LEVEL SECURITY;
 ALTER TABLE ao_case_studies ENABLE ROW LEVEL SECURITY;
@@ -224,7 +225,7 @@ DECLARE
   t text;
   admin_id uuid := '<ADMIN_UID>';
 BEGIN
-  FOREACH t IN ARRAY ARRAY['ao_settings','ao_hero','ao_portfolio','ao_products','ao_clients','ao_before_after','ao_pages','ao_videos','ao_case_studies'] LOOP
+  FOREACH t IN ARRAY ARRAY['ao_settings','ao_hero','ao_portfolio','ao_products','ao_clients','ao_before_after','ao_pages','ao_videos','ao_case_studies','ao_faq'] LOOP
     EXECUTE format('CREATE POLICY %I ON public.%I FOR SELECT USING (true)', t || '_select', t);
     EXECUTE format('CREATE POLICY %I ON public.%I FOR INSERT WITH CHECK (auth.uid() = %L)', t || '_insert', t, admin_id);
     EXECUTE format('CREATE POLICY %I ON public.%I FOR UPDATE USING (auth.uid() = %L) WITH CHECK (auth.uid() = %L)', t || '_update', t, admin_id, admin_id);
