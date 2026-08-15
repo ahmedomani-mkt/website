@@ -15,7 +15,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js" defer></script>
 <style>
 /* ══ TOKENS — dark glass ═══════════════════════════ */
 :root{
@@ -1015,7 +1015,7 @@ function injectTikTokPixel(id){
 }
 
 function portCardHtml(p){
-  var img=p.image_url?'<img src="'+esc(p.image_url)+'" alt="'+esc(p.title)+'">'
+  var img=p.image_url?'<img src="'+esc(p.image_url)+'" alt="'+esc(p.title)+'" loading="lazy">'
     :'<div class="port-img-ph"><i class="bi '+esc(catIcon[p.category]||'bi-image')+'"></i></div>';
   var badge=p.stat_badge?'<div class="port-stat">'+esc(p.stat_badge)+'</div>':'';
   return'<div class="port-card" data-cat="'+esc(p.category)+'">'
@@ -1288,8 +1288,8 @@ function renderBeforeAfter(list){
   baList=list;
   var g=document.getElementById('baGrid');
   if(g)g.innerHTML=list.map(function(b,i){
-    var before=b.before_image_url?'<img src="'+esc(b.before_image_url)+'" alt="قبل">':'<div class="ba-img-ph"><i class="bi bi-image"></i></div>';
-    var after=b.after_image_url?'<img src="'+esc(b.after_image_url)+'" alt="بعد">':'<div class="ba-img-ph"><i class="bi bi-image"></i></div>';
+    var before=b.before_image_url?'<img src="'+esc(b.before_image_url)+'" alt="قبل" loading="lazy">':'<div class="ba-img-ph"><i class="bi bi-image"></i></div>';
+    var after=b.after_image_url?'<img src="'+esc(b.after_image_url)+'" alt="بعد" loading="lazy">':'<div class="ba-img-ph"><i class="bi bi-image"></i></div>';
     return'<div class="ba-card" onclick="openBALightbox('+i+')">'
       +'<div class="ba-stack">'
         +'<div class="ba-img ba-img-before"><div class="ba-img-inner">'+before+'</div><span class="ba-tag ba-tag-before">قبل</span></div>'
@@ -1465,7 +1465,22 @@ async function loadSite(){
   try{
     sb=supabase.createClient(SB_URL,SB_KEY);
     logVisitOnce();
-    var cfg=(await sb.from('ao_settings').select('*').single()).data;
+    // fire every independent table query in parallel instead of awaiting
+    // them one by one — this was 9 sequential network round-trips before,
+    // now it's bounded by the single slowest one
+    var results=await Promise.all([
+      sb.from('ao_settings').select('*').single(),
+      sb.from('ao_hero').select('*').single(),
+      sb.from('ao_portfolio').select('*').eq('is_active',true).order('sort_order'),
+      sb.from('ao_clients').select('*').eq('is_active',true).order('sort_order'),
+      sb.from('ao_before_after').select('*').eq('is_active',true).order('sort_order'),
+      sb.from('ao_videos').select('*').eq('is_active',true).order('sort_order'),
+      sb.from('ao_case_studies').select('*').eq('is_active',true).order('sort_order'),
+      sb.from('ao_faq').select('*').eq('is_active',true).order('sort_order'),
+      sb.from('ao_pages').select('title,slug').eq('is_published',true).order('created_at'),
+    ]);
+    var cfg=results[0].data,hero=results[1].data,port=results[2].data,clients=results[3].data,
+      beforeAfter=results[4].data,vids=results[5].data,cases=results[6].data,faqs=results[7].data,pglist=results[8].data;
     if(cfg){
       if(cfg.whatsapp)updateWaLinks(cfg.whatsapp);
       if(cfg.meta_pixel_id)injectMetaPixel(cfg.meta_pixel_id);
@@ -1491,23 +1506,15 @@ async function loadSite(){
       applySiteTheme(cfg.site_theme_mode);
       renderSocial(cfg);
     }
-    var hero=(await sb.from('ao_hero').select('*').single()).data;
     if(hero)applyHero(hero);
     revealHeroStats();
-    var port=(await sb.from('ao_portfolio').select('*').eq('is_active',true).order('sort_order')).data;
     if(port&&port.length)renderPortfolio(port);
-    var clients=(await sb.from('ao_clients').select('*').eq('is_active',true).order('sort_order')).data;
     if(clients&&clients.length)renderClients(clients);
-    var beforeAfter=(await sb.from('ao_before_after').select('*').eq('is_active',true).order('sort_order')).data;
     renderBeforeAfter(beforeAfter||[]);
-    var vids=(await sb.from('ao_videos').select('*').eq('is_active',true).order('sort_order')).data;
     renderVideos(vids||[]);
-    var cases=(await sb.from('ao_case_studies').select('*').eq('is_active',true).order('sort_order')).data;
     renderCaseStudies(cases||[]);
-    var faqs=(await sb.from('ao_faq').select('*').eq('is_active',true).order('sort_order')).data;
     renderFaq(faqs||[]);
     animateCounters();
-    var pglist=(await sb.from('ao_pages').select('title,slug').eq('is_published',true).order('created_at')).data;
     if(pglist&&pglist.length)renderPagesLinks(pglist);
     initReveal();
   }catch(e){revealHeroStats()}

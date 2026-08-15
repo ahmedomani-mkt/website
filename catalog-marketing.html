@@ -11,7 +11,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js" defer></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{
@@ -635,7 +635,11 @@ async function loadCatalog(){
     if(typeof supabase==='undefined')throw new Error('no sb');
     sb=supabase.createClient(SB_URL,SB_KEY);
     logVisitOnce();
-    var cfg=(await sb.from('ao_settings').select('whatsapp,wa_digital,meta_pixel_id,logo_url,logo_dark_url,favicon_url,site_bg_image,site_theme_mode').single()).data;
+    var results=await Promise.all([
+      sb.from('ao_settings').select('whatsapp,wa_digital,meta_pixel_id,logo_url,logo_dark_url,favicon_url,site_bg_image,site_theme_mode').single(),
+      sb.from('ao_products').select('*').eq('is_active',true).eq('catalog','marketing').order('sort_order'),
+    ]);
+    var cfg=results[0].data;
     if(cfg&&cfg.whatsapp)_waNum=cfg.whatsapp;
     var waHref='https://wa.me/'+_waNum+'?text='+encodeURIComponent('مرحبا، أريد الاستفسار عن خدماتكم');
     document.querySelectorAll('#navCta,#mCta').forEach(function(a){a.href=waHref});
@@ -645,8 +649,7 @@ async function loadCatalog(){
     if(cfg&&cfg.favicon_url){var fav=document.getElementById('faviconLink');if(fav)fav.href=cfg.favicon_url;}
     if(cfg&&cfg.site_bg_image)applySiteBg(cfg.site_bg_image);
     if(cfg)applySiteTheme(cfg.site_theme_mode);
-    var res=await sb.from('ao_products').select('*').eq('is_active',true).eq('catalog','marketing').order('sort_order');
-    products=res.data||[];
+    products=results[1].data||[];
   }catch(e){products=[]}
   document.getElementById('catLoading').style.display='none';
   // drop cart entries for products that no longer exist
