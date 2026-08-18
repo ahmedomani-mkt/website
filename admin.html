@@ -1122,6 +1122,13 @@ try{
       <div style="font-size:11px;color:var(--red);font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">المجموعة</div>
       <div style="font-size:14px;color:var(--w);font-weight:600" id="gm-group-name"></div>
     </div>
+    <input type="hidden" id="gm-first-id">
+    <div class="field">
+      <label>نبذة عن المشروع</label>
+      <textarea id="gm-desc" rows="3" placeholder="نبذة مختصرة عن المشروع تظهر للعميل لما يدوس على شاهد المشروع..."></textarea>
+      <div class="field-hint">النبذة دي بتظهر في صفحة تفاصيل المشروع بالموقع — سيبها فاضية لو مش عايز نبذة تظهر.</div>
+    </div>
+    <button class="btn btn-p bsm" style="margin-bottom:16px" onclick="saveGroupDescription()">حفظ النبذة</button>
     <div id="gm-photos" class="card-grid"></div>
     <div class="mf">
       <button class="btn btn-g" onclick="closeGroupManager()">إغلاق</button>
@@ -1911,6 +1918,8 @@ function openGroupManager(groupName){
   var groupPhotos=portfolio.filter(function(p){return p.catalog!=='marketing'&&(p.group_label||'متنوع')===groupName});
   document.getElementById('gm-title').textContent=h(groupName);
   document.getElementById('gm-group-name').textContent=h(groupName);
+  document.getElementById('gm-first-id').value=groupPhotos[0]?groupPhotos[0].id:'';
+  v('gm-desc',groupPhotos[0]?groupPhotos[0].description||'':'');
   document.getElementById('gm-photos').innerHTML=groupPhotos.map(function(p){
     var actions='<button class="btn btn-g bsm" onclick="editPort(\''+p.id+'\')">تعديل</button>'
       +'<button class="btn btn-g bsm" onclick="togglePort(\''+p.id+'\','+(!p.is_active)+')">'+( p.is_active?'إخفاء':'إظهار')+'</button>'
@@ -2019,6 +2028,14 @@ async function renameGroup(oldName){
 }
 function closePBM(){document.getElementById('ov-port-bulk').classList.remove('open')}
 function closeGroupManager(){document.getElementById('ov-port-group').classList.remove('open')}
+async function saveGroupDescription(){
+  var id=document.getElementById('gm-first-id').value;
+  if(!id){toast('ضيف صورة للمجموعة الأول');return}
+  var{error}=await sb.from('ao_portfolio').update({description:g('gm-desc')||null}).eq('id',id);
+  if(error){toast('❌ '+error.message);return}
+  await loadPort();
+  toast('✅ تم حفظ النبذة!');
+}
 function toggleBulkGroupField(){
   var isAds=document.getElementById('pbm-catalog').value==='ads';
   document.getElementById('pbm-group-field').style.display=isAds?'block':'none';

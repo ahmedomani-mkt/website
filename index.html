@@ -227,24 +227,18 @@ section{padding:clamp(56px,8vw,92px) 0}
 }
 .proj-modal-media{background:var(--p3);position:relative;max-width:100%;overflow:hidden}
 .proj-modal-main-wrap{position:relative;aspect-ratio:4/3;overflow:hidden;touch-action:pan-y}
-.proj-modal-main-wrap img{width:100%;height:100%;object-fit:cover;display:block;cursor:zoom-in;-webkit-user-drag:none;user-select:none}
-.proj-modal-nav{position:absolute;top:50%;transform:translateY(-50%);z-index:2;width:36px;height:36px;border-radius:50%;border:1px solid rgba(255,255,255,.2);background:rgba(15,13,10,.55);backdrop-filter:blur(6px);color:#fff;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.2s}
-.proj-modal-nav:hover{background:rgba(15,13,10,.8)}
-.proj-modal-nav-prev{right:12px}
-.proj-modal-nav-next{left:12px}
+.proj-modal-main-wrap img{width:100%;height:100%;object-fit:cover;display:block;cursor:zoom-in;-webkit-user-drag:none;user-select:none;transition:transform .28s cubic-bezier(.22,.61,.36,1),opacity .22s ease}
+.proj-modal-dots{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);z-index:2;display:flex;gap:6px}
+.proj-dot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.5);border:none;padding:0;cursor:pointer;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.3)}
+.proj-dot.active{background:#fff;width:18px;border-radius:4px}
 .proj-modal-thumbs{display:flex;gap:8px;padding:12px;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;max-width:100%;-webkit-overflow-scrolling:touch}
 .proj-modal-thumbs::-webkit-scrollbar{display:none}
 .proj-thumb{flex-shrink:0;width:60px;height:60px;border-radius:8px;overflow:hidden;cursor:pointer;border:2px solid transparent;opacity:.55;transition:.2s}
 .proj-thumb.active{border-color:var(--red);opacity:1}
 .proj-thumb img{width:100%;height:100%;object-fit:cover;display:block}
 .proj-modal-info{padding:clamp(24px,4vw,40px);display:flex;flex-direction:column;max-width:100%}
-.proj-modal-cat{align-self:flex-start;background:var(--red-soft);color:var(--red);padding:6px 14px;border-radius:var(--rp);font-size:11px;font-weight:700;margin-bottom:16px}
 .proj-modal-title{font-size:clamp(20px,2.6vw,27px);font-weight:800;line-height:1.32;color:var(--ink);margin-bottom:12px}
 .proj-modal-desc{font-size:13.5px;color:var(--ink2);line-height:1.85;margin-bottom:22px}
-.proj-modal-meta{display:flex;gap:10px;margin-bottom:24px;flex-wrap:wrap}
-.proj-meta-chip{background:var(--p2);border:1px solid var(--line);border-radius:var(--rs);padding:9px 16px;min-width:96px}
-.proj-meta-chip-label{font-size:9.5px;color:var(--ink3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px;font-weight:700}
-.proj-meta-chip-val{font-size:12.5px;color:var(--ink);font-weight:700}
 .proj-modal-ctas{display:flex;gap:10px;flex-wrap:wrap;margin-top:auto;padding-top:8px}
 .proj-cta-primary{display:inline-flex;align-items:center;gap:8px;background:var(--red);color:#fff;padding:13px 22px;border-radius:var(--rp);font-weight:700;font-size:13px;transition:.2s;box-shadow:0 8px 24px rgba(var(--red-rgb),.35)}
 .proj-cta-primary:hover{background:var(--red-d);transform:translateY(-2px)}
@@ -631,25 +625,13 @@ footer{padding:clamp(36px,5.5vw,56px) var(--pad) 0;border-top:1px solid var(--li
       <div class="proj-modal-media">
         <div class="proj-modal-main-wrap" id="projModalMainWrap">
           <img id="projModalMainImg" src="" alt="" onclick="openProjModalZoom()">
-          <button class="proj-modal-nav proj-modal-nav-prev" id="projModalPrevBtn" onclick="event.stopPropagation();projModalPrev()" aria-label="السابق"><i class="bi bi-chevron-right"></i></button>
-          <button class="proj-modal-nav proj-modal-nav-next" id="projModalNextBtn" onclick="event.stopPropagation();projModalNext()" aria-label="التالي"><i class="bi bi-chevron-left"></i></button>
+          <div class="proj-modal-dots" id="projModalDots"></div>
         </div>
         <div class="proj-modal-thumbs" id="projModalThumbs"></div>
       </div>
       <div class="proj-modal-info">
-        <div class="proj-modal-cat" id="projModalCat"></div>
         <div class="proj-modal-title" id="projModalTitle"></div>
         <div class="proj-modal-desc" id="projModalDesc"></div>
-        <div class="proj-modal-meta">
-          <div class="proj-meta-chip">
-            <div class="proj-meta-chip-label">التصنيف</div>
-            <div class="proj-meta-chip-val" id="projModalCatVal">—</div>
-          </div>
-          <div class="proj-meta-chip">
-            <div class="proj-meta-chip-label">عدد الصور</div>
-            <div class="proj-meta-chip-val" id="projModalCountVal">—</div>
-          </div>
-        </div>
         <div class="proj-modal-ctas">
           <a class="proj-cta-primary" id="projModalQuote" href="#" target="_blank" rel="noopener"><i class="bi bi-rocket-takeoff"></i> اطلب عرض سعر</a>
           <a class="proj-cta-secondary" id="projModalContact" href="#" target="_blank" rel="noopener"><i class="bi bi-whatsapp"></i> تواصل معنا</a>
@@ -1114,15 +1096,12 @@ function renderAdsGroups(list){
 // and the individual marketing-work cards, so every "work" item opens
 // the same rich title/description/meta/CTA + gallery view instead of a
 // bare image grid.
-var projModalImages=[],projModalIndex=0;
+var projModalImages=[],projModalIndex=0,projModalAnimating=false;
 function openProjectDetail(data){
-  document.getElementById('projModalCat').textContent=catLabel[data.category]||data.category||'';
   document.getElementById('projModalTitle').textContent=data.title||'';
   var descEl=document.getElementById('projModalDesc');
   descEl.textContent=data.description||'';
   descEl.style.display=data.description?'block':'none';
-  document.getElementById('projModalCatVal').textContent=catLabel[data.category]||data.category||'—';
-  document.getElementById('projModalCountVal').textContent=data.images.length;
   var quoteMsg='مرحبًا، أعجبني مشروع "'+(data.title||'')+'" وأريد عرض سعر لشيء مشابه.';
   var contactMsg='مرحبًا، أريد الاستفسار عن مشروع "'+(data.title||'')+'".';
   document.getElementById('projModalQuote').href='https://wa.me/'+_waNum+'?text='+encodeURIComponent(quoteMsg);
@@ -1135,21 +1114,52 @@ function openProjectDetail(data){
   thumbsWrap.innerHTML=data.images.map(function(url,i){
     return'<div class="proj-thumb'+(i===0?' active':'')+'" onclick="projModalShow('+i+')"><img src="'+esc(url)+'" alt="" loading="lazy"></div>';
   }).join('');
-  document.getElementById('projModalPrevBtn').style.display=data.images.length>1?'flex':'none';
-  document.getElementById('projModalNextBtn').style.display=data.images.length>1?'flex':'none';
+  var dotsWrap=document.getElementById('projModalDots');
+  dotsWrap.style.display=data.images.length>1?'flex':'none';
+  dotsWrap.innerHTML=data.images.map(function(url,i){
+    return'<button class="proj-dot'+(i===0?' active':'')+'" onclick="event.stopPropagation();projModalShow('+i+')" aria-label="صورة '+(i+1)+'"></button>';
+  }).join('');
   document.getElementById('projModalOv').classList.add('open');
   document.body.style.overflow='hidden';
 }
-function projModalShow(i){
-  if(!projModalImages.length)return;
-  projModalIndex=(i+projModalImages.length)%projModalImages.length;
-  renderProjModalImg();
-  document.querySelectorAll('#projModalThumbs .proj-thumb').forEach(function(t,ti){t.classList.toggle('active',ti===projModalIndex)});
-  var activeThumb=document.querySelectorAll('#projModalThumbs .proj-thumb')[projModalIndex];
+function projModalMarkers(i){
+  document.querySelectorAll('#projModalThumbs .proj-thumb').forEach(function(t,ti){t.classList.toggle('active',ti===i)});
+  document.querySelectorAll('#projModalDots .proj-dot').forEach(function(d,di){d.classList.toggle('active',di===i)});
+  var activeThumb=document.querySelectorAll('#projModalThumbs .proj-thumb')[i];
   if(activeThumb)activeThumb.scrollIntoView({block:'nearest',inline:'nearest',behavior:'smooth'});
 }
-function projModalNext(){projModalShow(projModalIndex+1)}
-function projModalPrev(){projModalShow(projModalIndex-1)}
+// slides the current image out in the swipe/nav direction, swaps the
+// source, then slides the new image in from the opposite side — a single
+// <img> element is reused (no cloning) so this stays simple.
+function projModalShow(i,dir){
+  if(!projModalImages.length||projModalAnimating)return;
+  var newIndex=(i+projModalImages.length)%projModalImages.length;
+  if(newIndex===projModalIndex)return;
+  if(!dir){
+    var fwd=(newIndex-projModalIndex+projModalImages.length)%projModalImages.length;
+    var bwd=(projModalIndex-newIndex+projModalImages.length)%projModalImages.length;
+    dir=fwd<=bwd?'next':'prev';
+  }
+  projModalAnimating=true;
+  var img=document.getElementById('projModalMainImg');
+  var outX=dir==='next'?'-26px':'26px';
+  img.style.transform='translateX('+outX+')';
+  img.style.opacity='0';
+  setTimeout(function(){
+    projModalIndex=newIndex;
+    renderProjModalImg();
+    projModalMarkers(projModalIndex);
+    img.style.transition='none';
+    img.style.transform='translateX('+(dir==='next'?'26px':'-26px')+')';
+    void img.offsetWidth; // force reflow so the next transition actually animates
+    img.style.transition='';
+    img.style.transform='translateX(0)';
+    img.style.opacity='1';
+    setTimeout(function(){projModalAnimating=false},280);
+  },220);
+}
+function projModalNext(){projModalShow(projModalIndex+1,'next')}
+function projModalPrev(){projModalShow(projModalIndex-1,'prev')}
 function renderProjModalImg(){
   document.getElementById('projModalMainImg').src=projModalImages[projModalIndex]||'';
 }
