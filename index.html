@@ -182,17 +182,20 @@ section{padding:clamp(56px,8vw,92px) 0}
 .port-track-wrap{overflow:hidden;margin:0 calc(var(--pad) * -1);padding:0 var(--pad)}
 .port-track{display:flex;gap:18px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;scroll-behavior:smooth;padding-bottom:4px}
 .port-track::-webkit-scrollbar{display:none}
-.port-card{flex-shrink:0;width:min(290px,80vw);scroll-snap-align:start;background:var(--card-bg);backdrop-filter:var(--glass-blur);-webkit-backdrop-filter:var(--glass-blur);border:1px solid var(--glass-border);border-radius:var(--r);overflow:hidden;transition:.3s cubic-bezier(.16,1,.3,1);cursor:pointer;box-shadow:var(--glass-shadow)}
-.port-card:hover{border-color:rgba(var(--red-rgb),.4);transform:translateY(-5px);box-shadow:0 18px 40px rgba(var(--red-rgb),.3)}
-.port-img{width:100%;aspect-ratio:1/1;height:auto;display:flex;align-items:center;justify-content:center;background:var(--p3);position:relative;overflow:hidden}
-.port-img img{width:100%;height:100%;object-fit:cover;transition:.4s}
+.port-card{flex-shrink:0;width:min(290px,80vw);height:330px;scroll-snap-align:start;position:relative;border-radius:var(--r);overflow:hidden;transition:.3s cubic-bezier(.16,1,.3,1);cursor:pointer;box-shadow:var(--glass-shadow);border:1px solid var(--glass-border)}
+.port-card:hover{transform:translateY(-5px);box-shadow:0 18px 40px rgba(var(--red-rgb),.35)}
+.port-img{width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:var(--p3);position:relative;overflow:hidden}
+.port-img img{width:100%;height:100%;object-fit:cover;transition:.4s;display:block}
 .port-card:hover .port-img img{transform:scale(1.05)}
 .port-img-ph{font-size:12px;font-weight:500;color:var(--ink3)}
-.port-type-badge{position:absolute;top:12px;right:12px;background:rgba(24,21,15,.72);backdrop-filter:blur(6px);color:#fff;padding:5px 12px;border-radius:var(--rp);font-size:10px;font-weight:600}
-.port-stat{position:absolute;top:12px;left:12px;background:var(--red);color:#fff;padding:5px 12px;border-radius:var(--rp);font-size:10.5px;font-weight:600}
-.port-body{padding:20px}
-.port-title{font-size:14.5px;font-weight:700;margin-bottom:7px;line-height:1.4;color:var(--card-ink)}
-.port-desc{font-size:12px;color:var(--card-ink3);line-height:1.7;font-weight:400}
+.port-type-badge{position:absolute;top:12px;right:12px;z-index:2;display:inline-flex;align-items:center;gap:5px;background:rgba(15,13,10,.55);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.2);color:#fff;padding:5px 12px;border-radius:var(--rp);font-size:10px;font-weight:700}
+.port-stat{position:absolute;top:12px;left:12px;z-index:2;background:var(--red);color:#fff;padding:5px 12px;border-radius:var(--rp);font-size:10.5px;font-weight:600}
+.port-body{position:absolute;inset:auto 0 0 0;padding:18px 16px;background:linear-gradient(to top,rgba(15,13,10,.92) 10%,rgba(15,13,10,.5) 55%,transparent 90%);color:#fff}
+.port-title{font-size:15px;font-weight:700;margin-bottom:8px;line-height:1.4;color:#fff;text-shadow:0 2px 10px rgba(0,0,0,.35)}
+.port-desc{display:none}
+.port-more{display:inline-flex;align-items:center;gap:6px;color:var(--red-d);font-size:12px;font-weight:700}
+.port-card:hover .port-more i{transform:translateX(-3px)}
+.port-more i{transition:.2s;font-size:11px}
 .port-empty{padding:50px 20px;text-align:center;color:var(--ink3);font-size:13px}
 
 /* ══ PORTFOLIO GROUP CARDS — fixed-height row, any group count ═ */
@@ -201,24 +204,44 @@ section{padding:clamp(56px,8vw,92px) 0}
 .pg-card{flex-shrink:0;width:270px;height:330px;border-radius:var(--r);overflow:hidden;position:relative;cursor:pointer;scroll-snap-align:start;transition:transform .25s,box-shadow .25s;border:1px solid var(--glass-border);box-shadow:var(--glass-shadow)}
 .pg-card:hover{transform:translateY(-5px);box-shadow:0 18px 40px rgba(var(--red-rgb),.35)}
 .pg-card img{width:100%;height:100%;object-fit:cover;display:block}
-.pg-card-index{position:absolute;top:12px;right:12px;z-index:2;background:rgba(15,13,10,.55);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.2);color:#fff;font-size:11px;font-weight:700;letter-spacing:.03em;padding:5px 10px;border-radius:var(--rp)}
-.pg-card-overlay{position:absolute;inset:auto 0 0 0;padding:18px 16px;background:linear-gradient(to top,rgba(15,13,10,.85),transparent 70%);color:#fff}
-.pg-card-name{display:inline-block;font-size:13px;font-weight:700;margin-bottom:6px;background:var(--red);color:#fff;padding:4px 10px;border-radius:6px}
-.pg-card-count{font-size:11.5px;opacity:.88;display:flex;align-items:center;gap:5px}
-@media(max-width:560px){.pg-card{width:210px;height:270px}}
+.pg-card-cat{position:absolute;top:12px;right:12px;z-index:2;display:inline-flex;align-items:center;gap:5px;background:rgba(15,13,10,.55);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.2);color:#fff;font-size:10px;font-weight:700;padding:5px 12px;border-radius:var(--rp)}
+.pg-card-count{position:absolute;top:12px;left:12px;z-index:2;background:rgba(15,13,10,.55);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.2);color:#fff;font-size:10.5px;font-weight:700;padding:5px 10px;border-radius:var(--rp);display:flex;align-items:center;gap:5px}
+.pg-card-overlay{position:absolute;inset:auto 0 0 0;padding:18px 16px;background:linear-gradient(to top,rgba(15,13,10,.92) 10%,rgba(15,13,10,.5) 55%,transparent 90%);color:#fff}
+.pg-card-name{font-size:15px;font-weight:700;margin-bottom:8px;line-height:1.4;text-shadow:0 2px 10px rgba(0,0,0,.35)}
+.pg-card-more{display:inline-flex;align-items:center;gap:6px;color:var(--red-d);font-size:12px;font-weight:700}
+.pg-card:hover .pg-card-more i{transform:translateX(-3px)}
+.pg-card-more i{transition:.2s;font-size:11px}
+@media(max-width:560px){.pg-card,.port-card{width:210px;height:270px}}
 
-/* ══ PORTFOLIO GROUP GALLERY MODAL ═══════════════════ */
-.pgm-ov{position:fixed;inset:0;z-index:600;background:rgba(15,13,10,.75);display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .25s}
-.pgm-ov.open{opacity:1;pointer-events:all}
-.pgm{background:rgba(28,25,22,.55);backdrop-filter:blur(24px) saturate(160%);-webkit-backdrop-filter:blur(24px) saturate(160%);border:1px solid rgba(255,255,255,.14);border-radius:20px;max-width:900px;width:100%;max-height:86vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 24px 60px rgba(0,0,0,.45)}
-.pgm-head{display:flex;align-items:center;justify-content:space-between;padding:18px 22px;border-bottom:1px solid rgba(255,255,255,.14)}
-.pgm-title{font-size:16px;font-weight:700;color:#fff}
-.pgm-close{width:34px;height:34px;border-radius:50%;border:none;background:rgba(255,255,255,.14);color:#fff;font-size:15px;cursor:pointer;flex-shrink:0;transition:.2s}
-.pgm-close:hover{background:rgba(255,255,255,.24)}
-.pgm-grid{padding:18px 22px;overflow-y:auto;display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
-.pgm-grid img{width:100%;height:150px;object-fit:cover;border-radius:10px;cursor:pointer;transition:opacity .2s}
-.pgm-grid img:hover{opacity:.85}
-@media(max-width:560px){.pgm-grid{grid-template-columns:repeat(auto-fill,minmax(110px,1fr));padding:14px}.pgm-grid img{height:110px}}
+/* ══ PROJECT DETAIL MODAL — replicates a case-study "project page" ══ */
+.proj-modal-ov{position:fixed;inset:0;z-index:600;background:rgba(8,7,6,.82);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .25s}
+.proj-modal-ov.open{opacity:1;pointer-events:all}
+.proj-modal{background:var(--p1);border:1px solid var(--glass-border);border-radius:var(--r);max-width:980px;width:100%;max-height:88vh;overflow-y:auto;box-shadow:0 24px 60px rgba(0,0,0,.45);position:relative}
+.proj-modal-close{position:absolute;top:16px;left:16px;z-index:3;width:36px;height:36px;border-radius:50%;border:1px solid rgba(255,255,255,.2);background:rgba(15,13,10,.55);backdrop-filter:blur(6px);color:#fff;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.2s}
+.proj-modal-close:hover{background:rgba(15,13,10,.8)}
+.proj-modal-grid{display:grid;grid-template-columns:1fr 1fr}
+@media(max-width:800px){.proj-modal-grid{grid-template-columns:1fr}}
+.proj-modal-media{background:var(--p3);position:relative}
+.proj-modal-main-wrap{position:relative;aspect-ratio:4/3;overflow:hidden}
+.proj-modal-main-wrap img{width:100%;height:100%;object-fit:cover;display:block;cursor:zoom-in}
+.proj-modal-thumbs{display:flex;gap:8px;padding:12px;overflow-x:auto;scrollbar-width:none}
+.proj-modal-thumbs::-webkit-scrollbar{display:none}
+.proj-thumb{flex-shrink:0;width:60px;height:60px;border-radius:8px;overflow:hidden;cursor:pointer;border:2px solid transparent;opacity:.55;transition:.2s}
+.proj-thumb.active{border-color:var(--red);opacity:1}
+.proj-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.proj-modal-info{padding:clamp(24px,4vw,40px);display:flex;flex-direction:column}
+.proj-modal-cat{align-self:flex-start;background:var(--red-soft);color:var(--red);padding:6px 14px;border-radius:var(--rp);font-size:11px;font-weight:700;margin-bottom:16px}
+.proj-modal-title{font-size:clamp(20px,2.6vw,27px);font-weight:800;line-height:1.32;color:var(--ink);margin-bottom:12px}
+.proj-modal-desc{font-size:13.5px;color:var(--ink2);line-height:1.85;margin-bottom:22px}
+.proj-modal-meta{display:flex;gap:10px;margin-bottom:24px;flex-wrap:wrap}
+.proj-meta-chip{background:var(--p2);border:1px solid var(--line);border-radius:var(--rs);padding:9px 16px;min-width:96px}
+.proj-meta-chip-label{font-size:9.5px;color:var(--ink3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px;font-weight:700}
+.proj-meta-chip-val{font-size:12.5px;color:var(--ink);font-weight:700}
+.proj-modal-ctas{display:flex;gap:10px;flex-wrap:wrap;margin-top:auto;padding-top:8px}
+.proj-cta-primary{display:inline-flex;align-items:center;gap:8px;background:var(--red);color:#fff;padding:13px 22px;border-radius:var(--rp);font-weight:700;font-size:13px;transition:.2s;box-shadow:0 8px 24px rgba(var(--red-rgb),.35)}
+.proj-cta-primary:hover{background:var(--red-d);transform:translateY(-2px)}
+.proj-cta-secondary{display:inline-flex;align-items:center;gap:8px;background:transparent;color:var(--ink);border:1.5px solid var(--line2);padding:13px 22px;border-radius:var(--rp);font-weight:700;font-size:13px;transition:.2s}
+.proj-cta-secondary:hover{border-color:var(--red);color:var(--red)}
 
 /* ══ COLLAGE LIGHTBOX ═══════════════════════════════ */
 .cg-lb-ov{position:fixed;inset:0;z-index:700;background:rgba(15,13,10,.9);display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .25s}
@@ -592,14 +615,37 @@ footer{padding:clamp(36px,5.5vw,56px) var(--pad) 0;border-top:1px solid var(--li
   </div>
 </div>
 
-<!-- PORTFOLIO GROUP GALLERY MODAL -->
-<div class="pgm-ov" id="pgGalleryModal" onclick="if(event.target===this)closePgGallery()">
-  <div class="pgm">
-    <div class="pgm-head">
-      <div class="pgm-title" id="pgGalleryTitle"></div>
-      <button class="pgm-close" onclick="closePgGallery()" aria-label="إغلاق">✕</button>
+<!-- PROJECT DETAIL MODAL -->
+<div class="proj-modal-ov" id="projModalOv" onclick="if(event.target===this)closeProjectDetail()">
+  <div class="proj-modal">
+    <button class="proj-modal-close" onclick="closeProjectDetail()" aria-label="إغلاق">✕</button>
+    <div class="proj-modal-grid">
+      <div class="proj-modal-media">
+        <div class="proj-modal-main-wrap">
+          <img id="projModalMainImg" src="" alt="" onclick="openProjModalZoom()">
+        </div>
+        <div class="proj-modal-thumbs" id="projModalThumbs"></div>
+      </div>
+      <div class="proj-modal-info">
+        <div class="proj-modal-cat" id="projModalCat"></div>
+        <div class="proj-modal-title" id="projModalTitle"></div>
+        <div class="proj-modal-desc" id="projModalDesc"></div>
+        <div class="proj-modal-meta">
+          <div class="proj-meta-chip">
+            <div class="proj-meta-chip-label">التصنيف</div>
+            <div class="proj-meta-chip-val" id="projModalCatVal">—</div>
+          </div>
+          <div class="proj-meta-chip">
+            <div class="proj-meta-chip-label">عدد الصور</div>
+            <div class="proj-meta-chip-val" id="projModalCountVal">—</div>
+          </div>
+        </div>
+        <div class="proj-modal-ctas">
+          <a class="proj-cta-primary" id="projModalQuote" href="#" target="_blank" rel="noopener"><i class="bi bi-rocket-takeoff"></i> اطلب عرض سعر</a>
+          <a class="proj-cta-secondary" id="projModalContact" href="#" target="_blank" rel="noopener"><i class="bi bi-whatsapp"></i> تواصل معنا</a>
+        </div>
+      </div>
     </div>
-    <div class="pgm-grid" id="pgGalleryGrid"></div>
   </div>
 </div>
 
@@ -1014,16 +1060,17 @@ function injectTikTokPixel(id){
   document.head.appendChild(s);
 }
 
-function portCardHtml(p){
+var portMarketingData=[];
+function portCardHtml(p,i){
   var img=p.image_url?'<img src="'+esc(p.image_url)+'" alt="'+esc(p.title)+'" loading="lazy">'
     :'<div class="port-img-ph"><i class="bi '+esc(catIcon[p.category]||'bi-image')+'"></i></div>';
   var badge=p.stat_badge?'<div class="port-stat">'+esc(p.stat_badge)+'</div>':'';
-  return'<div class="port-card" data-cat="'+esc(p.category)+'">'
+  return'<div class="port-card" data-cat="'+esc(p.category)+'" onclick="openMarketingProject('+i+')">'
     +'<div class="port-img">'+img+'</div>'
     +'<div class="port-type-badge">'+esc(catLabel[p.category]||p.category)+'</div>'
     +badge
     +'<div class="port-body"><div class="port-title">'+esc(p.title)+'</div>'
-    +'<div class="port-desc">'+esc(p.description)+'</div>'
+    +'<div class="port-more">شاهد المشروع <i class="bi bi-arrow-left"></i></div>'
     +'</div></div>';
 }
 var pgGroupsData={};
@@ -1040,40 +1087,99 @@ function renderAdsGroups(list){
   });
   pgGroupsData=groups;
   wrap.innerHTML='<div class="pg-cards-row stagger">'
-    +order.map(function(gname,i){
+    +order.map(function(gname){
       var items=groups[gname];
+      var cat=items[0].category;
       return'<div class="pg-card" onclick="openPgGallery(\''+gname.replace(/'/g,"\\'")+'\')">'
-        +'<div class="pg-card-index">'+String(i+1).padStart(2,'0')+'</div>'
+        +'<div class="pg-card-cat">'+esc(catLabel[cat]||cat||'')+'</div>'
+        +'<div class="pg-card-count"><i class="bi bi-images"></i> '+items.length+'</div>'
         +'<img src="'+esc(items[0].image_url)+'" alt="'+esc(gname)+'" loading="lazy">'
         +'<div class="pg-card-overlay"><div class="pg-card-name">'+esc(gname)+'</div>'
-        +'<div class="pg-card-count"><i class="bi bi-images"></i> '+items.length+' صورة</div></div>'
+        +'<div class="pg-card-more">شاهد المشروع <i class="bi bi-arrow-left"></i></div></div>'
       +'</div>';
     }).join('')
   +'</div>';
 }
-function openPgGallery(gname){
-  var items=pgGroupsData[gname];
-  if(!items)return;
-  document.getElementById('pgGalleryTitle').textContent=gname;
-  document.getElementById('pgGalleryGrid').innerHTML=items.map(function(p,i){
-    return'<img src="'+esc(p.image_url)+'" alt="'+esc(p.title||gname)+'" loading="lazy" onclick="openCollageLightbox('+i+')">';
+// ── PROJECT DETAIL MODAL — shared by both the grouped ads-work cards
+// and the individual marketing-work cards, so every "work" item opens
+// the same rich title/description/meta/CTA + gallery view instead of a
+// bare image grid.
+var projModalImages=[],projModalIndex=0;
+function openProjectDetail(data){
+  document.getElementById('projModalCat').textContent=catLabel[data.category]||data.category||'';
+  document.getElementById('projModalTitle').textContent=data.title||'';
+  var descEl=document.getElementById('projModalDesc');
+  descEl.textContent=data.description||'';
+  descEl.style.display=data.description?'block':'none';
+  document.getElementById('projModalCatVal').textContent=catLabel[data.category]||data.category||'—';
+  document.getElementById('projModalCountVal').textContent=data.images.length;
+  var quoteMsg='مرحبًا، أعجبني مشروع "'+(data.title||'')+'" وأريد عرض سعر لشيء مشابه.';
+  var contactMsg='مرحبًا، أريد الاستفسار عن مشروع "'+(data.title||'')+'".';
+  document.getElementById('projModalQuote').href='https://wa.me/'+_waNum+'?text='+encodeURIComponent(quoteMsg);
+  document.getElementById('projModalContact').href='https://wa.me/'+_waNum+'?text='+encodeURIComponent(contactMsg);
+  projModalImages=data.images;
+  projModalIndex=0;
+  renderProjModalImg();
+  var thumbsWrap=document.getElementById('projModalThumbs');
+  thumbsWrap.style.display=data.images.length>1?'flex':'none';
+  thumbsWrap.innerHTML=data.images.map(function(url,i){
+    return'<div class="proj-thumb'+(i===0?' active':'')+'" onclick="projModalShow('+i+')"><img src="'+esc(url)+'" alt="" loading="lazy"></div>';
   }).join('');
-  lbImages=items.map(function(p){return p.image_url});
-  document.getElementById('pgGalleryModal').classList.add('open');
+  document.getElementById('projModalOv').classList.add('open');
   document.body.style.overflow='hidden';
 }
-function closePgGallery(){
-  document.getElementById('pgGalleryModal').classList.remove('open');
+function projModalShow(i){
+  projModalIndex=i;
+  renderProjModalImg();
+  document.querySelectorAll('#projModalThumbs .proj-thumb').forEach(function(t,ti){t.classList.toggle('active',ti===i)});
+}
+function renderProjModalImg(){
+  document.getElementById('projModalMainImg').src=projModalImages[projModalIndex]||'';
+}
+function openProjModalZoom(){
+  if(!projModalImages.length)return;
+  lbImages=projModalImages;
+  openCollageLightbox(projModalIndex);
+}
+function closeProjectDetail(){
+  document.getElementById('projModalOv').classList.remove('open');
   document.body.style.overflow='';
 }
+window.openProjectDetail=openProjectDetail;
+window.closeProjectDetail=closeProjectDetail;
+window.projModalShow=projModalShow;
+window.openProjModalZoom=openProjModalZoom;
+function openPgGallery(gname){
+  var items=pgGroupsData[gname];
+  if(!items||!items.length)return;
+  openProjectDetail({
+    title:gname,
+    description:items[0].description||'',
+    category:items[0].category,
+    images:items.map(function(p){return p.image_url}).filter(Boolean)
+  });
+}
+function closePgGallery(){closeProjectDetail()}
 window.openPgGallery=openPgGallery;
 window.closePgGallery=closePgGallery;
+function openMarketingProject(i){
+  var p=portMarketingData[i];
+  if(!p)return;
+  openProjectDetail({
+    title:p.title,
+    description:p.description||'',
+    category:p.category,
+    images:p.image_url?[p.image_url]:[]
+  });
+}
+window.openMarketingProject=openMarketingProject;
 function renderPortfolio(list){
   var ads=list.filter(function(p){return(p.catalog||'ads')!=='marketing'});
   var marketing=list.filter(function(p){return p.catalog==='marketing'});
   renderAdsGroups(ads);
   var ge=document.getElementById('portEmpty');
   if(ge)ge.style.display=ads.length?'none':'block';
+  portMarketingData=marketing;
   var gm=document.getElementById('portGridMarketing');
   if(gm)gm.innerHTML=marketing.map(portCardHtml).join('');
   var gme=document.getElementById('portEmptyMarketing');
