@@ -1025,7 +1025,15 @@ try{
           </select>
           <div class="field-hint">بيتحكم في شكل الموقع كله (الصفحة الرئيسية والكتالوجين وصفحة المنتج) — تصميم زجاجي غامق أو تصميم زجاجي فاتح أبيض.</div>
         </div>
-        <div class="field-hint" style="margin-bottom:12px">صورة (زي سيارة أو ورشة) تظهر خافتة خلف كل الموقع تحت تأثير الزجاج المصنفر — لو سبتها فاضية، الموقع بيفضل على الخلفية اللونية الافتراضية.</div>
+        <div class="field">
+          <label>قالب التصميم</label>
+          <select id="s-site-template">
+            <option value="glass">زجاجي (Glass) — شفافية وتمويه خلف الكروت</option>
+            <option value="flat">فلات/سوليد (Flat) — ألوان صلبة بدون شفافية</option>
+          </select>
+          <div class="field-hint">القالب الفلات بيشيل تأثير الزجاج (الشفافية والتمويه) من كل كروت الموقع ويستبدله بألوان صلبة وحواف واضحة، مع الاحتفاظ بنفس الألوان والوضع الداكن/الفاتح اللي اخترته فوق.</div>
+        </div>
+        <div class="field-hint" style="margin-bottom:12px">صورة (زي سيارة أو ورشة) تظهر خافتة خلف كل الموقع تحت تأثير الزجاج المصنفر — لو سبتها فاضية، الموقع بيفضل على الخلفية اللونية الافتراضية. (الصورة دي بتتجاهل تلقائيًا لو القالب فلات مفعّل.)</div>
         <div class="field">
           <label>صورة الخلفية</label>
           <input type="url" id="s-site-bg" placeholder="https://..." oninput="prevCatalogImg('s-site-bg-pv',this.value)">
@@ -1729,6 +1737,7 @@ async function loadSettings(){
   v('s-site-bg',data.site_bg_image);prevCatalogImg('s-site-bg-pv',data.site_bg_image);
   v('s-wa-offline',data.wa_offline);v('s-wa-digital',data.wa_digital);v('s-wa-product',data.wa_full);
   document.getElementById('s-theme-mode').value=data.site_theme_mode==='light'?'light':'dark';
+  document.getElementById('s-site-template').value=data.site_template==='flat'?'flat':'glass';
   document.getElementById('s-show-mkt-port').checked=data.show_marketing_portfolio!==false;
   try{document.getElementById('s-notrack').checked=localStorage.getItem('ao_no_track')==='1'}catch(e){}
   statsData=data.stats_data||defaultStats();
@@ -1822,6 +1831,7 @@ async function saveSettings(){
     ads_catalog_badges:adsBadges.filter(function(b){return b.text&&b.text.trim()}),
     wa_offline:g('s-wa-offline').trim()||null,wa_digital:g('s-wa-digital').trim()||null,wa_full:g('s-wa-product').trim()||null,
     site_theme_mode:document.getElementById('s-theme-mode').value,
+    site_template:document.getElementById('s-site-template').value,
     show_marketing_portfolio:document.getElementById('s-show-mkt-port').checked,
     updated_at:new Date().toISOString()
   };

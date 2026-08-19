@@ -2,6 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
 <script>try{if(localStorage.getItem('ao-site-theme')==='light')document.documentElement.dataset.theme='light'}catch(e){}</script>
+<script>try{if(localStorage.getItem('ao-site-template')==='flat')document.documentElement.dataset.template='flat'}catch(e){}</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="description" content="أحمد عماني — تسويق إلكتروني ودعاية وإعلان متخصصة لقطاع السيارات في مصر. شوف شغلنا وتصفح الكتالوجات.">
@@ -30,6 +31,7 @@
   --glass-blur:blur(28px) saturate(180%);
   --glass-border:rgba(255,255,255,.28);
   --glass-shadow:inset 0 1.5px 0 rgba(255,255,255,.3), inset 0 0 0 1px rgba(255,255,255,.06), 0 24px 50px -16px rgba(0,0,0,.6);
+  --nav-bg:rgba(10,10,12,.5);
   --font:'Rubik','Segoe UI',Tahoma,Arial,sans-serif;
   --r:22px; --rs:14px; --rp:999px;
   --pad:clamp(20px,4vw,56px);
@@ -47,7 +49,20 @@
   --card-ink-rgb:var(--ink-rgb); --card-ink2:rgba(var(--card-ink-rgb),.64); --card-ink3:rgba(var(--card-ink-rgb),.42);
   --glass-border:rgba(20,20,26,.14);
   --glass-shadow:inset 0 1.5px 0 rgba(255,255,255,.9), inset 0 0 0 1px rgba(255,255,255,.5), 0 20px 44px -18px rgba(20,20,26,.2);
+  --nav-bg:rgba(255,255,255,.55);
 }
+/* ══ TOKENS — flat/solid template (admin-toggled, orthogonal to dark/light) ══ */
+:root[data-template="flat"]{
+  --card-bg:var(--p2);
+  --glass-blur:none;
+  --glass-border:var(--line2);
+  --glass-shadow:0 1px 2px rgba(0,0,0,.05),0 10px 24px -12px rgba(0,0,0,.18);
+  --nav-bg:var(--p1);
+}
+:root[data-template="flat"][data-theme="light"]{
+  --glass-shadow:0 1px 2px rgba(20,20,26,.04),0 10px 24px -14px rgba(20,20,26,.14);
+}
+:root[data-template="flat"] .ambient-glow span{display:none}
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{font-family:var(--font);background:var(--p1);color:var(--ink);overflow-x:hidden;font-weight:400;line-height:1.5}
@@ -85,8 +100,7 @@ h1,h2,h3{font-weight:700}
 .progress{position:fixed;top:0;right:0;height:2px;background:var(--red);z-index:500;width:0;transition:width .1s linear}
 
 /* ══ NAV ══════════════════════════════════════════ */
-nav{position:fixed;top:0;left:0;right:0;z-index:500;height:72px;display:flex;align-items:center;justify-content:space-between;padding:0 var(--pad);background:rgba(10,10,12,.5);backdrop-filter:var(--glass-blur);-webkit-backdrop-filter:var(--glass-blur);border-bottom:1px solid var(--line);transition:.3s}
-:root[data-theme="light"] nav{background:rgba(255,255,255,.55)}
+nav{position:fixed;top:0;left:0;right:0;z-index:500;height:72px;display:flex;align-items:center;justify-content:space-between;padding:0 var(--pad);background:var(--nav-bg);backdrop-filter:var(--glass-blur);-webkit-backdrop-filter:var(--glass-blur);border-bottom:1px solid var(--line);transition:.3s}
 nav.solid{box-shadow:0 2px 16px rgba(24,21,15,.06)}
 .logo-wrap{display:flex;align-items:center}
 .logo-img{height:40px;width:auto;max-width:180px;object-fit:contain}
@@ -1545,9 +1559,16 @@ function applySiteTheme(mode){
   else delete document.documentElement.dataset.theme;
   try{localStorage.setItem('ao-site-theme',isLight?'light':'dark')}catch(e){}
 }
+function applySiteTemplate(tpl){
+  var isFlat=tpl==='flat';
+  if(isFlat)document.documentElement.dataset.template='flat';
+  else delete document.documentElement.dataset.template;
+  try{localStorage.setItem('ao-site-template',isFlat?'flat':'glass')}catch(e){}
+}
 function applySiteBg(url){
   var glow=document.querySelector('.ambient-glow');
   if(!glow||!url)return;
+  if(document.documentElement.dataset.template==='flat')return;
   glow.style.backgroundImage='url('+JSON.stringify(url)+')';
   glow.classList.add('has-image');
 }
@@ -1650,6 +1671,7 @@ async function loadSite(){
       if(cfg.show_marketing_portfolio===false){var pm=document.getElementById('portfolioMarketing');if(pm)pm.style.display='none';}
       if(cfg.catalog_ads_image){document.getElementById('catImgAds').src=cfg.catalog_ads_image;}
       if(cfg.catalog_marketing_image){document.getElementById('catImgMarketing').src=cfg.catalog_marketing_image;}
+      applySiteTemplate(cfg.site_template);
       applySiteBg(cfg.site_bg_image);
       applySiteTheme(cfg.site_theme_mode);
       renderSocial(cfg);

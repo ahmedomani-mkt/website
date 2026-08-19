@@ -39,6 +39,7 @@ CREATE TABLE IF NOT EXISTS ao_settings (
   catalog_marketing_image TEXT DEFAULT '',
   site_bg_image TEXT DEFAULT '',
   site_theme_mode TEXT DEFAULT 'dark', -- 'dark' | 'light'
+  site_template TEXT DEFAULT 'glass', -- 'glass' | 'flat' — orthogonal to site_theme_mode (each combines with dark/light)
   ads_catalog_badges JSONB DEFAULT '[{"icon":"truck","text":"توصيل لحد مكانك"},{"icon":"clock-history","text":"تنفيذ وتسليم خلال 7-10 أيام عمل"},{"icon":"gift","text":"تصميم مجاني"}]', -- trust badges row under catalog.html's header: [{icon, text}]
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );

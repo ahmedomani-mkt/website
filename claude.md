@@ -7,7 +7,7 @@ B2B automotive marketing portfolio/catalog website for Ahmed Omani (automotive m
 - **Live Site**: Deployed on Vercel, auto-deploy from GitHub branch `claude/portfolio-website-redesign-y8p4kd`
 - **Tech Stack**: Plain HTML/CSS/JS (no framework, no bundler) + Supabase (Postgres + Storage + Auth) + Vercel
 - **Language**: Arabic (RTL) with Noto Kufi Arabic / Rubik fonts
-- **Branding**: Red accent (`#E8192C`) on a black-glass (iOS-style glassmorphism) public site, with a switchable light-glass variant — admin picks which one is live site-wide via `ao_settings.site_theme_mode`. Admin panel has its own separate light/dark toggle (unrelated to the public site's theme).
+- **Branding**: Red accent (`#E8192C`) on a public site with two independently-switchable axes — dark/light theme (`ao_settings.site_theme_mode`) and glass/flat template (`ao_settings.site_template`, glassmorphism blur-and-translucency vs. a flat/solid surface look), both admin dropdowns, four combinations total. Admin panel has its own separate light/dark toggle (unrelated to the public site's theme/template).
 
 ---
 
@@ -51,8 +51,9 @@ Every `ao_*` table: **public SELECT**, **writes (INSERT/UPDATE/DELETE) restricte
 - `page_texts` (jsonb) — section heading overrides
 - `section_colors`, `global_colors` (jsonb)
 - `logo_url` (main logo; also the dark-mode fallback), `logo_dark_url` (optional, used only when `site_theme_mode='dark'`), `favicon_url`
-- `site_theme_mode` (`'dark'|'light'`, default `'dark'`) — site-wide glass theme switch, read by every public page
-- `site_bg_image` — optional ambient background photo shown blurred behind the glass panels (admin can also clear it back to the plain color background)
+- `site_theme_mode` (`'dark'|'light'`, default `'dark'`) — site-wide dark/light theme switch, read by every public page
+- `site_template` (`'glass'|'flat'`, default `'glass'`) — site-wide glassmorphism-vs-flat surface template, orthogonal to `site_theme_mode` (see Design & Styling below)
+- `site_bg_image` — optional ambient background photo shown blurred behind the glass panels (glass template only — ignored under the flat template; admin can also clear it back to the plain color background)
 - `show_marketing_portfolio` — toggles the "أعمالنا في التسويق" section on index.html
 - `catalog_ads_image`, `catalog_marketing_image` — cover images for the two catalog link-cards on index.html
 - `wa_digital`, `wa_offline`, `wa_full` — WhatsApp message templates
@@ -125,13 +126,14 @@ Local testing hits the real, live Supabase project (there's no separate dev DB) 
 
 ## Design & Styling
 
-### Public site: glassmorphism theme
-`index.html`, `catalog.html`, `catalog-marketing.html`, `product.html` share the same token-based dark/light glass design system (`admin.html` and `page.html` are NOT part of it — they keep their own separate look):
-- CSS custom properties (`--p1/p2/p3` backgrounds, `--ink-rgb`/`--ink`/`--ink2`/`--ink3` text, `--line`/`--line2` borders, `--red-rgb`/`--red`/`--red-d` accent, `--card-bg`/`--glass-blur`/`--glass-border`/`--glass-shadow` for the frosted-glass cards) defined in `:root`, overridden by a `:root[data-theme="light"]` block for the light variant.
-- Which variant is live is controlled entirely by `ao_settings.site_theme_mode` (admin dropdown) — resolved theme is cached to `localStorage` and applied via an early inline `<head>` script on every page to avoid a flash of the wrong theme on load.
-- A fixed `.ambient-glow` layer with animated blurred color blobs sits behind every section (sections use translucent backgrounds) — this is what makes the `backdrop-filter: blur()` glass cards actually read as glass instead of flat color. Admin can optionally set `site_bg_image` to put a real photo behind the blur instead of the plain color blobs.
+### Public site: glassmorphism theme + flat/solid template
+`index.html`, `catalog.html`, `catalog-marketing.html`, `product.html` share the same token-based design system (`admin.html` and `page.html` are NOT part of it — they keep their own separate look):
+- CSS custom properties (`--p1/p2/p3` backgrounds, `--ink-rgb`/`--ink`/`--ink2`/`--ink3` text, `--line`/`--line2` borders, `--red-rgb`/`--red`/`--red-d` accent, `--card-bg`/`--glass-blur`/`--glass-border`/`--glass-shadow`/`--nav-bg` for the card/nav surface treatment) defined in `:root`, overridden by a `:root[data-theme="light"]` block for the light variant.
+- Which theme is live is controlled entirely by `ao_settings.site_theme_mode` (admin dropdown) — resolved theme is cached to `localStorage` (`ao-site-theme`) and applied via an early inline `<head>` script on every page to avoid a flash of the wrong theme on load.
+- **Template** is a second, orthogonal dimension on top of the theme: `ao_settings.site_template` (`'glass'` default | `'flat'`), toggled the same way (`document.documentElement.dataset.template='flat'`, cached to `localStorage` as `ao-site-template`, applied via its own early `<head>` script). A `:root[data-template="flat"]` block (plus a `:root[data-template="flat"][data-theme="light"]` variant for the shadow) redefines just the surface tokens — `--card-bg` becomes a flat `var(--p2)` instead of the translucent gradient, `--glass-blur:none`, `--glass-border` becomes a normal opaque line color, `--glass-shadow` drops the inset glass-sheen highlight for a plain drop shadow, `--nav-bg` becomes fully opaque — and hides the `.ambient-glow` color blobs and any admin-uploaded `site_bg_image` (glass-only feature, `applySiteBg()` no-ops when the flat template is active). Because every card/nav component already reads its surface treatment from these tokens rather than hardcoding it, the flat template requires no changes to individual component rules — all 4 files carry an identical override block. `applySiteTemplate()` must run before `applySiteBg()` in each page's load function so the flat-mode check sees the right `dataset.template` value.
+- A fixed `.ambient-glow` layer with animated blurred color blobs sits behind every section in the glass template (sections use translucent backgrounds) — this is what makes the `backdrop-filter: blur()` glass cards actually read as glass instead of flat color; hidden entirely under the flat template. Admin can optionally set `site_bg_image` to put a real photo behind the blur instead of the plain color blobs (glass template only).
 - Accent red is constant across both themes (`--red: #E8192C` / `rgb(232,25,44)`); the hover shade `--red-d` differs per theme (brighter on dark, darker on light) since it needs to stay visible against the theme's background.
-- Border-radius tokens: `--r:22px` (cards), `--rs:14px` (small elements), `--rp:999px` (pills).
+- Border-radius tokens: `--r:22px` (cards), `--rs:14px` (small elements), `--rp:999px` (pills) — shared by both templates.
 
 ### Layout
 - RTL (`dir="rtl"`), mobile-first responsive breakpoints at 768px/560px.
