@@ -309,6 +309,7 @@ section{padding:clamp(56px,8vw,92px) 0}
 
 /* ══ VIDEOS — draggable auto-scroll track (same behavior as clients) ══ */
 .vid-marquee{overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;cursor:grab;-webkit-mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent)}
+.vid-marquee.no-fade{-webkit-mask-image:none;mask-image:none}
 .vid-marquee::-webkit-scrollbar{display:none}
 .vid-marquee.dragging{cursor:grabbing;scroll-behavior:auto;user-select:none}
 .vid-grid{display:flex;gap:16px;width:max-content}
@@ -361,6 +362,7 @@ section{padding:clamp(56px,8vw,92px) 0}
 
 /* ══ CLIENTS · STATIC GRID ═════════════════════════ */
 .cl-marquee{overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;cursor:grab;-webkit-mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent)}
+.cl-marquee.no-fade{-webkit-mask-image:none;mask-image:none}
 .cl-marquee::-webkit-scrollbar{display:none}
 .cl-marquee.dragging{cursor:grabbing;scroll-behavior:auto;user-select:none}
 .cl-grid{display:flex;gap:12px;width:max-content}
@@ -1518,8 +1520,9 @@ function initMarqueeAutoScroll(sel){
   function scheduleResume(){clearTimeout(resumeTimer);resumeTimer=setTimeout(function(){paused=false},2200)}
 
   function tick(){
+    var max=wrap.scrollWidth-wrap.clientWidth;
+    wrap.classList.toggle('no-fade',max<=1);
     if(!paused&&!dragging&&!reduceMotion){
-      var max=wrap.scrollWidth-wrap.clientWidth;
       if(max>1){
         wrap.scrollLeft+=dir*sign*0.6;
         var pos=sign*wrap.scrollLeft;
