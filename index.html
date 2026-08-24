@@ -421,6 +421,7 @@ section{padding:clamp(56px,8vw,92px) 0}
 .cl-marquee::-webkit-scrollbar{display:none}
 .cl-marquee.dragging{cursor:grabbing;scroll-behavior:auto;user-select:none}
 .cl-grid{display:flex;gap:12px;width:max-content}
+.cl-row2{margin-top:12px}
 .cl-item{display:flex;align-items:center;justify-content:center;height:56px;min-width:140px;padding:8px 22px;background:transparent;border:1px solid var(--line);border-radius:var(--rp);overflow:hidden;transition:.25s;flex-shrink:0}
 .cl-item:has(img){background:#fff;border-color:rgba(0,0,0,.06)}
 .cl-item:hover{border-color:var(--red);color:var(--red)}
@@ -793,7 +794,7 @@ footer{padding:0 var(--pad) var(--pad);background:transparent;border-top:none;po
       <h2 class="sec-title" id="clTitle">ثقوا فينا</h2>
       <p class="sec-sub" id="clSub">أكثر من 30 علامة في قطاع السيارات المصري</p>
     </div>
-    <div class="cl-marquee">
+    <div class="cl-marquee" id="clRow1">
     <div class="cl-grid" id="clientsGrid">
       <div class="cl-item"><div class="cl-name">KSH</div></div>
       <div class="cl-item"><div class="cl-name">Nakamichi</div></div>
@@ -811,6 +812,10 @@ footer{padding:0 var(--pad) var(--pad);background:transparent;border-top:none;po
       <div class="cl-item"><div class="cl-name">El Fayrouz</div></div>
       <div class="cl-item"><div class="cl-name">EL KOPTAN</div></div>
       <div class="cl-item"><div class="cl-name">AL KHALIFA</div></div>
+    </div>
+    </div>
+    <div class="cl-marquee cl-row2" id="clRow2">
+    <div class="cl-grid" id="clientsGrid2">
       <div class="cl-item"><div class="cl-name">CARBENZ</div></div>
       <div class="cl-item"><div class="cl-name">المتخصص</div></div>
       <div class="cl-item"><div class="cl-name">M.HANAFY</div></div>
@@ -1654,26 +1659,37 @@ document.addEventListener('keydown',function(e){
 });
 
 function renderClients(list){
-  var g=document.getElementById('clientsGrid');
-  g.innerHTML=list.map(function(c){
+  function itemHtml(c){
     return c.logo_url
       ?'<div class="cl-item"><img src="'+esc(c.logo_url)+'" alt="'+esc(c.name)+'" loading="lazy"></div>'
       :'<div class="cl-item"><div class="cl-name">'+esc(c.name)+'</div></div>';
-  }).join('');
-  initMarqueeAutoScroll('.cl-marquee');
+  }
+  // split across two rows that drift in opposite directions
+  var half=Math.ceil(list.length/2);
+  var g=document.getElementById('clientsGrid');
+  var g2=document.getElementById('clientsGrid2');
+  g.innerHTML=list.slice(0,half).map(itemHtml).join('');
+  if(g2)g2.innerHTML=list.slice(half).map(itemHtml).join('');
+  var row2=document.getElementById('clRow2');
+  if(row2)row2.style.display=list.length>1?'':'none';
+  initMarqueeAutoScroll('#clRow1',1);
+  initMarqueeAutoScroll('#clRow2',-1);
 }
 
 // ── DRAGGABLE AUTO-SCROLL TRACK — shared by the clients strip and the
 // videos strip: scrolls back and forth on its own, pauses on any user
 // interaction (drag/touch/wheel) and lets the user scroll it freely.
-function initClientsAutoScroll(){initMarqueeAutoScroll('.cl-marquee')}
-function initMarqueeAutoScroll(sel){
+function initClientsAutoScroll(){initMarqueeAutoScroll('#clRow1',1);initMarqueeAutoScroll('#clRow2',-1)}
+// startDir -1 makes the row drift the opposite way (used for the second
+// clients row); it starts parked at the far end so it has room to travel.
+function initMarqueeAutoScroll(sel,startDir){
   var wrap=document.querySelector(sel);
   if(!wrap||wrap.dataset.autoScrollBound)return;
   wrap.dataset.autoScrollBound='1';
   var reduceMotion=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var sign=rtlAdvanceSign();
-  var dir=1,paused=false,dragging=false,resumeTimer=null;
+  var dir=startDir===-1?-1:1,paused=false,dragging=false,resumeTimer=null;
+  var parked=dir!==-1;
   var dragStartX=0,dragStartScroll=0;
 
   function pause(){paused=true;clearTimeout(resumeTimer)}
@@ -1682,6 +1698,7 @@ function initMarqueeAutoScroll(sel){
   function tick(){
     var max=wrap.scrollWidth-wrap.clientWidth;
     wrap.classList.toggle('no-fade',max<=1);
+    if(!parked&&max>1){wrap.scrollLeft=sign*max;parked=true}
     if(!paused&&!dragging&&!reduceMotion){
       if(max>1){
         wrap.scrollLeft+=dir*sign*0.6;
