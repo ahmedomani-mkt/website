@@ -100,12 +100,12 @@ h1,h2,h3{font-weight:700}
 .progress{position:fixed;top:0;right:0;height:2px;background:var(--red);z-index:500;width:0;transition:width .1s linear}
 
 /* ══ NAV ══════════════════════════════════════════ */
-nav{position:fixed;top:0;left:0;right:0;z-index:500;height:72px;display:flex;align-items:center;justify-content:space-between;padding:0 var(--pad);background:var(--nav-bg);backdrop-filter:var(--glass-blur);-webkit-backdrop-filter:var(--glass-blur);border-bottom:1px solid var(--line);transition:.3s}
-nav.solid{box-shadow:0 2px 16px rgba(24,21,15,.06)}
+nav{position:fixed;top:0;left:0;right:0;z-index:500;height:80px;display:flex;align-items:center;justify-content:space-between;padding:0 var(--pad);background:transparent;border-bottom:1px solid transparent;transition:.35s}
+nav.solid{background:var(--nav-bg);backdrop-filter:var(--glass-blur);-webkit-backdrop-filter:var(--glass-blur);border-bottom-color:var(--line);box-shadow:0 2px 16px rgba(24,21,15,.06)}
 .logo-wrap{display:flex;align-items:center}
 .logo-img{height:40px;width:auto;max-width:180px;object-fit:contain}
-.nav-links{display:flex;gap:4px;list-style:none}
-.nav-links a{display:block;color:var(--ink2);font-size:14px;font-weight:500;transition:.2s;padding:9px 15px;border-radius:var(--rp)}
+.nav-links{display:flex;gap:2px;list-style:none}
+.nav-links a{display:block;color:var(--ink2);font-size:11.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;transition:.2s;padding:10px 16px;border-radius:var(--rp)}
 .nav-links a:hover{color:var(--ink);background:var(--card)}
 .nav-links a.active{color:var(--ink);background:var(--card-h)}
 .nav-cta{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:#fff;background:var(--wa);padding:11px 22px;border-radius:var(--rp);transition:.25s;box-shadow:0 6px 22px rgba(37,211,102,.4)}
@@ -125,9 +125,11 @@ nav.solid{box-shadow:0 2px 16px rgba(24,21,15,.06)}
 .m-cta{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:28px;background:var(--wa);color:#fff;padding:16px;border-radius:var(--rs);font-weight:600;font-size:15px}
 
 /* ══ HERO ═════════════════════════════════════════ */
-.hero{padding:168px 0 96px;position:relative;overflow:hidden;text-align:center}
+.hero{min-height:92vh;display:grid;grid-template-rows:1fr auto;padding:152px 0 0;position:relative;overflow:hidden;text-align:center}
+.hero-inner{align-self:center}
+.stats-bar{padding-bottom:clamp(28px,4vw,40px)}
 .hero-glow{position:absolute;top:-14%;left:50%;transform:translateX(-50%);width:820px;height:520px;background:radial-gradient(ellipse at center,rgba(var(--red-rgb),.09),transparent 65%);pointer-events:none}
-.hero-inner{position:relative;z-index:1;max-width:760px;margin:0 auto}
+.hero-inner{position:relative;z-index:1;max-width:900px;margin:0 auto;width:100%}
 .hero-badge{display:inline-flex;align-items:center;gap:9px;background:var(--p2);border:1px solid var(--line2);color:var(--ink2);padding:8px 18px;border-radius:var(--rp);font-size:12px;font-weight:500;margin-bottom:24px}
 .hero-badge-dot{width:7px;height:7px;background:var(--red);border-radius:50%;display:inline-block;flex-shrink:0;box-shadow:0 0 10px 2px rgba(var(--red-rgb),.7)}
 .hero-text-blocks{display:flex;flex-direction:column;align-items:center}
@@ -160,16 +162,16 @@ nav.solid{box-shadow:0 2px 16px rgba(24,21,15,.06)}
 .hero.hide-text .hero-bg::after{display:none}
 @media(max-width:767px){.hero.hide-text{min-height:340px;padding-bottom:80px}}
 
-/* ══ TRUST STATS — floating glass strip straddling the hero's bottom edge ══ */
-.stats-bar{position:relative;z-index:3;width:min(760px,94vw);margin:-64px auto 0}
-.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);background:var(--card-bg);backdrop-filter:var(--glass-blur);-webkit-backdrop-filter:var(--glass-blur);border:1px solid var(--glass-border);border-radius:var(--r);box-shadow:var(--glass-shadow);overflow:hidden}
-.stat-item{padding:24px 10px;text-align:center;position:relative}
+/* ══ TRUST STATS — borderless band integrated into the hero, no card chrome ══ */
+.stats-bar{position:relative;z-index:1;width:100%;margin-top:clamp(48px,7vw,80px);padding-top:clamp(24px,3.4vw,32px);border-top:1px solid var(--line)}
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr)}
+.stat-item{padding:0 14px;text-align:center;position:relative}
 .stat-item:not(:first-child){border-inline-start:1px solid var(--line)}
-.stat-icon{width:38px;height:38px;margin:0 auto 12px;border-radius:50%;background:var(--icon-soft);color:var(--icon-color);display:flex;align-items:center;justify-content:center;font-size:16px}
-.stat-num{font-size:clamp(19px,2.4vw,27px);font-weight:800;color:var(--ink);line-height:1;margin-bottom:6px;letter-spacing:-.01em}
+.stat-num{font-size:clamp(24px,3.6vw,42px);font-weight:800;color:var(--ink);line-height:1;margin-bottom:9px;letter-spacing:-.02em}
 .stat-num span{color:rgba(var(--ink-rgb),.8)}
-.stat-label{font-size:10px;color:var(--ink3);line-height:1.35;font-weight:500}
-@media(max-width:560px){.stats-grid{grid-template-columns:repeat(2,1fr)}.stat-item:nth-child(3){border-inline-start:none}.stat-item:nth-child(3),.stat-item:nth-child(4){border-top:1px solid var(--line)}}
+.stat-label{font-size:11px;color:var(--ink3);line-height:1.4;font-weight:500;display:flex;align-items:center;justify-content:center;gap:5px}
+.stat-label i{color:var(--red);font-size:11px}
+@media(max-width:560px){.stats-grid{grid-template-columns:repeat(2,1fr);row-gap:22px}.stat-item:nth-child(3){border-inline-start:none}.stat-item:nth-child(3),.stat-item:nth-child(4){border-top:1px solid var(--line);padding-top:20px}}
 
 /* ══ SECTION HEAD ═════════════════════════════════ */
 section{padding:clamp(56px,8vw,92px) 0}
@@ -416,21 +418,24 @@ section{padding:clamp(56px,8vw,92px) 0}
 .faq-a-inner>div{padding:0 20px 18px;font-size:13.5px;color:var(--ink2);line-height:1.85}
 
 /* ══ FOOTER ═══════════════════════════════════════ */
-footer{padding:clamp(36px,5.5vw,56px) var(--pad) 0;border-top:1px solid var(--line)}
-.ft-grid{max-width:1180px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr 1.4fr;gap:36px;padding-bottom:36px}
-.ft-logo{display:flex;align-items:center;margin-bottom:14px}
-.ft-logo img{height:38px;width:auto;max-width:180px;object-fit:contain}
-.ft-desc{font-size:14px;color:var(--ink3);line-height:1.8;max-width:320px;font-weight:400}
-.ft-col-title{font-size:13px;color:var(--ink3);font-weight:600;margin-bottom:14px}
-.ft-links{display:flex;flex-direction:column;gap:11px;align-items:flex-start}
-.ft-links a{color:var(--ink2);font-size:15px;font-weight:500;transition:.2s}
+footer{padding:clamp(52px,7vw,80px) var(--pad) 0;background:var(--p2);border-top:1px solid var(--glass-border);position:relative;overflow:hidden}
+footer::before{content:'';position:absolute;top:0;right:0;left:0;height:2px;background:linear-gradient(90deg,transparent,var(--red) 35%,var(--red) 65%,transparent)}
+.ft-grid{max-width:1180px;margin:0 auto;display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:40px;padding-bottom:44px}
+.ft-logo{display:flex;align-items:center;margin-bottom:16px}
+.ft-logo img{height:50px;width:auto;max-width:200px;object-fit:contain}
+.ft-desc{font-size:14.5px;color:var(--ink3);line-height:1.85;max-width:340px;font-weight:400}
+.ft-col-title{font-size:12px;color:var(--ink3);font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:16px}
+.ft-links{display:flex;flex-direction:column;gap:12px;align-items:flex-start}
+.ft-links a{color:var(--ink2);font-size:15.5px;font-weight:600;transition:.2s}
 .ft-links a:hover{color:var(--red)}
 .ft-social{display:flex;gap:10px}
-.ft-soc{width:46px;height:46px;border-radius:50%;background:var(--p1);border:1px solid var(--line2);display:flex;align-items:center;justify-content:center;font-size:18px;color:var(--ink2);transition:.2s}
-.ft-soc:hover{background:var(--red);border-color:var(--red);color:#fff}
-.ft-bottom{max-width:1180px;margin:0 auto;border-top:1px solid var(--line);padding:18px 0;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
+.ft-soc{width:50px;height:50px;border-radius:50%;background:var(--p1);border:1px solid var(--line2);display:flex;align-items:center;justify-content:center;font-size:19px;color:var(--ink2);transition:.2s}
+.ft-soc:hover{background:var(--red);border-color:var(--red);color:#fff;transform:translateY(-3px)}
+.ft-bottom{max-width:1180px;margin:0 auto;border-top:1px solid var(--line);padding:22px 0;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
 .ft-copy{font-size:13.5px;color:var(--ink3);font-weight:400}
 .ft-mark{font-size:13.5px;color:var(--ink3);font-weight:400}
+@media(max-width:760px){.ft-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:520px){.ft-grid{grid-template-columns:1fr;gap:32px}}
 
 /* ══ WA FLOAT ═════════════════════════════════════ */
 .wa-float{position:fixed;bottom:24px;left:24px;z-index:390}
@@ -533,33 +538,29 @@ footer{padding:clamp(36px,5.5vw,56px) var(--pad) 0;border-top:1px solid var(--li
       </a>
     </div>
   </div>
-</section>
-
-<!-- ══ TRUST STATS — floating glass strip straddling the hero's bottom edge ══ -->
-<div class="stats-bar" id="secStats">
-  <div class="stats-grid stagger" id="statsGrid">
-    <div class="stat-item fade-up" data-reveal-bound="1">
-      <div class="stat-icon"><i class="bi bi-trophy"></i></div>
-      <div class="stat-num" data-count>10+</div>
-      <div class="stat-label">سنوات في السوق المصري</div>
-    </div>
-    <div class="stat-item fade-up" data-reveal-bound="1">
-      <div class="stat-icon"><i class="bi bi-people"></i></div>
-      <div class="stat-num" data-count>30+</div>
-      <div class="stat-label">عميل في قطاع السيارات</div>
-    </div>
-    <div class="stat-item fade-up" data-reveal-bound="1">
-      <div class="stat-icon"><i class="bi bi-rocket-takeoff"></i></div>
-      <div class="stat-num" data-count>500+</div>
-      <div class="stat-label">مشروع منجز بنجاح</div>
-    </div>
-    <div class="stat-item fade-up" data-reveal-bound="1">
-      <div class="stat-icon"><i class="bi bi-lightbulb"></i></div>
-      <div class="stat-num" data-count>5x</div>
-      <div class="stat-label">متوسط عائد الاستثمار</div>
+  <div class="stats-bar" id="secStats">
+    <div class="container">
+      <div class="stats-grid stagger" id="statsGrid">
+        <div class="stat-item fade-up" data-reveal-bound="1">
+          <div class="stat-num" data-count>10+</div>
+          <div class="stat-label"><i class="bi bi-trophy"></i> سنوات في السوق المصري</div>
+        </div>
+        <div class="stat-item fade-up" data-reveal-bound="1">
+          <div class="stat-num" data-count>30+</div>
+          <div class="stat-label"><i class="bi bi-people"></i> عميل في قطاع السيارات</div>
+        </div>
+        <div class="stat-item fade-up" data-reveal-bound="1">
+          <div class="stat-num" data-count>500+</div>
+          <div class="stat-label"><i class="bi bi-rocket-takeoff"></i> مشروع منجز بنجاح</div>
+        </div>
+        <div class="stat-item fade-up" data-reveal-bound="1">
+          <div class="stat-num" data-count>5x</div>
+          <div class="stat-label"><i class="bi bi-lightbulb"></i> متوسط عائد الاستثمار</div>
+        </div>
+      </div>
     </div>
   </div>
-</div>
+</section>
 
 <!-- ══ 3 · CATALOG LINKS — white ═════════════════════ -->
 <section id="secCatalogs" class="bg-1">
@@ -812,24 +813,27 @@ footer{padding:clamp(36px,5.5vw,56px) var(--pad) 0;border-top:1px solid var(--li
 <footer class="bg-2" id="secFooter">
   <div class="ft-grid">
     <div>
+      <div class="ft-logo">
+        <img id="ftLogoImg" src="assets/logo.png" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Crect width=%27100%27 height=%27100%27 fill=%27%23E8192C%27/%3E%3Cpolygon points=%2750,22 78,68 22,68%27 fill=%27white%27/%3E%3C/svg%3E'" alt="Ahmed Omani Auto Marketing">
+      </div>
+      <p class="ft-desc">تسويق إلكتروني ودعاية وإعلان متخصصة لقطاع السيارات في مصر.</p>
+      <div class="ft-social" id="ftSocial" style="margin-top:20px"></div>
+    </div>
+    <div>
       <div class="ft-col-title">تصفح</div>
       <div class="ft-links" id="ftLinks">
         <a href="#portfolio">أعمالنا</a>
         <a href="catalog.html">كتالوج الدعاية والإعلان</a>
         <a href="catalog-marketing.html">كتالوج التسويق</a>
         <a href="#clients">عملاؤنا</a>
+      </div>
+    </div>
+    <div>
+      <div class="ft-col-title">تواصل</div>
+      <div class="ft-links">
         <a href="https://wa.me/201152501056?text=مرحبا،%20أريد%20الاستفسار%20عن%20خدماتكم" target="_blank" rel="noopener">واتساب مباشر</a>
+        <a href="#faq">الأسئلة الشائعة</a>
       </div>
-    </div>
-    <div>
-      <div class="ft-col-title">تابعنا</div>
-      <div class="ft-social" id="ftSocial"></div>
-    </div>
-    <div>
-      <div class="ft-logo">
-        <img id="ftLogoImg" src="assets/logo.png" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Crect width=%27100%27 height=%27100%27 fill=%27%23E8192C%27/%3E%3Cpolygon points=%2750,22 78,68 22,68%27 fill=%27white%27/%3E%3C/svg%3E'" alt="Ahmed Omani Auto Marketing">
-      </div>
-      <p class="ft-desc">تسويق إلكتروني ودعاية وإعلان متخصصة لقطاع السيارات في مصر.</p>
     </div>
   </div>
   <div class="ft-bottom">
@@ -1001,9 +1005,8 @@ function renderStats(list){
   if(!g||!list||!list.length)return;
   g.innerHTML=list.map(function(s){
     return'<div class="stat-item fade-up" data-reveal-bound="1">'
-      +'<div class="stat-icon">'+iconHtml(s.icon)+'</div>'
       +'<div class="stat-num" data-count>'+esc(s.num||'')+'</div>'
-      +'<div class="stat-label">'+esc(s.label||'')+'</div>'
+      +'<div class="stat-label">'+iconHtml(s.icon)+' '+esc(s.label||'')+'</div>'
       +'</div>';
   }).join('');
 }
