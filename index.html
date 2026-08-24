@@ -32,6 +32,8 @@
   --glass-border:rgba(255,255,255,.28);
   --glass-shadow:inset 0 1.5px 0 rgba(255,255,255,.3), inset 0 0 0 1px rgba(255,255,255,.06), 0 24px 50px -16px rgba(0,0,0,.6);
   --nav-bg:rgba(10,10,12,.5);
+  --nav-pill:rgba(20,20,23,.92); --nav-pill-line:rgba(255,255,255,.1);
+  --hero-card:#FFFFFF; --hero-card-ink:20,20,26;
   --font:'Rubik','Segoe UI',Tahoma,Arial,sans-serif;
   --r:28px; --rs:18px; --rp:999px;
   --pad:clamp(20px,4vw,56px);
@@ -50,6 +52,8 @@
   --glass-border:rgba(20,20,26,.14);
   --glass-shadow:inset 0 1.5px 0 rgba(255,255,255,.9), inset 0 0 0 1px rgba(255,255,255,.5), 0 20px 44px -18px rgba(20,20,26,.2);
   --nav-bg:rgba(255,255,255,.55);
+  --nav-pill:rgba(255,255,255,.92); --nav-pill-line:rgba(20,20,26,.1);
+  --hero-card:#FFFFFF; --hero-card-ink:20,20,26;
 }
 /* ══ TOKENS — flat/solid template (admin-toggled, orthogonal to dark/light) ══ */
 :root[data-template="flat"]{
@@ -100,10 +104,11 @@ h1,h2,h3{font-weight:700}
 .progress{position:fixed;top:0;right:0;height:2px;background:var(--red);z-index:500;width:0;transition:width .1s linear}
 
 /* ══ NAV ══════════════════════════════════════════ */
-nav{position:fixed;top:0;left:0;right:0;z-index:500;height:80px;display:flex;align-items:center;justify-content:space-between;padding:0 var(--pad);background:transparent;border-bottom:1px solid transparent;transition:.35s}
-nav.solid{background:var(--nav-bg);backdrop-filter:var(--glass-blur);-webkit-backdrop-filter:var(--glass-blur);border-bottom-color:var(--line);box-shadow:0 2px 16px rgba(24,21,15,.06)}
-.logo-wrap{display:flex;align-items:center}
-.logo-img{height:40px;width:auto;max-width:180px;object-fit:contain}
+/* floating pill nav — always solid so it never bleeds into the mobile overlay */
+nav{position:fixed;top:16px;left:var(--pad);right:var(--pad);z-index:500;height:66px;display:flex;align-items:center;justify-content:space-between;padding:0 10px 0 10px;background:var(--nav-pill);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid var(--nav-pill-line);border-radius:var(--rp);transition:.35s;box-shadow:0 10px 34px rgba(0,0,0,.28)}
+nav.solid{box-shadow:0 14px 40px rgba(0,0,0,.4)}
+.logo-wrap{display:flex;align-items:center;padding-inline-start:12px}
+.logo-img{height:38px;width:auto;max-width:180px;object-fit:contain}
 .nav-links{display:flex;gap:2px;list-style:none}
 .nav-links a{display:block;color:var(--ink2);font-size:11.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;transition:.2s;padding:10px 16px;border-radius:var(--rp)}
 .nav-links a:hover{color:var(--ink);background:var(--card)}
@@ -117,7 +122,7 @@ nav.solid{background:var(--nav-bg);backdrop-filter:var(--glass-blur);-webkit-bac
 .burger.open span:nth-child(3){transform:rotate(-45deg) translate(6px,-6px)}
 
 /* ══ MOBILE OVERLAY MENU ══════════════════════════ */
-.mobile-nav{position:fixed;inset:0;background:var(--p1);z-index:450;display:flex;flex-direction:column;justify-content:center;padding:80px var(--pad) 40px;opacity:0;pointer-events:none;transition:opacity .3s}
+.mobile-nav{position:fixed;inset:0;background:var(--p1);z-index:450;display:flex;flex-direction:column;justify-content:center;padding:118px var(--pad) 40px;opacity:0;pointer-events:none;transition:opacity .3s;overflow-y:auto}
 .mobile-nav.open{opacity:1;pointer-events:all}
 .mobile-nav ul{list-style:none}
 .mobile-nav ul li a{display:block;padding:15px 4px;font-size:23px;font-weight:600;color:var(--ink);border-bottom:1px solid var(--line);transition:.2s}
@@ -125,9 +130,15 @@ nav.solid{background:var(--nav-bg);backdrop-filter:var(--glass-blur);-webkit-bac
 .m-cta{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:28px;background:var(--wa);color:#fff;padding:16px;border-radius:var(--rs);font-weight:600;font-size:15px}
 
 /* ══ HERO ═════════════════════════════════════════ */
-.hero{min-height:92vh;display:grid;grid-template-rows:1fr auto;padding:152px 0 0;position:relative;overflow:hidden;text-align:right}
-.hero-inner{align-self:center}
-.stats-bar{padding-bottom:clamp(28px,4vw,40px)}
+.hero{padding:96px var(--pad) 0;position:relative;text-align:right}
+/* white rounded hero card floating on the dark page — the reference's signature block */
+.hero-card{position:relative;overflow:hidden;background:var(--hero-card);border-radius:clamp(28px,4vw,52px);padding:clamp(44px,6vw,76px) 0;min-height:min(70vh,600px);display:flex;align-items:center;box-shadow:0 24px 60px -24px rgba(0,0,0,.3);
+  --ink-rgb:var(--hero-card-ink);--ink:rgb(var(--ink-rgb));--ink2:rgba(var(--ink-rgb),.66);--ink3:rgba(var(--ink-rgb),.45);
+  --line:rgba(var(--ink-rgb),.12);--line2:rgba(var(--ink-rgb),.2);color:var(--ink)}
+.hero-card .hero-badge{background:rgba(var(--ink-rgb),.05);border-color:rgba(var(--ink-rgb),.14);color:var(--ink2)}
+.hero-card .btn-secondary{background:transparent;border-color:rgba(var(--ink-rgb),.25);color:var(--ink)}
+.hero-card .btn-secondary:hover{border-color:var(--red);color:var(--red);background:transparent}
+.hero.has-bg .hero-card{--ink-rgb:255,255,255;background:var(--p3)}
 .hero-glow{position:absolute;top:-14%;left:50%;transform:translateX(-50%);width:820px;height:520px;background:radial-gradient(ellipse at center,rgba(var(--red-rgb),.09),transparent 65%);pointer-events:none}
 .hero-inner{position:relative;z-index:1;max-width:640px;margin:0 0 0 auto;width:100%}
 .hero-visual{position:absolute;z-index:0;top:50%;right:56%;transform:translateY(-50%);display:none;pointer-events:none}
@@ -170,8 +181,8 @@ nav.solid{background:var(--nav-bg);backdrop-filter:var(--glass-blur);-webkit-bac
 .hero.hide-text .hero-bg::after{display:none}
 @media(max-width:767px){.hero.hide-text{min-height:340px;padding-bottom:80px}}
 
-/* ══ TRUST STATS — borderless band integrated into the hero, no card chrome ══ */
-.stats-bar{position:relative;z-index:1;width:100%;margin-top:clamp(48px,7vw,80px);padding-top:clamp(24px,3.4vw,32px);border-top:1px solid var(--line)}
+/* ══ TRUST STATS — dark rounded pill sitting under the white hero card ══ */
+.stats-bar{position:relative;z-index:1;width:100%;margin-top:clamp(16px,2.4vw,24px);padding:clamp(24px,3.4vw,34px) 0;background:var(--p2);border:1px solid var(--glass-border);border-radius:clamp(24px,3.4vw,44px)}
 .stats-grid{display:grid;grid-template-columns:repeat(4,1fr)}
 .stat-item{padding:0 14px;text-align:center;position:relative}
 .stat-item:not(:first-child){border-inline-start:1px solid var(--line)}
@@ -326,6 +337,15 @@ section{padding:clamp(56px,8vw,92px) 0}
 .ba-lb-desc{font-size:13.5px;color:var(--card-ink3);line-height:1.8}
 @media(max-width:600px){.ba-lb-imgs{grid-template-columns:1fr}}
 
+/* ══ TICKER — values strip between sections ══════════ */
+.ticker{padding:clamp(26px,4vw,44px) 0;border-block:1px solid var(--line)}
+.ticker-inner{display:flex;align-items:center;justify-content:center;gap:clamp(14px,3vw,40px);flex-wrap:wrap;text-align:center}
+.ticker-word{font-size:clamp(17px,2.8vw,32px);font-weight:800;letter-spacing:-.02em;color:var(--ink)}
+.ticker-star{color:var(--red);font-size:clamp(13px,1.8vw,19px)}
+
+/* ══ HIGHLIGHT BOX — colored box behind a word in a heading ══ */
+.hl{background:var(--red);color:#fff;padding:.04em .28em;border-radius:12px;display:inline-block;line-height:1.1}
+
 /* ══ CTA BAND — closing call-to-action before the footer ══ */
 .cta-band-card{position:relative;overflow:hidden;border-radius:var(--r);background:linear-gradient(135deg,var(--p2),var(--p3));border:1px solid var(--glass-border);padding:clamp(44px,7vw,76px) clamp(24px,6vw,60px);text-align:center;box-shadow:var(--glass-shadow)}
 .cta-band-card::before{content:'';position:absolute;inset:0;background:linear-gradient(115deg,transparent 32%,rgba(var(--red-rgb),.16) 50%,transparent 68%);pointer-events:none}
@@ -425,9 +445,13 @@ section{padding:clamp(56px,8vw,92px) 0}
 .faq-a-inner{overflow:hidden}
 .faq-a-inner>div{padding:0 20px 18px;font-size:13.5px;color:var(--ink2);line-height:1.85}
 
-/* ══ FOOTER ═══════════════════════════════════════ */
-footer{padding:clamp(52px,7vw,80px) var(--pad) 0;background:var(--p2);border-top:1px solid var(--glass-border);position:relative;overflow:hidden}
-footer::before{content:'';position:absolute;top:0;right:0;left:0;height:2px;background:linear-gradient(90deg,transparent,var(--red) 35%,var(--red) 65%,transparent)}
+/* ══ FOOTER — big colored rounded block (reference signature) ══ */
+footer{padding:0 var(--pad) var(--pad);background:transparent;border-top:none;position:relative}
+.ft-inner{background:var(--red);border-radius:clamp(28px,4vw,52px);padding:clamp(44px,6vw,72px) clamp(26px,4vw,56px) clamp(24px,3vw,34px);
+  --ink-rgb:255,255,255;--ink:rgb(255,255,255);--ink2:rgba(255,255,255,.82);--ink3:rgba(255,255,255,.7);--line:rgba(255,255,255,.22);--line2:rgba(255,255,255,.3);color:var(--ink)}
+.ft-inner .ft-links a:hover{color:#fff;text-decoration:underline}
+.ft-inner .ft-soc{background:rgba(255,255,255,.14);border-color:rgba(255,255,255,.3);color:#fff}
+.ft-inner .ft-soc:hover{background:#fff;border-color:#fff;color:var(--red)}
 .ft-grid{max-width:1180px;margin:0 auto;display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:40px;padding-bottom:44px}
 .ft-logo{display:flex;align-items:center;margin-bottom:16px}
 .ft-logo img{height:50px;width:auto;max-width:200px;object-fit:contain}
@@ -526,8 +550,8 @@ footer::before{content:'';position:absolute;top:0;right:0;left:0;height:2px;back
 
 <!-- ══ 1 · HERO — white ═════════════════════════════ -->
 <section class="hero bg-1" id="home">
+  <div class="hero-card">
   <div class="hero-bg" id="heroBg"><img src="" alt=""></div>
-  <div class="hero-glow"></div>
   <div class="hero-visual" aria-hidden="true">
     <div class="hero-visual-ring hero-visual-ring1"></div>
     <div class="hero-visual-ring hero-visual-ring2"></div>
@@ -550,6 +574,7 @@ footer::before{content:'';position:absolute;top:0;right:0;left:0;height:2px;back
         كتالوج التسويق
       </a>
     </div>
+  </div>
   </div>
   <div class="stats-bar" id="secStats">
     <div class="container">
@@ -624,11 +649,26 @@ footer::before{content:'';position:absolute;top:0;right:0;left:0;height:2px;back
   </div>
 </section>
 
+<!-- ══ 4.12 · TICKER — brand values strip ══════════════ -->
+<section class="ticker bg-1" id="ticker" style="padding-block:0">
+  <div class="container">
+    <div class="ticker-inner" style="padding-block:clamp(26px,4vw,44px)">
+      <span class="ticker-word">إبداع</span>
+      <span class="ticker-star"><i class="bi bi-asterisk"></i></span>
+      <span class="ticker-word">احترافية</span>
+      <span class="ticker-star"><i class="bi bi-asterisk"></i></span>
+      <span class="ticker-word">التزام بالمواعيد</span>
+      <span class="ticker-star"><i class="bi bi-asterisk"></i></span>
+      <span class="ticker-word">نتائج حقيقية</span>
+    </div>
+  </div>
+</section>
+
 <!-- ══ 4.13 · PROCESS — how we work, 5 numbered steps ══ -->
-<section id="process" class="bg-red">
+<section id="process" class="bg-2">
   <div class="container">
     <div class="sec-head">
-      <h2 class="sec-title">إزاي بنشتغل معاك</h2>
+      <h2 class="sec-title">إزاي <span class="hl">بنشتغل</span> معاك</h2>
       <p class="sec-sub">من أول ما نسمعك لحد ما نوصلك لأفضل نتيجة</p>
     </div>
     <div class="process-steps stagger">
@@ -809,7 +849,7 @@ footer::before{content:'';position:absolute;top:0;right:0;left:0;height:2px;back
 </section>
 
 <!-- ══ CTA BAND — closing call-to-action ══════════════ -->
-<section id="ctaBand" class="bg-red">
+<section id="ctaBand" class="bg-1">
   <div class="container">
     <div class="cta-band-card">
       <div class="cta-band-title">جاهز تبدأ حملتك الجاية؟</div>
@@ -823,7 +863,8 @@ footer::before{content:'';position:absolute;top:0;right:0;left:0;height:2px;back
 </section>
 
 <!-- ══ 6 · FOOTER — off-white ═══════════════════════ -->
-<footer class="bg-2" id="secFooter">
+<footer id="secFooter">
+  <div class="ft-inner">
   <div class="ft-grid">
     <div>
       <div class="ft-logo">
@@ -852,6 +893,7 @@ footer::before{content:'';position:absolute;top:0;right:0;left:0;height:2px;back
   <div class="ft-bottom">
     <div class="ft-copy" id="ftCopy">© 2025 Ahmed Omani Auto Marketing. جميع الحقوق محفوظة.</div>
     <div class="ft-mark">القاهرة — مصر</div>
+  </div>
   </div>
 </footer>
 
