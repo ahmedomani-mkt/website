@@ -125,20 +125,28 @@ nav.solid{background:var(--nav-bg);backdrop-filter:var(--glass-blur);-webkit-bac
 .m-cta{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:28px;background:var(--wa);color:#fff;padding:16px;border-radius:var(--rs);font-weight:600;font-size:15px}
 
 /* ══ HERO ═════════════════════════════════════════ */
-.hero{min-height:92vh;display:grid;grid-template-rows:1fr auto;padding:152px 0 0;position:relative;overflow:hidden;text-align:center}
+.hero{min-height:92vh;display:grid;grid-template-rows:1fr auto;padding:152px 0 0;position:relative;overflow:hidden;text-align:right}
 .hero-inner{align-self:center}
 .stats-bar{padding-bottom:clamp(28px,4vw,40px)}
 .hero-glow{position:absolute;top:-14%;left:50%;transform:translateX(-50%);width:820px;height:520px;background:radial-gradient(ellipse at center,rgba(var(--red-rgb),.09),transparent 65%);pointer-events:none}
-.hero-inner{position:relative;z-index:1;max-width:900px;margin:0 auto;width:100%}
+.hero-inner{position:relative;z-index:1;max-width:640px;margin:0 0 0 auto;width:100%}
+.hero-visual{position:absolute;z-index:0;top:50%;right:56%;transform:translateY(-50%);display:none;pointer-events:none}
+.hero-visual-ring{position:absolute;border-radius:50%;border:1.5px dashed var(--line2);top:50%;left:50%}
+.hero-visual-ring1{width:360px;height:360px;margin:-180px 0 0 -180px;animation:heroRingSpin 55s linear infinite}
+.hero-visual-ring2{width:240px;height:240px;margin:-120px 0 0 -120px;border-style:solid;border-color:rgba(var(--red-rgb),.25)}
+.hero-visual-badge{position:relative;width:180px;height:180px;border-radius:50%;background:var(--card-bg);backdrop-filter:var(--glass-blur);-webkit-backdrop-filter:var(--glass-blur);border:1px solid var(--glass-border);box-shadow:var(--glass-shadow);display:flex;align-items:center;justify-content:center}
+.hero-visual-badge img{width:92px;height:92px;object-fit:contain}
+@keyframes heroRingSpin{to{transform:rotate(360deg)}}
+@media(min-width:1180px){.hero-visual{display:block}}
 .hero-badge{display:inline-flex;align-items:center;gap:9px;background:var(--p2);border:1px solid var(--line2);color:var(--ink2);padding:8px 18px;border-radius:var(--rp);font-size:12px;font-weight:500;margin-bottom:24px}
 .hero-badge-dot{width:7px;height:7px;background:var(--red);border-radius:50%;display:inline-block;flex-shrink:0;box-shadow:0 0 10px 2px rgba(var(--red-rgb),.7)}
-.hero-text-blocks{display:flex;flex-direction:column;align-items:center}
+.hero-text-blocks{display:flex;flex-direction:column;align-items:flex-start}
 .hero h1{font-size:clamp(34px,6.6vw,72px);font-weight:800;line-height:1.12;letter-spacing:-.03em;margin-bottom:20px;color:var(--ink)}
 .hero h1 .r,.hero-text-blocks h2 .r,.hero-text-blocks h3 .r{color:var(--red)}
 .hero-text-blocks h2{font-size:clamp(22px,3.6vw,34px);font-weight:700;line-height:1.32;letter-spacing:-.01em;margin-bottom:16px;color:var(--ink)}
 .hero-text-blocks h3{font-size:clamp(17px,2.6vw,22px);font-weight:600;line-height:1.4;margin-bottom:14px;color:var(--ink)}
-.hero-sub,.hero-text-blocks p{font-size:16px;color:var(--ink2);line-height:1.8;max-width:480px;margin:0 auto 32px;font-weight:400}
-.hero-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.hero-sub,.hero-text-blocks p{font-size:16px;color:var(--ink2);line-height:1.8;max-width:480px;margin:0 0 32px;font-weight:400}
+.hero-btns{display:flex;gap:12px;justify-content:flex-start;flex-wrap:wrap}
 .btn-primary{background:var(--red);color:#fff;padding:17px 32px;border-radius:var(--rp);font-weight:600;font-size:15px;transition:.25s;display:inline-flex;align-items:center;gap:9px;box-shadow:0 8px 30px rgba(var(--red-rgb),.45),0 0 0 1px rgba(var(--red-rgb),.15)}
 .btn-primary:hover{background:var(--red-d);transform:translateY(-2px);box-shadow:0 12px 42px rgba(var(--red-rgb),.6),0 0 0 1px rgba(var(--red-rgb),.25)}
 .btn-secondary{background:var(--p1);color:var(--red);padding:17px 32px;border-radius:var(--rp);font-weight:600;font-size:15px;transition:.2s;border:1.5px solid var(--red);display:inline-flex;align-items:center;gap:8px}
@@ -321,15 +329,15 @@ section{padding:clamp(56px,8vw,92px) 0}
 /* ══ CTA BAND — closing call-to-action before the footer ══ */
 .cta-band-card{position:relative;overflow:hidden;border-radius:var(--r);background:linear-gradient(135deg,var(--p2),var(--p3));border:1px solid var(--glass-border);padding:clamp(44px,7vw,76px) clamp(24px,6vw,60px);text-align:center;box-shadow:var(--glass-shadow)}
 .cta-band-card::before{content:'';position:absolute;inset:0;background:linear-gradient(115deg,transparent 32%,rgba(var(--red-rgb),.16) 50%,transparent 68%);pointer-events:none}
-.cta-band-title{font-size:clamp(27px,4.4vw,44px);font-weight:800;letter-spacing:-.03em;line-height:1.16;color:var(--ink);margin-bottom:14px;position:relative;z-index:1}
-.cta-band-sub{font-size:14.5px;color:var(--ink2);max-width:480px;margin:0 auto 30px;line-height:1.8;position:relative;z-index:1}
+.cta-band-title{font-size:clamp(27px,4.4vw,44px);font-weight:800;letter-spacing:-.03em;line-height:1.16;color:var(--card-ink);margin-bottom:14px;position:relative;z-index:1}
+.cta-band-sub{font-size:14.5px;color:var(--card-ink2);max-width:480px;margin:0 auto 30px;line-height:1.8;position:relative;z-index:1}
 .cta-band-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;position:relative;z-index:1}
 
 /* ══ PROCESS — numbered workflow steps ══════════════ */
 .process-steps{display:grid;grid-template-columns:repeat(5,1fr);gap:18px;position:relative}
 .process-steps::before{content:'';position:absolute;top:28px;right:10%;left:10%;height:1px;background:repeating-linear-gradient(to left,var(--line2) 0 6px,transparent 6px 12px);z-index:1}
 .process-step{display:flex;flex-direction:column;align-items:center;text-align:center;padding:0 6px;position:relative;z-index:2}
-.process-num{width:56px;height:56px;border-radius:50%;background:var(--card-bg);backdrop-filter:var(--glass-blur);-webkit-backdrop-filter:var(--glass-blur);border:1px solid var(--glass-border);display:flex;align-items:center;justify-content:center;font-size:19px;font-weight:800;color:var(--red);margin-bottom:18px;box-shadow:var(--glass-shadow)}
+.process-num{width:56px;height:56px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;font-size:19px;font-weight:800;color:var(--red);margin-bottom:18px;box-shadow:0 8px 22px rgba(0,0,0,.25)}
 .process-title{font-size:15px;font-weight:700;margin-bottom:8px;color:var(--ink)}
 .process-desc{font-size:12.5px;color:var(--ink2);line-height:1.75}
 @media(max-width:900px){.process-steps{grid-template-columns:1fr;gap:34px}.process-steps::before{display:none}}
@@ -520,6 +528,11 @@ footer::before{content:'';position:absolute;top:0;right:0;left:0;height:2px;back
 <section class="hero bg-1" id="home">
   <div class="hero-bg" id="heroBg"><img src="" alt=""></div>
   <div class="hero-glow"></div>
+  <div class="hero-visual" aria-hidden="true">
+    <div class="hero-visual-ring hero-visual-ring1"></div>
+    <div class="hero-visual-ring hero-visual-ring2"></div>
+    <div class="hero-visual-badge"><img src="assets/logo.png" alt="" onerror="this.style.display='none'"></div>
+  </div>
   <div class="container hero-inner stagger">
     <div class="hero-badge fade-up" id="heroBadge" data-reveal-bound="1">
       <span class="hero-badge-dot"></span>
@@ -612,7 +625,7 @@ footer::before{content:'';position:absolute;top:0;right:0;left:0;height:2px;back
 </section>
 
 <!-- ══ 4.13 · PROCESS — how we work, 5 numbered steps ══ -->
-<section id="process" class="bg-2">
+<section id="process" class="bg-red">
   <div class="container">
     <div class="sec-head">
       <h2 class="sec-title">إزاي بنشتغل معاك</h2>
@@ -796,7 +809,7 @@ footer::before{content:'';position:absolute;top:0;right:0;left:0;height:2px;back
 </section>
 
 <!-- ══ CTA BAND — closing call-to-action ══════════════ -->
-<section id="ctaBand" class="bg-1">
+<section id="ctaBand" class="bg-red">
   <div class="container">
     <div class="cta-band-card">
       <div class="cta-band-title">جاهز تبدأ حملتك الجاية؟</div>
