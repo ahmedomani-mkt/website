@@ -33,7 +33,7 @@
   --glass-shadow:inset 0 1.5px 0 rgba(255,255,255,.3), inset 0 0 0 1px rgba(255,255,255,.06), 0 24px 50px -16px rgba(0,0,0,.6);
   --nav-bg:rgba(10,10,12,.5);
   --font:'Rubik','Segoe UI',Tahoma,Arial,sans-serif;
-  --r:22px; --rs:14px; --rp:999px;
+  --r:28px; --rs:18px; --rp:999px;
   --pad:clamp(20px,4vw,56px);
 }
 /* ══ TOKENS — light glass (admin-toggled) ═══════════ */
@@ -131,7 +131,7 @@ nav.solid{box-shadow:0 2px 16px rgba(24,21,15,.06)}
 .hero-badge{display:inline-flex;align-items:center;gap:9px;background:var(--p2);border:1px solid var(--line2);color:var(--ink2);padding:8px 18px;border-radius:var(--rp);font-size:12px;font-weight:500;margin-bottom:24px}
 .hero-badge-dot{width:7px;height:7px;background:var(--red);border-radius:50%;display:inline-block;flex-shrink:0;box-shadow:0 0 10px 2px rgba(var(--red-rgb),.7)}
 .hero-text-blocks{display:flex;flex-direction:column;align-items:center}
-.hero h1{font-size:clamp(32px,5.6vw,54px);font-weight:700;line-height:1.28;letter-spacing:-.01em;margin-bottom:18px;color:var(--ink)}
+.hero h1{font-size:clamp(34px,6.6vw,72px);font-weight:800;line-height:1.12;letter-spacing:-.03em;margin-bottom:20px;color:var(--ink)}
 .hero h1 .r,.hero-text-blocks h2 .r,.hero-text-blocks h3 .r{color:var(--red)}
 .hero-text-blocks h2{font-size:clamp(22px,3.6vw,34px);font-weight:700;line-height:1.32;letter-spacing:-.01em;margin-bottom:16px;color:var(--ink)}
 .hero-text-blocks h3{font-size:clamp(17px,2.6vw,22px);font-weight:600;line-height:1.4;margin-bottom:14px;color:var(--ink)}
@@ -161,20 +161,20 @@ nav.solid{box-shadow:0 2px 16px rgba(24,21,15,.06)}
 @media(max-width:767px){.hero.hide-text{min-height:340px;padding-bottom:80px}}
 
 /* ══ TRUST STATS — floating glass strip straddling the hero's bottom edge ══ */
-.stats-bar{position:relative;z-index:3;width:min(640px,92vw);margin:-56px auto 0}
-.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);background:var(--card-bg);backdrop-filter:var(--glass-blur);-webkit-backdrop-filter:var(--glass-blur);border:1px solid var(--glass-border);border-radius:22px;box-shadow:var(--glass-shadow);overflow:hidden}
-.stat-item{padding:16px 8px;text-align:center;position:relative}
+.stats-bar{position:relative;z-index:3;width:min(760px,94vw);margin:-64px auto 0}
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);background:var(--card-bg);backdrop-filter:var(--glass-blur);-webkit-backdrop-filter:var(--glass-blur);border:1px solid var(--glass-border);border-radius:var(--r);box-shadow:var(--glass-shadow);overflow:hidden}
+.stat-item{padding:24px 10px;text-align:center;position:relative}
 .stat-item:not(:first-child){border-inline-start:1px solid var(--line)}
-.stat-icon{font-size:17px;margin-bottom:6px;color:var(--icon-color)}
-.stat-num{font-size:clamp(16px,2vw,22px);font-weight:700;color:var(--ink);line-height:1;margin-bottom:4px}
+.stat-icon{width:38px;height:38px;margin:0 auto 12px;border-radius:50%;background:var(--icon-soft);color:var(--icon-color);display:flex;align-items:center;justify-content:center;font-size:16px}
+.stat-num{font-size:clamp(19px,2.4vw,27px);font-weight:800;color:var(--ink);line-height:1;margin-bottom:6px;letter-spacing:-.01em}
 .stat-num span{color:rgba(var(--ink-rgb),.8)}
-.stat-label{font-size:9.5px;color:var(--ink3);line-height:1.35;font-weight:500}
-@media(max-width:560px){.stats-grid{grid-template-columns:repeat(2,1fr)}.stat-item:nth-child(3){border-inline-start:none}}
+.stat-label{font-size:10px;color:var(--ink3);line-height:1.35;font-weight:500}
+@media(max-width:560px){.stats-grid{grid-template-columns:repeat(2,1fr)}.stat-item:nth-child(3){border-inline-start:none}.stat-item:nth-child(3),.stat-item:nth-child(4){border-top:1px solid var(--line)}}
 
 /* ══ SECTION HEAD ═════════════════════════════════ */
 section{padding:clamp(56px,8vw,92px) 0}
 .sec-head{text-align:center;max-width:640px;margin:0 auto clamp(40px,5.5vw,64px)}
-.sec-title{font-size:clamp(32px,4.6vw,50px);font-weight:800;line-height:1.22;letter-spacing:-.02em;color:var(--ink)}
+.sec-title{font-size:clamp(32px,5.4vw,60px);font-weight:800;line-height:1.14;letter-spacing:-.03em;color:var(--ink)}
 .sec-sub{font-size:14.5px;color:var(--ink2);line-height:1.7;margin-top:14px;font-weight:400}
 
 /* ══ CATALOG LINKS ════════════════════════════════ */
@@ -226,6 +226,15 @@ section{padding:clamp(56px,8vw,92px) 0}
 .pg-card:hover .pg-card-more i{transform:translateX(-3px)}
 .pg-card-more i{transition:.2s;font-size:11px}
 @media(max-width:560px){.pg-card,.port-card{width:210px;height:270px}}
+
+/* ══ WORK GRID — asymmetric bento layout (featured + pair), reuses .pg-card/.port-card ══ */
+.work-grid{display:grid;grid-template-columns:repeat(2,1fr);grid-auto-rows:190px;gap:20px}
+.work-grid>.pg-card,.work-grid>.port-card{width:100%;height:100%;scroll-snap-align:none}
+.work-grid>.pg-card:nth-child(3n+1),.work-grid>.port-card:nth-child(3n+1){grid-row:span 2}
+@media(max-width:760px){
+  .work-grid{grid-template-columns:1fr;grid-auto-rows:280px}
+  .work-grid>.pg-card:nth-child(3n+1),.work-grid>.port-card:nth-child(3n+1){grid-row:span 1}
+}
 
 /* ══ PROJECT DETAIL MODAL — replicates a case-study "project page" ══ */
 .proj-modal-ov{position:fixed;inset:0;z-index:600;background:rgba(8,7,6,.82);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .25s;overscroll-behavior:contain}
@@ -307,6 +316,22 @@ section{padding:clamp(56px,8vw,92px) 0}
 .ba-lb-desc{font-size:13.5px;color:var(--card-ink3);line-height:1.8}
 @media(max-width:600px){.ba-lb-imgs{grid-template-columns:1fr}}
 
+/* ══ CTA BAND — closing call-to-action before the footer ══ */
+.cta-band-card{position:relative;overflow:hidden;border-radius:var(--r);background:linear-gradient(135deg,var(--p2),var(--p3));border:1px solid var(--glass-border);padding:clamp(44px,7vw,76px) clamp(24px,6vw,60px);text-align:center;box-shadow:var(--glass-shadow)}
+.cta-band-card::before{content:'';position:absolute;inset:0;background:linear-gradient(115deg,transparent 32%,rgba(var(--red-rgb),.16) 50%,transparent 68%);pointer-events:none}
+.cta-band-title{font-size:clamp(27px,4.4vw,44px);font-weight:800;letter-spacing:-.03em;line-height:1.16;color:var(--ink);margin-bottom:14px;position:relative;z-index:1}
+.cta-band-sub{font-size:14.5px;color:var(--ink2);max-width:480px;margin:0 auto 30px;line-height:1.8;position:relative;z-index:1}
+.cta-band-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;position:relative;z-index:1}
+
+/* ══ PROCESS — numbered workflow steps ══════════════ */
+.process-steps{display:grid;grid-template-columns:repeat(5,1fr);gap:18px;position:relative}
+.process-steps::before{content:'';position:absolute;top:28px;right:10%;left:10%;height:1px;background:repeating-linear-gradient(to left,var(--line2) 0 6px,transparent 6px 12px);z-index:1}
+.process-step{display:flex;flex-direction:column;align-items:center;text-align:center;padding:0 6px;position:relative;z-index:2}
+.process-num{width:56px;height:56px;border-radius:50%;background:var(--card-bg);backdrop-filter:var(--glass-blur);-webkit-backdrop-filter:var(--glass-blur);border:1px solid var(--glass-border);display:flex;align-items:center;justify-content:center;font-size:19px;font-weight:800;color:var(--red);margin-bottom:18px;box-shadow:var(--glass-shadow)}
+.process-title{font-size:15px;font-weight:700;margin-bottom:8px;color:var(--ink)}
+.process-desc{font-size:12.5px;color:var(--ink2);line-height:1.75}
+@media(max-width:900px){.process-steps{grid-template-columns:1fr;gap:34px}.process-steps::before{display:none}}
+
 /* ══ VIDEOS — draggable auto-scroll track (same behavior as clients) ══ */
 .vid-marquee{overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;cursor:grab;-webkit-mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent)}
 .vid-marquee.no-fade{-webkit-mask-image:none;mask-image:none}
@@ -366,11 +391,13 @@ section{padding:clamp(56px,8vw,92px) 0}
 .cl-marquee::-webkit-scrollbar{display:none}
 .cl-marquee.dragging{cursor:grabbing;scroll-behavior:auto;user-select:none}
 .cl-grid{display:flex;gap:12px;width:max-content}
-.cl-item{display:flex;align-items:center;justify-content:center;height:64px;min-width:150px;padding:10px 20px;background:var(--card-bg);backdrop-filter:var(--glass-blur);-webkit-backdrop-filter:var(--glass-blur);border:1px solid var(--glass-border);border-radius:var(--rs);overflow:hidden;transition:.3s cubic-bezier(.16,1,.3,1);box-shadow:var(--glass-shadow);flex-shrink:0}
-.cl-item:has(img){background:#fff;backdrop-filter:none;-webkit-backdrop-filter:none;border-color:rgba(0,0,0,.06)}
-.cl-item:hover{border-color:var(--red);transform:translateY(-4px);box-shadow:0 0 0 1px rgba(var(--red-rgb),.3),0 14px 34px rgba(var(--red-rgb),.28)}
-.cl-item img{max-height:32px;max-width:100px;object-fit:contain}
-.cl-name{font-size:13px;font-weight:600;color:var(--card-ink2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.cl-item{display:flex;align-items:center;justify-content:center;height:56px;min-width:140px;padding:8px 22px;background:transparent;border:1px solid var(--line);border-radius:var(--rp);overflow:hidden;transition:.25s;flex-shrink:0}
+.cl-item:has(img){background:#fff;border-color:rgba(0,0,0,.06)}
+.cl-item:hover{border-color:var(--red);color:var(--red)}
+.cl-item img{max-height:28px;max-width:100px;object-fit:contain;filter:grayscale(1);opacity:.75;transition:.25s}
+.cl-item:hover img{filter:none;opacity:1}
+.cl-name{font-size:12.5px;font-weight:700;letter-spacing:.02em;text-transform:uppercase;color:var(--ink3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;transition:.25s}
+.cl-item:hover .cl-name{color:var(--red)}
 .clients-note{font-size:12px;color:var(--ink3);text-align:center;margin-top:22px;font-weight:400}
 
 /* ══ FAQ ═══════════════════════════════════════════ */
@@ -566,7 +593,7 @@ footer{padding:clamp(36px,5.5vw,56px) var(--pad) 0;border-top:1px solid var(--li
       <h2 class="sec-title" id="portTitle">أعمالنا في الدعاية والإعلان</h2>
     </div>
   </div>
-  <div id="portGroups"></div>
+  <div id="portGroups" class="container"></div>
   <div class="container">
     <div class="port-empty" id="portEmpty">لسه مفيش أعمال في القسم ده — تابعنا قريبًا</div>
   </div>
@@ -575,19 +602,48 @@ footer{padding:clamp(36px,5.5vw,56px) var(--pad) 0;border-top:1px solid var(--li
 <!-- ══ 4.1 · PORTFOLIO: MARKETING — white ════════════ -->
 <section id="portfolioMarketing" class="bg-1">
   <div class="container">
-    <div class="port-head">
-      <div class="port-head-text sec-head" style="margin:0;text-align:right">
-          <h2 class="sec-title" id="portTitleMarketing">أعمالنا في التسويق</h2>
-      </div>
-      <div class="port-nav-btns">
-        <button class="port-nav-btn" onclick="slidePort(-1,'portGridMarketing')"><i class="bi bi-arrow-right"></i></button>
-        <button class="port-nav-btn" onclick="slidePort(1,'portGridMarketing')"><i class="bi bi-arrow-left"></i></button>
-      </div>
+    <div class="sec-head" style="text-align:right;margin-bottom:26px">
+      <h2 class="sec-title" id="portTitleMarketing">أعمالنا في التسويق</h2>
     </div>
-    <div class="port-track-wrap">
-      <div class="port-track stagger" id="portGridMarketing"></div>
-    </div>
+    <div class="work-grid stagger" id="portGridMarketing"></div>
     <div class="port-empty" id="portEmptyMarketing">لسه مفيش أعمال في القسم ده — تابعنا قريبًا</div>
+  </div>
+</section>
+
+<!-- ══ 4.13 · PROCESS — how we work, 5 numbered steps ══ -->
+<section id="process" class="bg-2">
+  <div class="container">
+    <div class="sec-head">
+      <h2 class="sec-title">إزاي بنشتغل معاك</h2>
+      <p class="sec-sub">من أول ما نسمعك لحد ما نوصلك لأفضل نتيجة</p>
+    </div>
+    <div class="process-steps stagger">
+      <div class="process-step fade-up">
+        <div class="process-num">01</div>
+        <div class="process-title">نسمعك ونفهم هدفك</div>
+        <div class="process-desc">بنبدأ بجلسة نتعرف فيها على مركزك والسوق والمنافسين وهدفك من الحملة.</div>
+      </div>
+      <div class="process-step fade-up">
+        <div class="process-num">02</div>
+        <div class="process-title">تحليل واستراتيجية</div>
+        <div class="process-desc">بنحلل جمهورك المستهدف ونبني خطة تسويقية ودعائية تناسب ميزانيتك.</div>
+      </div>
+      <div class="process-step fade-up">
+        <div class="process-num">03</div>
+        <div class="process-title">تصميم وتنفيذ</div>
+        <div class="process-desc">فريقنا يصمم وينفذ المحتوى والدعاية بأعلى جودة وفي الميعاد المتفق عليه.</div>
+      </div>
+      <div class="process-step fade-up">
+        <div class="process-num">04</div>
+        <div class="process-title">إطلاق ومتابعة</div>
+        <div class="process-desc">بننشر ونتابع الأداء أول بأول على كل القنوات اللي بتخاطب عملاءك.</div>
+      </div>
+      <div class="process-step fade-up">
+        <div class="process-num">05</div>
+        <div class="process-title">تحسين مستمر</div>
+        <div class="process-desc">بنحلل النتائج ونطور الاستراتيجية باستمرار عشان نوصلك لأفضل عائد.</div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -735,6 +791,20 @@ footer{padding:clamp(36px,5.5vw,56px) var(--pad) 0;border-top:1px solid var(--li
       <p class="sec-sub">إجابات سريعة على أكتر الأسئلة اللي بتوصلنا</p>
     </div>
     <div class="faq-wrap" id="faqWrap"></div>
+  </div>
+</section>
+
+<!-- ══ CTA BAND — closing call-to-action ══════════════ -->
+<section id="ctaBand" class="bg-1">
+  <div class="container">
+    <div class="cta-band-card">
+      <div class="cta-band-title">جاهز تبدأ حملتك الجاية؟</div>
+      <p class="cta-band-sub">تواصل معانا دلوقتي واحصل على استشارة مجانية لمركزك — من غير أي التزام.</p>
+      <div class="cta-band-btns">
+        <a href="https://wa.me/201152501056?text=مرحبًا،%20عايز%20استشارة%20مجانية%20لمركزي" target="_blank" rel="noopener" class="btn-primary"><i class="bi bi-whatsapp"></i> تواصل واتساب</a>
+        <a href="catalog.html" class="btn-secondary">تصفح الكتالوج</a>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -1094,7 +1164,7 @@ function renderAdsGroups(list){
     groups[gname].push(p);
   });
   pgGroupsData=groups;
-  wrap.innerHTML='<div class="pg-cards-row stagger">'
+  wrap.innerHTML='<div class="work-grid stagger">'
     +order.map(function(gname){
       var items=groups[gname];
       var cat=items[0].category;
