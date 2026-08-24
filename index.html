@@ -241,15 +241,13 @@ section{padding:clamp(56px,8vw,92px) 0}
 .pg-card-more i{transition:.2s;font-size:11px}
 @media(max-width:560px){.pg-card,.port-card{width:210px;height:270px}}
 
-/* ══ WORK GRID — asymmetric bento layout (featured + pair), reuses .pg-card/.port-card ══ */
-.work-grid{display:grid;grid-template-columns:repeat(2,1fr);grid-auto-rows:190px;gap:20px}
-.work-grid>.pg-card,.work-grid>.port-card{width:100%;height:100%;scroll-snap-align:none}
-/* the tall "featured" slot is assigned in JS (not :nth-child) so it stays correct after filtering */
-.work-grid>.is-featured{grid-row:span 2}
-@media(max-width:760px){
-  .work-grid{grid-template-columns:1fr;grid-auto-rows:280px}
-  .work-grid>.is-featured{grid-row:span 1}
-}
+/* ══ WORK MARQUEE — big square cards drifting slowly, same behaviour as the clients strip ══ */
+.work-marquee{overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;cursor:grab;-webkit-mask-image:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent);mask-image:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent)}
+.work-marquee.no-fade{-webkit-mask-image:none;mask-image:none}
+.work-marquee::-webkit-scrollbar{display:none}
+.work-marquee.dragging{cursor:grabbing;scroll-behavior:auto;user-select:none}
+.work-track{display:flex;gap:20px;width:max-content;padding:4px 0}
+.work-track>.pg-card,.work-track>.port-card{flex-shrink:0;width:clamp(258px,26vw,380px);height:clamp(258px,26vw,380px);scroll-snap-align:none}
 
 /* ══ WORK FILTERS — category chips above each works grid ══ */
 .work-filters{display:flex;flex-wrap:wrap;gap:9px;margin-bottom:24px}
@@ -640,7 +638,7 @@ footer{padding:0 var(--pad) var(--pad);background:transparent;border-top:none;po
       <h2 class="sec-title" id="portTitleMarketing">أعمالنا في التسويق</h2>
     </div>
     <div class="work-filters" id="portFiltersMarketing"></div>
-    <div class="work-grid stagger" id="portGridMarketing"></div>
+    <div class="work-marquee" id="workMqMkt"><div class="work-track stagger" id="portGridMarketing"></div></div>
     <div class="port-empty" id="portEmptyMarketing">لسه مفيش أعمال في القسم ده — تابعنا قريبًا</div>
   </div>
 </section>
@@ -1209,11 +1207,13 @@ function portCardHtml(p,i){
     +'</div></div>';
 }
 var pgGroupsData={};
+// slower than the clients strip (0.6) so the bigger work cards read calmly
+var WORK_MQ_SPEED=0.22;
 function renderAdsGroups(list){
   var wrap=document.getElementById('portGroups');
   if(!wrap)return;
   var withImg=list.filter(function(p){return p.image_url});
-  if(!withImg.length){wrap.innerHTML='';pgGroupsData={};renderWorkFilters('portFilters',[],'#portGroups .work-grid');return}
+  if(!withImg.length){wrap.innerHTML='';pgGroupsData={};renderWorkFilters('portFilters',[],'#portGroups .work-track');return}
   var groups={},order=[];
   withImg.forEach(function(p){
     var gname=(p.group_label||'').trim()||'متنوع';
@@ -1221,7 +1221,7 @@ function renderAdsGroups(list){
     groups[gname].push(p);
   });
   pgGroupsData=groups;
-  wrap.innerHTML='<div class="work-grid stagger">'
+  wrap.innerHTML='<div class="work-marquee" id="workMqAds"><div class="work-track stagger">'
     +order.map(function(gname){
       var items=groups[gname];
       var cat=items[0].category;
@@ -1233,8 +1233,9 @@ function renderAdsGroups(list){
         +'<div class="pg-card-more">شاهد المشروع <i class="bi bi-arrow-left"></i></div></div>'
       +'</div>';
     }).join('')
-  +'</div>';
-  renderWorkFilters('portFilters',order.map(function(g){return groups[g][0]}),'#portGroups .work-grid');
+  +'</div></div>';
+  renderWorkFilters('portFilters',order.map(function(g){return groups[g][0]}),'#portGroups .work-track');
+  initMarqueeAutoScroll('#workMqAds',1,WORK_MQ_SPEED);
 }
 
 // ── WORK CATEGORY FILTERS ────────────────────────────
@@ -1246,13 +1247,12 @@ function renderWorkFilters(barId,items,gridSel){
   if(!bar)return;
   var cats=[];
   items.forEach(function(p){var c=p&&p.category;if(c&&cats.indexOf(c)<0)cats.push(c)});
-  if(cats.length<2){bar.innerHTML='';bar.style.display='none';reflowWorkGrid(gridSel);return}
+  if(cats.length<2){bar.innerHTML='';bar.style.display='none';return}
   bar.style.display='flex';
   bar.innerHTML='<button type="button" class="wf-btn active" onclick="filterWork(this,\''+gridSel+'\',\'all\')">الكل</button>'
     +cats.map(function(c){
       return'<button type="button" class="wf-btn" onclick="filterWork(this,\''+gridSel+'\',\''+esc(c)+'\')">'+esc(catLabel[c]||c)+'</button>';
     }).join('');
-  reflowWorkGrid(gridSel);
 }
 function filterWork(btn,gridSel,cat){
   Array.prototype.forEach.call(btn.parentNode.querySelectorAll('.wf-btn'),function(b){
@@ -1261,15 +1261,10 @@ function filterWork(btn,gridSel,cat){
   Array.prototype.forEach.call(document.querySelectorAll(gridSel+'>[data-cat]'),function(card){
     card.style.display=(cat==='all'||card.dataset.cat===cat)?'':'none';
   });
-  reflowWorkGrid(gridSel);
-}
-// re-assigns the tall "featured" slot across the currently VISIBLE cards, so
-// the bento layout keeps its big-then-two rhythm after any filter change.
-function reflowWorkGrid(gridSel){
-  var cards=document.querySelectorAll(gridSel+'>[data-cat]');
-  var visible=Array.prototype.filter.call(cards,function(c){return c.style.display!=='none'});
-  Array.prototype.forEach.call(cards,function(c){c.classList.remove('is-featured')});
-  visible.forEach(function(c,i){if(i%3===0)c.classList.add('is-featured')});
+  // the track got narrower/wider — send it back to the start so the
+  // remaining cards are actually in view
+  var mq=document.querySelector(gridSel).closest('.work-marquee');
+  if(mq)mq.scrollLeft=0;
 }
 window.filterWork=filterWork;
 // ── PROJECT DETAIL MODAL — shared by both the grouped ads-work cards
@@ -1405,6 +1400,7 @@ function renderPortfolio(list){
   var gm=document.getElementById('portGridMarketing');
   if(gm)gm.innerHTML=marketing.map(portCardHtml).join('');
   renderWorkFilters('portFiltersMarketing',marketing,'#portGridMarketing');
+  initMarqueeAutoScroll('#workMqMkt',1,WORK_MQ_SPEED);
   var gme=document.getElementById('portEmptyMarketing');
   if(gme)gme.style.display=marketing.length?'none':'block';
 }
@@ -1682,14 +1678,16 @@ function renderClients(list){
 function initClientsAutoScroll(){initMarqueeAutoScroll('#clRow1',1);initMarqueeAutoScroll('#clRow2',-1)}
 // startDir -1 makes the row drift the opposite way (used for the second
 // clients row); it starts parked at the far end so it has room to travel.
-function initMarqueeAutoScroll(sel,startDir){
+function initMarqueeAutoScroll(sel,startDir,speed){
   var wrap=document.querySelector(sel);
   if(!wrap||wrap.dataset.autoScrollBound)return;
   wrap.dataset.autoScrollBound='1';
   var reduceMotion=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var sign=rtlAdvanceSign();
+  var step=typeof speed==='number'?speed:0.6;
   var dir=startDir===-1?-1:1,paused=false,dragging=false,resumeTimer=null;
   var parked=dir!==-1;
+  var pos=0;
   var dragStartX=0,dragStartScroll=0;
 
   function pause(){paused=true;clearTimeout(resumeTimer)}
@@ -1698,14 +1696,17 @@ function initMarqueeAutoScroll(sel,startDir){
   function tick(){
     var max=wrap.scrollWidth-wrap.clientWidth;
     wrap.classList.toggle('no-fade',max<=1);
-    if(!parked&&max>1){wrap.scrollLeft=sign*max;parked=true}
-    if(!paused&&!dragging&&!reduceMotion){
-      if(max>1){
-        wrap.scrollLeft+=dir*sign*0.6;
-        var pos=sign*wrap.scrollLeft;
-        if(pos>=max){dir=-1;wrap.scrollLeft=sign*max}
-        else if(pos<=0){dir=1;wrap.scrollLeft=0}
-      }
+    if(!parked&&max>1){pos=max;wrap.scrollLeft=sign*max;parked=true}
+    if(paused||dragging||reduceMotion){
+      // stay in sync with wherever the user left it
+      pos=Math.abs(wrap.scrollLeft);
+    }else if(max>1){
+      // NOTE: accumulate in a float and assign — doing `scrollLeft += step`
+      // loses sub-pixel steps to rounding, which freezes slow speeds entirely.
+      pos+=dir*step;
+      if(pos>=max){dir=-1;pos=max}
+      else if(pos<=0){dir=1;pos=0}
+      wrap.scrollLeft=sign*pos;
     }
     requestAnimationFrame(tick);
   }
