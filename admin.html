@@ -1844,10 +1844,10 @@ async function upPromoBanner(inp,i){
   toast('⏳ جاري الرفع...');
   var f=inp.files[0];var ext=f.name.split('.').pop();
   var nm='banners/banner-'+i+'-'+Date.now()+'.'+ext;
-  var{error}=await sb.storage.from('media').upload(nm,f,{upsert:true});
+  var{error}=await sb.storage.from('ao-images').upload(nm,f,{upsert:true});
   if(error){toast('❌ '+error.message);return}
-  var{data}=sb.storage.from('media').getPublicUrl(nm);
-  promoBanners[i].image=data.publicUrl;
+  var url=sb.storage.from('ao-images').getPublicUrl(nm).data.publicUrl;
+  promoBanners[i].image=url;
   renderPromoBannersEditor();
   toast('✅ اترفعت!');
 }
