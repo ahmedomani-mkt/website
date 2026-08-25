@@ -40,12 +40,10 @@ CREATE TABLE IF NOT EXISTS ao_settings (
   site_bg_image TEXT DEFAULT '',
   site_theme_mode TEXT DEFAULT 'dark', -- 'dark' | 'light'
   site_template TEXT DEFAULT 'glass', -- 'glass' | 'flat' — orthogonal to site_theme_mode (each combines with dark/light)
-  -- Promo banner shown above the products on both catalog pages. Image and/or
-  -- text; with text but no image it renders as a solid red strip.
-  promo_banner_active BOOLEAN DEFAULT false,
-  promo_banner_image TEXT,
-  promo_banner_text TEXT,
-  promo_banner_link TEXT,
+  -- Promo banners shown above the products on both catalog pages, in order.
+  -- [{image, text, link, active}] — image and/or text per banner; text with no
+  -- image renders as a solid red strip.
+  promo_banners JSONB DEFAULT '[]'::jsonb,
   ads_catalog_badges JSONB DEFAULT '[{"icon":"truck","text":"توصيل لحد مكانك"},{"icon":"clock-history","text":"تنفيذ وتسليم خلال 7-10 أيام عمل"},{"icon":"gift","text":"تصميم مجاني"}]', -- trust badges row under catalog.html's header: [{icon, text}]
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );

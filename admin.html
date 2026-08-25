@@ -105,6 +105,21 @@ button,select,input,textarea{font-family:var(--font)}
 /* ── MAIN ────────────────────────────────────────────── */
 .main{background:var(--dk);overflow-y:auto;padding:28px 32px}
 .sec{display:none;max-width:1100px}.sec.active{display:block}
+/* ══ AREA ACCENTS — every part of the dashboard has its own colour ══ */
+.sb-group[data-g="content"],.sec[data-area="content"]{--acc:#3B82F6}
+.sb-group[data-g="works"],  .sec[data-area="works"]  {--acc:#A855F7}
+.sb-group[data-g="catalog"],.sec[data-area="catalog"]{--acc:#10B981}
+.sb-group[data-g="pagesg"], .sec[data-area="pagesg"] {--acc:#F59E0B}
+.sb-group[data-g="system"], .sec[data-area="system"] {--acc:#EF4444}
+.sec[data-area="dash"]{--acc:#E8192C}
+.sb-group{color:var(--acc,var(--g))}
+.sb-group:hover{color:var(--acc,var(--w2));filter:brightness(1.25)}
+.sb-group-items .ni.active{border-inline-start:3px solid var(--acc,var(--red))}
+/* section heading + each card header pick up the area colour */
+.sec[data-area] .sec-header{padding-inline-start:14px;border-inline-start:4px solid var(--acc,var(--red))}
+.sec[data-area] .sec-title{color:var(--acc,var(--w))}
+.sec[data-area] .card-title svg{stroke:var(--acc,var(--red))}
+.sec[data-area] .card-header{border-bottom-color:color-mix(in srgb,var(--acc) 28%,transparent)}
 .sec-header{margin-bottom:26px}
 .sec-title{font-size:21px;font-weight:800;color:var(--w);margin-bottom:5px;letter-spacing:-.01em}
 .sec-sub{font-size:13px;color:var(--g)}
@@ -484,7 +499,7 @@ try{
   <div class="main">
 
     <!-- DASHBOARD -->
-    <div class="sec active" id="sec-dash">
+    <div class="sec active" data-area="dash" id="sec-dash">
       <div class="sec-header">
         <div class="sec-title">مرحبًا بك 👋</div>
         <div class="sec-sub">ملخص سريع لحالة موقعك</div>
@@ -593,7 +608,7 @@ try{
     </div>
 
     <!-- HERO -->
-    <div class="sec" id="sec-hero">
+    <div class="sec" data-area="content" id="sec-hero">
       <div class="sec-header">
         <div class="sec-title">الصفحة الرئيسية — Hero</div>
         <div class="sec-sub">العنوان والنص والأزرار والإحصائيات الصغيرة في البطاقة الوسطى</div>
@@ -645,7 +660,7 @@ try{
     </div>
 
     <!-- STATS BAR -->
-    <div class="sec" id="sec-stats">
+    <div class="sec" data-area="content" id="sec-stats">
       <div class="sec-header">
         <div class="sec-title">الشريط الإحصائي</div>
         <div class="sec-sub">الأرقام الأربعة في الشريط الأحمر أسفل البورتفوليو</div>
@@ -664,7 +679,7 @@ try{
     </div>
 
     <!-- PORTFOLIO -->
-    <div class="sec" id="sec-port">
+    <div class="sec" data-area="works" id="sec-port">
       <div class="sec-header">
         <div class="sec-title">الأعمال</div>
         <div class="sec-sub">إضافة وتعديل وحذف أعمالك في قسم البورتفوليو</div>
@@ -691,7 +706,7 @@ try{
     </div>
 
     <!-- PRODUCTS / CATALOG -->
-    <div class="sec" id="sec-products">
+    <div class="sec" data-area="catalog" id="sec-products">
       <div class="sec-header">
         <div class="sec-title">الكتالوج</div>
         <div class="sec-sub">منتجات صفحة الكتالوج (catalog.html) — العميل يضيفها للسلة ويبعت الطلب واتساب</div>
@@ -713,7 +728,7 @@ try{
     </div>
 
     <!-- CLIENTS -->
-    <div class="sec" id="sec-clients">
+    <div class="sec" data-area="catalog" id="sec-clients">
       <div class="sec-header">
         <div class="sec-title">العملاء</div>
         <div class="sec-sub">إدارة قائمة العملاء الظاهرة في الموقع</div>
@@ -731,7 +746,7 @@ try{
     </div>
 
     <!-- BEFORE / AFTER -->
-    <div class="sec" id="sec-ba">
+    <div class="sec" data-area="works" id="sec-ba">
       <div class="sec-header">
         <div class="sec-title">قبل وبعد</div>
         <div class="sec-sub">صور مقارنة قبل/بعد لتجديد هوية العملاء — تظهر في سيكشن "قبل وبعد" بالموقع (يظهر تلقائيًا لما يكون فيه عميل واحد على الأقل)</div>
@@ -749,7 +764,7 @@ try{
     </div>
 
     <!-- VIDEOS -->
-    <div class="sec" id="sec-videos">
+    <div class="sec" data-area="works" id="sec-videos">
       <div class="sec-header">
         <div class="sec-title">الفيديوهات</div>
         <div class="sec-sub">ريلز وفيديوهات من يوتيوب / تيك توك / انستجرام / فيسبوك — تظهر في سيكشن "فيديوهاتنا" بالموقع (يظهر تلقائيًا لما يكون فيه فيديو واحد على الأقل)</div>
@@ -767,7 +782,7 @@ try{
     </div>
 
     <!-- CASE STUDIES -->
-    <div class="sec" id="sec-cases">
+    <div class="sec" data-area="works" id="sec-cases">
       <div class="sec-header">
         <div class="sec-title">النتائج</div>
         <div class="sec-sub">نتائج حقيقية لحملات ممولة وأورجانيك بالأرقام وسكرينات الإثبات — تظهر في سيكشن "نتائج حقيقية بالأرقام" بالموقع (يظهر تلقائيًا لما تكون فيه نتيجة واحدة على الأقل)</div>
@@ -785,7 +800,7 @@ try{
     </div>
 
     <!-- FAQ -->
-    <div class="sec" id="sec-faq">
+    <div class="sec" data-area="content" id="sec-faq">
       <div class="sec-header">
         <div class="sec-title">الأسئلة الشائعة</div>
         <div class="sec-sub">تظهر في سيكشن "الأسئلة الشائعة" بالصفحة الرئيسية (رابط مباشر: <code dir="ltr">/#faq</code>) — قسّم الأسئلة "عامة" أو "عن التسويق وإدارة السوشيال ميديا" وهتتجمع تلقائيًا تحت عنوانها في الموقع</div>
@@ -803,7 +818,7 @@ try{
     </div>
 
     <!-- PAGES -->
-    <div class="sec" id="sec-pages">
+    <div class="sec" data-area="pagesg" id="sec-pages">
       <div class="sec-header">
         <div class="sec-title">صفحات جديدة</div>
         <div class="sec-sub">أنشئ صفحات مخصصة مثل صفحة خدمة أو عرض سعر</div>
@@ -829,7 +844,7 @@ try{
     </div>
 
     <!-- TEXTS -->
-    <div class="sec" id="sec-texts">
+    <div class="sec" data-area="pagesg" id="sec-texts">
       <div class="sec-header">
         <div class="sec-title">نصوص الأقسام</div>
         <div class="sec-sub">تحكم في عناوين وأوصاف كل قسم داخل الموقع</div>
@@ -852,7 +867,7 @@ try{
     </div>
 
     <!-- SECTION COLORS -->
-    <div class="sec" id="sec-colors">
+    <div class="sec" data-area="pagesg" id="sec-colors">
       <div class="sec-header">
         <div class="sec-title">ألوان الموقع</div>
         <div class="sec-sub">غيّر ألوان الموقع كله دفعة واحدة، أو خصّص كل قسم لوحده</div>
@@ -878,7 +893,7 @@ try{
     </div>
 
     <!-- SETTINGS -->
-    <div class="sec" id="sec-settings">
+    <div class="sec" data-area="system" id="sec-settings">
       <div class="sec-header">
         <div class="sec-title">الإعدادات</div>
         <div class="sec-sub">بيانات التواصل وأدوات الإعلان والنصوص العامة</div>
@@ -1045,33 +1060,10 @@ try{
           <button type="button" class="btn btn-d bsm" onclick="clearSiteBg()">🗑 حذف صورة الخلفية</button>
         </div>
       </div>
-      <div class="card">
-        <div class="card-header"><div class="card-title"><svg viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M2 12h20"/></svg>البنر الإعلاني</div></div>
-        <div class="field-hint" style="margin-bottom:12px">بنر بيظهر فوق المنتجات في كتالوج الدعاية وكتالوج التسويق. تقدر تحط صورة أو نص أو الاتنين — لو حطيت نص من غير صورة هيظهر كشريط أحمر بالنص.</div>
-        <div class="field">
-          <label style="display:flex;align-items:center;gap:8px;cursor:pointer;text-transform:none;letter-spacing:0;font-size:13px;font-weight:600;color:var(--w2)">
-            <input type="checkbox" id="s-promo-active"> تفعيل البنر الإعلاني
-          </label>
-          <div class="field-hint">لو مقفول، البنر مش هيظهر خالص حتى لو فيه صورة أو نص محفوظين.</div>
-        </div>
-        <div class="field">
-          <label>صورة البنر</label>
-          <input type="url" id="s-promo-img" placeholder="https://..." oninput="prevCatalogImg('s-promo-img-pv',this.value)">
-          <div class="upload-zone" onclick="document.getElementById('s-promo-img-f').click()">
-            📁 ارفع صورة من جهازك
-            <input type="file" id="s-promo-img-f" accept="image/*" style="display:none" onchange="upCatalogImg(this,'s-promo-img')">
-          </div>
-          <img id="s-promo-img-pv" class="port-preview" style="max-height:140px;object-fit:cover">
-        </div>
-        <div class="field">
-          <label>نص البنر</label>
-          <input type="text" id="s-promo-text" placeholder="مثال: خصم 20% على كل المطبوعات هذا الشهر">
-        </div>
-        <div class="field">
-          <label>رابط عند الضغط (اختياري)</label>
-          <input type="url" id="s-promo-link" placeholder="https://wa.me/... أو رابط أي صفحة">
-          <div class="field-hint">سيبه فاضي لو مش عايز البنر يكون قابل للضغط.</div>
-        </div>
+      <div class="card sec-accent-promo">
+        <div class="card-header"><div class="card-title"><svg viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M2 12h20"/></svg>البنرات الإعلانية</div><button class="btn btn-p bsm" onclick="addPromoBanner()">+ إضافة بنر</button></div>
+        <div class="field-hint" style="margin-bottom:12px">البنرات بتظهر فوق المنتجات في كتالوج الدعاية وكتالوج التسويق بالترتيب. لكل بنر: صورة و/أو نص، ورابط اختياري، وزرار تفعيل. لو حطيت نص من غير صورة هيظهر كشريط أحمر بالنص.</div>
+        <div class="edit-grid" id="promoBannersEditor"></div>
       </div>
       <div class="card">
         <div class="card-header"><div class="card-title"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/></svg>ظهور الأقسام</div></div>
@@ -1768,10 +1760,8 @@ async function loadSettings(){
   document.getElementById('s-theme-mode').value=data.site_theme_mode==='light'?'light':'dark';
   document.getElementById('s-site-template').value=data.site_template==='flat'?'flat':'glass';
   document.getElementById('s-show-mkt-port').checked=data.show_marketing_portfolio!==false;
-  document.getElementById('s-promo-active').checked=data.promo_banner_active===true;
-  v('s-promo-img',data.promo_banner_image);prevCatalogImg('s-promo-img-pv',data.promo_banner_image||'');
-  v('s-promo-text',data.promo_banner_text);
-  v('s-promo-link',data.promo_banner_link);
+  promoBanners=Array.isArray(data.promo_banners)?data.promo_banners:[];
+  renderPromoBannersEditor();
   try{document.getElementById('s-notrack').checked=localStorage.getItem('ao_no_track')==='1'}catch(e){}
   statsData=data.stats_data||defaultStats();
   textsData=data.page_texts||{};
@@ -1823,6 +1813,44 @@ async function saveStats(){
 
 // ── ADS CATALOG TRUST BADGES ─────────────────────────────
 var adsBadges=[];
+var promoBanners=[];
+function renderPromoBannersEditor(){
+  var el=document.getElementById('promoBannersEditor');
+  if(!el)return;
+  if(!promoBanners.length){el.innerHTML=empty('لا توجد بنرات — اضغط "إضافة بنر"');return}
+  el.innerHTML=promoBanners.map(function(b,i){
+    return'<div class="edit-row">'
+      +'<div class="edit-row-head"><div class="edit-row-num">'+(i+1)+'</div> بنر '+(i+1)
+        +'<label style="margin-inline-start:auto;display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;cursor:pointer">'
+        +'<input type="checkbox" '+(b.active!==false?'checked':'')+' onchange="promoBanners['+i+'].active=this.checked"> مفعّل</label>'
+        +'<button class="btn btn-d bsm" style="margin-inline-start:8px" onclick="removePromoBanner('+i+')">حذف</button></div>'
+      +'<div class="field"><label>صورة البنر</label>'
+        +'<input class="fi" id="pb-img-'+i+'" value="'+h(b.image||'')+'" placeholder="https://..." oninput="promoBanners['+i+'].image=this.value;prevCatalogImg(\'pb-pv-'+i+'\',this.value)">'
+        +'<div class="upload-zone" onclick="document.getElementById(\'pb-f-'+i+'\').click()">📁 ارفع صورة من جهازك'
+          +'<input type="file" id="pb-f-'+i+'" accept="image/*" style="display:none" onchange="upPromoBanner(this,'+i+')"></div>'
+        +'<img id="pb-pv-'+i+'" class="port-preview" style="max-height:120px;object-fit:cover'+(b.image?'':';display:none')+'" src="'+h(b.image||'')+'">'
+      +'</div>'
+      +'<div class="field"><label>نص البنر</label>'
+        +'<input class="fi" value="'+h(b.text||'')+'" oninput="promoBanners['+i+'].text=this.value" placeholder="خصم 20% على كل المطبوعات"></div>'
+      +'<div class="field"><label>رابط عند الضغط (اختياري)</label>'
+        +'<input class="fi" value="'+h(b.link||'')+'" oninput="promoBanners['+i+'].link=this.value" placeholder="https://..."></div>'
+      +'</div>';
+  }).join('');
+}
+function addPromoBanner(){promoBanners.push({image:'',text:'',link:'',active:true});renderPromoBannersEditor()}
+function removePromoBanner(i){promoBanners.splice(i,1);renderPromoBannersEditor()}
+async function upPromoBanner(inp,i){
+  if(!inp.files[0])return;
+  toast('⏳ جاري الرفع...');
+  var f=inp.files[0];var ext=f.name.split('.').pop();
+  var nm='banners/banner-'+i+'-'+Date.now()+'.'+ext;
+  var{error}=await sb.storage.from('media').upload(nm,f,{upsert:true});
+  if(error){toast('❌ '+error.message);return}
+  var{data}=sb.storage.from('media').getPublicUrl(nm);
+  promoBanners[i].image=data.publicUrl;
+  renderPromoBannersEditor();
+  toast('✅ اترفعت!');
+}
 function renderAdsBadgesEditor(){
   var el=document.getElementById('adsBadgesEditor');
   if(!adsBadges.length){el.innerHTML=empty('لا توجد بادجات — اضغط "إضافة بادج"');return}
@@ -1866,10 +1894,7 @@ async function saveSettings(){
     site_theme_mode:document.getElementById('s-theme-mode').value,
     site_template:document.getElementById('s-site-template').value,
     show_marketing_portfolio:document.getElementById('s-show-mkt-port').checked,
-    promo_banner_active:document.getElementById('s-promo-active').checked,
-    promo_banner_image:g('s-promo-img').trim()||null,
-    promo_banner_text:g('s-promo-text').trim()||null,
-    promo_banner_link:g('s-promo-link').trim()||null,
+    promo_banners:promoBanners.filter(function(b){return (b.image&&b.image.trim())||(b.text&&b.text.trim())}),
     updated_at:new Date().toISOString()
   };
   var{error}=await sb.from('ao_settings').upsert({id:1,...payload});

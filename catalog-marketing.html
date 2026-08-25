@@ -167,9 +167,10 @@ nav.solid{box-shadow:0 14px 40px rgba(0,0,0,.4)}
 @media(max-width:900px){.prod-grid{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:560px){.prod-grid{grid-template-columns:repeat(2,1fr);gap:12px}.pc-body{padding:12px}.pc-title{font-size:13px}.add-btn{padding:8px 12px;font-size:11px}}
 
-/* ══ PROMO BANNER — admin-managed strip above the catalog ══ */
+/* ══ PROMO BANNERS — admin-managed strips above the catalog ══ */
+.promo-banners{display:none;flex-direction:column;gap:14px;margin-bottom:26px}
 .promo-banner{display:none;position:relative;border-radius:var(--r);overflow:hidden;margin-bottom:26px;border:1px solid var(--glass-border);box-shadow:var(--glass-shadow);background:var(--p3)}
-.promo-banner.show{display:block}
+.promo-banner.show{display:block;margin-bottom:0}
 .promo-banner img{width:100%;height:auto;display:block}
 .promo-banner-text{position:absolute;inset:auto 0 0 0;padding:26px 22px 18px;background:linear-gradient(to top,rgba(15,13,10,.85),transparent);color:#fff;font-size:clamp(14px,2vw,20px);font-weight:700;line-height:1.5}
 .promo-banner.text-only{background:linear-gradient(135deg,var(--red),var(--red-d));padding:clamp(20px,3.5vw,34px);text-align:center}
@@ -302,6 +303,7 @@ footer{border-top:1px solid var(--line);padding:24px var(--pad);display:flex;ali
       <div class="spin"></div>
       <div>جاري التحميل...</div>
     </div>
+    <div class="promo-banners" id="promoBanners"></div>
     <div class="bs-sec" id="bsSec" style="display:none">
       <div class="bs-sec-title"><i class="bi bi-fire"></i> الأكثر طلبًا في مجال السيارات</div>
       <div class="prod-grid" id="bsGrid"></div>
@@ -471,19 +473,22 @@ function renderGrid(){
 }
 
 
-function renderPromoBanner(cfg){
-  var el=document.getElementById('promoBanner');
-  if(!el||!cfg)return;
-  var img=cfg.promo_banner_image||'';
-  var text=(cfg.promo_banner_text||'').trim();
-  if(!cfg.promo_banner_active||(!img&&!text)){el.classList.remove('show');return}
-  var link=(cfg.promo_banner_link||'').trim();
-  el.innerHTML=(img?'<img src="'+esc(img)+'" alt="'+esc(text||'عرض')+'">':'')
-    +(text?'<div class="promo-banner-text">'+esc(text)+'</div>':'');
-  el.classList.toggle('text-only',!img);
-  if(link){el.href=link;el.style.pointerEvents=''}
-  else{el.removeAttribute('href');el.style.pointerEvents='none'}
-  el.classList.add('show');
+function renderPromoBanners(cfg){
+  var wrap=document.getElementById('promoBanners');
+  if(!wrap||!cfg)return;
+  var list=Array.isArray(cfg.promo_banners)?cfg.promo_banners:[];
+  var rows=list.filter(function(b){return b&&b.active!==false&&((b.image&&b.image.trim())||(b.text&&b.text.trim()))});
+  if(!rows.length){wrap.innerHTML='';wrap.style.display='none';return}
+  wrap.style.display='flex';
+  wrap.innerHTML=rows.map(function(b){
+    var img=(b.image||'').trim(),text=(b.text||'').trim(),link=(b.link||'').trim();
+    var inner=(img?'<img src="'+esc(img)+'" alt="'+esc(text||'عرض')+'">':'')
+      +(text?'<div class="promo-banner-text">'+esc(text)+'</div>':'');
+    var cls='promo-banner show'+(img?'':' text-only');
+    return link
+      ? '<a class="'+cls+'" href="'+esc(link)+'" target="_blank" rel="noopener">'+inner+'</a>'
+      : '<div class="'+cls+'">'+inner+'</div>';
+  }).join('');
 }
 function productCardHtml(p){
   var qty=cart[p.id]||0;
@@ -690,7 +695,7 @@ async function loadCatalog(){
     sb=supabase.createClient(SB_URL,SB_KEY);
     logVisitOnce();
     var results=await Promise.all([
-      sb.from('ao_settings').select('whatsapp,wa_digital,meta_pixel_id,logo_url,logo_dark_url,favicon_url,site_bg_image,site_theme_mode,site_template,promo_banner_image,promo_banner_text,promo_banner_link,promo_banner_active').single(),
+      sb.from('ao_settings').select('whatsapp,wa_digital,meta_pixel_id,logo_url,logo_dark_url,favicon_url,site_bg_image,site_theme_mode,site_template,promo_banners').single(),
       sb.from('ao_products').select('*').eq('is_active',true).eq('catalog','marketing').order('sort_order'),
     ]);
     var cfg=results[0].data;
@@ -702,7 +707,7 @@ async function loadCatalog(){
     if(cfg){var activeLogo=(cfg.site_theme_mode==='light')?cfg.logo_url:(cfg.logo_dark_url||cfg.logo_url);if(activeLogo){var nl=document.getElementById('navLogoImg');if(nl)nl.src=activeLogo;}}
     if(cfg&&cfg.favicon_url){var fav=document.getElementById('faviconLink');if(fav)fav.href=cfg.favicon_url;}
     if(cfg)applySiteTemplate(cfg.site_template);
-    renderPromoBanner(cfg);
+    renderPromoBanners(cfg);
     if(cfg&&cfg.site_bg_image)applySiteBg(cfg.site_bg_image);
     if(cfg)applySiteTheme(cfg.site_theme_mode);
     products=results[1].data||[];
