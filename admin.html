@@ -18,7 +18,7 @@
   --green-text2:#86efac;--del-text:#f87171;--del-off:#ef4444;
   --card-shadow:none;--toast-shadow:0 4px 20px rgba(0,0,0,.4);--off-bg:rgba(255,255,255,.04);--panel-shadow:none;
   --font:'Noto Kufi Arabic','Segoe UI',Arial,sans-serif;
-  --r:10px;--rsm:7px;--sb:240px;
+  --r:16px;--rsm:11px;--sb:240px;
 }
 :root[data-theme="light"]{
   --rdim:rgba(232,25,44,.06);--rdim2:rgba(232,25,44,.12);
@@ -28,8 +28,8 @@
   --green:#16a34a;--blue:#2563eb;--amber:#d97706;
   --blue-text:#2563eb;--purple-text:#9333ea;--orange-text:#ea580c;
   --green-text2:#16a34a;--del-text:#dc2626;--del-off:#dc2626;
-  --card-shadow:0 10px 26px rgba(20,20,35,.08);--toast-shadow:0 10px 30px rgba(20,20,35,.18);--off-bg:rgba(20,20,35,.045);
-  --panel-shadow:0 1px 2px rgba(20,20,35,.03),0 1px 8px rgba(20,20,35,.05);
+  --card-shadow:0 10px 30px rgba(20,20,35,.07);--toast-shadow:0 10px 30px rgba(20,20,35,.18);--off-bg:rgba(20,20,35,.045);
+  --panel-shadow:0 1px 2px rgba(20,20,35,.04),0 6px 20px rgba(20,20,35,.05);
 }
 html,body{height:100%;font-family:var(--font);background:var(--black);color:var(--w);overflow:hidden;transition:background .2s,color .2s}
 a{text-decoration:none;color:inherit}
@@ -125,7 +125,7 @@ button,select,input,textarea{font-family:var(--font)}
 .sec-sub{font-size:13px;color:var(--g)}
 
 /* ── CARDS ───────────────────────────────────────────── */
-.card{background:var(--s);border:1px solid var(--b);border-radius:var(--r);padding:20px;margin-bottom:16px;box-shadow:var(--panel-shadow)}
+.card{background:var(--s);border:1px solid var(--b);border-radius:var(--r);padding:24px;margin-bottom:18px;box-shadow:var(--panel-shadow)}
 .card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;padding-bottom:14px;border-bottom:1px solid var(--b)}
 .card-title{font-size:13px;font-weight:700;color:var(--w2);display:flex;align-items:center;gap:8px}
 .card-title svg{width:15px;height:15px;stroke:var(--red);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
@@ -151,12 +151,13 @@ button,select,input,textarea{font-family:var(--font)}
 .dq-sub{font-size:11px;color:var(--g);margin-top:2px}
 
 /* ── FORMS ───────────────────────────────────────────── */
-.field{margin-bottom:14px}
-.field label{display:block;font-size:10px;color:var(--g);margin-bottom:5px;font-weight:700;letter-spacing:.6px;text-transform:uppercase}
-.field-hint{font-size:10px;color:var(--g);margin-top:4px;line-height:1.6}
+.field{margin-bottom:18px;max-width:var(--fw,560px)}
+.field label{display:block;font-size:12.5px;color:var(--w2);margin-bottom:7px;font-weight:700;letter-spacing:0;text-transform:none}
+.field-hint{font-size:11.5px;color:var(--g);margin-top:6px;line-height:1.7}
+.field-wide{--fw:100%}
 .field input,.field textarea,.field select{
   width:100%;background:var(--dk);border:1px solid var(--b2);color:var(--w);
-  padding:9px 12px;border-radius:var(--rsm);font-size:13px;outline:none;transition:.15s
+  padding:12px 14px;border-radius:var(--rsm);font-size:13.5px;outline:none;transition:.15s
 }
 .field input:focus,.field textarea:focus,.field select:focus{border-color:var(--red);box-shadow:0 0 0 2px var(--rdim)}
 .field textarea{resize:vertical;min-height:80px;line-height:1.6}
@@ -236,12 +237,12 @@ button,select,input,textarea{font-family:var(--font)}
 /* ── PAGE BUILDER ────────────────────────────────────── */
 .psi{background:var(--dk);border:1px solid var(--b2);border-radius:var(--rsm);padding:13px;margin-bottom:10px}
 .psih{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;font-size:12px;font-weight:700;color:var(--g)}
-.fi{width:100%;background:var(--black);border:1px solid var(--b2);color:var(--w);padding:8px 10px;border-radius:6px;font-size:12px;outline:none;transition:.15s}
+.fi{width:100%;background:var(--black);border:1px solid var(--b2);color:var(--w);padding:10px 12px;border-radius:9px;font-size:13px;outline:none;transition:.15s}
 .fi:focus{border-color:var(--red)}
 
 /* ── INLINE EDITOR (Stats / Features) ───────────────── */
 .edit-grid{display:grid;gap:10px}
-.edit-row{background:var(--dk);border:1px solid var(--b);border-radius:var(--rsm);padding:14px;display:grid;gap:10px}
+.edit-row{background:var(--dk);border:1px solid var(--b);border-radius:var(--rsm);padding:16px;display:grid;gap:12px}
 .edit-row-head{display:flex;align-items:center;gap:8px;margin-bottom:4px;font-size:11px;font-weight:700;color:var(--red);letter-spacing:.5px;text-transform:uppercase}
 .edit-row-num{width:22px;height:22px;background:var(--rdim2);border:1px solid rgba(232,25,44,.2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:900;color:var(--red)}
 
@@ -262,10 +263,12 @@ button,select,input,textarea{font-family:var(--font)}
 .clr-input{width:34px;height:28px;border:1px solid var(--b2);border-radius:6px;background:transparent;cursor:pointer;padding:2px}
 
 /* ── UPLOAD ZONE ─────────────────────────────────────── */
-.upload-zone{border:1.5px dashed var(--b2);border-radius:var(--rsm);padding:16px;text-align:center;cursor:pointer;background:var(--dk);font-size:12px;color:var(--g);transition:.15s;margin-bottom:12px}
+.upload-zone{border:1.5px dashed var(--b2);border-radius:var(--rsm);padding:20px;text-align:center;cursor:pointer;background:var(--dk);font-size:12.5px;color:var(--g);transition:.15s;margin-bottom:12px}
+.upload-zone:hover{border-color:var(--red);color:var(--w2)}
 .upload-zone:hover{border-color:var(--red);color:var(--w2)}
 .upload-zone.disabled{pointer-events:none;opacity:.5}
-.port-preview{display:none;width:100%;max-height:110px;object-fit:cover;border-radius:var(--rsm);margin-bottom:12px;border:1px solid var(--b)}
+/* contain (not cover) so the image is shown at its true proportions */
+.port-preview{display:none;width:auto;max-width:min(100%,420px);max-height:200px;object-fit:contain;border-radius:var(--rsm);margin-bottom:12px;border:1px solid var(--b);background:var(--dk);padding:6px}
 .upload-progress{display:none;align-items:center;gap:10px;margin-bottom:12px;padding:10px 12px;background:var(--dk);border:1px solid var(--b2);border-radius:var(--rsm)}
 .upload-progress.show{display:flex}
 .upload-spinner{width:18px;height:18px;border:2px solid var(--b2);border-top-color:var(--red);border-radius:50%;animation:uspin .7s linear infinite;flex-shrink:0}
@@ -281,6 +284,8 @@ button,select,input,textarea{font-family:var(--font)}
 .prm-img-acts button{flex:1;background:rgba(255,255,255,.12);border:none;color:#fff;font-size:9.5px;padding:3px 2px;border-radius:4px;cursor:pointer;transition:.15s}
 .prm-img-acts button:hover{background:var(--red)}
 .upload-pct{font-size:11px;color:var(--g);font-weight:700;min-width:34px;text-align:left;flex-shrink:0}
+.upload-progress.auto{display:none}
+.img-dims{display:none;font-size:11.5px;color:var(--g);font-weight:700;margin:-6px 0 12px}
 
 /* ── INFO / ALERT ────────────────────────────────────── */
 .info-box{background:var(--rdim);border:1px solid rgba(232,25,44,.15);border-radius:var(--rsm);padding:11px 14px;font-size:12px;color:var(--w3);line-height:1.7;margin-bottom:14px}
@@ -628,7 +633,7 @@ try{
           📁 أو ارفع صورة من جهازك (JPG/PNG)
           <input type="file" id="h-bg-f" accept="image/*" style="display:none" onchange="upHeroBg(this)">
         </div>
-        <img id="h-bg-pv" class="port-preview" style="max-height:120px;object-fit:cover;width:100%;border-radius:8px;display:none;margin-top:10px">
+        <img id="h-bg-pv" class="port-preview" style="max-height:120px;object-fit:contain;border-radius:8px;display:none;margin-top:10px">
         <div style="margin-top:18px;padding-top:16px;border-top:1px solid var(--b)">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
             <label style="margin:0">صور إضافية (تتحرك تلقائيًا)</label>
@@ -982,7 +987,7 @@ try{
               📁 ارفع صورة من جهازك
               <input type="file" id="s-cat-ads-f" accept="image/*" style="display:none" onchange="upCatalogImg(this,'s-cat-ads')">
             </div>
-            <img id="s-cat-ads-pv" class="port-preview" style="max-height:120px;object-fit:cover">
+            <img id="s-cat-ads-pv" class="port-preview" style="max-height:120px;object-fit:contain">
           </div>
           <div class="field">
             <label>صورة كتالوج التسويق</label>
@@ -991,7 +996,7 @@ try{
               📁 ارفع صورة من جهازك
               <input type="file" id="s-cat-marketing-f" accept="image/*" style="display:none" onchange="upCatalogImg(this,'s-cat-marketing')">
             </div>
-            <img id="s-cat-marketing-pv" class="port-preview" style="max-height:120px;object-fit:cover">
+            <img id="s-cat-marketing-pv" class="port-preview" style="max-height:120px;object-fit:contain">
           </div>
         </div>
       </div>
@@ -1064,7 +1069,7 @@ try{
             📁 ارفع صورة من جهازك
             <input type="file" id="s-site-bg-f" accept="image/*" style="display:none" onchange="upCatalogImg(this,'s-site-bg')">
           </div>
-          <img id="s-site-bg-pv" class="port-preview" style="max-height:140px;object-fit:cover">
+          <img id="s-site-bg-pv" class="port-preview" style="max-height:140px;object-fit:contain">
           <button type="button" class="btn btn-d bsm" onclick="clearSiteBg()">🗑 حذف صورة الخلفية</button>
         </div>
       </div>
@@ -1356,7 +1361,7 @@ try{
         📁 ارفع صورة غلاف
         <input type="file" id="vidm-f" accept="image/*" style="display:none" onchange="upVidThumb(this)">
       </div>
-      <img id="vidm-pv" class="port-preview" style="max-height:110px;object-fit:cover">
+      <img id="vidm-pv" class="port-preview" style="max-height:110px;object-fit:contain">
       <div class="field-hint">فيديوهات يوتيوب بتجيب غلافها تلقائيًا لو سيبت الحقل ده فاضي — تيك توك وانستجرام وفيسبوك محتاجين صورة غلاف مرفوعة عشان الكارت يبان أحسن (سكرين شوت من الفيديو مثلًا).</div>
     </div>
     <div class="mf">
@@ -1741,16 +1746,9 @@ function prevHeroBg(url){
   if(url){pv.src=url;pv.style.display='block'}else{pv.style.display='none'}
 }
 async function upHeroBg(inp){
-  if(!inp.files[0])return;
-  toast('⏳ جاري الرفع...');
-  var f=inp.files[0];var ext=f.name.split('.').pop();
-  var nm='hero/bg-'+Date.now()+'.'+ext;
-  var{error}=await sb.storage.from('ao-images').upload(nm,f,{upsert:true});
-  if(error){toast('❌ '+error.message);inp.value='';return}
-  var url=sb.storage.from('ao-images').getPublicUrl(nm).data.publicUrl;
-  v('h-bg',url);prevHeroBg(url);
-  toast('✅ تم رفع الصورة!');
-  inp.value='';
+  var url=await uploadImageField(inp,'hero',{maxDim:1920});
+  if(!url)return;
+  v('h-bg',url);prevHeroBg(url);showImgDims('h-bg-pv',url);
 }
 
 // ── STATS BAR ──────────────────────────────────────────
@@ -1836,22 +1834,17 @@ function renderHeroImagesEditor(){
       +'<input class="fi" value="'+h(u||'')+'" placeholder="https://..." oninput="heroImages['+i+']=this.value;prevCatalogImg(\'hi-pv-'+i+'\',this.value)">'
       +'<div class="upload-zone" onclick="document.getElementById(\'hi-f-'+i+'\').click()">📁 ارفع صورة من جهازك'
         +'<input type="file" id="hi-f-'+i+'" accept="image/*" style="display:none" onchange="upHeroImage(this,'+i+')"></div>'
-      +'<img id="hi-pv-'+i+'" class="port-preview" style="max-height:110px;object-fit:cover'+(u?'':';display:none')+'" src="'+h(u||'')+'">'
+      +'<img id="hi-pv-'+i+'" class="port-preview" style="max-height:110px;object-fit:contain'+(u?'':';display:none')+'" src="'+h(u||'')+'">'
       +'</div>';
   }).join('');
 }
 function addHeroImage(){heroImages.push('');renderHeroImagesEditor()}
 function removeHeroImage(i){heroImages.splice(i,1);renderHeroImagesEditor()}
 async function upHeroImage(inp,i){
-  if(!inp.files[0])return;
-  toast('⏳ جاري الرفع...');
-  var f=inp.files[0];var ext=f.name.split('.').pop();
-  var nm='hero/hero-'+i+'-'+Date.now()+'.'+ext;
-  var{error}=await sb.storage.from('ao-images').upload(nm,f,{upsert:true});
-  if(error){toast('❌ '+error.message);return}
-  heroImages[i]=sb.storage.from('ao-images').getPublicUrl(nm).data.publicUrl;
+  var url=await uploadImageField(inp,'hero',{maxDim:1920});
+  if(!url)return;
+  heroImages[i]=url;
   renderHeroImagesEditor();
-  toast('✅ اترفعت!');
 }
 var PROMO_POS_HINT={
   top:'المقاس المناسب: عرض 1200 × ارتفاع 300 بكسل (شكل عريض). لو حطيت أكتر من بنر فوق، بيتقسموا جنب بعض فالمقاس المثالي يبقى 800 × 400.',
@@ -1874,7 +1867,7 @@ function renderPromoBannersEditor(){
         +'<input class="fi" id="pb-img-'+i+'" value="'+h(b.image||'')+'" placeholder="https://..." oninput="promoBanners['+i+'].image=this.value;prevCatalogImg(\'pb-pv-'+i+'\',this.value)">'
         +'<div class="upload-zone" onclick="document.getElementById(\'pb-f-'+i+'\').click()">📁 ارفع صورة من جهازك'
           +'<input type="file" id="pb-f-'+i+'" accept="image/*" style="display:none" onchange="upPromoBanner(this,'+i+')"></div>'
-        +'<img id="pb-pv-'+i+'" class="port-preview" style="max-height:120px;object-fit:cover'+(b.image?'':';display:none')+'" src="'+h(b.image||'')+'">'
+        +'<img id="pb-pv-'+i+'" class="port-preview" style="max-height:120px;object-fit:contain'+(b.image?'':';display:none')+'" src="'+h(b.image||'')+'">'
       +'</div>'
       +'<div class="field"><label>نص البنر</label>'
         +'<input class="fi" value="'+h(b.text||'')+'" oninput="promoBanners['+i+'].text=this.value" placeholder="خصم 20% على كل المطبوعات"></div>'
@@ -1893,16 +1886,10 @@ function renderPromoBannersEditor(){
 function addPromoBanner(){promoBanners.push({image:'',text:'',link:'',active:true,pos:'top'});renderPromoBannersEditor()}
 function removePromoBanner(i){promoBanners.splice(i,1);renderPromoBannersEditor()}
 async function upPromoBanner(inp,i){
-  if(!inp.files[0])return;
-  toast('⏳ جاري الرفع...');
-  var f=inp.files[0];var ext=f.name.split('.').pop();
-  var nm='banners/banner-'+i+'-'+Date.now()+'.'+ext;
-  var{error}=await sb.storage.from('ao-images').upload(nm,f,{upsert:true});
-  if(error){toast('❌ '+error.message);return}
-  var url=sb.storage.from('ao-images').getPublicUrl(nm).data.publicUrl;
+  var url=await uploadImageField(inp,'banners',{maxDim:1600});
+  if(!url)return;
   promoBanners[i].image=url;
   renderPromoBannersEditor();
-  toast('✅ اترفعت!');
 }
 function renderAdsBadgesEditor(){
   var el=document.getElementById('adsBadgesEditor');
@@ -1965,28 +1952,14 @@ function prevCatalogImg(pvId,url){
   if(url){pv.src=url;pv.style.display='block'}else{pv.style.display='none'}
 }
 async function upBrand(inp,fieldId){
-  if(!inp.files[0])return;
-  toast('⏳ جاري الرفع...');
-  var f=inp.files[0];var ext=f.name.split('.').pop();
-  var nm='branding/'+fieldId+'-'+Date.now()+'.'+ext;
-  var{error}=await sb.storage.from('ao-images').upload(nm,f,{upsert:true});
-  if(error){toast('❌ '+error.message);inp.value='';return}
-  var url=sb.storage.from('ao-images').getPublicUrl(nm).data.publicUrl;
-  v(fieldId,url);prevBrand(fieldId+'-pv',url);
-  toast('✅ تم رفع الصورة!');
-  inp.value='';
+  var url=await uploadImageField(inp,'branding',{maxDim:1000});
+  if(!url)return;
+  v(fieldId,url);prevBrand(fieldId+'-pv',url);showImgDims(fieldId+'-pv',url);
 }
 async function upCatalogImg(inp,fieldId){
-  if(!inp.files[0])return;
-  toast('⏳ جاري الرفع...');
-  var f=inp.files[0];var ext=f.name.split('.').pop();
-  var nm='catalogs/'+fieldId+'-'+Date.now()+'.'+ext;
-  var{error}=await sb.storage.from('ao-images').upload(nm,f,{upsert:true});
-  if(error){toast('❌ '+error.message);inp.value='';return}
-  var url=sb.storage.from('ao-images').getPublicUrl(nm).data.publicUrl;
-  v(fieldId,url);prevCatalogImg(fieldId+'-pv',url);
-  toast('✅ تم رفع الصورة!');
-  inp.value='';
+  var url=await uploadImageField(inp,'catalogs',{maxDim:1600});
+  if(!url)return;
+  v(fieldId,url);prevCatalogImg(fieldId+'-pv',url);showImgDims(fieldId+'-pv',url);
 }
 
 // ── PORTFOLIO ──────────────────────────────────────────
@@ -2096,15 +2069,9 @@ function closePM(){document.getElementById('ov-port').classList.remove('open')}
 function editPort(id){openPM(portfolio.find(function(p){return p.id===id}))}
 function prevImg(url){var pv=document.getElementById('pm-pv');if(url){pv.src=url;pv.style.display='block'}else{pv.style.display='none'}}
 async function upPortImg(inp){
-  if(!inp.files[0])return;
-  toast('⏳ جاري الرفع...');
-  var f=inp.files[0];var ext=f.name.split('.').pop();
-  var nm='portfolio/'+Date.now()+'.'+ext;
-  var{data,error}=await sb.storage.from('ao-images').upload(nm,f,{upsert:true});
-  if(error){toast('❌ '+error.message);inp.value='';return}
-  var url=sb.storage.from('ao-images').getPublicUrl(nm).data.publicUrl;
-  v('pm-i',url);prevImg(url);toast('✅ تم رفع الصورة');
-  inp.value='';
+  var url=await uploadImageField(inp,'portfolio',{maxDim:1600});
+  if(!url)return;
+  v('pm-i',url);prevImg(url);showImgDims('pm-pv',url);
 }
 async function savePM(){
   var id=document.getElementById('pm-id').value;
@@ -2354,6 +2321,72 @@ async function uploadWithProgress(bucket,path,file,onProgress){
   });
 }
 
+
+// ── SHARED IMAGE UPLOAD ──────────────────────────────
+// One path for every single-image field: validates, resizes, shows a real
+// progress bar injected under the field's upload zone, and reports the
+// stored image's pixel size once it's live.
+function upProgressUI(inp){
+  var zone=inp.closest('.upload-zone')||inp.parentNode;
+  var box=zone.parentNode.querySelector(':scope > .upload-progress.auto');
+  if(!box){
+    box=document.createElement('div');
+    box.className='upload-progress auto';
+    box.innerHTML='<div class="upload-bar-wrap"><div class="upload-bar"></div></div><div class="upload-pct">0%</div>';
+    zone.parentNode.insertBefore(box,zone.nextSibling);
+  }
+  var bar=box.querySelector('.upload-bar'),pct=box.querySelector('.upload-pct');
+  return {
+    start:function(){zone.classList.add('disabled');box.style.display='flex';bar.style.width='0%';pct.textContent='0%'},
+    set:function(p){bar.style.width=p+'%';pct.textContent=p+'%'},
+    done:function(){zone.classList.remove('disabled');box.style.display='none'}
+  };
+}
+// shows "العرض × الارتفاع" under a preview once the image has loaded
+function showImgDims(pvId,url){
+  var pv=document.getElementById(pvId);
+  if(!pv)return;
+  var tag=pv.parentNode.querySelector(':scope > .img-dims[data-for="'+pvId+'"]');
+  if(!tag){
+    tag=document.createElement('div');
+    tag.className='img-dims';tag.setAttribute('data-for',pvId);
+    pv.parentNode.insertBefore(tag,pv.nextSibling);
+  }
+  if(!url){tag.textContent='';tag.style.display='none';return}
+  var probe=new Image();
+  probe.onload=function(){
+    tag.textContent='📐 مقاس الصورة: '+probe.naturalWidth+' × '+probe.naturalHeight+' بكسل';
+    tag.style.display='block';
+  };
+  probe.onerror=function(){tag.style.display='none'};
+  probe.src=url;
+}
+// returns the public URL, or null if it failed / was rejected
+async function uploadImageField(inp,folder,opts){
+  opts=opts||{};
+  var f=inp.files&&inp.files[0];
+  if(!f)return null;
+  if(!f.type||!f.type.startsWith('image/')){toast('❌ اختار ملف صورة بس');inp.value='';return null}
+  if(f.size>15*1024*1024){toast('❌ الصورة كبيرة جدًا (أقصى حجم 15 ميجا)');inp.value='';return null}
+  var ui=upProgressUI(inp);
+  ui.start();
+  try{
+    var file=await resizeImageFile(f,opts.maxDim||1600,opts.quality||.85);
+    var ext=file.type==='image/jpeg'?'jpg':((f.name.split('.').pop()||'jpg').toLowerCase());
+    var nm=folder+'/'+Date.now()+'-'+Math.random().toString(36).slice(2,7)+'.'+ext;
+    await uploadWithProgress('ao-images',nm,file,ui.set);
+    var url=sb.storage.from('ao-images').getPublicUrl(nm).data.publicUrl;
+    toast('✅ اترفعت!');
+    return url;
+  }catch(err){
+    toast('❌ '+(err.message||'فشل رفع الصورة، حاول تاني'));
+    return null;
+  }finally{
+    ui.done();
+    inp.value='';
+  }
+}
+
 var prmUploading=false;
 async function upPrImg(inp){
   var files=Array.prototype.slice.call(inp.files||[]);
@@ -2494,18 +2527,11 @@ function openBAM(item){
 function closeBAM(){document.getElementById('ov-ba').classList.remove('open')}
 function editBA(id){openBAM(beforeAfters.find(function(b){return b.id===id}))}
 async function upBAImg(inp,which){
-  if(!inp.files[0])return;
-  toast('⏳ جاري الرفع...');
-  var f=inp.files[0];var ext=f.name.split('.').pop();
-  var nm='before-after/'+which+'-'+Date.now()+'.'+ext;
-  var{error}=await sb.storage.from('ao-images').upload(nm,f,{upsert:true});
-  if(error){toast('❌ '+error.message);inp.value='';return}
-  var url=sb.storage.from('ao-images').getPublicUrl(nm).data.publicUrl;
+  var url=await uploadImageField(inp,'before-after',{maxDim:1400});
+  if(!url)return;
   var pv=document.getElementById('bam-pv-'+which);
-  pv.src=url;pv.style.display='block';
-  pv.dataset.url=url;
-  toast('✅ تم رفع الصورة!');
-  inp.value='';
+  pv.src=url;pv.style.display='block';pv.dataset.url=url;
+  showImgDims('bam-pv-'+which,url);
 }
 async function saveBAM(){
   var id=document.getElementById('bam-id').value;
@@ -2586,16 +2612,11 @@ function openVidM(item){
 function closeVidM(){document.getElementById('ov-vid').classList.remove('open')}
 function editVid(id){openVidM(videosList.find(function(x){return x.id===id}))}
 async function upVidThumb(inp){
-  if(!inp.files[0])return;
-  toast('⏳ جاري الرفع...');
-  var f=inp.files[0];var ext=f.name.split('.').pop();
-  var nm='videos/thumb-'+Date.now()+'.'+ext;
-  var{error}=await sb.storage.from('ao-images').upload(nm,f,{upsert:true});
-  if(error){toast('❌ '+error.message);inp.value='';return}
-  var url=sb.storage.from('ao-images').getPublicUrl(nm).data.publicUrl;
+  var url=await uploadImageField(inp,'videos',{maxDim:1280});
+  if(!url)return;
   var pv=document.getElementById('vidm-pv');
   pv.src=url;pv.dataset.url=url;pv.style.display='block';
-  toast('✅ تم رفع الصورة!');inp.value='';
+  showImgDims('vidm-pv',url);
 }
 async function saveVidM(){
   var id=document.getElementById('vidm-id').value;
@@ -2664,17 +2685,28 @@ function openCsM(item){
 function closeCsM(){document.getElementById('ov-cs').classList.remove('open')}
 function editCs(id){openCsM(casesList.find(function(x){return x.id===id}))}
 async function upCsProof(inp){
-  if(!inp.files.length)return;
-  toast('⏳ جاري رفع '+inp.files.length+' صورة...');
-  for(var i=0;i<inp.files.length;i++){
-    var f=inp.files[i];var ext=f.name.split('.').pop();
-    var nm='case-studies/proof-'+Date.now()+'-'+i+'.'+ext;
-    var{error}=await sb.storage.from('ao-images').upload(nm,f,{upsert:true});
-    if(error){toast('❌ '+error.message);continue}
-    csmProofs.push(sb.storage.from('ao-images').getPublicUrl(nm).data.publicUrl);
+  var files=Array.prototype.slice.call(inp.files||[]);
+  if(!files.length)return;
+  var ui=upProgressUI(inp);
+  ui.start();
+  var ok=0;
+  for(var i=0;i<files.length;i++){
+    var f=files[i];
+    if(!f.type||!f.type.startsWith('image/')){toast('❌ اختار ملفات صور بس');continue}
+    if(f.size>15*1024*1024){toast('❌ صورة كبيرة جدًا (أقصى حجم 15 ميجا)');continue}
+    try{
+      var file=await resizeImageFile(f,1600,.85);
+      var ext=file.type==='image/jpeg'?'jpg':((f.name.split('.').pop()||'jpg').toLowerCase());
+      var nm='case-studies/proof-'+Date.now()+'-'+i+'.'+ext;
+      await uploadWithProgress('ao-images',nm,file,ui.set);
+      csmProofs.push(sb.storage.from('ao-images').getPublicUrl(nm).data.publicUrl);
+      ok++;
+    }catch(err){toast('❌ '+(err.message||'فشل رفع الصورة'))}
   }
   renderCsmProofs();
-  toast('✅ تم رفع السكرينات!');inp.value='';
+  if(ok)toast('✅ تم رفع '+ok+' صورة');
+  ui.done();
+  inp.value='';
 }
 async function saveCsM(){
   var id=document.getElementById('csm-id').value;
@@ -2950,16 +2982,9 @@ function prevCLogo(url){
   if(url){pv.src=url;pv.style.display='block'}else{pv.style.display='none'}
 }
 async function upClientLogo(inp){
-  if(!inp.files[0])return;
-  toast('⏳ جاري الرفع...');
-  var f=inp.files[0];var ext=f.name.split('.').pop();
-  var nm='clients/'+Date.now()+'.'+ext;
-  var{error}=await sb.storage.from('ao-images').upload(nm,f,{upsert:true});
-  if(error){toast('❌ '+error.message);inp.value='';return}
-  var url=sb.storage.from('ao-images').getPublicUrl(nm).data.publicUrl;
-  v('cm-l',url);prevCLogo(url);
-  toast('✅ تم رفع اللوجو!');
-  inp.value='';
+  var url=await uploadImageField(inp,'clients',{maxDim:800});
+  if(!url)return;
+  v('cm-l',url);prevCLogo(url);showImgDims('cm-pv',url);
 }
 
 // ── PAGE PUBLISH TOGGLE ────────────────────────────────
