@@ -41,7 +41,8 @@ CREATE TABLE IF NOT EXISTS ao_settings (
   site_theme_mode TEXT DEFAULT 'dark', -- 'dark' | 'light'
   site_template TEXT DEFAULT 'glass', -- 'glass' | 'flat' — orthogonal to site_theme_mode (each combines with dark/light)
   -- Promo banners on both catalog pages, in order.
-  -- [{image, text, link, active, pos}] — image and/or text per banner; text with
+  -- [{image, image_mobile, text, link, active, pos}] — image is the desktop art
+  -- and image_mobile swaps in under 640px (either alone is used everywhere); text with
   -- no image renders as a solid red strip. pos is 'top' (above the products),
   -- 'bottom' (before the footer) or 'side' (fixed rails, >=1500px screens);
   -- a missing/unknown pos falls back to 'top'.

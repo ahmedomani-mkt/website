@@ -286,6 +286,7 @@ button,select,input,textarea{font-family:var(--font)}
 .upload-pct{font-size:11px;color:var(--g);font-weight:700;min-width:34px;text-align:left;flex-shrink:0}
 .upload-progress.auto{display:none}
 .img-dims{display:none;font-size:11.5px;color:var(--g);font-weight:700;margin:-6px 0 12px}
+.size-note{font-size:11.5px;color:var(--red);font-weight:700;line-height:1.7;margin-bottom:8px}
 
 /* ── INFO / ALERT ────────────────────────────────────── */
 .info-box{background:var(--rdim);border:1px solid rgba(232,25,44,.15);border-radius:var(--rsm);padding:11px 14px;font-size:12px;color:var(--w3);line-height:1.7;margin-bottom:14px}
@@ -1867,10 +1868,18 @@ async function upHeroImage(inp,i){
   heroImages[i]=url;
   renderHeroImagesEditor();
 }
+var PROMO_SIZE_NOTE={
+  top:{desktop:'📐 صمّم على 1600 × 800 بكسل (نسبة 2:1). بيتعرض 1068×534 لو بنر لوحده، و527×264 لو اتنين جنب بعض، و347×173 لو تلاتة.',
+       mobile:'📐 صمّم على 1200 × 900 بكسل (نسبة 4:3). بيتعرض 350×262 على الموبايل.'},
+  bottom:{desktop:'📐 صمّم على 1600 × 800 بكسل (نسبة 2:1) — نفس نظام بنر "فوق".',
+          mobile:'📐 صمّم على 1200 × 900 بكسل (نسبة 4:3). بيتعرض 350×262 على الموبايل.'},
+  side:{desktop:'📐 صمّم على 600 × 1200 بكسل (نسبة 1:2 — طولي). بيتعرض 180×360 على جنب الصفحة.',
+        mobile:''}
+};
 var PROMO_POS_HINT={
-  top:'📐 صمّم على مقاس 1600 × 800 بكسل (نسبة 2:1). البنر بياخد النسبة دي دايمًا مهما كانت صورتك، وأي زيادة بتتقص من الأطراف — فخلّي الكلام والعناصر المهمة في النص. لو حطيت أكتر من بنر فوق بيتقسموا جنب بعض ويصغروا، بس النسبة بتفضل نفسها.',
-  bottom:'📐 صمّم على مقاس 1600 × 800 بكسل (نسبة 2:1) — نفس نظام بنر "فوق" بالظبط.',
-  side:'📐 صمّم على مقاس 600 × 1200 بكسل (نسبة 1:2 — طولي). بيظهر على جنب الصفحة في شاشات الكمبيوتر العريضة بس (1500 بكسل فأكتر) بعرض 180 بكسل، ومش بيظهر على الموبايل والتابلت.'
+  top:'بيظهر فوق المنتجات في الكتالوجين. لو أكتر من بنر في نفس المكان بيتقسموا جنب بعض.',
+  bottom:'بيظهر تحت المنتجات قبل الفوتر مباشرة.',
+  side:'بيظهر على جنب الصفحة في شاشات الكمبيوتر العريضة بس (1500 بكسل فأكتر) — مش بيظهر على الموبايل والتابلت، فمش محتاج نسخة موبايل.'
 };
 var promoBanners=[];
 function renderPromoBannersEditor(){
@@ -1884,12 +1893,21 @@ function renderPromoBannersEditor(){
         +'<label style="margin-inline-start:auto;display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;cursor:pointer">'
         +'<input type="checkbox" '+(b.active!==false?'checked':'')+' onchange="promoBanners['+i+'].active=this.checked"> مفعّل</label>'
         +'<button class="btn btn-d bsm" style="margin-inline-start:8px" onclick="removePromoBanner('+i+')">حذف</button></div>'
-      +'<div class="field"><label>صورة البنر</label>'
-        +'<input class="fi" id="pb-img-'+i+'" value="'+h(b.image||'')+'" placeholder="https://..." oninput="promoBanners['+i+'].image=this.value;prevCatalogImg(\'pb-pv-'+i+'\',this.value)">'
-        +'<div class="upload-zone" onclick="document.getElementById(\'pb-f-'+i+'\').click()">📁 ارفع صورة من جهازك'
-          +'<input type="file" id="pb-f-'+i+'" accept="image/*" style="display:none" onchange="upPromoBanner(this,'+i+')"></div>'
+      +'<div class="field"><label>صورة نسخة الكمبيوتر</label>'
+        +'<div class="size-note">'+PROMO_SIZE_NOTE[pos].desktop+'</div>'
+        +'<input class="fi" id="pb-img-'+i+'" value="'+h(b.image||'')+'" placeholder="https://..." oninput="promoBanners['+i+'].image=this.value;prevCatalogImg(\'pb-pv-'+i+'\',this.value);showImgDims(\'pb-pv-'+i+'\',this.value)">'
+        +'<div class="upload-zone" onclick="document.getElementById(\'pb-f-'+i+'\').click()">📁 ارفع صورة الكمبيوتر من جهازك'
+          +'<input type="file" id="pb-f-'+i+'" accept="image/*" style="display:none" onchange="upPromoBanner(this,'+i+',\'image\')"></div>'
         +'<img id="pb-pv-'+i+'" class="port-preview" style="max-height:120px;object-fit:contain'+(b.image?'':';display:none')+'" src="'+h(b.image||'')+'">'
       +'</div>'
+      +(pos==='side'?'':'<div class="field"><label>صورة نسخة الموبايل (اختياري)</label>'
+        +'<div class="size-note">'+PROMO_SIZE_NOTE[pos].mobile+'</div>'
+        +'<input class="fi" id="pb-mimg-'+i+'" value="'+h(b.image_mobile||'')+'" placeholder="https://..." oninput="promoBanners['+i+'].image_mobile=this.value;prevCatalogImg(\'pb-mpv-'+i+'\',this.value);showImgDims(\'pb-mpv-'+i+'\',this.value)">'
+        +'<div class="upload-zone" onclick="document.getElementById(\'pb-mf-'+i+'\').click()">📱 ارفع صورة الموبايل من جهازك'
+          +'<input type="file" id="pb-mf-'+i+'" accept="image/*" style="display:none" onchange="upPromoBanner(this,'+i+',\'image_mobile\')"></div>'
+        +'<img id="pb-mpv-'+i+'" class="port-preview" style="max-height:120px;object-fit:contain'+(b.image_mobile?'':';display:none')+'" src="'+h(b.image_mobile||'')+'">'
+        +'<div class="field-hint">سيبها فاضية لو عايز صورة الكمبيوتر تتعرض على الموبايل برضه.</div>'
+      +'</div>')
       +'<div class="field"><label>نص البنر</label>'
         +'<input class="fi" value="'+h(b.text||'')+'" oninput="promoBanners['+i+'].text=this.value" placeholder="خصم 20% على كل المطبوعات"></div>'
       +'<div class="field"><label>رابط عند الضغط (اختياري)</label>'
@@ -1904,12 +1922,12 @@ function renderPromoBannersEditor(){
       +'</div>';
   }).join('');
 }
-function addPromoBanner(){promoBanners.push({image:'',text:'',link:'',active:true,pos:'top'});renderPromoBannersEditor()}
+function addPromoBanner(){promoBanners.push({image:'',image_mobile:'',text:'',link:'',active:true,pos:'top'});renderPromoBannersEditor()}
 function removePromoBanner(i){promoBanners.splice(i,1);renderPromoBannersEditor()}
-async function upPromoBanner(inp,i){
+async function upPromoBanner(inp,i,key){
   var url=await uploadImageField(inp,'banners',{maxDim:1600});
   if(!url)return;
-  promoBanners[i].image=url;
+  promoBanners[i][key||'image']=url;
   renderPromoBannersEditor();
 }
 function renderAdsBadgesEditor(){
@@ -1955,7 +1973,7 @@ async function saveSettings(){
     site_theme_mode:document.getElementById('s-theme-mode').value,
     site_template:document.getElementById('s-site-template').value,
     show_marketing_portfolio:document.getElementById('s-show-mkt-port').checked,
-    promo_banners:promoBanners.filter(function(b){return (b.image&&b.image.trim())||(b.text&&b.text.trim())}),
+    promo_banners:promoBanners.filter(function(b){return (b.image&&b.image.trim())||(b.image_mobile&&b.image_mobile.trim())||(b.text&&b.text.trim())}),
     updated_at:new Date().toISOString()
   };
   var{error}=await sb.from('ao_settings').upsert({id:1,...payload});
