@@ -40,9 +40,11 @@ CREATE TABLE IF NOT EXISTS ao_settings (
   site_bg_image TEXT DEFAULT '',
   site_theme_mode TEXT DEFAULT 'dark', -- 'dark' | 'light'
   site_template TEXT DEFAULT 'glass', -- 'glass' | 'flat' — orthogonal to site_theme_mode (each combines with dark/light)
-  -- Promo banners shown above the products on both catalog pages, in order.
-  -- [{image, text, link, active}] — image and/or text per banner; text with no
-  -- image renders as a solid red strip.
+  -- Promo banners on both catalog pages, in order.
+  -- [{image, text, link, active, pos}] — image and/or text per banner; text with
+  -- no image renders as a solid red strip. pos is 'top' (above the products),
+  -- 'bottom' (before the footer) or 'side' (fixed rails, >=1500px screens);
+  -- a missing/unknown pos falls back to 'top'.
   promo_banners JSONB DEFAULT '[]'::jsonb,
   ads_catalog_badges JSONB DEFAULT '[{"icon":"truck","text":"توصيل لحد مكانك"},{"icon":"clock-history","text":"تنفيذ وتسليم خلال 7-10 أيام عمل"},{"icon":"gift","text":"تصميم مجاني"}]', -- trust badges row under catalog.html's header: [{icon, text}]
   updated_at TIMESTAMPTZ DEFAULT NOW()
@@ -56,7 +58,8 @@ CREATE TABLE IF NOT EXISTS ao_hero (
   title TEXT DEFAULT '',
   subtitle TEXT DEFAULT '',
   text_blocks JSONB DEFAULT '[]', -- [{tag:'h1'|'h2'|'h3'|'p', text}]
-  bg_image_url TEXT DEFAULT '',
+  bg_image_url TEXT DEFAULT '', -- legacy single cover; first entry of hero_images wins when set
+  hero_images JSONB DEFAULT '[]'::jsonb, -- cover slideshow: ordered image URLs (auto-rotates on the site)
   hide_text BOOLEAN DEFAULT FALSE,
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );

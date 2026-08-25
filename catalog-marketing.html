@@ -180,6 +180,15 @@ nav.solid{box-shadow:0 14px 40px rgba(0,0,0,.4)}
 .promo-banner-text{position:absolute;inset:auto 0 0 0;padding:26px 22px 18px;background:linear-gradient(to top,rgba(15,13,10,.85),transparent);color:#fff;font-size:clamp(14px,2vw,20px);font-weight:700;line-height:1.5}
 .promo-banner.text-only{background:linear-gradient(135deg,var(--red),var(--red-d));padding:clamp(20px,3.5vw,34px);text-align:center}
 .promo-banner.text-only .promo-banner-text{position:static;background:none;padding:0}
+/* side rails — only on screens wide enough to have real margin space */
+.promo-rail{display:none}
+@media(min-width:1500px){
+  .promo-rail.show{display:flex;flex-direction:column;gap:14px;position:fixed;top:104px;width:180px;z-index:300}
+  .promo-rail-start{inset-inline-start:18px}
+  .promo-rail-end{inset-inline-end:18px}
+  .promo-rail .promo-banner{margin:0}
+  .promo-rail .promo-banner img{width:100%;height:auto;object-fit:cover}
+}
 .cat-empty{padding:70px 20px;text-align:center;color:var(--ink3);font-size:13px}
 
 /* CART DRAWER */
@@ -321,6 +330,7 @@ footer{border-top:1px solid var(--line);padding:24px var(--pad);display:flex;ali
   </div>
 </main>
 
+<div class="container"><div class="promo-banners" id="promoBannersBottom"></div></div>
 <footer>
   <div class="ft-copy">© 2025 Ahmed Omani Auto Marketing. جميع الحقوق محفوظة.</div>
   <div class="ft-mark">القاهرة — مصر</div>
@@ -478,22 +488,41 @@ function renderGrid(){
 }
 
 
+function bannerHtml(b){
+  var img=(b.image||'').trim(),text=(b.text||'').trim(),link=(b.link||'').trim();
+  var inner=(img?'<img src="'+esc(img)+'" alt="'+esc(text||'عرض')+'">':'')
+    +(text?'<div class="promo-banner-text">'+esc(text)+'</div>':'');
+  var cls='promo-banner show'+(img?'':' text-only');
+  return link
+    ? '<a class="'+cls+'" href="'+esc(link)+'" target="_blank" rel="noopener">'+inner+'</a>'
+    : '<div class="'+cls+'">'+inner+'</div>';
+}
+// Banners carry a `pos`: 'top' (above the products), 'bottom' (before the
+// footer) or 'side' (fixed rails, wide screens only). Anything unknown or
+// missing falls back to 'top' so older saved banners keep working.
 function renderPromoBanners(cfg){
-  var wrap=document.getElementById('promoBanners');
-  if(!wrap||!cfg)return;
+  if(!cfg)return;
   var list=Array.isArray(cfg.promo_banners)?cfg.promo_banners:[];
   var rows=list.filter(function(b){return b&&b.active!==false&&((b.image&&b.image.trim())||(b.text&&b.text.trim()))});
-  if(!rows.length){wrap.innerHTML='';wrap.classList.remove('show');return}
-  wrap.classList.add('show');
-  wrap.innerHTML=rows.map(function(b){
-    var img=(b.image||'').trim(),text=(b.text||'').trim(),link=(b.link||'').trim();
-    var inner=(img?'<img src="'+esc(img)+'" alt="'+esc(text||'عرض')+'">':'')
-      +(text?'<div class="promo-banner-text">'+esc(text)+'</div>':'');
-    var cls='promo-banner show'+(img?'':' text-only');
-    return link
-      ? '<a class="'+cls+'" href="'+esc(link)+'" target="_blank" rel="noopener">'+inner+'</a>'
-      : '<div class="'+cls+'">'+inner+'</div>';
-  }).join('');
+  var buckets={top:[],bottom:[],side:[]};
+  rows.forEach(function(b){
+    var p=b.pos==='bottom'?'bottom':(b.pos==='side'?'side':'top');
+    buckets[p].push(b);
+  });
+  function fill(id,items){
+    var el=document.getElementById(id);
+    if(!el)return;
+    if(!items.length){el.innerHTML='';el.classList.remove('show');return}
+    el.innerHTML=items.map(bannerHtml).join('');
+    el.classList.add('show');
+  }
+  fill('promoBanners',buckets.top);
+  fill('promoBannersBottom',buckets.bottom);
+  // side banners alternate between the two rails so both sides fill evenly
+  var startRail=[],endRail=[];
+  buckets.side.forEach(function(b,i){(i%2?endRail:startRail).push(b)});
+  fill('promoRailStart',startRail);
+  fill('promoRailEnd',endRail);
 }
 function productCardHtml(p){
   var qty=cart[p.id]||0;
@@ -737,5 +766,7 @@ window.addEventListener('resize',function(){
   document.getElementById('cartFloat').classList.toggle('show',cartQty()>0&&window.innerWidth<768);
 });
 </script>
+<div class="promo-rail promo-rail-start" id="promoRailStart"></div>
+<div class="promo-rail promo-rail-end" id="promoRailEnd"></div>
 </body>
 </html>

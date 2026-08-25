@@ -629,6 +629,14 @@ try{
           <input type="file" id="h-bg-f" accept="image/*" style="display:none" onchange="upHeroBg(this)">
         </div>
         <img id="h-bg-pv" class="port-preview" style="max-height:120px;object-fit:cover;width:100%;border-radius:8px;display:none;margin-top:10px">
+        <div style="margin-top:18px;padding-top:16px;border-top:1px solid var(--b)">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+            <label style="margin:0">صور إضافية (تتحرك تلقائيًا)</label>
+            <button class="btn btn-p bsm" onclick="addHeroImage()">+ إضافة صورة</button>
+          </div>
+          <div class="field-hint" style="margin-bottom:10px">لو ضفت صورة أو أكتر هنا، الغلاف هيبقى سلايدر بيقلّب بينهم تلقائيًا كل 5 ثواني، وينفع كمان تسحب بصباعك على الموبايل. الصورة اللي فوق بتبقى أول صورة. نفس المقاس المفضّل: 1920×720 بكسل.</div>
+          <div class="edit-grid" id="heroImagesEditor"></div>
+        </div>
       </div>
       <div class="card">
         <div class="card-header">
@@ -1680,6 +1688,8 @@ async function loadHero(){
     :[{tag:'h1',text:data.title||''},{tag:'p',text:data.subtitle||''}];
   renderHeroBlocksEditor();
   v('h-bg',data.bg_image_url);prevHeroBg(data.bg_image_url);
+  heroImages=Array.isArray(data.hero_images)?data.hero_images.slice(1):[];
+  renderHeroImagesEditor();
   document.getElementById('h-show-text').checked=!data.hide_text;
 }
 var HERO_TAG_LABELS={h1:'H1 — العنوان الرئيسي',h2:'H2 — عنوان فرعي',h3:'H3 — عنوان صغير',p:'فقرة نصية'};
@@ -1719,6 +1729,7 @@ async function saveHero(){
   var{error}=await sb.from('ao_hero').upsert({id:1,
     badge:g('h-badge'),text_blocks:heroBlocks,
     bg_image_url:g('h-bg')||null,
+    hero_images:[g('h-bg')].concat(heroImages).map(function(u){return (u||'').trim()}).filter(Boolean),
     hide_text:!document.getElementById('h-show-text').checked,
     updated_at:new Date().toISOString()
   });
@@ -1813,12 +1824,47 @@ async function saveStats(){
 
 // ── ADS CATALOG TRUST BADGES ─────────────────────────────
 var adsBadges=[];
+var heroImages=[];
+function renderHeroImagesEditor(){
+  var el=document.getElementById('heroImagesEditor');
+  if(!el)return;
+  if(!heroImages.length){el.innerHTML=empty('مفيش صور إضافية — الغلاف هيعرض صورة واحدة بس');return}
+  el.innerHTML=heroImages.map(function(u,i){
+    return'<div class="edit-row">'
+      +'<div class="edit-row-head"><div class="edit-row-num">'+(i+2)+'</div> صورة '+(i+2)
+        +'<button class="btn btn-d bsm" style="margin-inline-start:auto" onclick="removeHeroImage('+i+')">حذف</button></div>'
+      +'<input class="fi" value="'+h(u||'')+'" placeholder="https://..." oninput="heroImages['+i+']=this.value;prevCatalogImg(\'hi-pv-'+i+'\',this.value)">'
+      +'<div class="upload-zone" onclick="document.getElementById(\'hi-f-'+i+'\').click()">📁 ارفع صورة من جهازك'
+        +'<input type="file" id="hi-f-'+i+'" accept="image/*" style="display:none" onchange="upHeroImage(this,'+i+')"></div>'
+      +'<img id="hi-pv-'+i+'" class="port-preview" style="max-height:110px;object-fit:cover'+(u?'':';display:none')+'" src="'+h(u||'')+'">'
+      +'</div>';
+  }).join('');
+}
+function addHeroImage(){heroImages.push('');renderHeroImagesEditor()}
+function removeHeroImage(i){heroImages.splice(i,1);renderHeroImagesEditor()}
+async function upHeroImage(inp,i){
+  if(!inp.files[0])return;
+  toast('⏳ جاري الرفع...');
+  var f=inp.files[0];var ext=f.name.split('.').pop();
+  var nm='hero/hero-'+i+'-'+Date.now()+'.'+ext;
+  var{error}=await sb.storage.from('ao-images').upload(nm,f,{upsert:true});
+  if(error){toast('❌ '+error.message);return}
+  heroImages[i]=sb.storage.from('ao-images').getPublicUrl(nm).data.publicUrl;
+  renderHeroImagesEditor();
+  toast('✅ اترفعت!');
+}
+var PROMO_POS_HINT={
+  top:'المقاس المناسب: عرض 1200 × ارتفاع 300 بكسل (شكل عريض). لو حطيت أكتر من بنر فوق، بيتقسموا جنب بعض فالمقاس المثالي يبقى 800 × 400.',
+  bottom:'المقاس المناسب: عرض 1200 × ارتفاع 300 بكسل (شكل عريض) — نفس مقاس بنر "فوق".',
+  side:'المقاس المناسب: عرض 300 × ارتفاع 600 بكسل (شكل طولي). البنر ده بيظهر على جنب الصفحة في شاشات الكمبيوتر العريضة بس (1500 بكسل فأكتر)، ومش بيظهر على الموبايل والتابلت.'
+};
 var promoBanners=[];
 function renderPromoBannersEditor(){
   var el=document.getElementById('promoBannersEditor');
   if(!el)return;
   if(!promoBanners.length){el.innerHTML=empty('لا توجد بنرات — اضغط "إضافة بنر"');return}
   el.innerHTML=promoBanners.map(function(b,i){
+    var pos=b.pos==='bottom'?'bottom':(b.pos==='side'?'side':'top');
     return'<div class="edit-row">'
       +'<div class="edit-row-head"><div class="edit-row-num">'+(i+1)+'</div> بنر '+(i+1)
         +'<label style="margin-inline-start:auto;display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;cursor:pointer">'
@@ -1834,10 +1880,17 @@ function renderPromoBannersEditor(){
         +'<input class="fi" value="'+h(b.text||'')+'" oninput="promoBanners['+i+'].text=this.value" placeholder="خصم 20% على كل المطبوعات"></div>'
       +'<div class="field"><label>رابط عند الضغط (اختياري)</label>'
         +'<input class="fi" value="'+h(b.link||'')+'" oninput="promoBanners['+i+'].link=this.value" placeholder="https://..."></div>'
+      +'<div class="field"><label>مكان البنر</label>'
+        +'<select class="fi" onchange="promoBanners['+i+'].pos=this.value;renderPromoBannersEditor()">'
+          +'<option value="top"'+(pos==='top'?' selected':'')+'>فوق — قبل المنتجات</option>'
+          +'<option value="bottom"'+(pos==='bottom'?' selected':'')+'>تحت — قبل الفوتر</option>'
+          +'<option value="side"'+(pos==='side'?' selected':'')+'>الجنبين — نسخة الديسكتوب بس</option>'
+        +'</select>'
+        +'<div class="field-hint">'+PROMO_POS_HINT[pos]+'</div></div>'
       +'</div>';
   }).join('');
 }
-function addPromoBanner(){promoBanners.push({image:'',text:'',link:'',active:true});renderPromoBannersEditor()}
+function addPromoBanner(){promoBanners.push({image:'',text:'',link:'',active:true,pos:'top'});renderPromoBannersEditor()}
 function removePromoBanner(i){promoBanners.splice(i,1);renderPromoBannersEditor()}
 async function upPromoBanner(inp,i){
   if(!inp.files[0])return;

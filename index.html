@@ -158,9 +158,15 @@ nav.solid{box-shadow:0 14px 40px rgba(0,0,0,.4)}
 .btn-secondary:hover{background:var(--red-soft);transform:translateY(-2px)}
 
 /* ══ HERO BACKGROUND IMAGE (optional) ══════════════ */
-.hero-bg{position:absolute;inset:0;z-index:0;overflow:hidden;display:none}
+.hero-bg{position:absolute;inset:0;z-index:0;overflow:hidden;display:none;touch-action:pan-y}
 .hero-bg img{width:100%;height:100%;object-fit:cover}
-.hero-bg::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,8,6,.5),rgba(10,8,6,.72) 55%,var(--p1) 100%)}
+.hero-slide{position:absolute;inset:0;opacity:0;transition:opacity .9s ease}
+.hero-slide.active{opacity:1}
+/* light scrim: enough to keep text readable, without washing the photo out */
+.hero-bg::after{content:'';position:absolute;inset:0;z-index:1;background:linear-gradient(180deg,rgba(10,8,6,.22),rgba(10,8,6,.42))}
+.hero-dots{position:absolute;bottom:16px;left:50%;transform:translateX(-50%);z-index:3;display:flex;gap:7px}
+.hero-dot{width:8px;height:8px;padding:0;border:none;border-radius:50%;background:rgba(255,255,255,.5);cursor:pointer;transition:.2s;box-shadow:0 1px 4px rgba(0,0,0,.4)}
+.hero-dot.active{background:#fff;width:22px;border-radius:4px}
 .hero.has-bg .hero-bg{display:block}
 .hero.has-bg .hero-glow{display:none}
 .hero.has-bg .hero-badge{background:rgba(var(--ink-rgb),.12);border-color:rgba(var(--ink-rgb),.28);color:var(--ink)}
@@ -548,7 +554,7 @@ footer{padding:0 var(--pad) var(--pad);background:transparent;border-top:none;po
 <!-- ══ 1 · HERO — white ═════════════════════════════ -->
 <section class="hero bg-1" id="home">
   <div class="hero-card">
-  <div class="hero-bg" id="heroBg"><img src="" alt=""></div>
+  <div class="hero-bg" id="heroBg"></div>
   <div class="container hero-inner stagger">
     <div class="hero-badge fade-up" id="heroBadge" data-reveal-bound="1">
       <span class="hero-badge-dot"></span>
@@ -1758,11 +1764,53 @@ function applyHero(h){
     if(h.title){var t=document.getElementById('heroH1');if(t)t.innerHTML=h.title;}
     if(h.subtitle){var s=document.getElementById('heroSub');if(s)s.innerHTML=h.subtitle;}
   }
-  if(h.bg_image_url){
-    var bg=document.getElementById('heroBg');
-    if(bg){bg.querySelector('img').src=h.bg_image_url;document.getElementById('home').classList.add('has-bg');}
-  }
+  // hero cover: a list of images (falls back to the single legacy field)
+  var imgs=Array.isArray(h.hero_images)?h.hero_images.filter(function(u){return u&&String(u).trim()}):[];
+  if(!imgs.length&&h.bg_image_url)imgs=[h.bg_image_url];
+  if(imgs.length)initHeroSlides(imgs);
 }
+
+// Cover slideshow: fades between images on a timer, supports swipe, and
+// pauses while the tab is hidden or the pointer is over it.
+var heroSlides=[],heroSlideIdx=0,heroSlideTimer=null;
+function initHeroSlides(imgs){
+  var bg=document.getElementById('heroBg');
+  if(!bg)return;
+  heroSlides=imgs;
+  bg.innerHTML=imgs.map(function(u,i){
+    return'<img src="'+esc(u)+'" alt="" class="hero-slide'+(i===0?' active':'')+'"'+(i?' loading="lazy"':'')+'>';
+  }).join('')+(imgs.length>1?'<div class="hero-dots" id="heroDots">'
+    +imgs.map(function(u,i){return'<button class="hero-dot'+(i===0?' active':'')+'" onclick="heroGo('+i+')" aria-label="صورة '+(i+1)+'"></button>'}).join('')
+    +'</div>':'');
+  document.getElementById('home').classList.add('has-bg');
+  if(imgs.length<2)return;
+  startHeroAuto();
+  bg.addEventListener('mouseenter',stopHeroAuto);
+  bg.addEventListener('mouseleave',startHeroAuto);
+  document.addEventListener('visibilitychange',function(){document.hidden?stopHeroAuto():startHeroAuto()});
+  var sx=null;
+  bg.addEventListener('touchstart',function(e){sx=e.touches[0].clientX;stopHeroAuto()},{passive:true});
+  bg.addEventListener('touchend',function(e){
+    if(sx===null)return;
+    var dx=e.changedTouches[0].clientX-sx;sx=null;
+    if(Math.abs(dx)>40)heroGo(heroSlideIdx+(dx<0?1:-1));
+    startHeroAuto();
+  },{passive:true});
+}
+function startHeroAuto(){
+  stopHeroAuto();
+  if(heroSlides.length<2)return;
+  if(window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+  heroSlideTimer=setInterval(function(){heroGo(heroSlideIdx+1)},5000);
+}
+function stopHeroAuto(){if(heroSlideTimer){clearInterval(heroSlideTimer);heroSlideTimer=null}}
+function heroGo(i){
+  if(!heroSlides.length)return;
+  heroSlideIdx=(i+heroSlides.length)%heroSlides.length;
+  document.querySelectorAll('#heroBg .hero-slide').forEach(function(el,n){el.classList.toggle('active',n===heroSlideIdx)});
+  document.querySelectorAll('#heroDots .hero-dot').forEach(function(el,n){el.classList.toggle('active',n===heroSlideIdx)});
+}
+window.heroGo=heroGo;
 
 var heroStatsRevealed=false;
 function revealHeroStats(){
