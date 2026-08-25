@@ -174,10 +174,15 @@ nav.solid{box-shadow:0 14px 40px rgba(0,0,0,.4)}
 @media(max-width:560px){.prod-grid{grid-template-columns:repeat(2,1fr);gap:12px}.pc-body{padding:12px}.pc-title{font-size:13px}.add-btn{padding:8px 12px;font-size:11px}}
 
 /* ══ PROMO BANNERS — admin-managed strips above the catalog ══ */
-.promo-banners{display:none;flex-direction:column;gap:14px;margin-bottom:26px}
+.promo-banners{display:none;gap:14px;margin-bottom:26px}
+/* side by side; wraps to fewer columns as the screen narrows */
+.promo-banners.show{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,290px),1fr));align-items:stretch}
 .promo-banner{display:none;position:relative;border-radius:var(--r);overflow:hidden;margin-bottom:26px;border:1px solid var(--glass-border);box-shadow:var(--glass-shadow);background:var(--p3)}
 .promo-banner.show{display:block;margin-bottom:0}
 .promo-banner img{width:100%;height:auto;display:block}
+/* stretched grid items: let the image fill so neighbours line up */
+.promo-banners.show .promo-banner{height:100%}
+.promo-banners.show .promo-banner img{height:100%;object-fit:cover}
 .promo-banner-text{position:absolute;inset:auto 0 0 0;padding:26px 22px 18px;background:linear-gradient(to top,rgba(15,13,10,.85),transparent);color:#fff;font-size:clamp(14px,2vw,20px);font-weight:700;line-height:1.5}
 .promo-banner.text-only{background:linear-gradient(135deg,var(--red),var(--red-d));padding:clamp(20px,3.5vw,34px);text-align:center}
 .promo-banner.text-only .promo-banner-text{position:static;background:none;padding:0}
@@ -468,8 +473,8 @@ function renderPromoBanners(cfg){
   if(!wrap||!cfg)return;
   var list=Array.isArray(cfg.promo_banners)?cfg.promo_banners:[];
   var rows=list.filter(function(b){return b&&b.active!==false&&((b.image&&b.image.trim())||(b.text&&b.text.trim()))});
-  if(!rows.length){wrap.innerHTML='';wrap.style.display='none';return}
-  wrap.style.display='flex';
+  if(!rows.length){wrap.innerHTML='';wrap.classList.remove('show');return}
+  wrap.classList.add('show');
   wrap.innerHTML=rows.map(function(b){
     var img=(b.image||'').trim(),text=(b.text||'').trim(),link=(b.link||'').trim();
     var inner=(img?'<img src="'+esc(img)+'" alt="'+esc(text||'عرض')+'">':'')
