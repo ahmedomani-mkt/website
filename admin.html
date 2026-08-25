@@ -1731,15 +1731,36 @@ function delHeroBlock(i){
   renderHeroBlocksEditor();
 }
 async function saveHero(){
-  var{error}=await sb.from('ao_hero').upsert({id:1,
+  var payload={id:1,
     badge:g('h-badge'),text_blocks:heroBlocks,
     bg_image_url:g('h-bg')||null,
     hero_images:[g('h-bg')].concat(heroImages).map(function(u){return (u||'').trim()}).filter(Boolean),
     hide_text:!document.getElementById('h-show-text').checked,
     updated_at:new Date().toISOString()
-  });
-  if(error){toast('❌ '+error.message);return}
+  };
+  var res=await saveWithOptionalCols('ao_hero',payload,['hero_images']);
+  if(res.error){toast('❌ '+res.error.message);return}
+  if(res.skipped.length){
+    toast('⚠️ اتحفظ، بس صور الغلاف الإضافية محتاجة تشغّل كود الـ SQL الأول');
+    return;
+  }
   toast('✅ تم حفظ الصفحة الرئيسية!');
+}
+// Saves normally; if the database is missing a newer optional column, drops
+// just that field and retries so the rest of the user's edits still save.
+async function saveWithOptionalCols(table,payload,optional){
+  var body=Object.assign({},payload),skipped=[];
+  for(var attempt=0;attempt<=optional.length;attempt++){
+    var{error}=await sb.from(table).upsert(body);
+    if(!error)return{error:null,skipped:skipped};
+    var missing=optional.filter(function(c){
+      return c in body && error.message && error.message.indexOf("'"+c+"'")>-1;
+    })[0];
+    if(!missing)return{error:error,skipped:skipped};
+    delete body[missing];
+    skipped.push(missing);
+  }
+  return{error:null,skipped:skipped};
 }
 function prevHeroBg(url){
   var pv=document.getElementById('h-bg-pv');
