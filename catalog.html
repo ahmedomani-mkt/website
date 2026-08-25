@@ -10,7 +10,7 @@
 <title>كتالوج الدعاية والإعلان — Ahmed Omani</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Zain:wght@300;400;700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js" defer></script>
 <style>
@@ -25,7 +25,7 @@
   --glass-blur:blur(28px) saturate(180%);
   --glass-border:rgba(255,255,255,.28);
   --glass-shadow:inset 0 1.5px 0 rgba(255,255,255,.3), inset 0 0 0 1px rgba(255,255,255,.06), 0 24px 50px -16px rgba(0,0,0,.6);
-  --font:'Rubik','Segoe UI',Tahoma,Arial,sans-serif;
+  --font:'Zain','Segoe UI',Tahoma,Arial,sans-serif;
   --r:28px; --rs:18px; --rp:999px;
   --pad:clamp(20px,4vw,56px);
   --nav-hover:rgba(255,255,255,.06); --nav-active:rgba(255,255,255,.11);
@@ -119,9 +119,17 @@ nav{position:fixed;top:0;width:100%;z-index:500;height:72px;padding:0 var(--pad)
 .cat-header h1{font-size:clamp(28px,5.2vw,54px);font-weight:800;line-height:1.18;letter-spacing:-.02em;margin-bottom:14px;color:var(--ink)}
 .cat-header h1 .r{color:var(--red)}
 .cat-header p{font-size:14px;color:var(--ink2);line-height:1.8}
-.cat-badges{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:22px}
-.cat-badge{display:flex;align-items:center;gap:7px;background:var(--card-bg);backdrop-filter:var(--glass-blur);-webkit-backdrop-filter:var(--glass-blur);border:1px solid var(--glass-border);color:var(--ink2);padding:9px 16px;border-radius:var(--rp);font-size:12.5px;font-weight:600;box-shadow:var(--glass-shadow)}
-.cat-badge i{color:var(--red);font-size:14px}
+/* trust row: no pills — icon above label, thin dividers between items */
+/* trust row: no pills — icon above label, equal columns with thin dividers */
+.cat-badges{display:grid;grid-template-columns:repeat(3,1fr);align-items:start;margin-top:30px;border-block:1px solid var(--line);padding:20px 0}
+.cat-badge{display:flex;flex-direction:column;align-items:center;text-align:center;gap:9px;padding:2px 10px;color:var(--ink2);font-size:12.5px;font-weight:700;line-height:1.55}
+.cat-badge+.cat-badge{border-inline-start:1px solid var(--line)}
+.cat-badge i{color:var(--red);font-size:21px;line-height:1}
+@media(max-width:560px){
+  .cat-badges{padding:16px 0}
+  .cat-badge{padding:2px 6px;font-size:11px;gap:7px}
+  .cat-badge i{font-size:17px}
+}
 
 /* BEST SELLERS */
 .bs-sec{margin-bottom:40px;padding-bottom:36px;border-bottom:1px solid var(--line)}
@@ -468,7 +476,6 @@ function renderPromoBanner(cfg){
   else{el.removeAttribute('href');el.style.pointerEvents='none'}
   el.classList.add('show');
 }
-var catNames={general:'عام',signage:'يافطات وواجهات',print:'مطبوعات',uniform:'يوني فورم',accessories:'اكسسوارات',digital:'خدمات رقمية',branding:'هوية بصرية'};
 function productCardHtml(p){
   var qty=cart[p.id]||0;
   var img=p.image_url
@@ -480,11 +487,10 @@ function productCardHtml(p){
   var priceHtml=price
     ?'<div class="pc-price-wrap"><div class="pc-price">'+price+'</div>'+(showOld?'<div class="pc-old">'+oldPrice+'</div>':'')+'</div>'
     :'<div class="pc-price-wrap"><div class="pc-price ask">السعر عند التواصل</div></div>';
-  var catChip=p.category?'<span class="pc-chip">'+esc(catNames[p.category]||p.category)+'</span>':'<span></span>';
-  var hotChip=p.is_bestseller?'<span class="pc-chip pc-chip-hot"><i class="bi bi-fire"></i> الأكثر طلبًا</span>':'<span></span>';
+  var hotChip=p.is_bestseller?'<div class="pc-chips"><span class="pc-chip pc-chip-hot"><i class="bi bi-fire"></i> الأكثر طلبًا</span></div>':'';
   return'<div class="prod-card'+(qty>0?' in-cart':'')+'" data-id="'+esc(p.id)+'">'
     +'<a class="prod-link" href="product.html?id='+esc(p.id)+'">'
-      +'<div class="pc-media">'+img+'<div class="pc-chips">'+catChip+hotChip+'</div></div>'
+      +'<div class="pc-media">'+img+hotChip+'</div>'
       +'<div class="pc-body">'
         +'<div class="pc-title">'+esc(p.title)+'</div>'
         +'<div class="pc-meta">'+esc(p.description||'')+'</div>'
