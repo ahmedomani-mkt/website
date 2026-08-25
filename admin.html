@@ -1046,6 +1046,34 @@ try{
         </div>
       </div>
       <div class="card">
+        <div class="card-header"><div class="card-title"><svg viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M2 12h20"/></svg>البنر الإعلاني</div></div>
+        <div class="field-hint" style="margin-bottom:12px">بنر بيظهر فوق المنتجات في كتالوج الدعاية وكتالوج التسويق. تقدر تحط صورة أو نص أو الاتنين — لو حطيت نص من غير صورة هيظهر كشريط أحمر بالنص.</div>
+        <div class="field">
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer;text-transform:none;letter-spacing:0;font-size:13px;font-weight:600;color:var(--w2)">
+            <input type="checkbox" id="s-promo-active"> تفعيل البنر الإعلاني
+          </label>
+          <div class="field-hint">لو مقفول، البنر مش هيظهر خالص حتى لو فيه صورة أو نص محفوظين.</div>
+        </div>
+        <div class="field">
+          <label>صورة البنر</label>
+          <input type="url" id="s-promo-img" placeholder="https://..." oninput="prevCatalogImg('s-promo-img-pv',this.value)">
+          <div class="upload-zone" onclick="document.getElementById('s-promo-img-f').click()">
+            📁 ارفع صورة من جهازك
+            <input type="file" id="s-promo-img-f" accept="image/*" style="display:none" onchange="upCatalogImg(this,'s-promo-img')">
+          </div>
+          <img id="s-promo-img-pv" class="port-preview" style="max-height:140px;object-fit:cover">
+        </div>
+        <div class="field">
+          <label>نص البنر</label>
+          <input type="text" id="s-promo-text" placeholder="مثال: خصم 20% على كل المطبوعات هذا الشهر">
+        </div>
+        <div class="field">
+          <label>رابط عند الضغط (اختياري)</label>
+          <input type="url" id="s-promo-link" placeholder="https://wa.me/... أو رابط أي صفحة">
+          <div class="field-hint">سيبه فاضي لو مش عايز البنر يكون قابل للضغط.</div>
+        </div>
+      </div>
+      <div class="card">
         <div class="card-header"><div class="card-title"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/></svg>ظهور الأقسام</div></div>
         <div class="field">
           <label style="display:flex;align-items:center;gap:8px;cursor:pointer;text-transform:none;letter-spacing:0;font-size:13px;font-weight:600;color:var(--w2)">
@@ -1740,6 +1768,10 @@ async function loadSettings(){
   document.getElementById('s-theme-mode').value=data.site_theme_mode==='light'?'light':'dark';
   document.getElementById('s-site-template').value=data.site_template==='flat'?'flat':'glass';
   document.getElementById('s-show-mkt-port').checked=data.show_marketing_portfolio!==false;
+  document.getElementById('s-promo-active').checked=data.promo_banner_active===true;
+  v('s-promo-img',data.promo_banner_image);prevCatalogImg('s-promo-img-pv',data.promo_banner_image||'');
+  v('s-promo-text',data.promo_banner_text);
+  v('s-promo-link',data.promo_banner_link);
   try{document.getElementById('s-notrack').checked=localStorage.getItem('ao_no_track')==='1'}catch(e){}
   statsData=data.stats_data||defaultStats();
   textsData=data.page_texts||{};
@@ -1834,6 +1866,10 @@ async function saveSettings(){
     site_theme_mode:document.getElementById('s-theme-mode').value,
     site_template:document.getElementById('s-site-template').value,
     show_marketing_portfolio:document.getElementById('s-show-mkt-port').checked,
+    promo_banner_active:document.getElementById('s-promo-active').checked,
+    promo_banner_image:g('s-promo-img').trim()||null,
+    promo_banner_text:g('s-promo-text').trim()||null,
+    promo_banner_link:g('s-promo-link').trim()||null,
     updated_at:new Date().toISOString()
   };
   var{error}=await sb.from('ao_settings').upsert({id:1,...payload});
