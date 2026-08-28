@@ -17,7 +17,7 @@
 *{margin:0;padding:0;box-sizing:border-box}
 :root{
   --p1:#0A0A0C; --p2:#131316; --p3:#1C1C21;
-  --ink:#F5F5F8; --ink2:rgba(245,245,248,.68); --ink3:rgba(245,245,248,.46);
+  --ink:#F5F5F8; --ink2:rgba(245,245,248,.68); --ink3:rgba(245,245,248,.55);
   --line:rgba(245,245,248,.16); --line2:rgba(245,245,248,.26);
   --red:#E8192C; --red-d:#ff3b4e; --red-soft:rgba(232,25,44,.18);
   --wa:#25D366; --wa-d:#2ee578;
@@ -34,7 +34,7 @@
 }
 :root[data-theme="light"]{
   --p1:#F6F6F8; --p2:#EFEFF3; --p3:#E6E6EC;
-  --ink:#14141A; --ink2:rgba(20,20,26,.64); --ink3:rgba(20,20,26,.42);
+  --ink:#14141A; --ink2:rgba(20,20,26,.68); --ink3:rgba(20,20,26,.68);
   --line:rgba(20,20,26,.12); --line2:rgba(20,20,26,.2);
   --red-d:#c4101f; --red-soft:rgba(232,25,44,.1);
   --wa-d:#1dba58;
@@ -124,6 +124,8 @@ nav.solid{box-shadow:0 14px 40px rgba(0,0,0,.4)}
 /* BREADCRUMB */
 .pd-crumb{padding:96px 0 0}
 .pd-crumb-inner{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--ink3);font-weight:500}
+/* breadcrumb links were 15px tall — WCAG 2.2 target minimum is 24px */
+.pd-crumb-inner a{display:inline-flex;align-items:center;min-height:24px}
 .pd-crumb-inner a{color:var(--ink2);transition:.2s}
 .pd-crumb-inner a:hover{color:var(--red)}
 
