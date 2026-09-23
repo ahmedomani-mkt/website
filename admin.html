@@ -2024,7 +2024,8 @@ function renderPort(){
   var html='<div class="card-grid">';
   html+=order.map(function(gname){
     var groupPhotos=groups[gname];
-    var firstImg=groupPhotos[0]&&groupPhotos[0].image_url?groupPhotos[0].image_url:'';
+    var cover=groupCover(groupPhotos);
+    var firstImg=cover&&cover.image_url?cover.image_url:'';
     var groupArg=(gname==='متنوع'?'':gname).replace(/'/g,"\\'");
     var renameArg=gname.replace(/'/g,"\\'");
     return'<div class="li-card" onclick="openGroupManager(\''+renameArg+'\')" style="cursor:pointer">'
@@ -2051,20 +2052,76 @@ function renderPort(){
   el.className='';
   el.innerHTML=html;
 }
+// A project's "cover" is whichever of its photos has is_cover=true; falls
+// back to the first photo by sort_order when none is flagged (also true for
+// projects created before the is_cover column existed). This same row is
+// used as the description source (gm-desc / the public gallery's blurb) —
+// keeping both on the same row means reordering images (movePortImg) never
+// silently moves the saved description to a different, empty row.
+function groupCover(list){return list.find(function(p){return p.is_cover})||list[0]}
+var currentGroupName='';
 function openGroupManager(groupName){
+  currentGroupName=groupName;
   var groupPhotos=portfolio.filter(function(p){return p.catalog!=='marketing'&&(p.group_label||'متنوع')===groupName});
+  var cover=groupCover(groupPhotos);
   document.getElementById('gm-title').textContent=h(groupName);
   document.getElementById('gm-group-name').textContent=h(groupName);
-  document.getElementById('gm-first-id').value=groupPhotos[0]?groupPhotos[0].id:'';
-  v('gm-desc',groupPhotos[0]?groupPhotos[0].description||'':'');
-  document.getElementById('gm-photos').innerHTML=groupPhotos.map(function(p){
-    var actions='<button class="btn btn-g bsm" onclick="editPort(\''+p.id+'\')">تعديل</button>'
+  document.getElementById('gm-first-id').value=cover?cover.id:'';
+  v('gm-desc',cover?cover.description||'':'');
+  document.getElementById('gm-photos').innerHTML=groupPhotos.map(function(p,i){
+    var isCover=cover&&p.id===cover.id;
+    var actions=
+      '<button class="btn btn-g bsm"'+(i===0?' disabled':'')+' onclick="movePortImg(\''+p.id+'\',-1)" title="حرك لفوق">▲</button>'
+      +'<button class="btn btn-g bsm"'+(i===groupPhotos.length-1?' disabled':'')+' onclick="movePortImg(\''+p.id+'\',1)" title="حرك لتحت">▼</button>'
+      +(isCover?'':'<button class="btn btn-g bsm" onclick="setCoverPhoto(\''+p.id+'\')">تعيين كصورة مصغرة</button>')
+      +'<button class="btn btn-g bsm" onclick="editPort(\''+p.id+'\')">تعديل</button>'
       +'<button class="btn btn-g bsm" onclick="togglePort(\''+p.id+'\','+(!p.is_active)+')">'+( p.is_active?'إخفاء':'إظهار')+'</button>'
       +'<button class="btn btn-d bsm" onclick="delPort(\''+p.id+'\')">حذف</button>';
-    var badges='<span class="badge '+(p.is_active?'b-green':'b-off')+'">'+(p.is_active?'ظاهر':'مخفي')+'</span>';
+    var badges=(isCover?'<span class="badge b-blue">⭐ الصورة المصغرة</span>':'')
+      +'<span class="badge '+(p.is_active?'b-green':'b-off')+'">'+(p.is_active?'ظاهر':'مخفي')+'</span>';
     return liCardHtml({imgUrl:p.image_url,ph:'🖼️',title:p.title,badges:badges,actions:actions});
   }).join('');
   document.getElementById('ov-port-group').classList.add('open');
+}
+async function setCoverPhoto(id){
+  var groupPhotos=portfolio.filter(function(p){return p.catalog!=='marketing'&&(p.group_label||'متنوع')===currentGroupName});
+  var otherIds=groupPhotos.map(function(p){return p.id}).filter(function(x){return x!==id});
+  if(otherIds.length){
+    var r1=await sb.from('ao_portfolio').update({is_cover:false}).in('id',otherIds);
+    if(r1.error){toast('❌ '+r1.error.message);return}
+  }
+  var r2=await sb.from('ao_portfolio').update({is_cover:true}).eq('id',id);
+  if(r2.error){toast('❌ '+r2.error.message);return}
+  await loadPort();
+  openGroupManager(currentGroupName);
+  toast('✅ اتعينت كصورة مصغرة للمشروع');
+}
+async function movePortImg(id,dir){
+  var list=portfolio.filter(function(p){return p.catalog!=='marketing'&&(p.group_label||'متنوع')===currentGroupName});
+  var idx=list.findIndex(function(p){return p.id===id});
+  var swapIdx=idx+dir;
+  if(idx<0||swapIdx<0||swapIdx>=list.length)return;
+  var a=list[idx],b=list[swapIdx];
+  if(a.sort_order===b.sort_order){
+    // duplicate/unset sort_order values — normalize the whole group to a
+    // stable increasing sequence (anchored at its current minimum) before
+    // swapping, so the swap below is guaranteed to actually move something.
+    var base=Math.min.apply(null,list.map(function(p){return p.sort_order||0}));
+    for(var i=0;i<list.length;i++){
+      if(list[i].sort_order!==base+i){
+        var rn=await sb.from('ao_portfolio').update({sort_order:base+i}).eq('id',list[i].id);
+        if(rn.error){toast('❌ '+rn.error.message);return}
+        list[i].sort_order=base+i;
+      }
+    }
+    a=list[idx];b=list[swapIdx];
+  }
+  var r1=await sb.from('ao_portfolio').update({sort_order:b.sort_order}).eq('id',a.id);
+  if(r1.error){toast('❌ '+r1.error.message);return}
+  var r2=await sb.from('ao_portfolio').update({sort_order:a.sort_order}).eq('id',b.id);
+  if(r2.error){toast('❌ '+r2.error.message);return}
+  await loadPort();
+  openGroupManager(currentGroupName);
 }
 function renderGroupSummary(){
   var ads=portfolio.filter(function(p){return p.catalog!=='marketing'});

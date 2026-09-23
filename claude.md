@@ -19,7 +19,7 @@ B2B automotive marketing portfolio/catalog website for Ahmed Omani (automotive m
 - **`catalog-marketing.html`** — Digital-marketing service catalog, same cart/checkout pattern.
 - **`product.html`** — Single product detail page (`product.html?id={uuid}`), image gallery, WhatsApp order.
 - **`page.html`** — Generic published-page template (`page.html?slug={slug}`), renders `ao_pages.sections` (hero/text/cta blocks).
-- **`admin.html`** — Admin CMS. Real Supabase Auth login (see Security below). Sections: hero, stats bar, ads/marketing portfolio (grouped by `group_label`, with group rename + bulk multi-image upload), products catalog, clients, before/after, pages, section text overrides, section colors, settings.
+- **`admin.html`** — Admin CMS. Real Supabase Auth login (see Security below). Sections: hero, stats bar, ads/marketing portfolio (grouped by `group_label`, with group rename, bulk multi-image upload, per-project cover-image picker, and ▲▼ image reordering — see "Portfolio Projects" below), products catalog, clients, before/after, pages, section text overrides, section colors, settings.
 
 ### Assets
 - **`assets/logo.png`** — Brand logo, used as favicon, nav/footer logo, and `og:image`.
@@ -68,6 +68,7 @@ Every `ao_*` table: **public SELECT**, **writes (INSERT/UPDATE/DELETE) restricte
 
 #### `ao_portfolio`
 - `title`, `image_url`, `catalog` (`'ads'|'marketing'`), `category`, `group_label` (client/collection grouping for the ads collage — index.html renders one horizontal track per distinct `group_label`), `stat_badge`, `description`, `is_active`, `sort_order`
+- `is_cover` (boolean, default `false`) — marks one row within a `group_label` group as that project's thumbnail/cover. See "Portfolio Projects: Cover Image & Image Ordering" below for the full model (this column did not exist when the project launched; added 2026-09, see `setup.sql`'s migrations section for the `ALTER TABLE` needed on the live DB).
 
 #### `ao_products`
 - Product catalog rows: `title`, `image_url`, `price`, `price_note`, `category`, `catalog`, `description`, `details` (text), `images` (jsonb array of extra gallery URLs), `is_active`, `is_bestseller` (surfaces the product in the "الأكثر طلبًا" section on the catalog pages), `sort_order`
@@ -94,6 +95,27 @@ Every `ao_*` table: **public SELECT**, **writes (INSERT/UPDATE/DELETE) restricte
 ### Storage
 - **Bucket**: `ao-images` (public read via direct object URL; API access — list/upload/update/delete — restricted to the admin user)
 - **Paths**: `portfolio/`, `products/`, `clients/`, `hero/`, `branding/`
+
+---
+
+## Portfolio Projects: Cover Image & Image Ordering
+
+There is no dedicated "project" table — a project (called a "group" in the code) is just every `ao_portfolio` row that shares the same `group_label` and `catalog='ads'`. `index.html`'s `renderAdsGroups()` groups the sort_order-ordered rows by `group_label` on the fly and renders one `pg-card` per group; clicking it opens the full-image gallery (`openPgGallery()` → `openProjectDetail()`). `admin.html`'s `openGroupManager()` is the equivalent admin view for one group, listing every photo row in it.
+
+Two things about a group are editable beyond the individual photo rows, both added 2026-09:
+
+### Cover image (thumbnail)
+- Column: `ao_portfolio.is_cover` (boolean). At most one row per group should have `is_cover=true` at a time — `admin.html`'s `setCoverPhoto(id)` enforces this by clearing it on every other row in the group before setting it on the chosen one (two sequential `.update()` calls, not a single atomic transaction — acceptable for a single-admin CMS with no concurrent writers).
+- `groupCover(list)` (defined once in `admin.html`, duplicated inline as a one-off `.find(...)||list[0]` in `index.html` since the two files don't share JS) resolves the cover: the flagged row, or the group's first row by `sort_order` if none is flagged. This fallback is what makes the column safe to add without a data backfill — every existing group behaves exactly as before until an admin explicitly picks a cover.
+- Used for: the `pg-card` thumbnail on the public site (`index.html`'s `renderAdsGroups`), the group's thumbnail in the admin portfolio list (`admin.html`'s `renderPort`), and — see next paragraph — the project's saved description.
+- **Why the description rides along with the cover**: a group's description text lives on one specific `ao_portfolio` row (there's nowhere else to put it, absent a real projects table) — historically always `groupPhotos[0]`, i.e. whichever row happened to sort first. `gm-desc` in `openGroupManager()` and the public gallery's blurb in `openPgGallery()` both now read/write the **cover** row's `description` instead of positional-first. This was a deliberate side effect of adding image reordering (see below): without it, reordering a group's images could silently move the saved description onto a different, empty row the moment a different photo became first. Once an admin sets an explicit cover, the description is pinned to that row regardless of how the images get reordered afterwards. A group that has never had a cover set still uses positional-first for both, same as before this feature existed.
+
+### Image ordering within a project
+- No new column — reuses the existing `sort_order` (which already determined display order within a group as a side effect of the query being `.order('sort_order')` and groups being built by iterating that already-sorted list). What's new is `admin.html` giving the admin a direct way to *change* it per-image instead of it only ever reflecting insert order.
+- UI: `openGroupManager()`'s photo list has ▲/▼ buttons per photo (disabled at the group's first/last position). Each click calls `movePortImg(id, dir)` (`dir` is `-1` or `+1`), which finds that photo's immediate neighbor within the **same group** and swaps their `sort_order` values with two `.update()` calls, then reloads and reopens the modal.
+- **Only rows within the clicked photo's own group are ever touched** — this is what keeps a group's position relative to other groups stable (a group's overall position in the marquee is an emergent property of "which group's rows have the lowest `sort_order` values", not a field of its own; reordering *within* the group must not change which numeric neighborhood its rows occupy, or the group could jump position in the marquee as an unintended side effect).
+- **Duplicate/unset `sort_order` edge case**: if the two rows being swapped happen to already have equal `sort_order` (e.g. legacy rows that were never explicitly ordered, or two bulk-uploaded batches that collided), a plain swap is a no-op. `movePortImg` detects this (`a.sort_order===b.sort_order`) and first renumbers the *entire group* to a compact strictly-increasing sequence anchored at the group's current minimum `sort_order` (`base, base+1, base+2, ...`, matching the group's current display order) before performing the intended swap. This keeps the group's numeric neighborhood anchored at the same minimum it already had, so its position among other groups shouldn't move — but this isn't airtight against a truly pathological case (another group's row landing, by coincidence, inside the exact numeric gap this renumber now occupies) — considered acceptable given how the data actually gets created (bulk upload always appends strictly-increasing values at the current global max, so a group's own rows are rarely interleaved with another group's in practice). If a future agent needs this to be bulletproof, the real fix is a proper `ao_portfolio_projects` table with its own `sort_order` independent of image rows — a bigger migration than this feature warranted.
+- The public gallery lightbox (`openPgGallery()` → `images: items.map(p => p.image_url)`) reflects this order directly — reordering in `admin.html` immediately changes the order photos appear in when a visitor opens the project.
 
 ---
 
@@ -177,6 +199,7 @@ Centralized WhatsApp number in `_waNum`, loaded from `ao_settings.whatsapp`. Mes
 ## Known Limitations & TODOs
 
 - Deleting a portfolio/product/client row only deletes the DB row, not the underlying Supabase Storage object — uploaded images become orphaned in storage over time (harmless, but wastes storage quota).
+- Portfolio "projects" (groups) aren't a real entity, just rows sharing a `group_label` string — there's no way to reorder the *projects* themselves (only the images within one project), and a project's overall position is an emergent side effect of its rows' `sort_order` values rather than something directly settable. See "Portfolio Projects: Cover Image & Image Ordering" above for the edge cases this creates.
 - No contact form — WhatsApp only.
 - Arabic only (no i18n).
 - `setup.sql` is a best-effort reference snapshot of the schema, not a source of truth. The Supabase MCP tools in this environment cannot see this project (see Development Workflow), so there is no automated way to introspect the live schema — when in doubt, ask the client to confirm via the Supabase dashboard, or infer it from what `admin.html`/the public pages actually read and write.

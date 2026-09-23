@@ -77,7 +77,8 @@ CREATE TABLE IF NOT EXISTS ao_portfolio (
   image_url TEXT DEFAULT '',
   tags TEXT[] DEFAULT '{}',
   is_active BOOLEAN DEFAULT TRUE,
-  sort_order INTEGER DEFAULT 0,
+  is_cover BOOLEAN DEFAULT FALSE, -- marks this row's image_url as the project's thumbnail/cover on the ads-collage card + gallery description source; falls back to the group's first row (by sort_order) when no row in the group has this set
+  sort_order INTEGER DEFAULT 0, -- also controls display order of images *within* a group (admin.html group manager's ▲▼ buttons swap sort_order between adjacent rows of the same group_label)
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
@@ -277,3 +278,12 @@ ON CONFLICT DO NOTHING;
 -- Portfolio, products, before/after, and pages all contain real client work
 -- and are not reproduced here as fabricated seed data — populate them
 -- through admin.html after the schema is created.
+
+-- ── MIGRATIONS (run against the LIVE project) ─────────
+-- CREATE TABLE IF NOT EXISTS above only affects a fresh database — it does
+-- NOT retroactively add columns to a table that already exists. Run these
+-- by hand in the Supabase dashboard → SQL Editor, on the correct project,
+-- whenever this file gains a new column on a table that's already live.
+
+-- 2026-09: portfolio image thumbnail/cover + per-project image ordering.
+ALTER TABLE ao_portfolio ADD COLUMN IF NOT EXISTS is_cover BOOLEAN DEFAULT FALSE;

@@ -1223,10 +1223,11 @@ function renderAdsGroups(list){
     +order.map(function(gname){
       var items=groups[gname];
       var cat=items[0].category;
+      var cover=items.find(function(p){return p.is_cover})||items[0];
       return'<div class="pg-card" data-cat="'+esc(cat||'')+'" onclick="openPgGallery(\''+gname.replace(/'/g,"\\'")+'\')">'
         +'<div class="pg-card-cat">'+esc(catLabel[cat]||cat||'')+'</div>'
         +'<div class="pg-card-count"><i class="bi bi-images"></i> '+items.length+'</div>'
-        +'<img src="'+esc(items[0].image_url)+'" alt="'+esc(gname)+'" loading="lazy">'
+        +'<img src="'+esc(cover.image_url)+'" alt="'+esc(gname)+'" loading="lazy">'
         +'<div class="pg-card-overlay"><div class="pg-card-name">'+esc(gname)+'</div>'
         +'<div class="pg-card-more">شاهد المشروع <i class="bi bi-arrow-left"></i></div></div>'
       +'</div>';
@@ -1367,9 +1368,10 @@ window.openProjModalZoom=openProjModalZoom;
 function openPgGallery(gname){
   var items=pgGroupsData[gname];
   if(!items||!items.length)return;
+  var cover=items.find(function(p){return p.is_cover})||items[0];
   openProjectDetail({
     title:gname,
-    description:items[0].description||'',
+    description:cover.description||'',
     category:items[0].category,
     images:items.map(function(p){return p.image_url}).filter(Boolean)
   });
