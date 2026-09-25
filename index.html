@@ -1948,8 +1948,16 @@ function renderBeforeAfter(list){
   // a lazy <img> inserted into a still-hidden section loads abnormally late
   if(sec)sec.style.display='';
   if(g)g.innerHTML=rows.map(function(b,i){
-    return'<div class="ba-item">'
-      +'<div class="ba-compare reveal-mask" id="baCompare'+i+'">'
+    // reveal-mask sits on the wrapper, not .ba-compare itself: a clip-path that
+    // zeroes an element's own rendered rect (as reveal-mask's hidden state does)
+    // stops this Chromium build from ever reporting that same element as
+    // intersecting via IntersectionObserver — a self-inflicted deadlock where
+    // the element needs to intersect to get .visible added, but the clip
+    // prevents it from ever registering as intersecting. The wrapper has no
+    // clip-path of its own, so it observes correctly and reveals both the
+    // comparison image and its caption together.
+    return'<div class="ba-item reveal-mask">'
+      +'<div class="ba-compare" id="baCompare'+i+'">'
         +'<img class="ba-img-full ba-img-after" src="'+esc(b.after_image_url)+'" alt="بعد" loading="lazy">'
         +'<img class="ba-img-full ba-img-before" src="'+esc(b.before_image_url)+'" alt="قبل" loading="lazy">'
         +'<div class="ba-divider"><span class="ba-handle"><i class="bi bi-arrows"></i></span></div>'
