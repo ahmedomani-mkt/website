@@ -331,6 +331,14 @@ section{padding:clamp(72px,12vw,180px) 0;position:relative}
 .scene.comp-1 .scene-pin{display:grid;grid-template-columns:1fr;width:100%;padding:0 var(--pad)}
 @media(min-width:860px){
   .scene.comp-1 .scene-pin{grid-template-columns:1.2fr 1fr;align-items:center;gap:56px}
+  /* flipping which side the image sits on used to swap visual order only,
+     while the grid's own two tracks stayed fixed at 1.2fr/1fr — so on every
+     flipped (odd-numbered) scene the image landed in the narrower 1fr track
+     and rendered almost half the size of its non-flipped neighbors (measured
+     413px vs 964px wide on a 1440px viewport). Reversing the track sizes
+     together with the order swap keeps the image in the wide track on both
+     sides, so every comp-1 scene reads at the same scale. */
+  .scene.comp-1.flip .scene-pin{grid-template-columns:1fr 1.2fr}
   .scene.comp-1.flip .scene-media{order:2}
   .scene.comp-1.flip .scene-cap{order:1}
 }
