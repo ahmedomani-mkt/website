@@ -352,7 +352,12 @@ section{padding:clamp(72px,12vw,180px) 0;position:relative}
 
 .scene.comp-2 .scene-pin{width:100%;padding:0 var(--pad);position:relative}
 .scene.comp-2 .scene-duo{display:grid;grid-template-columns:1fr 1fr;gap:clamp(10px,2vw,20px);width:100%;max-width:1120px;margin:0 auto}
-.scene.comp-2 .scene-duo .scene-media{aspect-ratio:3/4}
+/* a 3/4 ratio at this column width (~472px on a 1440px screen) only reached
+   ~629px tall — still visibly shorter than comp-0's ~772-800px full-bleed
+   image right next to it in the same scroll sequence. A taller 3/5 ratio
+   brings comp-2 to ~787px, matching comp-0's scale much more closely while
+   keeping the two-image diagonal composition and its own distinct feel. */
+.scene.comp-2 .scene-duo .scene-media{aspect-ratio:3/5}
 .scene.comp-2 .scene-duo>.scene-media:first-child{margin-top:8%}
 /* side-by-side at mobile width splits each image down to ~150px wide (a
    3/4 ratio there is only ~200px tall) — a full 4x smaller than comp-0's
