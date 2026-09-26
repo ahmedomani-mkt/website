@@ -34,8 +34,8 @@
      interactive/indicator details only (hover/active states, thin marker
      lines, a few numerals) so black+red+orange reads as one controlled
      palette, never a background fill or a second brand color competing
-     with red. See usage sites: .process-step active state, .scene-num
-     hover, .cl-item focus ring, before/after handle, scroll progress bar. */
+     with red. See usage sites: .process-step active state, .cl-item focus
+     ring, before/after handle + expand button, scroll progress bar. */
   --orange-rgb:255,106,0; --orange:rgb(var(--orange-rgb)); --orange-d:#e05e00; --orange-soft:rgba(var(--orange-rgb),.14);
   --wa:#25D366; --wa-d:#1dba58;
   --card:rgba(245,245,242,.045); --card-h:rgba(245,245,242,.08);
@@ -285,12 +285,15 @@ section{padding:clamp(72px,12vw,180px) 0;position:relative}
    scroll-linked --imgscale/--reveal pair set in JS, see initScrollScenes()
    — then the next scene's sticky stage naturally covers it once the budget
    runs out, the same handoff mechanism the hero uses on the section below
-   it. Three compositions alternate by index (see workItemHtml()): 0 =
-   full-bleed image with an overlaid caption, 1 = split image/text (RTL-
-   aware flip), 2 = a diagonal two-image duo with a title plaque over the
-   seam. Anything beyond the first six projects drops the pin treatment and
-   appears in a plain horizontal "more work" tray below, so a large catalog
-   doesn't turn the homepage into an endless scroll. ══ */
+   it. One composition for every project: a full-bleed cover image, inset by
+   the page gutter so it reads as a large framed photo, with an overlaid
+   caption (see workItemHtml()) — this used to alternate 3 different
+   layouts, each with its own aspect-ratio/grid math, and they never matched
+   in scale (confirmed by measurement: some projects rendered under half the
+   height of others at the same viewport). A single composition removes
+   that mismatch entirely. Anything beyond the first six projects drops the
+   pin treatment and appears in a plain horizontal "more work" tray below,
+   so a large catalog doesn't turn the homepage into an endless scroll. ══ */
 .work-filters{display:flex;flex-wrap:wrap;gap:2px;margin-bottom:clamp(28px,4vw,44px);border-bottom:1px solid var(--line)}
 .wf-btn{background:transparent;border:none;color:var(--ink3);padding:12px 16px;font-size:13.5px;font-weight:600;cursor:pointer;transition:.2s;position:relative;margin-bottom:-1px}
 .wf-btn::after{content:'';position:absolute;left:16px;right:16px;bottom:-1px;height:2px;background:var(--red);transform:scaleX(0);transition:transform .2s var(--ease)}
@@ -304,75 +307,23 @@ section{padding:clamp(72px,12vw,180px) 0;position:relative}
 @media(prefers-reduced-motion:reduce){.scene{height:auto;margin-bottom:56px}}
 .scene-pin{position:sticky;top:0;height:100svh;display:flex;align-items:center;overflow:hidden}
 @media(prefers-reduced-motion:reduce){.scene-pin{position:relative;height:auto;min-height:60vh;padding:48px 0}}
-.scene-num{position:absolute;font-family:var(--font-display);font-weight:800;line-height:.75;color:transparent;-webkit-text-stroke:1.5px var(--line2);font-size:clamp(120px,26vw,320px);z-index:0;pointer-events:none;user-select:none;top:6%;left:var(--pad)}
-[dir=rtl] .scene-num{left:auto;right:var(--pad)}
 .scene-count-badge{position:absolute;top:22px;left:22px;z-index:3;display:inline-flex;align-items:center;gap:6px;background:rgba(11,11,12,.55);color:#fff;font-size:10.5px;font-weight:600;padding:5px 11px;border-radius:var(--rs)}
-.scene-cap{position:relative;z-index:2}
-.scene-cat{font-size:11.5px;font-weight:700;letter-spacing:.03em;color:var(--ink2);margin-bottom:12px;display:block}
+.scene-cat{font-size:11.5px;font-weight:700;letter-spacing:.03em;color:rgba(245,245,242,.82);margin-bottom:12px;display:block}
 .scene-title{font-size:clamp(26px,4.4vw,58px);font-weight:700;color:var(--ink);line-height:1.12;letter-spacing:-.02em}
-.scene-cta{margin-top:24px;display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--ink2);border-bottom:1px solid var(--line2);padding-bottom:3px;transition:.2s}
+.scene-cta{margin-top:24px;display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:rgba(245,245,242,.82);border-bottom:1px solid var(--line2);padding-bottom:3px;transition:.2s}
 .scene:hover .scene-cta{color:var(--red);border-color:var(--red)}
-.scene-num{transition:-webkit-text-stroke-color .3s var(--ease)}
-.scene:hover .scene-num{-webkit-text-stroke-color:rgba(var(--orange-rgb),.4)}
-.scene-media{position:relative;overflow:hidden;background:var(--p3)}
+.scene-media{position:absolute;inset:var(--pad);overflow:hidden;background:var(--p3)}
 .scene-media img{width:100%;height:100%;object-fit:cover;display:block;filter:grayscale(.28) contrast(1.06) brightness(.92);transform:scale(var(--imgscale,1.16));will-change:transform;transition:filter .4s}
 .scene:hover .scene-media img{filter:grayscale(.08) contrast(1.03) brightness(1)}
-
-/* framed, not literal edge-to-edge wallpaper: an inset equal to the page's
-   own gutter keeps the photo large and dominant while leaving visible dark
-   margin around it, so it reads as a big cinematic still rather than a
-   full-screen background image */
-.scene.comp-0 .scene-media{position:absolute;inset:var(--pad)}
-.scene.comp-0 .scene-media::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(11,11,12,0) 42%,rgba(11,11,12,.82) 100%)}
-.scene.comp-0 .scene-cap{position:absolute;bottom:calc(var(--pad) + 24px);inset-inline:calc(var(--pad) + 24px);max-width:760px;margin-inline-start:auto;text-align:right;opacity:var(--reveal,0);transform:translateY(calc(30px * (1 - var(--reveal,0))))}
-.scene.comp-0 .scene-cat,.scene.comp-0 .scene-cta{color:rgba(245,245,242,.82)}
-@media(prefers-reduced-motion:reduce){.scene.comp-0 .scene-media{position:relative;inset:auto;aspect-ratio:16/10}.scene.comp-0 .scene-cap{position:relative;bottom:auto;margin-top:20px;color:var(--ink)}.scene.comp-0 .scene-cat,.scene.comp-0 .scene-cta{color:var(--ink2)}}
-
-.scene.comp-1 .scene-pin{display:grid;grid-template-columns:1fr;width:100%;padding:0 var(--pad)}
-@media(min-width:860px){
-  .scene.comp-1 .scene-pin{grid-template-columns:1.2fr 1fr;align-items:center;gap:56px}
-  /* flipping which side the image sits on used to swap visual order only,
-     while the grid's own two tracks stayed fixed at 1.2fr/1fr — so on every
-     flipped (odd-numbered) scene the image landed in the narrower 1fr track
-     and rendered almost half the size of its non-flipped neighbors (measured
-     413px vs 964px wide on a 1440px viewport). Reversing the track sizes
-     together with the order swap keeps the image in the wide track on both
-     sides, so every comp-1 scene reads at the same scale. */
-  .scene.comp-1.flip .scene-pin{grid-template-columns:1fr 1.2fr}
-  .scene.comp-1.flip .scene-media{order:2}
-  .scene.comp-1.flip .scene-cap{order:1}
+/* a dark gradient inside the framed image (not the same effect as the site's
+   retired ambient-glow) keeps the caption text legible over any photo */
+.scene-media::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(11,11,12,0) 32%,rgba(11,11,12,.94) 100%)}
+.scene-cap{position:absolute;z-index:2;bottom:calc(var(--pad) + 24px);inset-inline:calc(var(--pad) + 24px);max-width:760px;margin-inline-start:auto;text-align:right;opacity:var(--reveal,0);transform:translateY(calc(30px * (1 - var(--reveal,0))))}
+@media(prefers-reduced-motion:reduce){
+  .scene-media{position:relative;inset:auto;aspect-ratio:16/10}
+  .scene-cap{position:relative;bottom:auto;inset-inline:auto;margin-top:20px;color:var(--ink)}
+  .scene-cat,.scene-cta{color:var(--ink2)}
 }
-.scene.comp-1 .scene-media{aspect-ratio:4/5;border-radius:var(--r);max-height:64vh}
-.scene.comp-1 .scene-cap{padding:28px 0;opacity:var(--reveal,0);transform:translateY(calc(24px * (1 - var(--reveal,0))))}
-/* a 4/5 ratio at mobile's ~310px content width only reaches ~388px tall —
-   under half of comp-0's ~800px-tall full-bleed image at the same width, a
-   gap wide enough to read as broken rather than intentional variety. A
-   taller ratio brings it closer without changing the split-layout concept. */
-@media(max-width:859px){.scene.comp-1 .scene-media{margin-top:14vh;aspect-ratio:2/3}}
-
-.scene.comp-2 .scene-pin{width:100%;padding:0 var(--pad);position:relative}
-.scene.comp-2 .scene-duo{display:grid;grid-template-columns:1fr 1fr;gap:clamp(10px,2vw,20px);width:100%;max-width:1120px;margin:0 auto}
-/* a 3/4 ratio at this column width (~472px on a 1440px screen) only reached
-   ~629px tall — still visibly shorter than comp-0's ~772-800px full-bleed
-   image right next to it in the same scroll sequence. A taller 3/5 ratio
-   brings comp-2 to ~787px, matching comp-0's scale much more closely while
-   keeping the two-image diagonal composition and its own distinct feel. */
-.scene.comp-2 .scene-duo .scene-media{aspect-ratio:3/5}
-.scene.comp-2 .scene-duo>.scene-media:first-child{margin-top:8%}
-/* side-by-side at mobile width splits each image down to ~150px wide (a
-   3/4 ratio there is only ~200px tall) — a full 4x smaller than comp-0's
-   image at the same viewport. Stacking the two photos instead lets each
-   use the full content width, and a wider ratio keeps the stacked pair
-   from needing more height than the pinned viewport actually has. */
-@media(max-width:859px){
-  .scene.comp-2 .scene-duo{grid-template-columns:1fr;gap:12px}
-  .scene.comp-2 .scene-duo .scene-media{aspect-ratio:16/11}
-  .scene.comp-2 .scene-duo>.scene-media:first-child{margin-top:0}
-}
-.scene.comp-2 .scene-cap{position:absolute;top:50%;right:50%;transform:translate(50%,calc(-50% + 24px * (1 - var(--reveal,0))));opacity:var(--reveal,0);text-align:center;background:var(--p1);box-shadow:0 20px 60px rgba(0,0,0,.4);padding:20px 28px;max-width:min(80vw,420px)}
-.scene.comp-2 .scene-cap .scene-title{font-size:clamp(20px,3vw,32px)}
-@media(max-width:640px){.scene.comp-2 .scene-cap{padding:16px 20px}}
-@media(prefers-reduced-motion:reduce){.scene.comp-1 .scene-media,.scene.comp-2 .scene-duo .scene-media{margin-top:0}.scene.comp-2 .scene-cap{position:relative;top:auto;right:auto;transform:none;margin:20px auto 0;box-shadow:none;border:1px solid var(--line)}}
 
 /* overflow tray for projects beyond the first six — plain, small, quiet */
 .more-strip-wrap{margin-top:8px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;-webkit-mask-image:linear-gradient(90deg,transparent,#000 4%,#000 96%,transparent);mask-image:linear-gradient(90deg,transparent,#000 4%,#000 96%,transparent)}
@@ -1532,32 +1483,26 @@ function injectTikTokPixel(id){
 
 var portMarketingData=[];
 // ── CINEMATIC WORK SCENES — shared by both the ads-collage groups and the
-// individual marketing items. Alternates 3 compositions by index (see
-// .scene.comp-0/1/2 in <style>): 0 = full-bleed image with an overlaid
-// caption · 1 = split image/text, flipping side every full cycle · 2 = a
-// diagonal two-image duo with a title plaque over the seam (falls back to a
-// repeated single image when the group has no second photo). Each becomes
-// its own scroll-pinned scene via initScrollScenes().
+// individual marketing items. One consistent composition for every project
+// (full-bleed cover image with an overlaid caption) — this used to alternate
+// 3 different layouts (full-bleed / split image+text / two-image diagonal
+// duo) by index, but each had its own aspect-ratio/grid math and the three
+// never matched in scale (confirmed by measurement: some project images
+// rendered under half the height of others at the same viewport), which
+// read as broken rather than intentional variety. A single composition
+// removes that whole class of mismatch — every project gets the exact same
+// size and treatment. Multi-image projects still get a count badge here and
+// show their full set in the gallery modal on click. Each becomes its own
+// scroll-pinned scene via initScrollScenes().
 var SCENE_CAP=6;
 function workItemHtml(item,idx){
-  var comp=idx%3;
-  var flip=idx%2===1;
   var num=String(idx+1).padStart(2,'0');
   var catLbl=esc(catLabel[item.cat]||item.cat||'');
   var countBadge=item.count>1?'<span class="scene-count-badge"><i class="bi bi-images"></i> '+item.count+'</span>':'';
-  var numHtml=comp!==0?'<span class="scene-num">'+num+'</span>':'';
   var cap='<div class="scene-cap"><span class="scene-cat">مشروع '+num+' — '+catLbl+'</span><h3 class="scene-title">'+esc(item.title)+'</h3><span class="scene-cta">شاهد المشروع <i class="bi bi-arrow-left"></i></span></div>';
-  var media;
-  if(comp===2){
-    media='<div class="scene-duo">'
-      +'<div class="scene-media"><img src="'+esc(item.image)+'" alt="" loading="lazy"></div>'
-      +'<div class="scene-media"><img src="'+esc(item.image2||item.image)+'" alt="" loading="lazy"></div>'
-      +'</div>'+countBadge;
-  }else{
-    media='<div class="scene-media">'+countBadge+'<img src="'+esc(item.image)+'" alt="'+esc(item.title)+'" loading="lazy"></div>';
-  }
-  return'<article class="scene comp-'+comp+(flip?' flip':'')+'" data-cat="'+esc(item.cat||'')+'" onclick="'+item.onclick+'">'
-    +'<div class="scene-pin">'+numHtml+media+cap+'</div>'
+  var media='<div class="scene-media">'+countBadge+'<img src="'+esc(item.image)+'" alt="'+esc(item.title)+'" loading="lazy"></div>';
+  return'<article class="scene" data-cat="'+esc(item.cat||'')+'" onclick="'+item.onclick+'">'
+    +'<div class="scene-pin">'+media+cap+'</div>'
     +'</article>';
 }
 function moreItemHtml(it){
@@ -1583,8 +1528,7 @@ function renderAdsGroups(list){
   var items=order.map(function(gname){
     var g=groups[gname];
     var cover=g.find(function(p){return p.is_cover})||g[0];
-    var second=g.filter(function(p){return p!==cover})[0];
-    return{title:gname,cat:g[0].category,image:cover.image_url,image2:second?second.image_url:null,count:g.length,
+    return{title:gname,cat:g[0].category,image:cover.image_url,count:g.length,
       onclick:'openPgGallery(\''+gname.replace(/'/g,"\\'")+'\')'};
   });
   var featured=items.slice(0,SCENE_CAP),rest=items.slice(SCENE_CAP);
