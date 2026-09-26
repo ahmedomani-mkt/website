@@ -30,6 +30,13 @@
   --line:rgba(var(--ink-rgb),.14); --line2:rgba(var(--ink-rgb),.24);
   --line-on-paper:rgba(var(--paper-rgb),.12);
   --red-rgb:232,25,44; --red:rgb(var(--red-rgb)); --red-d:#c21322; --red-soft:rgba(var(--red-rgb),.14);
+  /* second accent — fiery automotive orange, used sparingly for small
+     interactive/indicator details only (hover/active states, thin marker
+     lines, a few numerals) so black+red+orange reads as one controlled
+     palette, never a background fill or a second brand color competing
+     with red. See usage sites: .process-step active state, .scene-num
+     hover, .cl-item focus ring, before/after handle, scroll progress bar. */
+  --orange-rgb:255,106,0; --orange:rgb(var(--orange-rgb)); --orange-d:#e05e00; --orange-soft:rgba(var(--orange-rgb),.14);
   --wa:#25D366; --wa-d:#1dba58;
   --card:rgba(245,245,242,.045); --card-h:rgba(245,245,242,.08);
   --card-bg:var(--p2); --icon-rgb:var(--red-rgb); --icon-color:rgb(var(--icon-rgb)); --icon-soft:rgba(var(--icon-rgb),.14);
@@ -83,7 +90,7 @@ h1,h2,h3{font-weight:700;text-wrap:balance}
 .ambient-glow{display:none}
 
 /* ══ SCROLL PROGRESS ══════════════════════════════ */
-.progress{position:fixed;top:0;right:0;height:2px;background:var(--red);z-index:500;width:0;transition:width .1s linear}
+.progress{position:fixed;top:0;right:0;height:2px;background:var(--orange);z-index:500;width:0;transition:width .1s linear}
 
 /* ══ EDITORIAL PRIMITIVES — reused across every rebuilt section ══ */
 .eyebrow{display:inline-flex;align-items:center;gap:10px;font-size:12px;font-weight:600;letter-spacing:.02em;color:var(--ink2)}
@@ -137,16 +144,20 @@ nav.solid{background:var(--nav-bg);border-bottom-color:var(--line)}
    covers it once the pin's scroll budget runs out. See scrollLinkHero(). ══ */
 .hero-pin{position:relative;height:165vh}
 @media(prefers-reduced-motion:reduce){.hero-pin{height:auto}}
-.hero{position:sticky;top:0;min-height:100svh;height:100svh;display:flex;flex-direction:column;justify-content:flex-end;padding:88px var(--pad) 56px;overflow:hidden;text-align:right}
+.hero{position:sticky;top:0;min-height:100svh;height:100svh;display:flex;flex-direction:column;justify-content:flex-end;padding:clamp(96px,14vw,132px) var(--pad) 48px;overflow:hidden;text-align:right}
 @media(prefers-reduced-motion:reduce){.hero{position:relative;height:auto}}
 .hero-media{position:absolute;inset:0;z-index:0;background:linear-gradient(155deg,var(--p2),var(--p1) 70%);transform:scale(1);will-change:transform}
 .hero-media::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(11,11,12,.15) 0%,rgba(11,11,12,.72) 55%,rgba(11,11,12,.95) 100%)}
 .hero.has-bg .hero-media{display:none}
 .hero-glow{display:none}
 .hero-inner{position:relative;z-index:1;max-width:760px;margin:0 0 0 auto;width:100%;will-change:transform,opacity}
-.hero .eyebrow{margin-bottom:26px;color:rgba(245,245,242,.82)}
+.hero .eyebrow{margin-bottom:30px;color:rgba(245,245,242,.82)}
 .hero-text-blocks{display:flex;flex-direction:column;align-items:flex-end}
-.hero h1{font-size:clamp(42px,10vw,124px);font-weight:700;line-height:1.1;letter-spacing:-.03em;margin-bottom:clamp(20px,3vw,34px);color:var(--ink);text-shadow:0 2px 20px rgba(0,0,0,.4);opacity:0;transform:translateY(28px);transition:opacity 1s var(--ease) .1s,transform 1s var(--ease) .1s}
+/* real CMS headlines run a full sentence across 1-3 blocks (h1+h2+p), not the
+   short 2-3 word phrase this used to assume — a 124px h1 plus a second
+   heading and a paragraph could exceed the viewport height entirely and push
+   the eyebrow above the header. Sized for that real content instead. */
+.hero h1{font-size:clamp(30px,6.2vw,72px);font-weight:700;line-height:1.15;letter-spacing:-.03em;margin-bottom:clamp(14px,2vw,22px);color:var(--ink);text-shadow:0 2px 20px rgba(0,0,0,.4);opacity:0;transform:translateY(28px);transition:opacity 1s var(--ease) .1s,transform 1s var(--ease) .1s}
 .hero.lines-in h1{opacity:1;transform:none}
 .hero h1 .r,.hero-text-blocks h2 .r,.hero-text-blocks h3 .r{color:var(--red)}
 /* reusable line-reveal utility for hand-authored static copy (e.g. .intro-title) —
@@ -156,9 +167,9 @@ nav.solid{background:var(--nav-bg);border-bottom-color:var(--line)}
 .visible .line-mask>span{transform:translateY(0)}
 .line-mask:nth-of-type(2)>span{transition-delay:.08s}
 .line-mask:nth-of-type(3)>span{transition-delay:.16s}
-.hero-text-blocks h2{font-size:clamp(22px,3.6vw,34px);font-weight:700;line-height:1.32;letter-spacing:-.01em;margin-bottom:16px;color:var(--ink);text-shadow:0 2px 16px rgba(0,0,0,.5)}
-.hero-text-blocks h3{font-size:clamp(17px,2.6vw,22px);font-weight:600;line-height:1.4;margin-bottom:14px;color:var(--ink);text-shadow:0 2px 16px rgba(0,0,0,.5)}
-.hero-sub,.hero-text-blocks p{font-size:15.5px;color:var(--ink2);line-height:1.8;max-width:440px;margin:0 0 32px auto;font-weight:400;text-shadow:0 1px 12px rgba(0,0,0,.55);opacity:0;transform:translateY(14px);transition:opacity .6s cubic-bezier(.16,1,.3,1) .5s,transform .6s cubic-bezier(.16,1,.3,1) .5s}
+.hero-text-blocks h2{font-size:clamp(16px,2.6vw,25px);font-weight:700;line-height:1.35;letter-spacing:-.01em;margin-bottom:12px;color:var(--ink);text-shadow:0 2px 16px rgba(0,0,0,.5)}
+.hero-text-blocks h3{font-size:clamp(14px,2vw,19px);font-weight:600;line-height:1.4;margin-bottom:10px;color:var(--ink);text-shadow:0 2px 16px rgba(0,0,0,.5)}
+.hero-sub,.hero-text-blocks p{font-size:15px;color:var(--ink2);line-height:1.75;max-width:420px;margin:0 0 26px auto;font-weight:400;text-shadow:0 1px 12px rgba(0,0,0,.55);opacity:0;transform:translateY(14px);transition:opacity .6s cubic-bezier(.16,1,.3,1) .5s,transform .6s cubic-bezier(.16,1,.3,1) .5s}
 .hero.lines-in .hero-sub,.hero.lines-in .hero-text-blocks p{opacity:1;transform:none}
 .hero-btns{display:flex;gap:12px;justify-content:flex-end;flex-wrap:wrap;opacity:0;transform:translateY(14px);transition:opacity .6s cubic-bezier(.16,1,.3,1) .68s,transform .6s cubic-bezier(.16,1,.3,1) .68s}
 .hero.lines-in .hero-btns{opacity:1;transform:none}
@@ -288,8 +299,8 @@ section{padding:clamp(72px,12vw,180px) 0;position:relative}
 .wf-btn.active::after{transform:scaleX(1)}
 
 .work-list{display:flex;flex-direction:column}
-.scene{position:relative;height:168vh;cursor:pointer}
-@media(max-width:767px){.scene{height:132vh}}
+.scene{position:relative;height:148vh;cursor:pointer}
+@media(max-width:767px){.scene{height:120vh}}
 @media(prefers-reduced-motion:reduce){.scene{height:auto;margin-bottom:56px}}
 .scene-pin{position:sticky;top:0;height:100svh;display:flex;align-items:center;overflow:hidden}
 @media(prefers-reduced-motion:reduce){.scene-pin{position:relative;height:auto;min-height:60vh;padding:48px 0}}
@@ -301,13 +312,19 @@ section{padding:clamp(72px,12vw,180px) 0;position:relative}
 .scene-title{font-size:clamp(26px,4.4vw,58px);font-weight:700;color:var(--ink);line-height:1.12;letter-spacing:-.02em}
 .scene-cta{margin-top:24px;display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--ink2);border-bottom:1px solid var(--line2);padding-bottom:3px;transition:.2s}
 .scene:hover .scene-cta{color:var(--red);border-color:var(--red)}
+.scene-num{transition:-webkit-text-stroke-color .3s var(--ease)}
+.scene:hover .scene-num{-webkit-text-stroke-color:rgba(var(--orange-rgb),.4)}
 .scene-media{position:relative;overflow:hidden;background:var(--p3)}
 .scene-media img{width:100%;height:100%;object-fit:cover;display:block;filter:grayscale(.28) contrast(1.06) brightness(.92);transform:scale(var(--imgscale,1.16));will-change:transform;transition:filter .4s}
 .scene:hover .scene-media img{filter:grayscale(.08) contrast(1.03) brightness(1)}
 
-.scene.comp-0 .scene-media{position:absolute;inset:0}
+/* framed, not literal edge-to-edge wallpaper: an inset equal to the page's
+   own gutter keeps the photo large and dominant while leaving visible dark
+   margin around it, so it reads as a big cinematic still rather than a
+   full-screen background image */
+.scene.comp-0 .scene-media{position:absolute;inset:var(--pad)}
 .scene.comp-0 .scene-media::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(11,11,12,0) 42%,rgba(11,11,12,.82) 100%)}
-.scene.comp-0 .scene-cap{position:absolute;bottom:clamp(32px,7vw,72px);inset-inline:var(--pad);max-width:760px;margin-inline-start:auto;text-align:right;opacity:var(--reveal,0);transform:translateY(calc(30px * (1 - var(--reveal,0))))}
+.scene.comp-0 .scene-cap{position:absolute;bottom:calc(var(--pad) + 24px);inset-inline:calc(var(--pad) + 24px);max-width:760px;margin-inline-start:auto;text-align:right;opacity:var(--reveal,0);transform:translateY(calc(30px * (1 - var(--reveal,0))))}
 .scene.comp-0 .scene-cat,.scene.comp-0 .scene-cta{color:rgba(245,245,242,.82)}
 @media(prefers-reduced-motion:reduce){.scene.comp-0 .scene-media{position:relative;inset:auto;aspect-ratio:16/10}.scene.comp-0 .scene-cap{position:relative;bottom:auto;margin-top:20px;color:var(--ink)}.scene.comp-0 .scene-cat,.scene.comp-0 .scene-cta{color:var(--ink2)}}
 
@@ -317,7 +334,7 @@ section{padding:clamp(72px,12vw,180px) 0;position:relative}
   .scene.comp-1.flip .scene-media{order:2}
   .scene.comp-1.flip .scene-cap{order:1}
 }
-.scene.comp-1 .scene-media{aspect-ratio:4/5;border-radius:var(--r);max-height:74vh}
+.scene.comp-1 .scene-media{aspect-ratio:4/5;border-radius:var(--r);max-height:64vh}
 .scene.comp-1 .scene-cap{padding:28px 0;opacity:var(--reveal,0);transform:translateY(calc(24px * (1 - var(--reveal,0))))}
 @media(max-width:859px){.scene.comp-1 .scene-media{margin-top:22vh}}
 
@@ -399,15 +416,22 @@ section{padding:clamp(72px,12vw,180px) 0;position:relative}
 .ba-img-full{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;pointer-events:none}
 .ba-img-before{clip-path:inset(0 calc(100% - var(--bap,50%)) 0 0)}
 .ba-divider{position:absolute;top:0;bottom:0;left:var(--bap,50%);width:2px;background:rgba(255,255,255,.9);transform:translateX(-50%);pointer-events:none}
-.ba-handle{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:46px;height:46px;border-radius:50%;background:#fff;color:var(--p1);display:flex;align-items:center;justify-content:center;font-size:16px;box-shadow:0 10px 28px rgba(0,0,0,.4);pointer-events:none}
-.ba-tag{position:absolute;bottom:16px;z-index:2;font-size:11px;font-weight:700;color:#fff;background:rgba(11,11,12,.55);padding:5px 12px;border-radius:var(--rs);pointer-events:none}
-.ba-tag-before{left:16px}
-.ba-tag-after{right:16px;background:var(--red)}
+.ba-handle{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:46px;height:46px;border-radius:50%;background:#fff;color:var(--orange);display:flex;align-items:center;justify-content:center;font-size:16px;box-shadow:0 10px 28px rgba(0,0,0,.4);pointer-events:none}
+/* only the side that's actually dominant on screen shows its label — driven
+   by --bef-op/--aft-op, set from the real drag position in initBADrag() —
+   instead of both "قبل" and "بعد" sitting on screen at the same time */
+.ba-tag{position:absolute;bottom:16px;z-index:2;font-size:11px;font-weight:700;color:#fff;background:rgba(11,11,12,.55);padding:5px 12px;border-radius:var(--rs);pointer-events:none;transition:opacity .25s var(--ease)}
+.ba-tag-before{left:16px;opacity:var(--bef-op,1)}
+.ba-tag-after{right:16px;background:var(--red);opacity:var(--aft-op,0)}
 .ba-info{margin-top:20px;display:flex;justify-content:space-between;align-items:flex-end;gap:20px;flex-wrap:wrap}
 .ba-name{font-size:19px;font-weight:700;color:var(--ink);margin-bottom:6px;line-height:1.4}
 .ba-desc{font-size:13px;color:var(--ink3);line-height:1.7;max-width:52ch}
-.ba-expand{flex-shrink:0;display:inline-flex;align-items:center;gap:8px;background:transparent;border:1px solid var(--line2);color:var(--ink2);font-size:12.5px;font-weight:600;padding:10px 18px;border-radius:var(--rs);cursor:pointer;transition:.2s;white-space:nowrap}
-.ba-expand:hover{border-color:var(--red);color:var(--red)}
+/* compact icon-only zoom control — a 46px circular touch target is clearer
+   and takes far less room than the old pill-with-label button, while
+   staying outside .ba-compare so it never competes with the drag hit area */
+.ba-expand{flex-shrink:0;display:inline-flex;align-items:center;justify-content:center;width:46px;height:46px;border-radius:50%;background:transparent;border:1px solid var(--line2);color:var(--ink2);font-size:16px;cursor:pointer;transition:.25s var(--ease)}
+.ba-expand:hover,.ba-expand:focus-visible{border-color:var(--orange);color:var(--orange);transform:scale(1.08)}
+.ba-expand:active{transform:scale(.94)}
 
 /* ══ BEFORE / AFTER LIGHTBOX ═══════════════════════ */
 .ba-lb-ov{position:fixed;inset:0;z-index:600;background:rgba(11,11,12,.9);display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .25s}
@@ -455,10 +479,20 @@ section{padding:clamp(72px,12vw,180px) 0;position:relative}
   .process-step:last-child{margin-inline-end:0}
   .process-step:first-child{border-inline-start:none;padding-inline-start:0;margin-inline-start:0}
 }
-.process-num{font-family:var(--font-display);font-size:clamp(30px,3.2vw,44px);font-weight:800;color:var(--ink3);line-height:1;flex-shrink:0}
+.process-num{font-family:var(--font-display);font-size:clamp(30px,3.2vw,44px);font-weight:800;color:var(--ink3);line-height:1;flex-shrink:0;transition:color .3s var(--ease)}
 @media(min-width:900px){.process-num{margin-bottom:18px}}
-.process-title{font-size:15px;font-weight:700;margin-bottom:8px;color:var(--ink)}
+.process-title{font-size:15px;font-weight:700;margin-bottom:8px;color:var(--ink);transition:color .3s var(--ease)}
 .process-desc{font-size:12.5px;color:var(--ink2);line-height:1.75}
+/* active-step interaction: hovered/tapped step brightens, its siblings quiet
+   down — pure opacity + color, no size/position change, so nothing shifts */
+.process-step{opacity:1;transition:opacity .35s var(--ease)}
+.process-step:focus-visible{outline:1px solid var(--line2);outline-offset:6px}
+@media(hover:hover){
+  .process-steps:hover .process-step:not(:hover){opacity:.5}
+  .process-step:hover .process-num,.process-step:hover .process-title{color:var(--orange)}
+}
+.process-steps.has-active .process-step:not(.step-active){opacity:.5}
+.process-step.step-active .process-num,.process-step.step-active .process-title{color:var(--orange)}
 
 /* ══ VIDEOS — cinematic thumbnails, metadata below (not overlaid) ══ */
 .vid-marquee{overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;cursor:grab;-webkit-mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent)}
@@ -521,8 +555,13 @@ section{padding:clamp(72px,12vw,180px) 0;position:relative}
 .cl-grid{display:flex;gap:8px;width:max-content;padding:10px 0 14px}
 .cl-row2{margin-top:6px}
 .cl-item{display:flex;align-items:center;justify-content:center;height:64px;min-width:150px;padding:8px 26px;background:transparent;border:none;overflow:hidden;transition:.25s;flex-shrink:0}
-.cl-item img{max-height:26px;max-width:110px;object-fit:contain;filter:grayscale(1) brightness(1.6) contrast(.8);opacity:.5;transition:.3s}
-.cl-item:hover img{filter:none;opacity:1}
+/* real brand color, not the near-monochrome dark treatment this used to
+   force on every logo (grayscale+brightness+contrast made most logos read
+   as almost invisible against the dark background) — a light opacity dip
+   keeps the calm marquee feel without hiding the actual colors */
+.cl-item img{max-height:30px;max-width:120px;object-fit:contain;opacity:.85;transition:.3s var(--ease);transform:scale(1)}
+.cl-item:hover img,.cl-item:focus-visible img{opacity:1;transform:scale(1.1)}
+.cl-item:focus-visible{outline:1px solid var(--orange);outline-offset:6px;border-radius:4px}
 .cl-name{font-size:12.5px;font-weight:600;letter-spacing:.03em;color:var(--ink3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;transition:.25s}
 .cl-item:hover .cl-name{color:var(--ink)}
 .clients-note{font-size:12px;color:var(--ink3);text-align:center;margin-top:26px;font-weight:400}
@@ -859,27 +898,27 @@ footer{padding:0 var(--pad);background:var(--p1)}
       <p class="sec-sub">من أول ما نسمعك لحد ما نوصلك لأفضل نتيجة</p>
     </div>
     <div class="process-steps stagger">
-      <div class="process-step fade-up">
+      <div class="process-step fade-up" tabindex="0">
         <div class="process-num">01</div>
         <div class="process-title">نسمعك ونفهم هدفك</div>
         <div class="process-desc">بنبدأ بجلسة نتعرف فيها على مركزك والسوق والمنافسين وهدفك من الحملة.</div>
       </div>
-      <div class="process-step fade-up">
+      <div class="process-step fade-up" tabindex="0">
         <div class="process-num">02</div>
         <div class="process-title">تحليل واستراتيجية</div>
         <div class="process-desc">بنحلل جمهورك المستهدف ونبني خطة تسويقية ودعائية تناسب ميزانيتك.</div>
       </div>
-      <div class="process-step fade-up">
+      <div class="process-step fade-up" tabindex="0">
         <div class="process-num">03</div>
         <div class="process-title">تصميم وتنفيذ</div>
         <div class="process-desc">فريقنا يصمم وينفذ المحتوى والدعاية بأعلى جودة وفي الميعاد المتفق عليه.</div>
       </div>
-      <div class="process-step fade-up">
+      <div class="process-step fade-up" tabindex="0">
         <div class="process-num">04</div>
         <div class="process-title">إطلاق ومتابعة</div>
         <div class="process-desc">بننشر ونتابع الأداء أول بأول على كل القنوات اللي بتخاطب عملاءك.</div>
       </div>
-      <div class="process-step fade-up">
+      <div class="process-step fade-up" tabindex="0">
         <div class="process-num">05</div>
         <div class="process-title">تحسين مستمر</div>
         <div class="process-desc">بنحلل النتائج ونطور الاستراتيجية باستمرار عشان نوصلك لأفضل عائد.</div>
@@ -892,8 +931,8 @@ footer{padding:0 var(--pad);background:var(--p1)}
 <section id="videos" class="bg-2" style="display:none">
   <div class="container">
     <div class="sec-head">
-      <h2 class="sec-title">فيديوهاتنا</h2>
-      <p class="sec-sub">ريلز وفيديوهات من شغلنا لعملائنا على السوشيال ميديا</p>
+      <h2 class="sec-title">تصويرنا وريلزنا</h2>
+      <p class="sec-sub">كواليس تصوير المحتوى والريلز اللي بنصممها وننفذها لعملائنا في قطاع السيارات</p>
     </div>
     <div class="vid-marquee">
       <div class="vid-grid" id="vidGrid"></div>
@@ -1256,7 +1295,14 @@ function initHeroParallax(){
       var r=pin.getBoundingClientRect();
       var range=r.height-window.innerHeight;
       var p=range>0?Math.min(1,Math.max(0,-r.top/range)):0;
-      var textP=Math.min(1,p/.55);
+      // textP used to reach 1 (fully faded) at p=.55, leaving the remaining
+      // 45% of the pin's scroll budget as a dead zone: the text was already
+      // gone but the sticky hero kept the viewport pinned in place with
+      // nothing left to animate, reading as "stuck" until a second scroll
+      // gesture finally released it into the next section. Tracking p
+      // directly finishes the fade exactly as the pin releases, so one
+      // continuous scroll carries the visitor straight through.
+      var textP=p;
       target.style.opacity=String(1-textP);
       target.style.transform='translateY('+(textP*-46)+'px)';
       var scale=1+p*.14;
@@ -1274,9 +1320,27 @@ function initHeroParallax(){
   io.observe(pin);
 }
 
+// ── PROCESS STEP TAP STATE — the CSS :hover rule (gated to hover:hover
+// devices) handles desktop; this covers touch/tap, since a tapped element
+// on a touchscreen doesn't reliably get an equivalent hover/dim effect.
+function initProcessTap(){
+  var wrap=document.querySelector('.process-steps');
+  if(!wrap)return;
+  var steps=wrap.querySelectorAll('.process-step');
+  steps.forEach(function(step){
+    step.addEventListener('click',function(){
+      var already=step.classList.contains('step-active');
+      steps.forEach(function(s){s.classList.remove('step-active')});
+      if(!already){step.classList.add('step-active');wrap.classList.add('has-active')}
+      else wrap.classList.remove('has-active');
+    });
+  });
+}
+
 document.addEventListener('DOMContentLoaded',function(){
   initReveal();
   initHeroParallax();
+  initProcessTap();
 });
 </script>
 
@@ -1516,8 +1580,13 @@ function scrollSceneTick(){
     var r=el.getBoundingClientRect();
     var range=r.height-vh;
     var p=range>0?Math.min(1,Math.max(0,-r.top/range)):(r.top<vh?1:0);
-    var imgP=Math.min(1,p/.55);
-    var revealP=Math.min(1,Math.max(0,(p-.1)/.35));
+    // imgP/revealP used to finish around p=.45-.55, leaving a long flat
+    // stretch of the pin's scroll budget where the scene was already fully
+    // settled but the next project hadn't started appearing yet — the
+    // "forced"/dead-space feeling. Spreading both across nearly the full
+    // pin range keeps something moving right up until the handoff.
+    var imgP=Math.min(1,p/.92);
+    var revealP=Math.min(1,Math.max(0,(p-.06)/.6));
     el.style.setProperty('--imgscale',(1.16-.16*imgP).toFixed(4));
     el.style.setProperty('--reveal',revealP.toFixed(4));
   });
@@ -1971,7 +2040,7 @@ function renderBeforeAfter(list){
       +'<div class="ba-info">'
         +'<div><div class="ba-name">'+esc(b.client_name)+'</div>'
         +(b.description?'<div class="ba-desc">'+esc(b.description)+'</div>':'')+'</div>'
-        +'<button type="button" class="ba-expand" onclick="openBALightbox('+i+')"><i class="bi bi-arrows-fullscreen"></i> تكبير الصورتين</button>'
+        +'<button type="button" class="ba-expand" onclick="openBALightbox('+i+')" aria-label="تكبير الصورتين" title="تكبير الصورتين"><i class="bi bi-arrows-fullscreen"></i></button>'
       +'</div>'
       +'</div>';
   }).join('');
@@ -1987,6 +2056,13 @@ function initBADrag(el){
     var r=el.getBoundingClientRect();
     var pct=Math.min(100,Math.max(0,(clientX-r.left)/r.width*100));
     el.style.setProperty('--bap',pct+'%');
+    // "قبل"/"بعد" used to sit on screen at the same time regardless of the
+    // slider — crossfade each tag by which side actually dominates the
+    // visible area instead, so only the relevant label shows (both fade
+    // together only in the narrow band right at the midpoint).
+    var t=Math.min(1,Math.max(0,(pct-35)/30));
+    el.style.setProperty('--bef-op',t.toFixed(2));
+    el.style.setProperty('--aft-op',(1-t).toFixed(2));
   }
   el.addEventListener('pointerdown',function(e){
     dragging=true;
@@ -2027,8 +2103,8 @@ document.addEventListener('keydown',function(e){
 function renderClients(list){
   function itemHtml(c){
     return c.logo_url
-      ?'<div class="cl-item"><img src="'+esc(c.logo_url)+'" alt="'+esc(c.name)+'" loading="lazy"></div>'
-      :'<div class="cl-item"><div class="cl-name">'+esc(c.name)+'</div></div>';
+      ?'<div class="cl-item" tabindex="0"><img src="'+esc(c.logo_url)+'" alt="'+esc(c.name)+'" loading="lazy"></div>'
+      :'<div class="cl-item" tabindex="0"><div class="cl-name">'+esc(c.name)+'</div></div>';
   }
   // split across two rows that drift in opposite directions
   var half=Math.ceil(list.length/2);
