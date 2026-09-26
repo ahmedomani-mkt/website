@@ -344,12 +344,26 @@ section{padding:clamp(72px,12vw,180px) 0;position:relative}
 }
 .scene.comp-1 .scene-media{aspect-ratio:4/5;border-radius:var(--r);max-height:64vh}
 .scene.comp-1 .scene-cap{padding:28px 0;opacity:var(--reveal,0);transform:translateY(calc(24px * (1 - var(--reveal,0))))}
-@media(max-width:859px){.scene.comp-1 .scene-media{margin-top:22vh}}
+/* a 4/5 ratio at mobile's ~310px content width only reaches ~388px tall —
+   under half of comp-0's ~800px-tall full-bleed image at the same width, a
+   gap wide enough to read as broken rather than intentional variety. A
+   taller ratio brings it closer without changing the split-layout concept. */
+@media(max-width:859px){.scene.comp-1 .scene-media{margin-top:14vh;aspect-ratio:2/3}}
 
 .scene.comp-2 .scene-pin{width:100%;padding:0 var(--pad);position:relative}
 .scene.comp-2 .scene-duo{display:grid;grid-template-columns:1fr 1fr;gap:clamp(10px,2vw,20px);width:100%;max-width:1120px;margin:0 auto}
 .scene.comp-2 .scene-duo .scene-media{aspect-ratio:3/4}
 .scene.comp-2 .scene-duo>.scene-media:first-child{margin-top:8%}
+/* side-by-side at mobile width splits each image down to ~150px wide (a
+   3/4 ratio there is only ~200px tall) — a full 4x smaller than comp-0's
+   image at the same viewport. Stacking the two photos instead lets each
+   use the full content width, and a wider ratio keeps the stacked pair
+   from needing more height than the pinned viewport actually has. */
+@media(max-width:859px){
+  .scene.comp-2 .scene-duo{grid-template-columns:1fr;gap:12px}
+  .scene.comp-2 .scene-duo .scene-media{aspect-ratio:16/11}
+  .scene.comp-2 .scene-duo>.scene-media:first-child{margin-top:0}
+}
 .scene.comp-2 .scene-cap{position:absolute;top:50%;right:50%;transform:translate(50%,calc(-50% + 24px * (1 - var(--reveal,0))));opacity:var(--reveal,0);text-align:center;background:var(--p1);box-shadow:0 20px 60px rgba(0,0,0,.4);padding:20px 28px;max-width:min(80vw,420px)}
 .scene.comp-2 .scene-cap .scene-title{font-size:clamp(20px,3vw,32px)}
 @media(max-width:640px){.scene.comp-2 .scene-cap{padding:16px 20px}}
