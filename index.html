@@ -307,6 +307,9 @@ section{padding:clamp(72px,12vw,180px) 0;position:relative}
 @media(prefers-reduced-motion:reduce){.scene{height:auto;margin-bottom:56px}}
 .scene-pin{position:sticky;top:0;height:100svh;display:flex;align-items:center;justify-content:center;overflow:hidden;padding:0 var(--pad)}
 @media(prefers-reduced-motion:reduce){.scene-pin{position:relative;height:auto;min-height:60vh;padding:48px var(--pad)}}
+.scene-num{position:absolute;font-family:var(--font-display);font-weight:800;line-height:.75;color:transparent;-webkit-text-stroke:1.5px var(--line2);font-size:clamp(120px,26vw,320px);z-index:0;pointer-events:none;user-select:none;top:6%;left:var(--pad);transition:-webkit-text-stroke-color .3s var(--ease)}
+[dir=rtl] .scene-num{left:auto;right:var(--pad)}
+.scene:hover .scene-num{-webkit-text-stroke-color:rgba(var(--orange-rgb),.4)}
 .scene-count-badge{position:absolute;top:22px;left:22px;z-index:3;display:inline-flex;align-items:center;gap:6px;background:rgba(11,11,12,.55);color:#fff;font-size:10.5px;font-weight:600;padding:5px 11px;border-radius:var(--rs)}
 .scene-cat{font-size:11.5px;font-weight:700;letter-spacing:.03em;color:rgba(245,245,242,.82);margin-bottom:12px;display:block}
 .scene-title{font-size:clamp(24px,3.6vw,46px);font-weight:700;color:var(--ink);line-height:1.12;letter-spacing:-.02em}
@@ -316,9 +319,10 @@ section{padding:clamp(72px,12vw,180px) 0;position:relative}
    whole pinned viewport. The previous inset(var(--pad)) treatment only ever
    trimmed a small margin off a full-bleed image, so even once every scene
    matched in size, each one still read as "this photo IS the screen" rather
-   than a large photo WITHIN the scene. Capping both width and height here
-   leaves visible dark canvas on every side. */
-.scene-media{position:relative;width:100%;max-width:860px;height:min(58vh,540px);overflow:hidden;background:var(--p3)}
+   than a large photo WITHIN the scene. Sized to match .cat-link-card (the
+   catalog section's own cards) exactly, so "أعمالنا" reads at the same
+   normal card scale as the rest of the site instead of a giant hero image. */
+.scene-media{position:relative;width:100%;max-width:560px;height:340px;overflow:hidden;background:var(--p3)}
 .scene-media img{width:100%;height:100%;object-fit:cover;display:block;filter:grayscale(.28) contrast(1.06) brightness(.92);transform:scale(var(--imgscale,1.16));will-change:transform;transition:filter .4s}
 .scene:hover .scene-media img{filter:grayscale(.08) contrast(1.03) brightness(1)}
 /* a dark gradient inside the framed image (not the same effect as the site's
@@ -328,7 +332,6 @@ section{padding:clamp(72px,12vw,180px) 0;position:relative}
    overlays the card itself rather than floating relative to the full pin,
    which no longer matches the card's shrunk footprint */
 .scene-cap{position:absolute;z-index:2;bottom:24px;inset-inline:24px;text-align:right;opacity:var(--reveal,0);transform:translateY(calc(20px * (1 - var(--reveal,0))))}
-@media(max-width:767px){.scene-media{max-width:100%;height:min(52vh,440px)}}
 @media(prefers-reduced-motion:reduce){
   .scene-media{height:auto;aspect-ratio:16/10}
   .scene-cap{position:relative;bottom:auto;inset-inline:auto;margin-top:20px;color:var(--ink)}
@@ -1509,10 +1512,11 @@ function workItemHtml(item,idx){
   var num=String(idx+1).padStart(2,'0');
   var catLbl=esc(catLabel[item.cat]||item.cat||'');
   var countBadge=item.count>1?'<span class="scene-count-badge"><i class="bi bi-images"></i> '+item.count+'</span>':'';
+  var numHtml='<span class="scene-num">'+num+'</span>';
   var cap='<div class="scene-cap"><span class="scene-cat">مشروع '+num+' — '+catLbl+'</span><h3 class="scene-title">'+esc(item.title)+'</h3><span class="scene-cta">شاهد المشروع <i class="bi bi-arrow-left"></i></span></div>';
   var media='<div class="scene-media">'+countBadge+'<img src="'+esc(item.image)+'" alt="'+esc(item.title)+'" loading="lazy">'+cap+'</div>';
   return'<article class="scene" data-cat="'+esc(item.cat||'')+'" onclick="'+item.onclick+'">'
-    +'<div class="scene-pin">'+media+'</div>'
+    +'<div class="scene-pin">'+numHtml+media+'</div>'
     +'</article>';
 }
 function moreItemHtml(it){
