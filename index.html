@@ -278,22 +278,14 @@ section{padding:clamp(72px,12vw,180px) 0;position:relative}
 .service-arrow{flex-shrink:0;color:var(--ink3);transition:transform .3s var(--ease);padding-top:10px;font-size:14px}
 .service-row.open .service-arrow{transform:rotate(90deg);color:var(--red)}
 
-/* ══ OUR WORK — cinematic pinned scroll scenes, not a card grid ═══════
-   Each project is its own pin: a tall wrapper (.scene) holds a sticky
-   viewport-height stage (.scene-pin). While its wrapper's scroll budget is
-   being consumed, the image scales and the caption reveals — driven by a
-   scroll-linked --imgscale/--reveal pair set in JS, see initScrollScenes()
-   — then the next scene's sticky stage naturally covers it once the budget
-   runs out, the same handoff mechanism the hero uses on the section below
-   it. One composition for every project: a full-bleed cover image, inset by
-   the page gutter so it reads as a large framed photo, with an overlaid
-   caption (see workItemHtml()) — this used to alternate 3 different
-   layouts, each with its own aspect-ratio/grid math, and they never matched
-   in scale (confirmed by measurement: some projects rendered under half the
-   height of others at the same viewport). A single composition removes
-   that mismatch entirely. Anything beyond the first six projects drops the
-   pin treatment and appears in a plain horizontal "more work" tray below,
-   so a large catalog doesn't turn the homepage into an endless scroll. ══ */
+/* ══ OUR WORK — editorial grid of portrait project cards ═══════════
+   Every project is the same card: a 4:5 cover image with the number,
+   category and title set underneath it (not overlaid), so the photo stays
+   clean and any cover — including graphic-style covers with their own
+   baked-in text — reads correctly. Natural scroll, no pinning: a pinned
+   stage only earns its scroll budget with a full-screen image, and a
+   consistent grid can't drift out of scale the way the old alternating
+   pinned compositions did. ══ */
 .work-filters{display:flex;flex-wrap:wrap;gap:2px;margin-bottom:clamp(28px,4vw,44px);border-bottom:1px solid var(--line)}
 .wf-btn{background:transparent;border:none;color:var(--ink3);padding:12px 16px;font-size:13.5px;font-weight:600;cursor:pointer;transition:.2s;position:relative;margin-bottom:-1px}
 .wf-btn::after{content:'';position:absolute;left:16px;right:16px;bottom:-1px;height:2px;background:var(--red);transform:scaleX(0);transition:transform .2s var(--ease)}
@@ -301,52 +293,24 @@ section{padding:clamp(72px,12vw,180px) 0;position:relative}
 .wf-btn.active{color:var(--ink)}
 .wf-btn.active::after{transform:scaleX(1)}
 
-.work-list{display:flex;flex-direction:column}
-.scene{position:relative;height:148vh;cursor:pointer}
-@media(max-width:767px){.scene{height:120vh}}
-@media(prefers-reduced-motion:reduce){.scene{height:auto;margin-bottom:56px}}
-.scene-pin{position:sticky;top:0;height:100svh;display:flex;align-items:center;justify-content:center;overflow:hidden;padding:0 var(--pad)}
-@media(prefers-reduced-motion:reduce){.scene-pin{position:relative;height:auto;min-height:60vh;padding:48px var(--pad)}}
-.scene-num{position:absolute;font-family:var(--font-display);font-weight:800;line-height:.75;color:transparent;-webkit-text-stroke:1.5px var(--line2);font-size:clamp(120px,26vw,320px);z-index:0;pointer-events:none;user-select:none;top:6%;left:var(--pad);transition:-webkit-text-stroke-color .3s var(--ease)}
-[dir=rtl] .scene-num{left:auto;right:var(--pad)}
-.scene:hover .scene-num{-webkit-text-stroke-color:rgba(var(--orange-rgb),.4)}
-.scene-count-badge{position:absolute;top:22px;left:22px;z-index:3;display:inline-flex;align-items:center;gap:6px;background:rgba(11,11,12,.55);color:#fff;font-size:10.5px;font-weight:600;padding:5px 11px;border-radius:var(--rs)}
-.scene-cat{font-size:11.5px;font-weight:700;letter-spacing:.03em;color:rgba(245,245,242,.82);margin-bottom:12px;display:block}
-.scene-title{font-size:clamp(24px,3.6vw,46px);font-weight:700;color:var(--ink);line-height:1.12;letter-spacing:-.02em}
-.scene-cta{margin-top:20px;display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:rgba(245,245,242,.82);border-bottom:1px solid var(--line2);padding-bottom:3px;transition:.2s}
-.scene:hover .scene-cta{color:var(--red);border-color:var(--red)}
-/* a genuinely smaller, centered card — not an edge-to-edge image filling the
-   whole pinned viewport. The previous inset(var(--pad)) treatment only ever
-   trimmed a small margin off a full-bleed image, so even once every scene
-   matched in size, each one still read as "this photo IS the screen" rather
-   than a large photo WITHIN the scene. Sized to match .cat-link-card (the
-   catalog section's own cards) exactly, so "أعمالنا" reads at the same
-   normal card scale as the rest of the site instead of a giant hero image. */
-.scene-media{position:relative;width:100%;max-width:560px;height:340px;overflow:hidden;background:var(--p3)}
-.scene-media img{width:100%;height:100%;object-fit:cover;display:block;filter:grayscale(.28) contrast(1.06) brightness(.92);transform:scale(var(--imgscale,1.16));will-change:transform;transition:filter .4s}
-.scene:hover .scene-media img{filter:grayscale(.08) contrast(1.03) brightness(1)}
-/* a dark gradient inside the framed image (not the same effect as the site's
-   retired ambient-glow) keeps the caption text legible over any photo */
-.scene-media::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(11,11,12,0) 32%,rgba(11,11,12,.94) 100%)}
-/* the caption now lives inside .scene-media (see workItemHtml()) so it
-   overlays the card itself rather than floating relative to the full pin,
-   which no longer matches the card's shrunk footprint */
-.scene-cap{position:absolute;z-index:2;bottom:24px;inset-inline:24px;text-align:right;opacity:var(--reveal,0);transform:translateY(calc(20px * (1 - var(--reveal,0))))}
-@media(prefers-reduced-motion:reduce){
-  .scene-media{height:auto;aspect-ratio:16/10}
-  .scene-cap{position:relative;bottom:auto;inset-inline:auto;margin-top:20px;color:var(--ink)}
-  .scene-cat,.scene-cta{color:var(--ink2)}
+.work-list{display:grid;grid-template-columns:1fr;gap:clamp(36px,5vw,56px) clamp(18px,2.4vw,28px)}
+@media(min-width:640px){.work-list{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:1024px){.work-list{grid-template-columns:repeat(3,1fr)}}
+.work-card{cursor:pointer;display:block;min-width:0}
+.work-media{position:relative;aspect-ratio:4/5;overflow:hidden;background:var(--p3);border-radius:var(--r)}
+.work-media img{width:100%;height:100%;object-fit:cover;display:block;filter:grayscale(.22) contrast(1.04) brightness(.94);transform:scale(1.001);transition:transform .9s var(--ease),filter .5s var(--ease)}
+.work-count{position:absolute;top:14px;left:14px;z-index:2;display:inline-flex;align-items:center;gap:6px;background:rgba(11,11,12,.62);color:#fff;font-size:11px;font-weight:600;padding:5px 10px;border-radius:var(--rs)}
+.work-meta{display:flex;align-items:baseline;gap:12px;margin-top:18px;padding-top:14px;border-top:1px solid var(--line)}
+.work-num{font-family:var(--font-display);font-size:15px;font-weight:700;letter-spacing:.04em;color:var(--ink3);font-variant-numeric:tabular-nums;transition:color .3s var(--ease)}
+.work-cat{font-size:12px;font-weight:600;color:var(--ink3)}
+.work-title{margin-top:10px;font-size:clamp(19px,1.7vw,23px);font-weight:700;line-height:1.35;color:var(--ink);display:flex;align-items:center;justify-content:space-between;gap:12px}
+.work-title i{font-size:15px;color:var(--ink3);flex-shrink:0;transition:transform .35s var(--ease),color .3s}
+@media(hover:hover){
+  .work-card:hover .work-media img{transform:scale(1.05);filter:none}
+  .work-card:hover .work-num{color:var(--orange)}
+  .work-card:hover .work-title i{color:var(--red);transform:translateX(-4px)}
 }
-
-/* overflow tray for projects beyond the first six — plain, small, quiet */
-.more-strip-wrap{margin-top:8px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;-webkit-mask-image:linear-gradient(90deg,transparent,#000 4%,#000 96%,transparent);mask-image:linear-gradient(90deg,transparent,#000 4%,#000 96%,transparent)}
-.more-strip-wrap::-webkit-scrollbar{display:none}
-.more-strip{display:flex;gap:14px;width:max-content;padding:4px 4px 8px}
-.more-item{width:170px;cursor:pointer;flex-shrink:0}
-.more-media{aspect-ratio:4/3;border-radius:var(--r);overflow:hidden;background:var(--p3)}
-.more-media img{width:100%;height:100%;object-fit:cover;display:block;filter:grayscale(.3) contrast(1.05) brightness(.94);transition:filter .3s,transform .5s var(--ease)}
-.more-item:hover .more-media img{filter:none;transform:scale(1.04)}
-.more-title{margin-top:10px;font-size:12.5px;font-weight:600;color:var(--ink2)}
+.work-card:focus-visible{outline:1px solid var(--orange);outline-offset:6px}
 
 .port-empty{padding:50px 20px;text-align:center;color:var(--ink3);font-size:13px}
 
@@ -769,7 +733,7 @@ footer{padding:0 var(--pad);background:var(--p1)}
       <h2 class="sec-title" id="portTitle">أعمالنا في الدعاية والإعلان</h2>
     </div>
     <div class="work-filters" id="portFilters"></div>
-    <div id="portGroups" class="work-list"></div>
+    <div id="portGroups" class="work-list stagger"></div>
     <div class="port-empty" id="portEmpty">لسه مفيش أعمال في القسم ده — تابعنا قريبًا</div>
   </div>
 </section>
@@ -782,7 +746,7 @@ footer{padding:0 var(--pad);background:var(--p1)}
       <h2 class="sec-title" id="portTitleMarketing">أعمالنا في التسويق</h2>
     </div>
     <div class="work-filters" id="portFiltersMarketing"></div>
-    <div id="portGridMarketing" class="work-list"></div>
+    <div id="portGridMarketing" class="work-list stagger"></div>
     <div class="port-empty" id="portEmptyMarketing">لسه مفيش أعمال في القسم ده — تابعنا قريبًا</div>
   </div>
 </section>
@@ -1495,36 +1459,18 @@ function injectTikTokPixel(id){
 }
 
 var portMarketingData=[];
-// ── CINEMATIC WORK SCENES — shared by both the ads-collage groups and the
-// individual marketing items. One consistent composition for every project
-// (full-bleed cover image with an overlaid caption) — this used to alternate
-// 3 different layouts (full-bleed / split image+text / two-image diagonal
-// duo) by index, but each had its own aspect-ratio/grid math and the three
-// never matched in scale (confirmed by measurement: some project images
-// rendered under half the height of others at the same viewport), which
-// read as broken rather than intentional variety. A single composition
-// removes that whole class of mismatch — every project gets the exact same
-// size and treatment. Multi-image projects still get a count badge here and
-// show their full set in the gallery modal on click. Each becomes its own
-// scroll-pinned scene via initScrollScenes().
-var SCENE_CAP=6;
+// ── WORK CARDS — shared by both the ads-collage groups and the individual
+// marketing items. One portrait card per project; multi-image projects get
+// a count badge and open their full set in the gallery modal on click.
 function workItemHtml(item,idx){
   var num=String(idx+1).padStart(2,'0');
   var catLbl=esc(catLabel[item.cat]||item.cat||'');
-  var countBadge=item.count>1?'<span class="scene-count-badge"><i class="bi bi-images"></i> '+item.count+'</span>':'';
-  var numHtml='<span class="scene-num">'+num+'</span>';
-  var cap='<div class="scene-cap"><span class="scene-cat">مشروع '+num+' — '+catLbl+'</span><h3 class="scene-title">'+esc(item.title)+'</h3><span class="scene-cta">شاهد المشروع <i class="bi bi-arrow-left"></i></span></div>';
-  var media='<div class="scene-media">'+countBadge+'<img src="'+esc(item.image)+'" alt="'+esc(item.title)+'" loading="lazy">'+cap+'</div>';
-  return'<article class="scene" data-cat="'+esc(item.cat||'')+'" onclick="'+item.onclick+'">'
-    +'<div class="scene-pin">'+numHtml+media+'</div>'
+  var countBadge=item.count>1?'<span class="work-count"><i class="bi bi-images"></i> '+item.count+'</span>':'';
+  return'<article class="work-card fade-up" tabindex="0" role="button" data-cat="'+esc(item.cat||'')+'" onclick="'+item.onclick+'" onkeydown="if(event.key===\'Enter\')this.click()">'
+    +'<div class="work-media">'+countBadge+'<img src="'+esc(item.image)+'" alt="'+esc(item.title)+'" loading="lazy"></div>'
+    +'<div class="work-meta"><span class="work-num">'+num+'</span>'+(catLbl?'<span class="work-cat">'+catLbl+'</span>':'')+'</div>'
+    +'<h3 class="work-title"><span>'+esc(item.title)+'</span><i class="bi bi-arrow-left"></i></h3>'
     +'</article>';
-}
-function moreItemHtml(it){
-  return'<div class="more-item" onclick="'+it.onclick+'"><div class="more-media"><img src="'+esc(it.image)+'" alt="" loading="lazy"></div><div class="more-title">'+esc(it.title)+'</div></div>';
-}
-function moreGridHtml(items){
-  if(!items.length)return'';
-  return'<div class="more-strip-wrap"><div class="more-strip">'+items.map(moreItemHtml).join('')+'</div></div>';
 }
 var pgGroupsData={};
 function renderAdsGroups(list){
@@ -1545,63 +1491,8 @@ function renderAdsGroups(list){
     return{title:gname,cat:g[0].category,image:cover.image_url,count:g.length,
       onclick:'openPgGallery(\''+gname.replace(/'/g,"\\'")+'\')'};
   });
-  var featured=items.slice(0,SCENE_CAP),rest=items.slice(SCENE_CAP);
-  wrap.innerHTML=featured.map(workItemHtml).join('')+moreGridHtml(rest);
+  wrap.innerHTML=items.map(workItemHtml).join('');
   renderWorkFilters('portFilters',order.map(function(g){return groups[g][0]}),'#portGroups');
-  initScrollScenes();
-}
-
-// ── SCROLL-LINKED SCENE CONTROLLER — a single shared IntersectionObserver
-// tracks every .scene; the (single, shared) scroll listener attaches only
-// while at least one scene is actually near the viewport, never a page-wide
-// unconditional handler. Sets --imgscale/--reveal per scene each frame from
-// its own pin progress (see .scene/.scene-pin CSS).
-var scrollSceneEls=[],scrollSceneBound=[],scrollSceneIO=null,scrollSceneActive=0,scrollSceneListening=false,scrollSceneTicking=false;
-function scrollSceneTick(){
-  scrollSceneTicking=false;
-  var vh=window.innerHeight;
-  scrollSceneEls.forEach(function(el){
-    if(el.offsetParent===null)return;
-    var r=el.getBoundingClientRect();
-    var range=r.height-vh;
-    var p=range>0?Math.min(1,Math.max(0,-r.top/range)):(r.top<vh?1:0);
-    // imgP/revealP used to finish around p=.45-.55, leaving a long flat
-    // stretch of the pin's scroll budget where the scene was already fully
-    // settled but the next project hadn't started appearing yet — the
-    // "forced"/dead-space feeling. Spreading both across nearly the full
-    // pin range keeps something moving right up until the handoff.
-    var imgP=Math.min(1,p/.92);
-    var revealP=Math.min(1,Math.max(0,(p-.06)/.6));
-    el.style.setProperty('--imgscale',(1.16-.16*imgP).toFixed(4));
-    el.style.setProperty('--reveal',revealP.toFixed(4));
-  });
-}
-function onScrollSceneScroll(){
-  if(scrollSceneTicking)return;
-  scrollSceneTicking=true;
-  requestAnimationFrame(scrollSceneTick);
-}
-function initScrollScenes(){
-  if(window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;
-  var newEls=[];
-  document.querySelectorAll('.scene').forEach(function(el){
-    if(scrollSceneBound.indexOf(el)<0){scrollSceneBound.push(el);scrollSceneEls.push(el);newEls.push(el)}
-  });
-  if(!newEls.length)return;
-  if(!scrollSceneIO){
-    scrollSceneIO=new IntersectionObserver(function(entries){
-      entries.forEach(function(e){
-        scrollSceneActive+=e.isIntersecting?1:-1;
-      });
-      scrollSceneActive=Math.max(0,scrollSceneActive);
-      if(scrollSceneActive>0&&!scrollSceneListening){
-        scrollSceneListening=true;window.addEventListener('scroll',onScrollSceneScroll,{passive:true});onScrollSceneScroll();
-      }else if(scrollSceneActive===0&&scrollSceneListening){
-        scrollSceneListening=false;window.removeEventListener('scroll',onScrollSceneScroll);
-      }
-    },{threshold:0,rootMargin:'50% 0px 50% 0px'});
-  }
-  newEls.forEach(function(el){scrollSceneIO.observe(el)});
 }
 
 // ── WORK CATEGORY FILTERS ────────────────────────────
@@ -1766,8 +1657,7 @@ function renderPortfolio(list){
       var i=marketing.indexOf(p);
       return{title:p.title,cat:p.category,image:p.image_url,count:1,onclick:'openMarketingProject('+i+')'};
     });
-    var featured=mItems.slice(0,SCENE_CAP),rest=mItems.slice(SCENE_CAP);
-    gm.innerHTML=featured.map(workItemHtml).join('')+moreGridHtml(rest);
+    gm.innerHTML=mItems.map(workItemHtml).join('');
   }
   renderWorkFilters('portFiltersMarketing',marketing,'#portGridMarketing');
   var gme=document.getElementById('portEmptyMarketing');
@@ -1781,7 +1671,6 @@ function renderPortfolio(list){
   // loadSite()) is left alone rather than being re-shown.
   var pmSec=document.getElementById('portfolioMarketing');
   if(pmSec&&!marketing.length)pmSec.style.display='none';
-  initScrollScenes();
 }
 var lbImages=[],lbIndex=0;
 function openCollageLightbox(index){
