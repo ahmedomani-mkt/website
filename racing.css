@@ -1,0 +1,97 @@
+/* ══ RACING TOUCHES — shared by every public page ═══════════════════════
+   Motorsport visual language, kept restrained so the black/red/orange
+   editorial look stays in charge: a checkered-flag band, a red+orange
+   double speed-stripe marker, slanted primary buttons, a carbon-weave
+   surface texture, a tachometer-style scroll bar and a race-number plate.
+   Uses its own --race-* tokens because not every page defines --orange. */
+:root{--race-red:#E8192C;--race-orange:#FF6A00}
+
+/* checkered flag — a thin two-row band; reused as the footer's top edge */
+.race-checker,footer::before{
+  content:'';display:block;height:20px;
+  background:
+    conic-gradient(#e6e6e2 25%,#0b0b0c 0 50%,#e6e6e2 0 75%,#0b0b0c 0) 0 0/20px 20px;
+  opacity:.85;
+}
+footer::before{margin:0 calc(var(--pad,20px) * -1)}
+/* keep the last footer row clear of the fixed music button */
+footer{padding-bottom:56px!important}
+
+/* double speed-stripe replaces the plain dash before every eyebrow label */
+.eyebrow::before{
+  width:22px!important;height:11px!important;flex-shrink:0;
+  background:linear-gradient(90deg,var(--race-red) 0 9px,transparent 9px 12px,var(--race-orange) 12px 22px)!important;
+  transform:skewX(-22deg);
+}
+
+/* slanted (parallelogram) primary buttons */
+.btn-primary,.m-cta{
+  clip-path:polygon(12px 0,100% 0,calc(100% - 12px) 100%,0 100%);
+  padding-inline:38px!important;
+}
+.btn-primary:hover{filter:brightness(1.08)}
+
+/* carbon-weave texture on the raised surfaces, low enough not to compete
+   with content */
+.bg-2{
+  background-image:
+    linear-gradient(45deg,rgba(255,255,255,.028) 25%,transparent 25% 75%,rgba(255,255,255,.028) 75%),
+    linear-gradient(45deg,rgba(255,255,255,.028) 25%,transparent 25% 75%,rgba(255,255,255,.028) 75%);
+  background-size:8px 8px;background-position:0 0,4px 4px;
+}
+
+/* hero: faint diagonal speed-lines over the photo (under the text) */
+.hero::before{
+  content:'';position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:repeating-linear-gradient(115deg,transparent 0 46px,rgba(245,245,242,.04) 46px 47px);
+}
+
+/* scroll progress becomes a tachometer: white -> orange -> redline, the
+   colour tied to how far across the viewport the bar has travelled */
+.progress{
+  height:4px!important;
+  background:
+    repeating-linear-gradient(90deg,rgba(11,11,12,.55) 0 1px,transparent 1px 12px),
+    linear-gradient(90deg,#f5f5f2 0,var(--race-orange) 62%,var(--race-red) 100%)!important;
+  background-size:100% 100%,100vw 100%!important;
+  background-position:0 0,right top!important;
+}
+
+/* project number reads as a race-number plate */
+.work-num{
+  display:inline-block;padding:2px 9px;border:1px solid currentColor;
+  transform:skewX(-12deg);
+}
+
+/* ── music toggle ─────────────────────────────────────────────────── */
+.race-sound{
+  position:fixed;right:20px;bottom:22px;z-index:395;
+  display:flex;align-items:center;gap:10px;height:44px;padding:0 18px 0 16px;
+  background:rgba(11,11,12,.92);color:#f5f5f2;border:0;cursor:pointer;
+  font:600 12.5px/1 var(--font,'IBM Plex Sans Arabic',sans-serif);
+  clip-path:polygon(12px 0,100% 0,calc(100% - 12px) 100%,0 100%);
+  box-shadow:inset 0 0 0 1px rgba(245,245,242,.2);
+  transition:background .25s;
+}
+.race-sound:hover{background:#17171a}
+.race-sound::before{ /* racing stripe along the bottom edge */
+  content:'';position:absolute;left:0;right:0;bottom:0;height:3px;
+  background:linear-gradient(90deg,var(--race-red),var(--race-orange));
+}
+.race-sound:focus-visible{outline:2px solid var(--race-orange);outline-offset:3px}
+.rs-bars{display:inline-flex;align-items:flex-end;gap:3px;height:16px}
+.rs-bars i{display:block;width:3px;height:4px;background:var(--race-orange);transform-origin:bottom}
+.race-sound[aria-pressed="true"] .rs-bars i{animation:rsEq .9s ease-in-out infinite}
+.race-sound[aria-pressed="true"] .rs-bars i:nth-child(2){animation-delay:-.3s}
+.race-sound[aria-pressed="true"] .rs-bars i:nth-child(3){animation-delay:-.6s}
+.race-sound[aria-pressed="true"] .rs-bars i:nth-child(4){animation-delay:-.15s}
+@keyframes rsEq{0%,100%{height:4px}50%{height:16px}}
+.race-sound.nudge{animation:rsNudge 2.4s ease-out 3}
+@keyframes rsNudge{0%{box-shadow:inset 0 0 0 1px rgba(245,245,242,.2),0 0 0 0 rgba(255,106,0,.55)}
+  100%{box-shadow:inset 0 0 0 1px rgba(245,245,242,.2),0 0 0 16px rgba(255,106,0,0)}}
+@media(max-width:520px){.race-sound{right:14px;bottom:16px;height:40px;padding:0 14px 0 12px}
+  .rs-label{display:none}}
+@media(prefers-reduced-motion:reduce){
+  .race-sound[aria-pressed="true"] .rs-bars i{animation:none;height:10px}
+  .race-sound.nudge{animation:none}
+}
