@@ -82,6 +82,13 @@ h1,h2,h3{font-weight:700;text-wrap:balance}
 .bg-1{background:transparent}
 .bg-2{background:var(--p2)}
 .bg-3{background:var(--p3)}
+/* alternating page rhythm: visible sections take turns being true black and
+   a clearly lighter gray (set by alternateTones() so it stays correct when
+   optional sections are hidden), instead of the near-identical #0B0B0C /
+   #141416 pair the static bg-1/bg-2 classes gave */
+:root{--gray:#242427}
+.tone-black{background-color:var(--p1)!important}
+.tone-gray{background-color:var(--gray)!important}
 .bg-paper{background:var(--paper);--ink-rgb:11,11,12;--ink:rgb(var(--ink-rgb));--ink2:rgba(var(--ink-rgb),.62);--ink3:rgba(var(--ink-rgb),.42);--line:var(--line-on-paper);--line2:rgba(var(--paper-rgb),.22);--card-bg:#fff;color:var(--ink)}
 .bg-red{background:var(--red);--ink-rgb:255,255,255;--ink:rgb(var(--ink-rgb));--ink2:rgba(var(--ink-rgb),.7);--ink3:rgba(var(--ink-rgb),.48);--icon-rgb:255,255,255;--icon-color:rgb(var(--icon-rgb));--icon-soft:rgba(var(--icon-rgb),.14);color:var(--ink)}
 
@@ -1294,10 +1301,27 @@ function initProcessTap(){
   });
 }
 
+// ── ALTERNATING SECTION TONES — walks the page's sections in order, skips
+// any that are currently hidden, and alternates gray / black between the
+// rest (the hero above them is black, so the first one is gray; the footer
+// takes whichever tone contrasts with the last section).
+var TONE_IDS=['intro','secCatalogs','portfolio','portfolioMarketing','services','ticker','process','videos','secBeforeAfter','secResults','clients','faq','ctaBand','secFooter'];
+function alternateTones(){
+  var gray=true;
+  TONE_IDS.forEach(function(id){
+    var el=document.getElementById(id);
+    if(!el)return;
+    el.classList.remove('tone-gray','tone-black');
+    if(getComputedStyle(el).display==='none')return;
+    el.classList.add(gray?'tone-gray':'tone-black');
+    gray=!gray;
+  });
+}
 document.addEventListener('DOMContentLoaded',function(){
   initReveal();
   initHeroParallax();
   initProcessTap();
+  alternateTones();
 });
 </script>
 
@@ -2234,7 +2258,8 @@ async function loadSite(){
     animateCounters();
     if(pglist&&pglist.length)renderPagesLinks(pglist);
     initReveal();
-  }catch(e){revealHeroStats()}
+    alternateTones();
+  }catch(e){revealHeroStats();alternateTones()}
 }
 document.addEventListener('DOMContentLoaded',function(){
   loadSite();
