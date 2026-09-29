@@ -1,19 +1,10 @@
 /* ══ RACING TOUCHES — shared by every public page ═══════════════════════
    Motorsport visual language, kept restrained so the black/red/orange
-   editorial look stays in charge: a checkered-flag band, a red+orange
-   double speed-stripe marker, slanted primary buttons, a carbon-weave
+   editorial look stays in charge: a red+orange double speed-stripe marker, slanted primary buttons, a carbon-weave
    surface texture, a tachometer-style scroll bar and a race-number plate.
    Uses its own --race-* tokens because not every page defines --orange. */
 :root{--race-red:#E8192C;--race-orange:#FF6A00}
 
-/* checkered flag — a thin two-row band; reused as the footer's top edge */
-.race-checker,footer::before{
-  content:'';display:block;height:20px;
-  background:
-    conic-gradient(#e6e6e2 25%,#0b0b0c 0 50%,#e6e6e2 0 75%,#0b0b0c 0) 0 0/20px 20px;
-  opacity:.85;
-}
-footer::before{margin:0 calc(var(--pad,20px) * -1)}
 /* keep the last footer row clear of the fixed music button */
 footer{padding-bottom:56px!important}
 
