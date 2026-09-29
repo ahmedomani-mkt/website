@@ -86,3 +86,8 @@ footer{padding-bottom:56px!important}
   .race-sound[aria-pressed="true"] .rs-bars i{animation:none;height:10px}
   .race-sound.nudge{animation:none}
 }
+
+/* muted state: the equalizer bars give way to a muted-speaker icon */
+.rs-mute{display:none;font-size:17px;line-height:1;color:var(--race-orange)}
+.race-sound[aria-pressed="false"] .rs-bars{display:none}
+.race-sound[aria-pressed="false"] .rs-mute{display:inline-block}

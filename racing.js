@@ -1,7 +1,9 @@
 /* Racing background music — a procedurally synthesised loop (Web Audio), so
-   there is no audio file to license or host. Browsers never allow sound to
-   start by itself, so it begins when the visitor taps the button (or on
-   their first tap anywhere, if they had it switched on last time). */
+   there is no audio file to license or host. It tries to start as soon as
+   the page loads; browsers usually refuse sound before any interaction, so
+   in that case it starts on the visitor's first tap/click/keypress instead.
+   The floating button mutes/unmutes, and a mute is remembered so it stays
+   off on later visits and other pages. */
 (function(){
   'use strict';
   var KEY='ao_race_music';
@@ -121,28 +123,42 @@
   function save(v){try{localStorage.setItem(KEY,v)}catch(e){}}
   function saved(){try{return localStorage.getItem(KEY)}catch(e){return null}}
 
-  var btn;
+  var btn,pending=false;
   function render(){
     if(!btn)return;
     btn.setAttribute('aria-pressed',on?'true':'false');
-    btn.setAttribute('aria-label',on?'إيقاف موسيقى السباقات':'تشغيل موسيقى السباقات');
-    btn.querySelector('.rs-label').textContent=on?'موسيقى السباقات':'شغّل الموسيقى';
+    btn.setAttribute('aria-label',on?'كتم الموسيقى':'تشغيل الصوت');
+    btn.querySelector('.rs-label').textContent=on?'كتم الموسيقى':'تشغيل الصوت';
+    btn.classList.toggle('nudge',!on&&pending);
+  }
+  var GESTURES=['pointerdown','touchend','click','keydown'];
+  function arm(){
+    pending=true;render();
+    var fire=function(e){
+      if(e.target&&e.target.closest&&e.target.closest('.race-sound'))return; // the button handles itself
+      GESTURES.forEach(function(g){document.removeEventListener(g,fire,true)});
+      pending=false;start();
+    };
+    GESTURES.forEach(function(g){document.addEventListener(g,fire,true)});
+  }
+  function autoStart(){
+    if(!build())return;
+    if(ctx.state==='running')start();else arm();
   }
   function mount(){
     btn=document.createElement('button');
     btn.type='button';btn.className='race-sound';
-    btn.innerHTML='<span class="rs-bars"><i></i><i></i><i></i><i></i></span><span class="rs-label"></span>';
-    btn.addEventListener('click',function(e){e.stopPropagation();on?stop():start()});
+    btn.innerHTML='<span class="rs-bars"><i></i><i></i><i></i><i></i></span><i class="bi bi-volume-mute-fill rs-mute"></i><span class="rs-label"></span>';
+    btn.addEventListener('click',function(e){
+      e.stopPropagation();
+      if(on){stop()}else{pending=false;start()}
+    });
     document.body.appendChild(btn);
     render();
 
-    if(saved()==='on'){
-      // they had it on last time: start on their first tap/keypress anywhere
-      var arm=function(){document.removeEventListener('pointerdown',arm,true);document.removeEventListener('keydown',arm,true);start()};
-      document.addEventListener('pointerdown',arm,true);document.addEventListener('keydown',arm,true);
-    }else if(saved()===null){
-      btn.classList.add('nudge');
-    }
+    // on by default; only a visitor's own mute keeps it off
+    if(saved()!=='off')autoStart();
+
     document.addEventListener('visibilitychange',function(){
       if(!ctx||!on)return;
       if(document.hidden)ctx.suspend();else ctx.resume();
