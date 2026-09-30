@@ -179,3 +179,40 @@
   window.RaceMusic={_makeEngine:makeEngine,start:start,stop:stop};
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mount);else mount();
 })();
+
+/* Logos: recolour the dark artwork to white while keeping its red mark. Works on any
+   logo the CMS sets (canvas read of a CORS image); if the browser refuses pixel
+   access it falls back to a plain white CSS filter. Runs on every page. */
+(function(){
+  'use strict';
+  function whitenLogo(im){
+    function run(){
+      var src=im.getAttribute('src')||'';
+      if(!src||src.indexOf('data:')===0||im.dataset.whiteFor===src)return;
+      var i2=new Image();i2.crossOrigin='anonymous';
+      i2.onload=function(){
+        try{
+          var w=Math.min(900,i2.naturalWidth),h=Math.round(i2.naturalHeight*w/i2.naturalWidth);
+          var c=document.createElement('canvas');c.width=w;c.height=h;
+          var x=c.getContext('2d');x.drawImage(i2,0,0,w,h);
+          var d=x.getImageData(0,0,w,h),a=d.data;
+          for(var i=0;i<a.length;i+=4){
+            if(a[i+3]<8)continue;
+            var r=a[i],g=a[i+1],b=a[i+2];
+            if(!(r>110&&r>g*1.5&&r>b*1.5)){a[i]=255;a[i+1]=255;a[i+2]=255}
+          }
+          x.putImageData(d,0,0);
+          im.dataset.whiteFor=src;
+          im.src=c.toDataURL('image/png');
+        }catch(e){im.style.filter='brightness(0) invert(1)'}
+      };
+      i2.onerror=function(){im.style.filter='brightness(0) invert(1)'};
+      i2.src=src;
+    }
+    run();
+    if(window.MutationObserver)new MutationObserver(run).observe(im,{attributes:true,attributeFilter:['src']});
+  }
+  function init(){['navLogoImg','ftLogoImg'].forEach(function(id){var im=document.getElementById(id);if(im)whitenLogo(im)})}
+  window.whitenLogo=whitenLogo;
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+})();
