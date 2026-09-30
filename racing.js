@@ -237,45 +237,54 @@
   var reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if(reduce)return;
 
-  var CAR_SVG='<svg viewBox="0 0 600 220" width="100%" style="display:block;overflow:visible" xmlns="http://www.w3.org/2000/svg">'
+  // Nissan Skyline GT-R (R34) side profile, facing right — boxy notchback, flat roof,
+  // tall GT wing, carbon vented hood, front-fender vent, gold multi-spoke wheels.
+  var CAR_SVG='<svg viewBox="0 0 600 200" width="100%" style="display:block;overflow:visible" xmlns="http://www.w3.org/2000/svg">'
   +'<defs>'
-  +'<linearGradient id="dcBody" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff4a3a"/><stop offset=".5" stop-color="#e00000"/><stop offset="1" stop-color="#6d0000"/></linearGradient>'
-  +'<linearGradient id="dcGlass" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1c2f3d"/><stop offset="1" stop-color="#05080c"/></linearGradient>'
-  +'<radialGradient id="dcRim" cx=".4" cy=".35" r=".8"><stop offset="0" stop-color="#f5f5f5"/><stop offset="1" stop-color="#7d8288"/></radialGradient>'
+  +'<linearGradient id="dcBody" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff4a3a"/><stop offset=".55" stop-color="#d40000"/><stop offset="1" stop-color="#680000"/></linearGradient>'
+  +'<linearGradient id="dcGlass" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#22394a"/><stop offset="1" stop-color="#04070b"/></linearGradient>'
+  +'<linearGradient id="dcCarbon" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#1b1b1b"/><stop offset="1" stop-color="#050505"/></linearGradient>'
+  +'<radialGradient id="dcRim" cx=".4" cy=".35" r=".8"><stop offset="0" stop-color="#f3d27a"/><stop offset="1" stop-color="#9a7420"/></radialGradient>'
   +'<radialGradient id="dcGlow" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#04F06A" stop-opacity=".55"/><stop offset="1" stop-color="#04F06A" stop-opacity="0"/></radialGradient>'
-  +'<clipPath id="dcArch"><rect x="0" y="0" width="600" height="159"/></clipPath>'
+  +'<clipPath id="dcArch"><rect x="0" y="0" width="600" height="176"/></clipPath>'
   +'</defs>'
-  +'<ellipse cx="300" cy="196" rx="290" ry="16" fill="url(#dcGlow)"/>'
-  +'<ellipse cx="300" cy="194" rx="255" ry="6" fill="#000" opacity=".55"/>'
-  // wing
-  +'<path d="M62 116 L56 92 M84 112 L80 92" stroke="#111" stroke-width="5" fill="none"/>'
-  +'<path d="M34 86 L104 84 L104 92 L34 94 Z" fill="#0d0d0d"/><path d="M34 86 L104 84" stroke="#04F06A" stroke-width="2"/>'
+  +'<ellipse cx="300" cy="188" rx="295" ry="15" fill="url(#dcGlow)"/>'
+  +'<ellipse cx="300" cy="188" rx="262" ry="6" fill="#000" opacity=".55"/>'
+  // GT wing: stands, blade, end-plate
+  +'<path d="M72 112 L68 76 M104 108 L102 76" stroke="#0d0d0d" stroke-width="5" fill="none"/>'
+  +'<path d="M26 62 L118 58 L118 68 L28 72 Z" fill="url(#dcCarbon)"/><path d="M26 62 L118 58" stroke="#04F06A" stroke-width="2"/>'
+  +'<path d="M112 54 L124 54 L124 78 L112 78 Z" fill="#0d0d0d"/>'
   // body
-  +'<path d="M46 156 L43 128 Q43 116 58 114 L150 106 Q176 104 196 84 L232 58 Q240 52 256 52 L338 52 Q352 52 362 60 L410 98 L500 110 Q540 116 556 132 L561 148 Q561 158 550 158 Z" fill="url(#dcBody)"/>'
-  +'<path d="M150 106 Q176 104 196 84 L232 58 Q240 52 256 52 L338 52 Q352 52 362 60 L410 98 L500 110" fill="none" stroke="#ff8a7a" stroke-width="1.6" opacity=".7"/>'
-  // glass
-  +'<path d="M208 96 L238 64 L336 64 L385 97 Z" fill="url(#dcGlass)"/>'
-  +'<path d="M290 64 L290 97" stroke="#b30000" stroke-width="5"/>'
-  +'<path d="M242 68 L262 68 L232 96 L214 96 Z" fill="#fff" opacity=".07"/>'
-  // livery stripe + door
-  +'<path d="M50 132 L548 124" stroke="#fff" stroke-width="6" fill="none"/><path d="M50 139 L548 131" stroke="#04F06A" stroke-width="2.4" fill="none"/>'
-  +'<path d="M289 100 L286 152 M196 100 L192 152" stroke="#000" stroke-opacity=".35" stroke-width="1.6" fill="none"/>'
-  +'<rect x="255" y="106" width="20" height="4" rx="2" fill="#000" opacity=".4"/>'
-  +'<text x="212" y="150" font-family="Archivo,Arial,sans-serif" font-weight="800" font-size="11" letter-spacing="2.6" fill="#fff" opacity=".92">AHMED OMANI</text>'
-  // skirt, lights, splitter, mirror
-  +'<path d="M176 150 L440 150 L436 158 L180 158 Z" fill="#0b0b0b"/>'
-  +'<rect x="44" y="118" width="9" height="12" rx="2" fill="#ff2a2a"/><rect x="44" y="118" width="9" height="12" rx="2" fill="#ff2a2a" opacity=".6" style="filter:blur(4px)"/>'
-  +'<path d="M516 114 L552 124 L546 133 L512 124 Z" fill="#fff8d8"/><path d="M516 114 L552 124 L546 133 L512 124 Z" fill="#fff8d8" style="filter:blur(5px)" opacity=".7"/>'
-  +'<path d="M498 158 L562 158 L562 162 L498 162 Z" fill="#0b0b0b"/>'
-  +'<path d="M370 98 L388 96 L386 104 L372 106 Z" fill="#b30000"/>'
-  // wheels: arch cut-outs then tyres
-  +'<g clip-path="url(#dcArch)"><circle cx="140" cy="158" r="41" fill="#05070a"/><circle cx="452" cy="158" r="41" fill="#05070a"/></g>'
-  +WHEEL(140,158,1)+WHEEL(452,158,.86)
+  +'<path d="M52 174 L46 134 Q46 114 60 112 L120 106 Q146 104 162 92 L212 48 Q218 44 232 44 L322 44 Q334 44 342 52 L396 94 L470 102 Q522 108 546 126 L558 146 L558 168 Q558 174 546 176 Z" fill="url(#dcBody)"/>'
+  +'<path d="M162 92 L212 48 Q218 44 232 44 L322 44 Q334 44 342 52 L396 94" fill="none" stroke="#ff9a8a" stroke-width="1.5" opacity=".65"/>'
+  // carbon vented hood
+  +'<path d="M396 94 L470 102 Q522 108 546 126 L500 126 Q470 112 396 104 Z" fill="url(#dcCarbon)"/>'
+  +'<path d="M430 100 L456 103 M440 104 L464 107" stroke="#04F06A" stroke-width="1.6" opacity=".8"/>'
+  // glass: side window + B-pillar
+  +'<path d="M170 96 L216 54 L320 54 L384 94 Z" fill="url(#dcGlass)"/>'
+  +'<path d="M270 54 L272 95" stroke="#8f0000" stroke-width="6"/>'
+  +'<path d="M222 58 L246 58 L208 94 L186 94 Z" fill="#fff" opacity=".07"/>'
+  // stripe, door cuts, handle, livery text
+  +'<path d="M52 140 L548 134" stroke="#fff" stroke-width="6" fill="none"/><path d="M52 147 L548 141" stroke="#04F06A" stroke-width="2.4" fill="none"/>'
+  +'<path d="M272 98 L270 166 M368 96 L370 166" stroke="#000" stroke-opacity=".38" stroke-width="1.6" fill="none"/>'
+  +'<rect x="236" y="106" width="20" height="4" rx="2" fill="#000" opacity=".4"/>'
+  +'<text x="284" y="162" direction="ltr" text-anchor="start" font-family="Archivo,Arial,sans-serif" font-weight="800" font-size="11" letter-spacing="2.4" fill="#fff" opacity=".92">AHMED OMANI</text>'
+  // front-fender vent
+  +'<path d="M404 116 L428 118 M402 123 L428 125 M400 130 L426 132" stroke="#000" stroke-width="3" stroke-linecap="round" opacity=".75"/>'
+  // sill, tail-light, headlight, bumper intake, mirror
+  +'<path d="M186 166 L414 166 L410 176 L190 176 Z" fill="#0b0b0b"/>'
+  +'<rect x="45" y="122" width="9" height="14" rx="2" fill="#ff2a2a"/><rect x="45" y="122" width="9" height="14" rx="2" fill="#ff2a2a" opacity=".6" style="filter:blur(4px)"/>'
+  +'<path d="M518 110 L548 124 L541 132 L510 118 Z" fill="#fff8d8"/><path d="M518 110 L548 124 L541 132 L510 118 Z" fill="#fff8d8" opacity=".7" style="filter:blur(5px)"/>'
+  +'<path d="M512 146 L558 146 L558 164 L520 164 Z" fill="#0b0b0b"/><path d="M518 152 L556 152 M520 158 L556 158" stroke="#2a2a2a" stroke-width="2"/>'
+  +'<path d="M374 92 L392 90 L390 99 L376 101 Z" fill="#8f0000"/>'
+  // wheels
+  +'<g clip-path="url(#dcArch)"><circle cx="150" cy="154" r="43" fill="#05070a"/><circle cx="450" cy="154" r="43" fill="#05070a"/></g>'
+  +WHEEL(150,154,1)+WHEEL(450,154,.86)
   +'</svg>';
   function WHEEL(cx,cy,sx){
-    var sp='';for(var i=0;i<5;i++)sp+='<line x1="0" y1="0" x2="0" y2="-20" stroke="#2a2d31" stroke-width="5" stroke-linecap="round" transform="rotate('+(i*72)+')"/>';
-    return '<g transform="translate('+cx+' '+cy+') scale('+sx+' 1)"><circle r="33" fill="#0b0b0b" stroke="#2b2b2b" stroke-width="3"/><circle r="23" fill="url(#dcRim)"/>'
-      +'<g class="dc-spin">'+sp+'<circle r="5" fill="#ff2a2a"/></g><circle r="23" fill="none" stroke="#fff" stroke-opacity=".7" stroke-width="1.5"/></g>';
+    var sp='';for(var i=0;i<10;i++)sp+='<line x1="0" y1="0" x2="0" y2="-24" stroke="#5c4310" stroke-width="3.2" stroke-linecap="round" transform="rotate('+(i*36)+')"/>';
+    return '<g transform="translate('+cx+' '+cy+') scale('+sx+' 1)"><circle r="36" fill="#0b0b0b" stroke="#2b2b2b" stroke-width="3"/><circle r="26" fill="url(#dcRim)"/>'
+      +'<g class="dc-spin">'+sp+'<circle r="7" fill="#1a1a1a"/><circle r="2.6" fill="#ff2a2a"/></g><circle r="26" fill="none" stroke="#fff3c4" stroke-opacity=".7" stroke-width="1.5"/></g>';
   }
   var last=Date.now(),busy=false,layer,car,cv,cx,sprite;
 
@@ -353,7 +362,7 @@
     if(!layer)build();
         busy=true;last=Date.now();
     var vw=window.innerWidth,vh=window.innerHeight;
-    var w=Math.max(230,Math.min(vw*(vw<700?.7:.42),560)),h=w*220/600;
+    var w=Math.max(230,Math.min(vw*(vw<700?.7:.42),560)),h=w*200/600;
     var dpr=Math.min(window.devicePixelRatio||1,2);
     cv.width=vw*dpr;cv.height=vh*dpr;cx.setTransform(dpr,0,0,dpr,0,0);
     car.style.width=w+'px';car.style.height=h+'px';
@@ -370,7 +379,7 @@
       // smoke leaves the rear wheel while the car is sliding
       var sl=p>.1&&p<.9;
       if(sl){
-        var rx=x+w*.235,ry=y+h*.86;
+        var rx=x+w*.25,ry=y+h*.93;
         for(var i=0;i<3;i++)parts.push({x:rx+Math.random()*14,y:ry-Math.random()*14,vx:-30-Math.random()*70,vy:-6-Math.random()*22,s:22+Math.random()*22,life:0,max:.7+Math.random()*.6});
       }
       cx.clearRect(0,0,vw,vh);
