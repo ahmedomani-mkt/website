@@ -185,3 +185,24 @@ section .sec-head .sec-sub{max-width:52ch}
 
 /* the CTA headline now lives inside a panel, so it needs a smaller scale */
 .cta-band-title{font-size:clamp(32px,5.4vw,76px)!important;max-width:none!important}
+
+/* Arabic never takes letter-spacing (it breaks the joins and makes words
+   run together); the display headings had negative tracking */
+.sec-title,.intro-title,.cta-band-title,.hero h1,.hero-text-blocks h2,.hero-text-blocks h3,
+.service-title,.work-title,.process-title,.cs-client,.ba-name,.proj-modal-title{letter-spacing:0!important}
+/* mask lines that clip glyphs above/below the line box: give them room */
+.line-mask{padding-block:.36em;margin-block:-.36em}
+
+/* mobile hero: a normal-flow block instead of a pinned 100svh stage, so the
+   text panel, HUD labels and stats can never stack on top of the nav */
+@media(max-width:640px){
+  .hero-pin{height:auto!important}
+  .hero{position:relative!important;height:auto!important;min-height:100svh;justify-content:flex-start!important;padding:124px var(--pad) 44px!important}
+  .hud{inset:78px 10px 10px}
+  .hud span{top:12px}
+  .stats-bar{margin-top:24px}
+  .hero-inner{margin:0!important}
+}
+
+/* section subtitle stays on the same (start) edge as its title now that the head is full width */
+section .sec-head .sec-sub{margin-inline:0 auto!important}
