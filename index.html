@@ -14,7 +14,7 @@
 <title>Ahmed Omani — تسويق وإعلان للسيارات</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Big+Shoulders+Display:wght@400;600;800&family=Archivo:wght@500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&family=Share+Tech+Mono&family=Big+Shoulders+Display:wght@400;600;800&family=Archivo:wght@500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js" defer></script>
 <style>
@@ -50,7 +50,7 @@
      numeral face for scene counters/stats (automotive dashboard reference,
      not a generic tabular-numeral font) + a wide-tracked utility face for
      Latin eyebrows/labels only. */
-  --font:'IBM Plex Sans Arabic','Segoe UI',Tahoma,Arial,sans-serif;
+  --font:'Tajawal','Segoe UI',Tahoma,Arial,sans-serif;
   --font-display:'Big Shoulders Display','Archivo','Inter Tight',sans-serif;
   --font-lat:'Archivo','Segoe UI',sans-serif;
   --r:2px; --rs:2px; --rp:2px;
@@ -657,6 +657,11 @@ footer{padding:0 var(--pad);background:var(--p1)}
 <section class="hero bg-1" id="home">
   <div class="hero-media" id="heroMedia"></div>
   <div class="hero-bg" id="heroBg"></div>
+  <div class="hud" aria-hidden="true">
+    <span class="tl"><i></i>LIVE</span>
+    <span class="rec"><i></i>REC <b id="hudRec">00:00:00</b></span>
+    <span class="tr">CAM 01 · SHOWROOM</span>
+  </div>
   <div class="container hero-inner">
     <span class="eyebrow" id="heroBadge">متخصصون في السيارات · منذ 2015</span>
     <div id="heroTextBlocks" class="hero-text-blocks">
@@ -1287,6 +1292,17 @@ function initHeroParallax(){
 // ── PROCESS STEP TAP STATE — the CSS :hover rule (gated to hover:hover
 // devices) handles desktop; this covers touch/tap, since a tapped element
 // on a touchscreen doesn't reliably get an equivalent hover/dim effect.
+// hero HUD: a running "REC" clock that counts the time the visitor has been on the page
+function initHudClock(){
+  var el=document.getElementById('hudRec');
+  if(!el)return;
+  var t0=Date.now();
+  function pad(n){return n<10?'0'+n:''+n}
+  setInterval(function(){
+    var sec=Math.floor((Date.now()-t0)/1000);
+    el.textContent=pad(Math.floor(sec/3600))+':'+pad(Math.floor(sec/60)%60)+':'+pad(sec%60);
+  },1000);
+}
 function initProcessTap(){
   var wrap=document.querySelector('.process-steps');
   if(!wrap)return;
@@ -1321,6 +1337,7 @@ document.addEventListener('DOMContentLoaded',function(){
   initReveal();
   initHeroParallax();
   initProcessTap();
+  initHudClock();
   alternateTones();
 });
 </script>
@@ -1488,14 +1505,17 @@ var portMarketingData=[];
 // ── WORK CARDS — shared by both the ads-collage groups and the individual
 // marketing items. One portrait card per project; multi-image projects get
 // a count badge and open their full set in the gallery modal on click.
+var workMaxCount=1;
 function workItemHtml(item,idx){
   var num=String(idx+1).padStart(2,'0');
   var catLbl=esc(catLabel[item.cat]||item.cat||'');
   var countBadge=item.count>1?'<span class="work-count"><i class="bi bi-images"></i> '+item.count+'</span>':'';
+  var bar=workMaxCount>1?'<div class="work-bar"><i style="width:'+Math.max(12,Math.round(item.count/workMaxCount*100))+'%"></i></div>':'';
   return'<article class="work-card fade-up" tabindex="0" role="button" data-cat="'+esc(item.cat||'')+'" onclick="'+item.onclick+'" onkeydown="if(event.key===\'Enter\')this.click()">'
-    +'<div class="work-media">'+countBadge+'<img src="'+esc(item.image)+'" alt="'+esc(item.title)+'" loading="lazy"></div>'
-    +'<div class="work-meta"><span class="work-num">'+num+'</span>'+(catLbl?'<span class="work-cat">'+catLbl+'</span>':'')+'</div>'
-    +'<h3 class="work-title"><span>'+esc(item.title)+'</span><i class="bi bi-arrow-left"></i></h3>'
+    +'<div class="work-media"><span class="work-file">FILE '+num+'</span>'+countBadge+'<img src="'+esc(item.image)+'" alt="'+esc(item.title)+'" loading="lazy"></div>'
+    +'<div class="work-body"><h3 class="work-title"><span>'+esc(item.title)+'</span><i class="bi bi-arrow-left"></i></h3>'
+    +(catLbl?'<div class="work-row"><span>التصنيف</span><b>'+catLbl+'</b></div>':'')
+    +'<div class="work-row"><span>الصور</span><b>'+String(item.count).padStart(2,'0')+'</b></div>'+bar+'</div>'
     +'</article>';
 }
 var pgGroupsData={};
@@ -1517,6 +1537,7 @@ function renderAdsGroups(list){
     return{title:gname,cat:g[0].category,image:cover.image_url,count:g.length,
       onclick:'openPgGallery(\''+gname.replace(/'/g,"\\'")+'\')'};
   });
+  workMaxCount=Math.max.apply(null,items.map(function(i){return i.count}));
   wrap.innerHTML=items.map(workItemHtml).join('');
   renderWorkFilters('portFilters',order.map(function(g){return groups[g][0]}),'#portGroups');
 }
@@ -1683,6 +1704,7 @@ function renderPortfolio(list){
       var i=marketing.indexOf(p);
       return{title:p.title,cat:p.category,image:p.image_url,count:1,onclick:'openMarketingProject('+i+')'};
     });
+    workMaxCount=1;
     gm.innerHTML=mItems.map(workItemHtml).join('');
   }
   renderWorkFilters('portFiltersMarketing',marketing,'#portGridMarketing');

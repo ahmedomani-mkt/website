@@ -1,74 +1,151 @@
-/* ══ RACING TOUCHES — shared by every public page ═══════════════════════
-   Motorsport visual language, kept restrained so the black/red/orange
-   editorial look stays in charge: a red+orange double speed-stripe marker, slanted primary buttons, a carbon-weave
-   surface texture, a tachometer-style scroll bar and a race-number plate.
-   Uses its own --race-* tokens because not every page defines --orange. */
-:root{--race-red:#E8192C;--race-orange:#FF6A00}
+/* ══ TELEMETRY THEME — shared by every public page ═══════════════════════
+   Black + a red gradient, with neon green / teal reserved for small live
+   "readout" details (LIVE dot, file tags, scroll tach, equalizer). Motorsport
+   telemetry language: a faint engineering grid, red corner brackets, mono
+   readout labels, slanted buttons. Loaded after each page's own <style>, so
+   the token overrides below re-colour the whole site in one place.
+   (--orange* / --race-orange are legacy names that now hold the green.) */
+:root{
+  --p1:#000;--p2:#0a0a0a;--p3:#111;--gray:#1b1b1b;
+  --nav-bg:rgba(0,0,0,.94);--nav-pill:rgba(0,0,0,.94);
+  --red-rgb:255,10,10;--red:rgb(255,10,10);--red-d:#b80000;--red-soft:rgba(255,10,10,.14);
+  --rg:linear-gradient(135deg,#ff4a3a 0%,#ff0000 45%,#8f0000 100%);
+  --neon:#04F06A;--teal:#06A77D;
+  --orange-rgb:4,240,106;--orange:#04F06A;--orange-d:#06A77D;--orange-soft:rgba(4,240,106,.14);
+  --race-red:#ff0a0a;--race-orange:#04F06A;
+  --mono:'Share Tech Mono',ui-monospace,Consolas,monospace;
+}
+
+/* engineering grid on the page and on every section tone */
+body,.tone-black,.tone-gray{
+  background-image:
+    linear-gradient(rgba(255,255,255,.05) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.05) 1px,transparent 1px);
+  background-size:64px 64px;background-position:-1px -1px;
+}
 
 /* keep the last footer row clear of the fixed music button */
 footer{padding-bottom:56px!important}
 
-/* double speed-stripe replaces the plain dash before every eyebrow label */
+/* red corner brackets (top-right + bottom-left) on panels */
+.work-card,.cat-link-card,.stats-grid,.cta-band-card,.hero-inner{position:relative}
+.work-card::before,.cat-link-card::before,.stats-grid::before,.cta-band-card::before,.hero-inner::before,
+.work-card::after,.cat-link-card::after,.stats-grid::after,.cta-band-card::after,.hero-inner::after{
+  content:'';display:block!important;position:absolute;width:18px;height:18px;
+  border:2px solid var(--race-red);pointer-events:none;z-index:4;
+}
+.work-card::before,.cat-link-card::before,.stats-grid::before,.cta-band-card::before,.hero-inner::before{top:-1px;right:-1px;border-left:0;border-bottom:0}
+.work-card::after,.cat-link-card::after,.stats-grid::after,.cta-band-card::after,.hero-inner::after{bottom:-1px;left:-1px;border-right:0;border-top:0}
+
+/* double speed-stripe (red + green) before every eyebrow label */
 .eyebrow::before{
   width:22px!important;height:11px!important;flex-shrink:0;
   background:linear-gradient(90deg,var(--race-red) 0 9px,transparent 9px 12px,var(--race-orange) 12px 22px)!important;
   transform:skewX(-22deg);
 }
 
-/* slanted (parallelogram) primary buttons */
-.btn-primary,.m-cta{
+/* headline accent words: red gradient. Vertical padding on the inline box
+   extends the clip area so Arabic marks above the line (hamza) survive. */
+.hl,.r{
+  background:var(--rg);-webkit-background-clip:text;background-clip:text;
+  color:transparent!important;padding:.32em 0 .06em;
+  -webkit-box-decoration-break:clone;box-decoration-break:clone;
+}
+
+/* slanted buttons */
+.btn-primary,.m-cta,.nav-cta,.btn-secondary{
   clip-path:polygon(12px 0,100% 0,calc(100% - 12px) 100%,0 100%);
-  padding-inline:38px!important;
+  padding-inline:38px!important;border:0!important;
 }
-.btn-primary:hover{filter:brightness(1.08)}
+.btn-primary,.m-cta,.nav-cta{background:var(--rg)!important;color:#fff!important}
+.btn-secondary{background:rgba(255,255,255,.13)!important;color:#fff!important}
+.btn-primary:hover,.m-cta:hover,.nav-cta:hover{filter:brightness(1.12);color:#fff!important}
+.btn-secondary:hover{background:rgba(255,255,255,.22)!important;color:#fff!important}
+.nav-cta{padding-block:11px!important}
 
-/* carbon-weave texture on the raised surfaces, low enough not to compete
-   with content */
-.tone-gray{
-  background-image:
-    linear-gradient(45deg,rgba(255,255,255,.028) 25%,transparent 25% 75%,rgba(255,255,255,.028) 75%),
-    linear-gradient(45deg,rgba(255,255,255,.028) 25%,transparent 25% 75%,rgba(255,255,255,.028) 75%);
-  background-size:8px 8px;background-position:0 0,4px 4px;
-}
+/* section head: full-width teal rule like a readout header */
+section .sec-head{max-width:none!important;border-bottom:1px solid var(--teal);padding-bottom:22px}
+section .sec-head .sec-sub{max-width:52ch}
 
-/* hero: faint diagonal speed-lines over the photo (under the text) */
+/* hero: faint speed-lines + scanlines under the text, HUD frame over the photo */
 .hero::before{
   content:'';position:absolute;inset:0;z-index:1;pointer-events:none;
-  background:repeating-linear-gradient(115deg,transparent 0 46px,rgba(245,245,242,.04) 46px 47px);
+  background:
+    repeating-linear-gradient(0deg,rgba(0,0,0,.16) 0 1px,transparent 1px 4px),
+    repeating-linear-gradient(115deg,transparent 0 46px,rgba(255,255,255,.035) 46px 47px),
+    linear-gradient(200deg,rgba(255,0,0,.3),transparent 42%);
+}
+.hud{position:absolute;z-index:2;inset:80px 24px 24px;border:1px solid rgba(255,255,255,.16);pointer-events:none;
+  font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase}
+.hud span{position:absolute;top:14px;display:flex;align-items:center;gap:8px}
+.hud .tl{right:16px;color:var(--neon)}
+.hud .tr{left:16px;color:#fff}
+.hud i{width:8px;height:8px;border-radius:50%;background:var(--neon)}
+.hud .rec i{background:#ff2d2d;animation:hudBlink 1.2s steps(2) infinite}
+.hud .rec{right:120px;color:#fff}
+@keyframes hudBlink{50%{opacity:.15}}
+@media(prefers-reduced-motion:reduce){.hud .rec i{animation:none}}
+@media(max-width:640px){.hud{inset:72px 12px 12px}.hud .rec{display:none}}
+
+/* hero text sits in a solid dark readout panel with a red top edge */
+.hero-inner{
+  background:rgba(0,0,0,.74);border:1px solid rgba(255,255,255,.14);border-top:3px solid #ff0000;
+  padding:clamp(22px,3vw,34px) clamp(20px,3vw,32px)!important;
 }
 
-/* scroll progress becomes a tachometer: white -> orange -> redline, the
-   colour tied to how far across the viewport the bar has travelled */
+/* stats: lap-timing panel */
+.stats-bar{background:transparent!important;border-top:0!important}
+.stats-grid{background:rgba(0,0,0,.78);border:1px solid rgba(255,255,255,.14);counter-reset:lap;padding:22px 8px}
+.stat-item::before{
+  counter-increment:lap;content:'LAP 0' counter(lap);display:block;margin-bottom:8px;
+  font-family:var(--mono);font-size:11px;letter-spacing:.16em;color:var(--neon);
+}
+.stat-num{color:#fff}
+
+/* portfolio: "project file" cards */
+.work-card{background:var(--p2);border:1px solid rgba(255,255,255,.14)}
+.work-media{border-radius:0}
+.work-file{position:absolute;top:12px;right:12px;z-index:2;background:rgba(0,0,0,.85);color:var(--neon);
+  font-family:var(--mono);font-size:11px;letter-spacing:.14em;padding:5px 10px}
+.work-body{padding:20px 22px 22px}
+.work-body .work-title{margin:0 0 14px}
+.work-row{display:flex;justify-content:space-between;align-items:baseline;padding:9px 0;border-top:1px dashed rgba(255,255,255,.16);font-size:13px}
+.work-row span{color:rgba(255,255,255,.5)}
+.work-row b{font-weight:500;color:#fff}
+.work-bar{height:5px;background:rgba(255,255,255,.12);margin-top:14px}
+.work-bar i{display:block;height:100%;background:linear-gradient(90deg,#7a0000,#ff0000 72%,var(--neon))}
+.work-meta,.work-num{display:none}
+
+/* call-to-action band: a red-glow readout panel */
+.cta-band-card{
+  padding:clamp(40px,6vw,80px) clamp(24px,5vw,60px)!important;
+  background:radial-gradient(circle at 12% 50%,rgba(255,0,0,.3),transparent 55%),var(--p2)!important;
+  border:1px solid rgba(255,255,255,.14)!important;
+}
+
+/* scroll progress becomes a tachometer: white -> green -> redline */
 .progress{
   height:4px!important;
   background:
-    repeating-linear-gradient(90deg,rgba(11,11,12,.55) 0 1px,transparent 1px 12px),
-    linear-gradient(90deg,#f5f5f2 0,var(--race-orange) 62%,var(--race-red) 100%)!important;
+    repeating-linear-gradient(90deg,rgba(0,0,0,.55) 0 1px,transparent 1px 12px),
+    linear-gradient(90deg,#fff 0,var(--neon) 55%,#ff0000 100%)!important;
   background-size:100% 100%,100vw 100%!important;
   background-position:0 0,right top!important;
-}
-
-/* project number reads as a race-number plate */
-.work-num{
-  display:inline-block;padding:2px 9px;border:1px solid currentColor;
-  transform:skewX(-12deg);
 }
 
 /* ── music toggle ─────────────────────────────────────────────────── */
 .race-sound{
   position:fixed;right:20px;bottom:22px;z-index:395;
   display:flex;align-items:center;gap:10px;height:44px;padding:0 18px 0 16px;
-  background:rgba(11,11,12,.92);color:#f5f5f2;border:0;cursor:pointer;
-  font:600 12.5px/1 var(--font,'IBM Plex Sans Arabic',sans-serif);
+  background:rgba(0,0,0,.92);color:#fff;border:0;cursor:pointer;
+  font:600 12.5px/1 var(--font,'Tajawal',sans-serif);
   clip-path:polygon(12px 0,100% 0,calc(100% - 12px) 100%,0 100%);
   box-shadow:inset 0 0 0 1px rgba(245,245,242,.2);
   transition:background .25s;
 }
-.race-sound:hover{background:#17171a}
-.race-sound::before{ /* racing stripe along the bottom edge */
-  content:'';position:absolute;left:0;right:0;bottom:0;height:3px;
-  background:linear-gradient(90deg,var(--race-red),var(--race-orange));
-}
+.race-sound:hover{background:#151515}
+.race-sound::before{content:'';position:absolute;left:0;right:0;bottom:0;height:3px;
+  background:linear-gradient(90deg,var(--race-red),var(--race-orange))}
 .race-sound:focus-visible{outline:2px solid var(--race-orange);outline-offset:3px}
 .rs-bars{display:inline-flex;align-items:flex-end;gap:3px;height:16px}
 .rs-bars i{display:block;width:3px;height:4px;background:var(--race-orange);transform-origin:bottom}
@@ -78,16 +155,33 @@ footer{padding-bottom:56px!important}
 .race-sound[aria-pressed="true"] .rs-bars i:nth-child(4){animation-delay:-.15s}
 @keyframes rsEq{0%,100%{height:4px}50%{height:16px}}
 .race-sound.nudge{animation:rsNudge 2.4s ease-out 3}
-@keyframes rsNudge{0%{box-shadow:inset 0 0 0 1px rgba(245,245,242,.2),0 0 0 0 rgba(255,106,0,.55)}
-  100%{box-shadow:inset 0 0 0 1px rgba(245,245,242,.2),0 0 0 16px rgba(255,106,0,0)}}
+@keyframes rsNudge{0%{box-shadow:inset 0 0 0 1px rgba(245,245,242,.2),0 0 0 0 rgba(4,240,106,.55)}
+  100%{box-shadow:inset 0 0 0 1px rgba(245,245,242,.2),0 0 0 16px rgba(4,240,106,0)}}
 @media(max-width:520px){.race-sound{right:14px;bottom:16px;height:40px;padding:0 14px 0 12px}
   .rs-label{display:none}}
 @media(prefers-reduced-motion:reduce){
   .race-sound[aria-pressed="true"] .rs-bars i{animation:none;height:10px}
   .race-sound.nudge{animation:none}
 }
-
-/* muted state: the equalizer bars give way to a muted-speaker icon */
 .rs-mute{display:none;font-size:17px;line-height:1;color:var(--race-orange)}
 .race-sound[aria-pressed="false"] .rs-bars{display:none}
 .race-sound[aria-pressed="false"] .rs-mute{display:inline-block}
+
+/* let the hero photo read: lighter wash than the old full-dark gradient */
+.hero-bg::after{background:linear-gradient(180deg,rgba(0,0,0,.05) 0,rgba(0,0,0,.34) 55%,rgba(0,0,0,.86) 100%)!important}
+.hero::before{background:
+  repeating-linear-gradient(0deg,rgba(0,0,0,.1) 0 1px,transparent 1px 4px),
+  repeating-linear-gradient(115deg,transparent 0 46px,rgba(255,255,255,.03) 46px 47px),
+  linear-gradient(200deg,rgba(255,0,0,.2),transparent 42%)!important}
+.hero-inner{background:rgba(0,0,0,.62)}
+
+@media(max-width:640px){
+  .hero-inner{padding:18px 16px!important}
+  .hero .eyebrow{margin-bottom:16px}
+  .stats-grid{padding:10px 4px;gap:10px 6px}
+  .stat-item::before{margin-bottom:3px;font-size:10px}
+  .stat-label{font-size:10.5px}
+}
+
+/* the CTA headline now lives inside a panel, so it needs a smaller scale */
+.cta-band-title{font-size:clamp(32px,5.4vw,76px)!important;max-width:none!important}
