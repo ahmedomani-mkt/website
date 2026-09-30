@@ -360,6 +360,7 @@
   window.addEventListener('wheel',maybe,{passive:true});
   window.addEventListener('touchmove',maybe,{passive:true});
   // warm the image so the first pass isn't skipped
-  var pre=new Image();pre.src=SRC;
+  function warm(){if(!layer)build()}
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',warm);else warm();
   window.RaceDrift={play:function(){last=0;play()}};
 })();
