@@ -230,23 +230,65 @@
 /* Drift pass — every ~15 s of scrolling a drift car slides across the screen
    trailing tyre smoke, with a synthesised engine + tyre-screech that pans with
    the car. The sound follows the music's mute button; motion is skipped when the
-   visitor prefers reduced motion. The car image is assets/drift-car.png. */
+   visitor prefers reduced motion. The car is an inline SVG drawn in the site's colours. */
 (function(){
   'use strict';
-  var GAP=15000,DUR=3600,SRC='assets/drift-car.png';
+  var GAP=15000,DUR=3600;
   var reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if(reduce)return;
-  var last=Date.now(),busy=false,layer,car,cv,cx,img,sprite;
+
+  var CAR_SVG='<svg viewBox="0 0 600 220" width="100%" style="display:block;overflow:visible" xmlns="http://www.w3.org/2000/svg">'
+  +'<defs>'
+  +'<linearGradient id="dcBody" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff4a3a"/><stop offset=".5" stop-color="#e00000"/><stop offset="1" stop-color="#6d0000"/></linearGradient>'
+  +'<linearGradient id="dcGlass" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1c2f3d"/><stop offset="1" stop-color="#05080c"/></linearGradient>'
+  +'<radialGradient id="dcRim" cx=".4" cy=".35" r=".8"><stop offset="0" stop-color="#f5f5f5"/><stop offset="1" stop-color="#7d8288"/></radialGradient>'
+  +'<radialGradient id="dcGlow" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#04F06A" stop-opacity=".55"/><stop offset="1" stop-color="#04F06A" stop-opacity="0"/></radialGradient>'
+  +'<clipPath id="dcArch"><rect x="0" y="0" width="600" height="159"/></clipPath>'
+  +'</defs>'
+  +'<ellipse cx="300" cy="196" rx="290" ry="16" fill="url(#dcGlow)"/>'
+  +'<ellipse cx="300" cy="194" rx="255" ry="6" fill="#000" opacity=".55"/>'
+  // wing
+  +'<path d="M62 116 L56 92 M84 112 L80 92" stroke="#111" stroke-width="5" fill="none"/>'
+  +'<path d="M34 86 L104 84 L104 92 L34 94 Z" fill="#0d0d0d"/><path d="M34 86 L104 84" stroke="#04F06A" stroke-width="2"/>'
+  // body
+  +'<path d="M46 156 L43 128 Q43 116 58 114 L150 106 Q176 104 196 84 L232 58 Q240 52 256 52 L338 52 Q352 52 362 60 L410 98 L500 110 Q540 116 556 132 L561 148 Q561 158 550 158 Z" fill="url(#dcBody)"/>'
+  +'<path d="M150 106 Q176 104 196 84 L232 58 Q240 52 256 52 L338 52 Q352 52 362 60 L410 98 L500 110" fill="none" stroke="#ff8a7a" stroke-width="1.6" opacity=".7"/>'
+  // glass
+  +'<path d="M208 96 L238 64 L336 64 L385 97 Z" fill="url(#dcGlass)"/>'
+  +'<path d="M290 64 L290 97" stroke="#b30000" stroke-width="5"/>'
+  +'<path d="M242 68 L262 68 L232 96 L214 96 Z" fill="#fff" opacity=".07"/>'
+  // livery stripe + door
+  +'<path d="M50 132 L548 124" stroke="#fff" stroke-width="6" fill="none"/><path d="M50 139 L548 131" stroke="#04F06A" stroke-width="2.4" fill="none"/>'
+  +'<path d="M289 100 L286 152 M196 100 L192 152" stroke="#000" stroke-opacity=".35" stroke-width="1.6" fill="none"/>'
+  +'<rect x="255" y="106" width="20" height="4" rx="2" fill="#000" opacity=".4"/>'
+  +'<text x="212" y="150" font-family="Archivo,Arial,sans-serif" font-weight="800" font-size="11" letter-spacing="2.6" fill="#fff" opacity=".92">AHMED OMANI</text>'
+  // skirt, lights, splitter, mirror
+  +'<path d="M176 150 L440 150 L436 158 L180 158 Z" fill="#0b0b0b"/>'
+  +'<rect x="44" y="118" width="9" height="12" rx="2" fill="#ff2a2a"/><rect x="44" y="118" width="9" height="12" rx="2" fill="#ff2a2a" opacity=".6" style="filter:blur(4px)"/>'
+  +'<path d="M516 114 L552 124 L546 133 L512 124 Z" fill="#fff8d8"/><path d="M516 114 L552 124 L546 133 L512 124 Z" fill="#fff8d8" style="filter:blur(5px)" opacity=".7"/>'
+  +'<path d="M498 158 L562 158 L562 162 L498 162 Z" fill="#0b0b0b"/>'
+  +'<path d="M370 98 L388 96 L386 104 L372 106 Z" fill="#b30000"/>'
+  // wheels: arch cut-outs then tyres
+  +'<g clip-path="url(#dcArch)"><circle cx="140" cy="158" r="41" fill="#05070a"/><circle cx="452" cy="158" r="41" fill="#05070a"/></g>'
+  +WHEEL(140,158,1)+WHEEL(452,158,.86)
+  +'</svg>';
+  function WHEEL(cx,cy,sx){
+    var sp='';for(var i=0;i<5;i++)sp+='<line x1="0" y1="0" x2="0" y2="-20" stroke="#2a2d31" stroke-width="5" stroke-linecap="round" transform="rotate('+(i*72)+')"/>';
+    return '<g transform="translate('+cx+' '+cy+') scale('+sx+' 1)"><circle r="33" fill="#0b0b0b" stroke="#2b2b2b" stroke-width="3"/><circle r="23" fill="url(#dcRim)"/>'
+      +'<g class="dc-spin">'+sp+'<circle r="5" fill="#ff2a2a"/></g><circle r="23" fill="none" stroke="#fff" stroke-opacity=".7" stroke-width="1.5"/></g>';
+  }
+  var last=Date.now(),busy=false,layer,car,cv,cx,sprite;
 
   function build(){
+    if(!document.getElementById('dcStyle')){var st=document.createElement('style');st.id='dcStyle';st.textContent='.dc-spin{transform-box:fill-box;transform-origin:center;animation:dcspin .18s linear infinite}@keyframes dcspin{to{transform:rotate(360deg)}}';document.head.appendChild(st)}
     layer=document.createElement('div');
     layer.setAttribute('aria-hidden','true');
     layer.style.cssText='position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:700;display:none';
     cv=document.createElement('canvas');
     cv.style.cssText='position:absolute;inset:0;width:100%;height:100%';
-    car=document.createElement('img');
-    car.alt='';car.decoding='async';car.src=SRC;
-    car.style.cssText='position:absolute;left:0;top:0;height:auto;will-change:transform;transform-origin:56% 78%;filter:drop-shadow(0 18px 22px rgba(0,0,0,.6))';
+    car=document.createElement('div');
+    car.innerHTML=CAR_SVG;
+    car.style.cssText='position:absolute;left:0;top:0;will-change:transform;transform-origin:56% 78%';
     layer.appendChild(cv);layer.appendChild(car);document.body.appendChild(layer);
     cx=cv.getContext('2d');
     // one soft white puff, reused for every smoke particle
@@ -309,37 +351,36 @@
   function play(){
     if(busy)return;
     if(!layer)build();
-    if(!car.complete||!car.naturalWidth)return;               // image not ready yet: try again on the next scroll
-    busy=true;last=Date.now();
+        busy=true;last=Date.now();
     var vw=window.innerWidth,vh=window.innerHeight;
-    var w=Math.max(230,Math.min(vw*(vw<700?.7:.42),560)),h=w*car.naturalHeight/car.naturalWidth;
+    var w=Math.max(230,Math.min(vw*(vw<700?.7:.42),560)),h=w*220/600;
     var dpr=Math.min(window.devicePixelRatio||1,2);
     cv.width=vw*dpr;cv.height=vh*dpr;cx.setTransform(dpr,0,0,dpr,0,0);
-    car.style.width=w+'px';
+    car.style.width=w+'px';car.style.height=h+'px';
     var baseY=vh-h-Math.max(24,vh*.1);
     layer.style.display='block';
-    var k=Math.min(1,w/520),snd=sfx(),parts=[],t0=performance.now(),prev=t0;
+    var sk=Math.min(1,w/520),snd=sfx(),parts=[],t0=performance.now(),prev=t0;
     function frame(now){
       var p=Math.min(1,(now-t0)/DUR),dt=Math.min(.05,(now-prev)/1000);prev=now;
       var e=p+.09*Math.sin(2*Math.PI*p);                     // fast in, hanging mid-slide, fast out
       var x=-w*1.05+(vw+w*1.6)*e;
-      var ang=-7*Math.sin(Math.PI*p)+3*Math.sin(3*Math.PI*p); // drift angle with a counter-steer flick
+      var ang=-2.5*Math.sin(Math.PI*p)+2*Math.sin(3*Math.PI*p); // drift angle with a counter-steer flick
       var y=baseY+Math.sin(p*Math.PI*6)*2;
       car.style.transform='translate3d('+x+'px,'+y+'px,0) rotate('+ang+'deg) skewX('+(-6*Math.sin(Math.PI*p))+'deg)';
       // smoke leaves the rear wheel while the car is sliding
       var sl=p>.1&&p<.9;
       if(sl){
-        var rx=x+w*.31,ry=y+h*.84;
-        for(var i=0;i<3;i++)parts.push({x:rx+Math.random()*20,y:ry+Math.random()*12,vx:-40-Math.random()*90,vy:-14-Math.random()*36,s:34+Math.random()*30,life:0,max:1.3+Math.random()*1.1});
+        var rx=x+w*.235,ry=y+h*.86;
+        for(var i=0;i<3;i++)parts.push({x:rx+Math.random()*14,y:ry-Math.random()*14,vx:-30-Math.random()*70,vy:-6-Math.random()*22,s:22+Math.random()*22,life:0,max:.7+Math.random()*.6});
       }
       cx.clearRect(0,0,vw,vh);
       for(var k=parts.length-1;k>=0;k--){
         var q=parts[k];q.life+=dt;
         if(q.life>=q.max){parts.splice(k,1);continue}
         var a=q.life/q.max;
-        q.x+=q.vx*dt;q.y+=q.vy*dt;q.vy-=6*dt;
-        var s=(q.s+a*170)*k;
-        cx.globalAlpha=(1-a)*(1-a)*(vw<700?.4:.5);
+        q.x+=q.vx*dt;q.y+=q.vy*dt;
+        var s=(q.s+a*95)*sk;
+        cx.globalAlpha=(1-a)*(1-a)*(vw<700?.45:.55);
         cx.drawImage(sprite,q.x-s/2,q.y-s/2,s,s);
       }
       cx.globalAlpha=1;
