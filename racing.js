@@ -176,7 +176,17 @@
     }
   }
 
-  window.RaceMusic={_makeEngine:makeEngine,start:start,stop:stop};
+  window.RaceMusic={_makeEngine:makeEngine,start:start,stop:stop,
+    isOn:function(){return on&&!!ctx&&ctx.state==='running'},
+    ctx:function(){return ctx},
+    // dip the music for `sec` seconds so a sound effect can stand out
+    dip:function(sec){
+      if(!ctx||!duck||ducked)return;
+      var t=ctx.currentTime;
+      duck.gain.cancelScheduledValues(t);duck.gain.setValueAtTime(duck.gain.value,t);
+      duck.gain.linearRampToValueAtTime(.3,t+.3);
+      duck.gain.linearRampToValueAtTime(1,t+sec);
+    }};
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mount);else mount();
 })();
 
@@ -215,4 +225,141 @@
   function init(){['navLogoImg','ftLogoImg'].forEach(function(id){var im=document.getElementById(id);if(im)whitenLogo(im)})}
   window.whitenLogo=whitenLogo;
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+})();
+
+/* Drift pass — every ~15 s of scrolling a drift car slides across the screen
+   trailing tyre smoke, with a synthesised engine + tyre-screech that pans with
+   the car. The sound follows the music's mute button; motion is skipped when the
+   visitor prefers reduced motion. The car image is assets/drift-car.png. */
+(function(){
+  'use strict';
+  var GAP=15000,DUR=3600,SRC='assets/drift-car.png';
+  var reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(reduce)return;
+  var last=Date.now(),busy=false,layer,car,cv,cx,img,sprite;
+
+  function build(){
+    layer=document.createElement('div');
+    layer.setAttribute('aria-hidden','true');
+    layer.style.cssText='position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:700;display:none';
+    cv=document.createElement('canvas');
+    cv.style.cssText='position:absolute;inset:0;width:100%;height:100%';
+    car=document.createElement('img');
+    car.alt='';car.decoding='async';car.src=SRC;
+    car.style.cssText='position:absolute;left:0;top:0;height:auto;will-change:transform;transform-origin:56% 78%;filter:drop-shadow(0 18px 22px rgba(0,0,0,.6))';
+    layer.appendChild(cv);layer.appendChild(car);document.body.appendChild(layer);
+    cx=cv.getContext('2d');
+    // one soft white puff, reused for every smoke particle
+    sprite=document.createElement('canvas');sprite.width=sprite.height=96;
+    var g=sprite.getContext('2d'),gr=g.createRadialGradient(48,48,0,48,48,48);
+    gr.addColorStop(0,'rgba(235,235,240,.9)');gr.addColorStop(.45,'rgba(200,200,210,.4)');gr.addColorStop(1,'rgba(180,180,190,0)');
+    g.fillStyle=gr;g.fillRect(0,0,96,96);
+  }
+
+  /* ── sound ── */
+  function sfx(){
+    var RM=window.RaceMusic;
+    if(!RM||!RM.isOn())return null;
+    var ctx=RM.ctx(),t=ctx.currentTime;
+    var out=ctx.createGain();out.gain.value=0;
+    var pan=ctx.createStereoPanner?ctx.createStereoPanner():null;
+    if(pan){out.connect(pan);pan.connect(ctx.destination)}else out.connect(ctx.destination);
+    // engine: two detuned saws + a sub square through a moving low-pass
+    var lp=ctx.createBiquadFilter();lp.type='lowpass';lp.Q.value=4;
+    var o1=ctx.createOscillator(),o2=ctx.createOscillator(),o3=ctx.createOscillator();
+    o1.type='sawtooth';o2.type='sawtooth';o3.type='square';o2.detune.value=14;
+    var eg=ctx.createGain();eg.gain.value=.5;
+    [o1,o2,o3].forEach(function(o){o.connect(lp);o.start(t)});
+    lp.connect(eg);eg.connect(out);
+    // tyre screech: noise through a wobbling band-pass
+    var nb=ctx.createBuffer(1,ctx.sampleRate*2,ctx.sampleRate),d=nb.getChannelData(0);
+    for(var i=0;i<d.length;i++)d[i]=Math.random()*2-1;
+    var ns=ctx.createBufferSource();ns.buffer=nb;ns.loop=true;
+    var bp=ctx.createBiquadFilter();bp.type='bandpass';bp.Q.value=7;bp.frequency.value=2400;
+    var sg=ctx.createGain();sg.gain.value=0;
+    ns.connect(bp);bp.connect(sg);sg.connect(out);ns.start(t);
+    var ns2=ctx.createBufferSource();ns2.buffer=nb;ns2.loop=true;
+    var hp=ctx.createBiquadFilter();hp.type='highpass';hp.frequency.value=5200;
+    var hg=ctx.createGain();hg.gain.value=0;
+    ns2.connect(hp);hp.connect(hg);hg.connect(out);ns2.start(t,.7);
+    RM.dip(DUR/1000+1);
+    return{
+      set:function(p){
+        var n=ctx.currentTime,gear=Math.min(2,Math.floor(p*3)),gp=p*3-gear;
+        var dop=1.12-.24*p;                                  // approaching = higher, leaving = lower
+        var f=(62+gear*16+gp*(150+gear*30))*dop;
+        [o1,o2].forEach(function(o){o.frequency.setTargetAtTime(f,n,.03)});
+        o3.frequency.setTargetAtTime(f/2,n,.03);
+        lp.frequency.setTargetAtTime(500+f*5,n,.05);
+        var near=Math.sin(Math.PI*p);
+        out.gain.setTargetAtTime(.22+.55*near,n,.05);
+        if(pan)pan.pan.setTargetAtTime(-.9+1.8*p,n,.05);
+        var sl=p>.14&&p<.86?Math.min(1,Math.sin(Math.PI*(p-.14)/.72)*1.6):0;   // slide phase
+        sg.gain.setTargetAtTime(sl*.22,n,.06);hg.gain.setTargetAtTime(sl*.1,n,.06);
+        bp.frequency.setTargetAtTime(2200+500*Math.sin(p*38)+400*sl,n,.04);
+      },
+      end:function(){
+        var n=ctx.currentTime;out.gain.cancelScheduledValues(n);out.gain.setTargetAtTime(0,n,.08);
+        setTimeout(function(){[o1,o2,o3,ns,ns2].forEach(function(s){try{s.stop()}catch(e){}});out.disconnect()},500);
+      }
+    };
+  }
+
+  /* ── one pass ── */
+  function play(){
+    if(busy)return;
+    if(!layer)build();
+    if(!car.complete||!car.naturalWidth)return;               // image not ready yet: try again on the next scroll
+    busy=true;last=Date.now();
+    var vw=window.innerWidth,vh=window.innerHeight;
+    var w=Math.max(230,Math.min(vw*(vw<700?.7:.42),560)),h=w*car.naturalHeight/car.naturalWidth;
+    var dpr=Math.min(window.devicePixelRatio||1,2);
+    cv.width=vw*dpr;cv.height=vh*dpr;cx.setTransform(dpr,0,0,dpr,0,0);
+    car.style.width=w+'px';
+    var baseY=vh-h-Math.max(24,vh*.1);
+    layer.style.display='block';
+    var k=Math.min(1,w/520),snd=sfx(),parts=[],t0=performance.now(),prev=t0;
+    function frame(now){
+      var p=Math.min(1,(now-t0)/DUR),dt=Math.min(.05,(now-prev)/1000);prev=now;
+      var e=p+.09*Math.sin(2*Math.PI*p);                     // fast in, hanging mid-slide, fast out
+      var x=-w*1.05+(vw+w*1.6)*e;
+      var ang=-7*Math.sin(Math.PI*p)+3*Math.sin(3*Math.PI*p); // drift angle with a counter-steer flick
+      var y=baseY+Math.sin(p*Math.PI*6)*2;
+      car.style.transform='translate3d('+x+'px,'+y+'px,0) rotate('+ang+'deg) skewX('+(-6*Math.sin(Math.PI*p))+'deg)';
+      // smoke leaves the rear wheel while the car is sliding
+      var sl=p>.1&&p<.9;
+      if(sl){
+        var rx=x+w*.31,ry=y+h*.84;
+        for(var i=0;i<3;i++)parts.push({x:rx+Math.random()*20,y:ry+Math.random()*12,vx:-40-Math.random()*90,vy:-14-Math.random()*36,s:34+Math.random()*30,life:0,max:1.3+Math.random()*1.1});
+      }
+      cx.clearRect(0,0,vw,vh);
+      for(var k=parts.length-1;k>=0;k--){
+        var q=parts[k];q.life+=dt;
+        if(q.life>=q.max){parts.splice(k,1);continue}
+        var a=q.life/q.max;
+        q.x+=q.vx*dt;q.y+=q.vy*dt;q.vy-=6*dt;
+        var s=(q.s+a*170)*k;
+        cx.globalAlpha=(1-a)*(1-a)*(vw<700?.4:.5);
+        cx.drawImage(sprite,q.x-s/2,q.y-s/2,s,s);
+      }
+      cx.globalAlpha=1;
+      if(snd){if(p<1)snd.set(p);else{snd.end();snd=null}}
+      if(p<1||parts.length)requestAnimationFrame(frame);
+      else{layer.style.display='none';busy=false}
+    }
+    requestAnimationFrame(frame);
+  }
+
+  function maybe(){
+    if(busy||document.hidden||Date.now()-last<GAP)return;
+    var vm=document.getElementById('vidModal');
+    if(vm&&vm.classList.contains('open'))return;
+    play();
+  }
+  window.addEventListener('scroll',maybe,{passive:true});
+  window.addEventListener('wheel',maybe,{passive:true});
+  window.addEventListener('touchmove',maybe,{passive:true});
+  // warm the image so the first pass isn't skipped
+  var pre=new Image();pre.src=SRC;
+  window.RaceDrift={play:function(){last=0;play()}};
 })();
