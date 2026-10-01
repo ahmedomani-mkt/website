@@ -462,3 +462,34 @@
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 })();
+
+/* Published CMS pages (e.g. "من نحن") join the header + phone menu on every page,
+   not just the homepage. Waits for the page's own Supabase client, skips links
+   that are already there. */
+(function(){
+  function add(list){
+    if(!list||!list.length)return;
+    var nl=document.getElementById('navLinks'),mn=document.querySelector('#mobileNav ul');
+    list.forEach(function(p){
+      var href='page.html?slug='+encodeURIComponent(p.slug);
+      [[nl,false],[mn,true]].forEach(function(t){
+        var ul=t[0];
+        if(!ul||ul.querySelector('a[href="'+href+'"]'))return;
+        var li=document.createElement('li'),a=document.createElement('a');
+        a.href=href;a.textContent=p.title;
+        if(t[1]&&window.closeMenu)a.addEventListener('click',function(){window.closeMenu()});
+        if(location.pathname.indexOf('page.html')>-1&&location.search.indexOf('slug='+encodeURIComponent(p.slug))>-1)a.className='active';
+        li.appendChild(a);ul.appendChild(li);
+      });
+    });
+  }
+  var tries=0;
+  (function wait(){
+    if(window.sb&&window.sb.from){
+      window.sb.from('ao_pages').select('title,slug').eq('is_published',true).order('created_at')
+        .then(function(r){add(r&&r.data)},function(){});
+      return;
+    }
+    if(++tries<40)setTimeout(wait,300);
+  })();
+})();
