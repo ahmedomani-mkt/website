@@ -298,3 +298,22 @@ section .sec-head .sec-sub{margin-inline:0 auto!important}
 .cat-badges,.cat-filter{justify-content:center!important}
 .cat-header h1{text-wrap:balance}
 .cat-header-inner{max-width:920px!important}
+
+/* ══ NAV — one shared menu on every page, catalog opens a drop-down ═════ */
+.nav-links{align-self:stretch}
+.nav-links>li{position:relative;display:flex;align-items:center}
+.has-sub>a>i{font-size:10px;margin-inline-start:6px;display:inline-block;transition:transform .2s}
+.has-sub:hover>a>i,.has-sub.open>a>i{transform:rotate(180deg)}
+.nav-sub{
+  list-style:none;margin:0;padding:6px 0;position:absolute;top:100%;inset-inline-start:0;min-width:280px;
+  background:rgba(0,0,0,.98);border:1px solid rgba(255,255,255,.16);border-top:2px solid var(--race-red);
+  opacity:0;visibility:hidden;transform:translateY(8px);transition:opacity .18s,transform .18s,visibility .18s;z-index:620;
+}
+.has-sub:hover>.nav-sub,.has-sub:focus-within>.nav-sub,.has-sub.open>.nav-sub{opacity:1;visibility:visible;transform:none}
+.nav-sub li{display:block}
+.nav-sub a{display:block!important;padding:13px 20px!important;white-space:nowrap;border-inline-start:3px solid transparent}
+.nav-sub a:hover{background:rgba(255,255,255,.06);color:#fff!important}
+.nav-sub a.active{color:#fff!important;border-inline-start-color:var(--race-red)}
+/* phone menu: the two catalogs sit under a small "الكتالوج" label */
+.mobile-nav .m-group{padding:18px 2px 4px;font-family:var(--mono);font-size:12px;letter-spacing:.14em;color:var(--neon);border:0}
+.mobile-nav .m-sub a{padding-inline-start:20px;font-size:20px}

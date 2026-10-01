@@ -441,3 +441,24 @@
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',warm);else warm();
   window.RaceDrift={play:function(){last=0;play()}};
 })();
+
+/* Catalog drop-down: hover opens it on desktop (CSS); a click/tap toggles it
+   instead of jumping straight to the first catalog. */
+(function(){
+  function init(){
+    var items=document.querySelectorAll('.nav-links .has-sub');
+    if(!items.length)return;
+    items.forEach(function(li){
+      var a=li.querySelector(':scope>a');
+      a.addEventListener('click',function(e){
+        e.preventDefault();
+        var open=!li.classList.contains('open');
+        li.classList.toggle('open',open);a.setAttribute('aria-expanded',open?'true':'false');
+      });
+    });
+    function closeAll(){items.forEach(function(li){li.classList.remove('open');li.querySelector(':scope>a').setAttribute('aria-expanded','false')})}
+    document.addEventListener('click',function(e){if(!e.target.closest||!e.target.closest('.has-sub'))closeAll()});
+    document.addEventListener('keydown',function(e){if(e.key==='Escape')closeAll()});
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+})();

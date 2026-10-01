@@ -632,10 +632,16 @@ footer{padding:0 var(--pad);background:var(--p1)}
 <nav id="mainNav">
   <a href="https://wa.me/201152501056?text=مرحبا،%20أريد%20الاستفسار%20عن%20خدماتكم" class="nav-cta" target="_blank" rel="noopener">يلا نتكلم</a>
   <ul class="nav-links" id="navLinks">
+    <li><a href="#home">الرئيسية</a></li>
     <li><a href="#portfolio">أعمالنا</a></li>
     <li><a href="#services">خدماتنا</a></li>
     <li><a href="#intro">نبذة عنا</a></li>
-    <li><a href="catalog.html">الكتالوج</a></li>
+    <li class="has-sub"><a href="catalog.html" aria-haspopup="true" aria-expanded="false">الكتالوج <i class="bi bi-chevron-down"></i></a>
+      <ul class="nav-sub">
+        <li><a href="catalog.html">كتالوج الدعاية والإعلان</a></li>
+        <li><a href="catalog-marketing.html">كتالوج التسويق</a></li>
+      </ul>
+    </li>
   </ul>
   <button class="burger" id="burger" onclick="toggleMenu()" aria-label="القائمة">
     <span></span><span></span><span></span>
@@ -648,11 +654,15 @@ footer{padding:0 var(--pad);background:var(--p1)}
 <!-- ══ MOBILE OVERLAY ═══════════════════════════════ -->
 <div class="mobile-nav" id="mobileNav">
   <ul id="mobileNavList">
+    <li><a href="#home" onclick="closeMenu()">الرئيسية</a></li>
     <li><a href="#portfolio" onclick="closeMenu()">أعمالنا</a></li>
     <li><a href="#services" onclick="closeMenu()">خدماتنا</a></li>
     <li><a href="#intro" onclick="closeMenu()">نبذة عنا</a></li>
-    <li><a href="catalog.html" onclick="closeMenu()">الكتالوج</a></li>
+    <li class="m-group">الكتالوج</li>
+    <li class="m-sub"><a href="catalog.html" onclick="closeMenu()">كتالوج الدعاية والإعلان</a></li>
+    <li class="m-sub"><a href="catalog-marketing.html" onclick="closeMenu()">كتالوج التسويق</a></li>
     <li><a href="#clients" onclick="closeMenu()">عملاؤنا</a></li>
+    <li><a href="#faq" onclick="closeMenu()">الأسئلة الشائعة</a></li>
   </ul>
   <a href="https://wa.me/201152501056?text=مرحبا،%20أريد%20الاستفسار%20عن%20خدماتكم" class="m-cta" target="_blank" rel="noopener">يلا نتكلم</a>
 </div>

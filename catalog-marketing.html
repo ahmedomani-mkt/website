@@ -258,8 +258,14 @@ footer{border-top:1px solid var(--line);padding:24px var(--pad);display:flex;ali
   <ul class="nav-links" id="navLinks">
     <li><a href="index.html">الرئيسية</a></li>
     <li><a href="index.html#portfolio">أعمالنا</a></li>
-    <li><a href="catalog.html">كتالوج الدعاية والإعلان</a></li>
-    <li><a href="catalog-marketing.html" class="active">كتالوج التسويق</a></li>
+    <li><a href="index.html#services">خدماتنا</a></li>
+    <li><a href="index.html#intro">نبذة عنا</a></li>
+    <li class="has-sub"><a href="catalog.html" class="active" aria-haspopup="true" aria-expanded="false">الكتالوج <i class="bi bi-chevron-down"></i></a>
+      <ul class="nav-sub">
+        <li><a href="catalog.html">كتالوج الدعاية والإعلان</a></li>
+        <li><a href="catalog-marketing.html" class="active">كتالوج التسويق</a></li>
+      </ul>
+    </li>
   </ul>
   <button class="burger" id="burger" onclick="toggleMenu()" aria-label="القائمة">
     <span></span><span></span><span></span>
@@ -273,8 +279,11 @@ footer{border-top:1px solid var(--line);padding:24px var(--pad);display:flex;ali
   <ul>
     <li><a href="index.html" onclick="closeMenu()">الرئيسية</a></li>
     <li><a href="index.html#portfolio" onclick="closeMenu()">أعمالنا</a></li>
-    <li><a href="catalog.html" onclick="closeMenu()">كتالوج الدعاية والإعلان</a></li>
-    <li><a href="catalog-marketing.html" onclick="closeMenu()">كتالوج التسويق</a></li>
+    <li><a href="index.html#services" onclick="closeMenu()">خدماتنا</a></li>
+    <li><a href="index.html#intro" onclick="closeMenu()">نبذة عنا</a></li>
+    <li class="m-group">الكتالوج</li>
+    <li class="m-sub"><a href="catalog.html" onclick="closeMenu()">كتالوج الدعاية والإعلان</a></li>
+    <li class="m-sub"><a href="catalog-marketing.html" onclick="closeMenu()">كتالوج التسويق</a></li>
     <li><a href="index.html#clients" onclick="closeMenu()">عملاؤنا</a></li>
     <li><a href="index.html#faq" onclick="closeMenu()">الأسئلة الشائعة</a></li>
   </ul>
