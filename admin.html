@@ -369,6 +369,7 @@ button,select,input,textarea{font-family:var(--font)}
 .card::before,.card::after,.ds-card::before{content:'';position:absolute;width:14px;height:14px;border:2px solid var(--red);pointer-events:none;opacity:.9}
 .card::before{top:-1px;right:-1px;border-left:0;border-bottom:0}
 .card::after{bottom:-1px;left:-1px;border-right:0;border-top:0}
+.ds-card::before{display:none}
 .ds-card::after{background:var(--rg)}
 .ds-num{font-family:var(--mono);letter-spacing:.03em}
 .ds-label,.tb-status{font-family:var(--font)}
@@ -378,6 +379,35 @@ button,select,input,textarea{font-family:var(--font)}
 .tb-theme,.tb-preview,.tb-out{border-radius:2px}
 .upload-bar{background:linear-gradient(90deg,#7a0000,#ff0000 72%,var(--neon))}
 ::selection{background:var(--red);color:#fff}
+
+/* date-range bar + daily chart + events log */
+.range-bar{background:var(--s);border:1px solid var(--b);border-radius:var(--r);padding:14px 16px;margin-bottom:16px;display:flex;flex-direction:column;gap:12px}
+.range-head{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.range-title{display:flex;align-items:center;gap:8px;font-weight:800;font-size:14px}
+.range-title svg{width:16px;height:16px;stroke:var(--red);fill:none;stroke-width:2}
+.range-label{font-family:var(--mono);font-size:12px;color:var(--neon);letter-spacing:.04em}
+.range-chips{display:flex;gap:6px;flex-wrap:wrap}
+.range-chips button{background:transparent;border:1px solid var(--b2);color:var(--w2);padding:7px 14px;font-size:12.5px;font-weight:700;border-radius:2px;cursor:pointer;transition:.15s}
+.range-chips button:hover{border-color:var(--red);color:var(--w)}
+.range-chips button.on{background:var(--rg);border-color:transparent;color:#fff}
+.range-custom{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.range-custom label{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--w3);font-weight:600}
+.range-custom input[type=date]{background:var(--dk);border:1px solid var(--b2);color:var(--w);padding:7px 10px;border-radius:2px;font-family:var(--font);font-size:12.5px;color-scheme:dark}
+:root[data-theme="light"] .range-custom input[type=date]{color-scheme:light}
+.dchart{display:flex;align-items:flex-end;gap:4px;height:170px;overflow-x:auto;padding-bottom:2px}
+.dcol{flex:1 0 22px;display:flex;flex-direction:column;align-items:center;gap:3px;height:100%;justify-content:flex-end}
+.dbar{width:100%;max-width:26px;flex:1;display:flex;align-items:flex-end;background:var(--off-bg);border-radius:2px 2px 0 0}
+.dbar i{display:block;width:100%;background:linear-gradient(0deg,#7a0000,#ff0000 70%,var(--neon));border-radius:2px 2px 0 0;min-height:0}
+.dnum{font-family:var(--mono);font-size:10px;color:var(--w2);height:12px}
+.dlbl{font-family:var(--mono);font-size:9.5px;color:var(--g)}
+.ev-table{display:flex;flex-direction:column}
+.ev-row{display:grid;grid-template-columns:190px auto 1fr;gap:14px;align-items:center;padding:10px 4px;border-bottom:1px dashed var(--b2)}
+.ev-when{display:flex;flex-direction:column;gap:2px}
+.ev-when b{font-family:var(--mono);font-size:13px;letter-spacing:.04em;color:var(--w)}
+.ev-when span{font-size:11px;color:var(--g)}
+.ev-meta{font-size:12.5px;color:var(--w2);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ev-foot{display:flex;align-items:center;gap:10px;margin-top:12px;font-size:12px;color:var(--g)}
+@media(max-width:700px){.ev-row{grid-template-columns:1fr auto;gap:6px}.ev-meta{grid-column:1/-1;white-space:normal}}
 </style>
 <script>
 try{
@@ -503,6 +533,10 @@ try{
         <div class="ni-ic"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg></div>
         العملاء
       </div>
+      <div class="ni" data-s="banners" onclick="go('banners',this)">
+        <div class="ni-ic"><svg viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M2 12h20"/></svg></div>
+        بنرات الكتالوج
+      </div>
     </div>
 
     <div class="sb-group" data-g="pagesg" onclick="toggleSbGroup('pagesg',this)">الصفحات والتخصيص<svg class="sb-group-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
@@ -518,6 +552,10 @@ try{
       <div class="ni" data-s="colors" onclick="go('colors',this)">
         <div class="ni-ic"><svg viewBox="0 0 24 24"><circle cx="13.5" cy="6.5" r=".5"/><circle cx="17.5" cy="10.5" r=".5"/><circle cx="8.5" cy="7.5" r=".5"/><circle cx="6.5" cy="12.5" r=".5"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 011.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/></svg></div>
         ألوان الأقسام
+      </div>
+      <div class="ni" data-s="appearance" onclick="go('appearance',this)">
+        <div class="ni-ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 3v18"/><path d="M12 3a9 9 0 010 18" fill="currentColor" opacity=".35"/></svg></div>
+        المظهر
       </div>
     </div>
 
@@ -571,6 +609,27 @@ try{
           <div class="ds-label">صفحة منشورة</div>
         </div>
       </div>
+      <div class="range-bar" id="rangeBar">
+        <div class="range-head">
+          <div class="range-title"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>فترة التقارير</div>
+          <div class="range-label" id="rangeLabel">كل الوقت</div>
+        </div>
+        <div class="range-chips">
+          <button type="button" data-r="today" onclick="setRange('today')">اليوم</button>
+          <button type="button" data-r="yesterday" onclick="setRange('yesterday')">أمس</button>
+          <button type="button" data-r="7d" onclick="setRange('7d')">آخر 7 أيام</button>
+          <button type="button" data-r="30d" onclick="setRange('30d')">آخر 30 يوم</button>
+          <button type="button" data-r="month" onclick="setRange('month')">هذا الشهر</button>
+          <button type="button" data-r="all" onclick="setRange('all')" class="on">كل الوقت</button>
+        </div>
+        <div class="range-custom">
+          <label>من <input type="date" id="rg-from"></label>
+          <label>إلى <input type="date" id="rg-to"></label>
+          <button type="button" class="btn btn-p bsm" onclick="applyCustomRange()">تطبيق</button>
+          <button type="button" class="btn btn-g bsm" onclick="loadAnalytics()">↻ تحديث</button>
+          <button type="button" class="btn btn-g bsm" onclick="exportEventsCsv()">⬇ تصدير CSV</button>
+        </div>
+      </div>
       <div class="dash-stats-alt">
         <div class="ds-card">
           <div class="ds-icon">👁️</div>
@@ -596,6 +655,20 @@ try{
           </div>
         </div>
         <div id="topProductsList"><div class="info-box">جارٍ التحميل…</div></div>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-title"><svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>الزيارات يوم بيوم</div></div>
+        <div id="dailyChart"><div class="info-box">جارٍ التحميل…</div></div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>سجل الأحداث — التاريخ والوقت بالظبط</div>
+          <select id="ev-type" onchange="renderEventsLog(true)" style="max-width:170px">
+            <option value="">كل الأنواع</option><option value="visit">زيارات</option><option value="add_to_cart">إضافات للسلة</option><option value="order">طلبات واتساب</option>
+          </select>
+        </div>
+        <div class="field-hint" style="margin-bottom:10px">الوقت بتوقيت جهازك. الأحدث فوق.</div>
+        <div id="eventsLog"><div class="info-box">جارٍ التحميل…</div></div>
       </div>
       <div class="dash-quick">
         <div class="dq-btn" onclick="go('hero',qni('hero'))">
@@ -955,11 +1028,11 @@ try{
       </button>
     </div>
 
-    <!-- SETTINGS -->
-    <div class="sec" data-area="system" id="sec-settings">
+    <!-- APPEARANCE -->
+    <div class="sec" data-area="pagesg" id="sec-appearance">
       <div class="sec-header">
-        <div class="sec-title">الإعدادات</div>
-        <div class="sec-sub">بيانات التواصل وأدوات الإعلان والنصوص العامة</div>
+        <div class="sec-title">المظهر</div>
+        <div class="sec-sub">الشعار وأيقونة المتصفح ومظهر الموقع العام</div>
       </div>
       <div class="card">
         <div class="card-header"><div class="card-title"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>الشعار وأيقونة المتصفح</div></div>
@@ -997,34 +1070,56 @@ try{
         <div class="field-hint">سيبهم فاضيين للاستمرار باللوجو الافتراضي للموقع.</div>
       </div>
       <div class="card">
-        <div class="card-header"><div class="card-title"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.22 1.18 2 2 0 012.22 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 7.91a16 16 0 006.08 6.08l1.08-.08a2 2 0 012.11.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>بيانات التواصل</div></div>
-        <div class="r2">
-          <div class="field"><label>رقم الهاتف</label><input type="text" id="s-ph" placeholder="+20 115 250 1056"></div>
-          <div class="field"><label>رقم واتساب (أرقام فقط)</label><input type="text" id="s-wa" placeholder="201152501056"></div>
+        <div class="card-header"><div class="card-title"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>مظهر الموقع</div></div>
+        <div class="field-hint" style="margin-bottom:14px;padding:14px 16px;border:1px solid var(--teal,#06A77D);background:var(--rdim)">
+          الموقع بقى بتصميم <b>التليمتري</b> الثابت (أسود + أحمر متدرج + أخضر نيون) فوضع الفاتح/الداكن، وقالب Glass/Flat، وصورة الخلفية الزجاجية <b>مبقوش بيأثروا على الموقع</b>. الإعدادات القديمة محفوظة زي ما هي ومخفية هنا عشان ماتتلخبطش.
         </div>
-        <div class="field"><label>الإيميل</label><input type="email" id="s-em" placeholder="info@ahmedomani.com"></div>
-      </div>
-      <div class="card">
-        <div class="card-header"><div class="card-title"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>SEO والموقع</div></div>
-        <div class="field"><label>عنوان الموقع (Tab العنوان)</label><input type="text" id="s-title" placeholder="Ahmed Omani — تسويق وإعلان للسيارات"></div>
-        <div class="field"><label>وصف الموقع (Meta Description)</label><textarea id="s-desc" rows="2" placeholder="وصف قصير يظهر في نتائج Google..."></textarea></div>
-        <div class="field"><label>نص الفوتر</label><input type="text" id="s-footer" placeholder="© 2025 Ahmed Omani Auto Marketing. جميع الحقوق محفوظة."></div>
-      </div>
-      <div class="card">
-        <div class="card-header"><div class="card-title"><svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>أدوات التتبع والإعلان</div></div>
-        <div class="r3">
-          <div class="field"><label>Meta Pixel ID</label><input type="text" id="s-px" placeholder="1234567890"><div class="field-hint">رقم الـ Pixel فقط</div></div>
-          <div class="field"><label>Google Tag ID</label><input type="text" id="s-gt" placeholder="G-XXXXXXXX"><div class="field-hint">يبدأ بـ G- أو UA-</div></div>
-          <div class="field"><label>TikTok Pixel ID</label><input type="text" id="s-tt" placeholder="CXXXXXXXX"></div>
+        <div style="display:none" aria-hidden="true">
+        <div class="field">
+          <label>وضع التصميم الزجاجي</label>
+          <select id="s-theme-mode">
+            <option value="dark">داكن (Dark Glass)</option>
+            <option value="light">فاتح (Light Glass)</option>
+          </select>
+          <div class="field-hint">بيتحكم في شكل الموقع كله (الصفحة الرئيسية والكتالوجين وصفحة المنتج) — تصميم زجاجي غامق أو تصميم زجاجي فاتح أبيض.</div>
+        </div>
+        <div class="field">
+          <label>قالب التصميم</label>
+          <select id="s-site-template">
+            <option value="glass">زجاجي (Glass) — شفافية وتمويه خلف الكروت</option>
+            <option value="flat">فلات/سوليد (Flat) — ألوان صلبة بدون شفافية</option>
+          </select>
+          <div class="field-hint">القالب الفلات بيشيل تأثير الزجاج (الشفافية والتمويه) من كل كروت الموقع ويستبدله بألوان صلبة وحواف واضحة، مع الاحتفاظ بنفس الألوان والوضع الداكن/الفاتح اللي اخترته فوق.</div>
+        </div>
+        <div class="field-hint" style="margin-bottom:12px">صورة (زي سيارة أو ورشة) تظهر خافتة خلف كل الموقع تحت تأثير الزجاج المصنفر — لو سبتها فاضية، الموقع بيفضل على الخلفية اللونية الافتراضية. (الصورة دي بتتجاهل تلقائيًا لو القالب فلات مفعّل.)</div>
+        <div class="field">
+          <label>صورة الخلفية</label>
+          <input type="url" id="s-site-bg" placeholder="https://..." oninput="prevCatalogImg('s-site-bg-pv',this.value)">
+          <div class="upload-zone" onclick="document.getElementById('s-site-bg-f').click()">
+            📁 ارفع صورة من جهازك
+            <input type="file" id="s-site-bg-f" accept="image/*" style="display:none" onchange="upCatalogImg(this,'s-site-bg')">
+          </div>
+          <img id="s-site-bg-pv" class="port-preview" style="max-height:140px;object-fit:contain">
+          <button type="button" class="btn btn-d bsm" onclick="clearSiteBg()">🗑 حذف صورة الخلفية</button>
+        </div>
         </div>
       </div>
-      <div class="card">
-        <div class="card-header"><div class="card-title"><svg viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>السوشيال ميديا</div></div>
-        <div class="r3">
-          <div class="field"><label>Facebook</label><input type="url" id="s-fb" placeholder="https://facebook.com/..."></div>
-          <div class="field"><label>Instagram</label><input type="url" id="s-ig" placeholder="https://instagram.com/..."></div>
-          <div class="field"><label>TikTok</label><input type="url" id="s-tk" placeholder="https://tiktok.com/@..."></div>
-        </div>
+      <button class="btn btn-p" onclick="saveSettings()">
+        <svg viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+        حفظ المظهر
+      </button>
+    </div>
+
+    <!-- CATALOG BANNERS -->
+    <div class="sec" data-area="catalog" id="sec-banners">
+      <div class="sec-header">
+        <div class="sec-title">بنرات الكتالوج</div>
+        <div class="sec-sub">البنرات الإعلانية وصور أغلفة الكتالوجين وشارات كتالوج الدعاية</div>
+      </div>
+      <div class="card sec-accent-promo">
+        <div class="card-header"><div class="card-title"><svg viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M2 12h20"/></svg>البنرات الإعلانية</div><button class="btn btn-p bsm" onclick="addPromoBanner()">+ إضافة بنر</button></div>
+        <div class="field-hint" style="margin-bottom:12px">البنرات بتظهر فوق المنتجات في كتالوج الدعاية وكتالوج التسويق بالترتيب. لكل بنر: صورة و/أو نص، ورابط اختياري، وزرار تفعيل. لو حطيت نص من غير صورة هيظهر كشريط أحمر بالنص.</div>
+        <div class="edit-grid" id="promoBannersEditor"></div>
       </div>
       <div class="card">
         <div class="card-header"><div class="card-title"><svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/></svg>صور الكتالوجات</div></div>
@@ -1061,6 +1156,48 @@ try{
         <div class="field-hint" style="margin-bottom:12px">شريط صغير من نقاط ثقة تحت عنوان كتالوج الدعاية والإعلان مباشرة (مثال: توصيل لحد مكانك، تنفيذ وتسليم خلال 7-10 أيام عمل، تصميم مجاني). سيبه فاضي لو مش عايز يظهر.</div>
         <div class="edit-grid" id="adsBadgesEditor"></div>
       </div>
+      <button class="btn btn-p" onclick="saveSettings()">
+        <svg viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+        حفظ بنرات الكتالوج
+      </button>
+    </div>
+
+    <!-- SETTINGS -->
+    <div class="sec" data-area="system" id="sec-settings">
+      <div class="sec-header">
+        <div class="sec-title">الإعدادات</div>
+        <div class="sec-sub">بيانات التواصل وأدوات الإعلان والرسائل والأمان</div>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-title"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.22 1.18 2 2 0 012.22 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 7.91a16 16 0 006.08 6.08l1.08-.08a2 2 0 012.11.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>بيانات التواصل</div></div>
+        <div class="r2">
+          <div class="field"><label>رقم الهاتف</label><input type="text" id="s-ph" placeholder="+20 115 250 1056"></div>
+          <div class="field"><label>رقم واتساب (أرقام فقط)</label><input type="text" id="s-wa" placeholder="201152501056"></div>
+        </div>
+        <div class="field"><label>الإيميل</label><input type="email" id="s-em" placeholder="info@ahmedomani.com"></div>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-title"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>SEO والموقع</div></div>
+        <div class="field"><label>عنوان الموقع (Tab العنوان)</label><input type="text" id="s-title" placeholder="Ahmed Omani — تسويق وإعلان للسيارات"></div>
+        <div class="field"><label>وصف الموقع (Meta Description)</label><textarea id="s-desc" rows="2" placeholder="وصف قصير يظهر في نتائج Google..."></textarea></div>
+        <div class="field"><label>نص الفوتر</label><input type="text" id="s-footer" placeholder="© 2025 Ahmed Omani Auto Marketing. جميع الحقوق محفوظة."></div>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-title"><svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>أدوات التتبع والإعلان</div></div>
+        <div class="r3">
+          <div class="field"><label>Meta Pixel ID</label><input type="text" id="s-px" placeholder="1234567890"><div class="field-hint">رقم الـ Pixel فقط</div></div>
+          <div class="field"><label>Google Tag ID</label><input type="text" id="s-gt" placeholder="G-XXXXXXXX"><div class="field-hint">يبدأ بـ G- أو UA-</div></div>
+          <div class="field"><label>TikTok Pixel ID</label><input type="text" id="s-tt" placeholder="CXXXXXXXX"></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-title"><svg viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>السوشيال ميديا</div></div>
+        <div class="r3">
+          <div class="field"><label>Facebook</label><input type="url" id="s-fb" placeholder="https://facebook.com/..."></div>
+          <div class="field"><label>Instagram</label><input type="url" id="s-ig" placeholder="https://instagram.com/..."></div>
+          <div class="field"><label>TikTok</label><input type="url" id="s-tk" placeholder="https://tiktok.com/@..."></div>
+        </div>
+      </div>
       <div class="card">
         <div class="card-header"><div class="card-title"><svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8z"/></svg>رسائل واتساب التلقائية</div></div>
         <div class="field">
@@ -1092,46 +1229,6 @@ try{
             لو بتستخدم أكتر من جهاز/متصفح (موبايل مثلًا) وعايز تستبعده برضه من غير ما تسجّل دخول للوحة التحكم عليه، افتح أي صفحة من صفحات الموقع من نفس الجهاز ده مع إضافة <code dir="ltr">?notrack=1</code> في آخر الرابط مرة واحدة بس، وهيفضل مستبعد تلقائيًا بعد كده. ولإلغاء الاستبعاد من جهاز زي ده، افتح رابط فيه <code dir="ltr">?notrack=0</code>.
           </div>
         </div>
-      </div>
-      <div class="card">
-        <div class="card-header"><div class="card-title"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>مظهر الموقع</div></div>
-        <div class="field-hint" style="margin-bottom:14px;padding:14px 16px;border:1px solid var(--teal,#06A77D);background:var(--rdim)">
-          الموقع بقى بتصميم <b>التليمتري</b> الثابت (أسود + أحمر متدرج + أخضر نيون) فوضع الفاتح/الداكن، وقالب Glass/Flat، وصورة الخلفية الزجاجية <b>مبقوش بيأثروا على الموقع</b>. الإعدادات القديمة محفوظة زي ما هي ومخفية هنا عشان ماتتلخبطش.
-        </div>
-        <div style="display:none" aria-hidden="true">
-        <div class="field">
-          <label>وضع التصميم الزجاجي</label>
-          <select id="s-theme-mode">
-            <option value="dark">داكن (Dark Glass)</option>
-            <option value="light">فاتح (Light Glass)</option>
-          </select>
-          <div class="field-hint">بيتحكم في شكل الموقع كله (الصفحة الرئيسية والكتالوجين وصفحة المنتج) — تصميم زجاجي غامق أو تصميم زجاجي فاتح أبيض.</div>
-        </div>
-        <div class="field">
-          <label>قالب التصميم</label>
-          <select id="s-site-template">
-            <option value="glass">زجاجي (Glass) — شفافية وتمويه خلف الكروت</option>
-            <option value="flat">فلات/سوليد (Flat) — ألوان صلبة بدون شفافية</option>
-          </select>
-          <div class="field-hint">القالب الفلات بيشيل تأثير الزجاج (الشفافية والتمويه) من كل كروت الموقع ويستبدله بألوان صلبة وحواف واضحة، مع الاحتفاظ بنفس الألوان والوضع الداكن/الفاتح اللي اخترته فوق.</div>
-        </div>
-        <div class="field-hint" style="margin-bottom:12px">صورة (زي سيارة أو ورشة) تظهر خافتة خلف كل الموقع تحت تأثير الزجاج المصنفر — لو سبتها فاضية، الموقع بيفضل على الخلفية اللونية الافتراضية. (الصورة دي بتتجاهل تلقائيًا لو القالب فلات مفعّل.)</div>
-        <div class="field">
-          <label>صورة الخلفية</label>
-          <input type="url" id="s-site-bg" placeholder="https://..." oninput="prevCatalogImg('s-site-bg-pv',this.value)">
-          <div class="upload-zone" onclick="document.getElementById('s-site-bg-f').click()">
-            📁 ارفع صورة من جهازك
-            <input type="file" id="s-site-bg-f" accept="image/*" style="display:none" onchange="upCatalogImg(this,'s-site-bg')">
-          </div>
-          <img id="s-site-bg-pv" class="port-preview" style="max-height:140px;object-fit:contain">
-          <button type="button" class="btn btn-d bsm" onclick="clearSiteBg()">🗑 حذف صورة الخلفية</button>
-        </div>
-        </div>
-      </div>
-      <div class="card sec-accent-promo">
-        <div class="card-header"><div class="card-title"><svg viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M2 12h20"/></svg>البنرات الإعلانية</div><button class="btn btn-p bsm" onclick="addPromoBanner()">+ إضافة بنر</button></div>
-        <div class="field-hint" style="margin-bottom:12px">البنرات بتظهر فوق المنتجات في كتالوج الدعاية وكتالوج التسويق بالترتيب. لكل بنر: صورة و/أو نص، ورابط اختياري، وزرار تفعيل. لو حطيت نص من غير صورة هيظهر كشريط أحمر بالنص.</div>
-        <div class="edit-grid" id="promoBannersEditor"></div>
       </div>
       <div class="card">
         <div class="card-header"><div class="card-title"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/></svg>ظهور الأقسام</div></div>
@@ -1545,7 +1642,7 @@ var portfolio=[],clients=[],pages=[],pageSecs=[],products=[],beforeAfters=[];
 var statsData=[],textsData={};
 
 // ── BREADCRUMB MAP ────────────────────────────────────
-var secNames={dash:'الرئيسية',hero:'الصفحة الرئيسية',stats:'الشريط الإحصائي',port:'الأعمال',products:'الكتالوج',clients:'العملاء',ba:'قبل وبعد',videos:'الفيديوهات',cases:'النتائج',faq:'الأسئلة الشائعة',pages:'الصفحات',texts:'نصوص الأقسام',colors:'ألوان الأقسام',settings:'الإعدادات'};
+var secNames={appearance:'المظهر',banners:'بنرات الكتالوج',dash:'الرئيسية',hero:'الصفحة الرئيسية',stats:'الشريط الإحصائي',port:'الأعمال',products:'الكتالوج',clients:'العملاء',ba:'قبل وبعد',videos:'الفيديوهات',cases:'النتائج',faq:'الأسئلة الشائعة',pages:'الصفحات',texts:'نصوص الأقسام',colors:'ألوان الأقسام',settings:'الإعدادات'};
 
 // ── ICON PICKER (flat modern icon library) ──────────────
 var ICON_LIB=['car-front','car-front-fill','truck','truck-front','wrench','wrench-adjustable','tools','gear','gear-fill','nut','fuel-pump','fuel-pump-fill','speedometer','speedometer2','battery-charging','cone-striped','signpost','signpost-2','map','geo-alt','geo-alt-fill','compass',
@@ -1697,13 +1794,68 @@ function updateStats(){
 }
 
 // ── ANALYTICS (visits / cart-adds / orders) ─────────────
+var anRange={key:'all',from:null,to:null},anEvents=[],evShown=50;
+var EV_NAMES={visit:'زيارة',add_to_cart:'إضافة للسلة',order:'طلب واتساب'};
+var EV_BADGE={visit:'b-blue',add_to_cart:'b-orange',order:'b-green'};
+var PAGE_NAMES={index:'الرئيسية',catalog:'كتالوج الدعاية','catalog-marketing':'كتالوج التسويق',product:'صفحة منتج',page:'صفحة'};
+function rangeBounds(){
+  var now=new Date(),sod=new Date(now.getFullYear(),now.getMonth(),now.getDate()),day=86400000,eod=new Date(sod.getTime()+day);
+  switch(anRange.key){
+    case 'today':return{from:sod,to:eod};
+    case 'yesterday':return{from:new Date(sod.getTime()-day),to:sod};
+    case '7d':return{from:new Date(sod.getTime()-6*day),to:eod};
+    case '30d':return{from:new Date(sod.getTime()-29*day),to:eod};
+    case 'month':return{from:new Date(now.getFullYear(),now.getMonth(),1),to:eod};
+    case 'custom':return{from:anRange.from,to:anRange.to};
+    default:return{from:null,to:null};
+  }
+}
+function fmtDate(d){return d.toLocaleDateString('ar-EG',{weekday:'short',day:'numeric',month:'long',year:'numeric'})}
+function fmtTime(d){return d.toLocaleTimeString('ar-EG',{hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:true})}
+function setRange(k){
+  anRange={key:k,from:null,to:null};
+  document.querySelectorAll('#rangeBar .range-chips button').forEach(function(b){b.classList.toggle('on',b.dataset.r===k)});
+  v('rg-from','');v('rg-to','');
+  loadAnalytics();
+}
+function applyCustomRange(){
+  var f=g('rg-from'),t=g('rg-to');
+  if(!f&&!t){toast('اختار تاريخ البداية أو النهاية');return}
+  function parse(s,plus){var p=s.split('-');var d=new Date(+p[0],+p[1]-1,+p[2]);return plus?new Date(d.getTime()+86400000):d}
+  var from=f?parse(f):null,to=t?parse(t,true):null;
+  if(from&&to&&from>=to){toast('تاريخ البداية لازم يكون قبل النهاية');return}
+  anRange={key:'custom',from:from,to:to};
+  document.querySelectorAll('#rangeBar .range-chips button').forEach(function(b){b.classList.remove('on')});
+  loadAnalytics();
+}
+function rangeText(b){
+  if(!b.from&&!b.to)return'كل الوقت';
+  if(anRange.key==='today')return'النهارده — '+fmtDate(b.from);
+  if(anRange.key==='yesterday')return'أمس — '+fmtDate(b.from);
+  var last=b.to?new Date(b.to.getTime()-86400000):null;
+  return(b.from?'من '+fmtDate(b.from):'من أول البيانات')+' — '+(last?'إلى '+fmtDate(last):'لحد دلوقتي');
+}
+async function fetchEvents(b){
+  var out=[],page=0,size=1000;
+  while(page<30){
+    var q=sb.from('ao_analytics_events').select('event_type,product_id,page,created_at').order('created_at',{ascending:false}).range(page*size,page*size+size-1);
+    if(b.from)q=q.gte('created_at',b.from.toISOString());
+    if(b.to)q=q.lt('created_at',b.to.toISOString());
+    var r=await q;
+    if(r.error)throw r.error;
+    out=out.concat(r.data||[]);
+    if(!r.data||r.data.length<size)break;
+    page++;
+  }
+  return out;
+}
 async function loadAnalytics(){
+  var b=rangeBounds();
+  document.getElementById('rangeLabel').textContent=rangeText(b);
   try{
-    var res=await sb.from('ao_analytics_events').select('event_type,product_id');
-    if(res.error)throw res.error;
-    var rows=res.data||[];
+    anEvents=await fetchEvents(b);
     var visits=0,orders=0,cartAdds=0,byProduct={};
-    rows.forEach(function(r){
+    anEvents.forEach(function(r){
       if(r.event_type==='visit')visits++;
       else if(r.event_type==='order')orders++;
       else if(r.event_type==='add_to_cart'){
@@ -1715,9 +1867,13 @@ async function loadAnalytics(){
       var p=products.find(function(x){return x.id===id});
       return{title:p?p.title:'منتج محذوف',count:byProduct[id]};
     }).sort(function(a,b){return b.count-a.count}).slice(0,5);
-    renderAnalytics({visits:visits,orders:orders,cartAdds:cartAdds,top:top});
+    renderAnalytics({visits:visits,orders:orders,cartAdds:cartAdds,top:top,bounds:b});
+    evShown=50;renderEventsLog();
   }catch(e){
+    anEvents=[];
     renderAnalytics(null);
+    document.getElementById('eventsLog').innerHTML='<div class="info-box">تعذر تحميل بيانات التحليلات</div>';
+    document.getElementById('dailyChart').innerHTML='<div class="info-box">تعذر تحميل بيانات التحليلات</div>';
   }
 }
 function renderAnalytics(a){
@@ -1729,13 +1885,66 @@ function renderAnalytics(a){
     wrap.innerHTML='<div class="info-box">تعذر تحميل بيانات التحليلات</div>';
     return;
   }
+  renderDailyChart(a.bounds);
   if(!a.top.length){
-    wrap.innerHTML='<div class="info-box">لا توجد إضافات للسلة مسجلة بعد</div>';
+    wrap.innerHTML='<div class="info-box">لا توجد إضافات للسلة مسجلة في الفترة دي</div>';
     return;
   }
   wrap.innerHTML=a.top.map(function(t,i){
     return'<div class="li"><div class="li-thumb">#'+(i+1)+'</div><div class="li-b"><div class="li-t">'+h(t.title)+'</div></div><span class="badge b-blue">'+t.count+' إضافة</span></div>';
   }).join('');
+}
+function dayKey(d){return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate()}
+function renderDailyChart(b){
+  var el=document.getElementById('dailyChart');
+  if(!anEvents.length){el.innerHTML='<div class="info-box">لا توجد أحداث في الفترة دي</div>';return}
+  var day=86400000,end=b.to?new Date(b.to.getTime()-day):new Date();
+  end=new Date(end.getFullYear(),end.getMonth(),end.getDate());
+  var oldest=new Date(anEvents[anEvents.length-1].created_at);
+  var start=b.from?b.from:new Date(oldest.getFullYear(),oldest.getMonth(),oldest.getDate());
+  var capped=false;
+  if((end-start)/day>44){start=new Date(end.getTime()-44*day);capped=true}
+  var days=[],map={};
+  for(var t=start.getTime();t<=end.getTime();t+=day){var d=new Date(t);var o={d:d,visit:0,add_to_cart:0,order:0};days.push(o);map[dayKey(d)]=o}
+  anEvents.forEach(function(r){var o=map[dayKey(new Date(r.created_at))];if(o)o[r.event_type]++});
+  var max=Math.max.apply(null,days.map(function(o){return o.visit}).concat([1]));
+  el.innerHTML='<div class="dchart">'+days.map(function(o){
+    var ht=Math.round(o.visit/max*100);
+    return'<div class="dcol" title="'+h(fmtDate(o.d))+' — '+o.visit+' زيارة · '+o.add_to_cart+' سلة · '+o.order+' طلب">'
+      +'<span class="dnum">'+(o.visit||'')+'</span><div class="dbar"><i style="height:'+Math.max(ht,o.visit?4:0)+'%"></i></div>'
+      +'<span class="dlbl">'+o.d.getDate()+'/'+(o.d.getMonth()+1)+'</span></div>';
+  }).join('')+'</div>'+(capped?'<div class="field-hint" style="margin-top:8px">معروض آخر 45 يوم في الفترة المختارة.</div>':'');
+}
+function evRows(){
+  var t=g('ev-type');
+  return t?anEvents.filter(function(r){return r.event_type===t}):anEvents;
+}
+function renderEventsLog(reset){
+  if(reset)evShown=50;
+  var el=document.getElementById('eventsLog'),rows=evRows();
+  if(!rows.length){el.innerHTML='<div class="info-box">لا توجد أحداث في الفترة دي</div>';return}
+  var shown=rows.slice(0,evShown);
+  el.innerHTML='<div class="ev-table">'+shown.map(function(r){
+    var d=new Date(r.created_at),p=r.product_id?products.find(function(x){return x.id===r.product_id}):null;
+    return'<div class="ev-row"><div class="ev-when"><b>'+h(fmtTime(d))+'</b><span>'+h(fmtDate(d))+'</span></div>'
+      +'<span class="badge '+(EV_BADGE[r.event_type]||'b-blue')+'">'+(EV_NAMES[r.event_type]||h(r.event_type))+'</span>'
+      +'<div class="ev-meta">'+h(PAGE_NAMES[r.page]||r.page||'—')+(p?' · '+h(p.title):(r.product_id?' · منتج محذوف':''))+'</div></div>';
+  }).join('')+'</div>'
+  +'<div class="ev-foot">معروض '+shown.length+' من '+rows.length+(rows.length>evShown?' <button type="button" class="btn btn-g bsm" onclick="evShown+=50;renderEventsLog()">عرض 50 أكتر</button>':'')+'</div>';
+}
+function exportEventsCsv(){
+  var rows=evRows();
+  if(!rows.length){toast('مفيش أحداث للتصدير في الفترة دي');return}
+  var lines=['التاريخ,الوقت,النوع,الصفحة,المنتج'];
+  rows.forEach(function(r){
+    var d=new Date(r.created_at),p=r.product_id?products.find(function(x){return x.id===r.product_id}):null;
+    function q(s){return'"'+String(s==null?'':s).replace(/"/g,'""')+'"'}
+    lines.push([q(d.toLocaleDateString('en-CA')),q(d.toLocaleTimeString('en-GB')),q(EV_NAMES[r.event_type]||r.event_type),q(PAGE_NAMES[r.page]||r.page),q(p?p.title:'')].join(','));
+  });
+  var a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob(['﻿'+lines.join('\n')],{type:'text/csv;charset=utf-8'}));
+  a.download='events-'+new Date().toISOString().slice(0,10)+'.csv';
+  document.body.appendChild(a);a.click();a.remove();
 }
 
 // ── HERO ───────────────────────────────────────────────

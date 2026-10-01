@@ -214,10 +214,10 @@ section .sec-head .sec-sub{margin-inline:0 auto!important}
 .cat-header{position:relative}
 .cat-header h1{letter-spacing:0!important}
 .cat-header-inner::before{
-  content:'CATALOG // SELECT & SEND';display:flex;align-items:center;justify-content:flex-end;gap:12px;
+  content:'CATALOG // SELECT & SEND';display:flex;align-items:center;justify-content:center;gap:12px;
   margin-bottom:16px;font-family:var(--mono);font-size:12px;letter-spacing:.16em;color:var(--neon);direction:ltr;
 }
-.cat-header p{max-width:52ch}
+.cat-header p{max-width:52ch;margin-inline:auto}
 .cat-filter{border-bottom:1px solid var(--teal)!important}
 .cf-btn{font-size:13.5px!important}
 .cf-btn::after{background:var(--rg)!important;height:3px!important}
@@ -291,3 +291,10 @@ section .sec-head .sec-sub{margin-inline:0 auto!important}
 .cl-item img{opacity:1!important}
 .cl-item .cl-name,.cl-item:hover .cl-name{color:#111!important}
 .cl-item:hover{box-shadow:0 0 0 1px var(--race-red)}
+
+/* catalog header sits on the page's centre line, like the product grid below it */
+.cat-header{text-align:center!important}
+.cat-header-inner{margin-inline:auto!important;max-width:820px!important}
+.cat-badges,.cat-filter{justify-content:center!important}
+.cat-header h1{text-wrap:balance}
+.cat-header-inner{max-width:920px!important}
