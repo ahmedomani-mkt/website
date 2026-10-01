@@ -1,3 +1,18 @@
+/* Site effect switches (set from the admin panel's "المؤثرات" card). The last
+   known values are cached in localStorage so the next page load already obeys them. */
+(function(){
+  var K='ao_fx',st={music:true,drift:true};
+  try{var s=JSON.parse(localStorage.getItem(K)||'{}');if(s.music===false)st.music=false;if(s.drift===false)st.drift=false}catch(e){}
+  window.RaceFX={
+    music:function(){return st.music},drift:function(){return st.drift},
+    set:function(t){
+      if(!t)return;
+      st.music=t.fx_music!=='off';st.drift=t.fx_drift!=='off';
+      try{localStorage.setItem(K,JSON.stringify(st))}catch(e){}
+      if(window.RaceMusic)window.RaceMusic.setEnabled(st.music);
+    }
+  };
+})();
 /* Racing background music — a procedurally synthesised loop (Web Audio), so
    there is no audio file to license or host. It tries to start as soon as
    the page loads; browsers usually refuse sound before any interaction, so
@@ -98,7 +113,7 @@
     while(nextT<ctx.currentTime+.14){engine.play(step,nextT);nextT+=S16;step=(step+1)%64}
   }
   function start(){
-    if(on)return;
+    if(on||!enabled)return;
     if(!ctx&&!build())return;
     on=true;
     var go=function(){
@@ -123,7 +138,7 @@
   function save(v){try{localStorage.setItem(KEY,v)}catch(e){}}
   function saved(){try{return localStorage.getItem(KEY)}catch(e){return null}}
 
-  var btn,pending=false;
+  var btn,pending=false,enabled=!window.RaceFX||window.RaceFX.music();
   function render(){
     if(!btn)return;
     btn.setAttribute('aria-pressed',on?'true':'false');
@@ -156,8 +171,9 @@
     document.body.appendChild(btn);
     render();
 
+    if(!enabled)btn.style.display='none';
     // on by default; only a visitor's own mute keeps it off
-    if(saved()!=='off')autoStart();
+    if(saved()!=='off'&&enabled)autoStart();
 
     document.addEventListener('visibilitychange',function(){
       if(!ctx||!on)return;
@@ -177,6 +193,16 @@
   }
 
   window.RaceMusic={_makeEngine:makeEngine,start:start,stop:stop,
+    // admin switch: hides the button and silences the loop without touching the visitor's own mute choice
+    setEnabled:function(e){
+      enabled=!!e;
+      if(btn)btn.style.display=enabled?'':'none';
+      if(!enabled&&on){
+        on=false;master.gain.cancelScheduledValues(ctx.currentTime);master.gain.setValueAtTime(master.gain.value,ctx.currentTime);
+        master.gain.linearRampToValueAtTime(0,ctx.currentTime+.4);
+        setTimeout(function(){if(!on){clearInterval(timer);ctx.suspend()}},500);render();
+      }
+    },
     isOn:function(){return on&&!!ctx&&ctx.state==='running'},
     ctx:function(){return ctx},
     // dip the music for `sec` seconds so a sound effect can stand out
@@ -402,6 +428,7 @@
 
   function maybe(){
     if(busy||document.hidden||Date.now()-last<GAP)return;
+    if(window.RaceFX&&!window.RaceFX.drift())return;
     var vm=document.getElementById('vidModal');
     if(vm&&vm.classList.contains('open'))return;
     play();

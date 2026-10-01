@@ -1434,6 +1434,10 @@ function applyColorTokens(el,c){
       el.style.setProperty('--red-rgb',a);
       el.style.setProperty('--red','rgb('+a+')');
       el.style.setProperty('--red-soft','rgba('+a+',.1)');
+      // the telemetry theme paints buttons/brackets with a gradient, so derive it from the chosen accent
+      var ar=a.split(',').map(Number);
+      el.style.setProperty('--race-red','rgb('+a+')');
+      el.style.setProperty('--rg','linear-gradient(135deg,rgb('+ar.map(function(n){return Math.min(255,Math.round(n+(255-n)*.28))}).join(',')+') 0%,rgb('+a+') 45%,rgb('+ar.map(function(n){return Math.round(n*.55)}).join(',')+') 100%)');
     }
   }
   if(c.card)el.style.setProperty('--card-bg',c.card);
@@ -1488,9 +1492,10 @@ function renderSocial(cfg){
 }
 
 function applyPageTexts(t){
-  function set(id,val){if(val&&val.trim()){var el=document.getElementById(id);if(el)el.innerHTML=val.replace(/\n/g,'<br>');}}
+  function set(id,val){if(val&&val.trim()){var el=document.getElementById(id);if(el)el.innerHTML=val.replace(/\u0640/g,'').replace(/\n/g,'<br>');}}
   set('portTitle',t.port_title);
   set('clTitle',t.cl_title);set('clSub',t.cl_sub);
+  if(window.RaceFX)window.RaceFX.set(t);
 }
 
 function safeTrackId(id){return id&&/^[A-Za-z0-9_-]{1,64}$/.test(id)?id:null}

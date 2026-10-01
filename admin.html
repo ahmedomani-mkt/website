@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>لوحة التحكم — Ahmed Omani</title>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -339,6 +339,45 @@ button,select,input,textarea{font-family:var(--font)}
 @media (max-width:400px){
   .dash-stats,.dash-stats-alt{grid-template-columns:1fr}
 }
+
+/* ══ TELEMETRY SKIN — same black / red-gradient / neon-green language as the public site ══ */
+:root{
+  --red:#ff0a0a;--rd:#b80000;--rdim:rgba(255,10,10,.10);--rdim2:rgba(255,10,10,.18);
+  --rg:linear-gradient(135deg,#ff4a3a 0%,#ff0000 45%,#8f0000 100%);
+  --neon:#04F06A;--teal:#06A77D;--mono:'Share Tech Mono',ui-monospace,Consolas,monospace;
+  --black:#000;--dk:#070707;--s:#0a0a0a;--s2:#111;--s3:#1b1b1b;
+  --b:#1f1f1f;--b2:#2e2e2e;--b3:#454545;
+  --green:#04F06A;--green-text2:#5ff7a5;
+  --font:'Tajawal','Segoe UI',Arial,sans-serif;
+  --r:4px;--rsm:2px;
+}
+:root[data-theme="light"]{--rdim:rgba(255,10,10,.07);--rdim2:rgba(255,10,10,.13);--green:#0a9d4d;--green-text2:#0a9d4d}
+:root:not([data-theme="light"]) body{
+  background-image:linear-gradient(rgba(255,255,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.04) 1px,transparent 1px);
+  background-size:64px 64px;background-position:-1px -1px;
+}
+:root:not([data-theme="light"]) .main,:root:not([data-theme="light"]) .content{background:transparent}
+.l-logo-ic,.tb-logo-ic{background:var(--rg);border-radius:2px}
+.lc{border-radius:4px;border-color:var(--b2)}
+.lbtn,.btn-p,.dq-btn.primary{background:var(--rg)!important;color:#fff;border-radius:0;clip-path:polygon(9px 0,100% 0,calc(100% - 9px) 100%,0 100%)}
+.lbtn:hover,.btn-p:hover{filter:brightness(1.12);background:var(--rg)!important}
+.l-logo-text .ls,.tb-logo-text .ts{font-family:var(--mono);letter-spacing:.16em;color:var(--neon)}
+.sec-header{border-bottom:1px solid var(--teal);padding-bottom:14px}
+.sec-title{letter-spacing:0}
+.card,.ds-card,.li-card{border-radius:var(--r)}
+.card{position:relative}
+.card::before,.card::after,.ds-card::before{content:'';position:absolute;width:14px;height:14px;border:2px solid var(--red);pointer-events:none;opacity:.9}
+.card::before{top:-1px;right:-1px;border-left:0;border-bottom:0}
+.card::after{bottom:-1px;left:-1px;border-right:0;border-top:0}
+.ds-card::after{background:var(--rg)}
+.ds-num{font-family:var(--mono);letter-spacing:.03em}
+.ds-label,.tb-status{font-family:var(--font)}
+.tb-status{border-radius:2px}
+.ni.active{background:var(--rdim2);border-inline-end-color:var(--red)}
+.badge,.b-red{border-radius:2px}
+.tb-theme,.tb-preview,.tb-out{border-radius:2px}
+.upload-bar{background:linear-gradient(90deg,#7a0000,#ff0000 72%,var(--neon))}
+::selection{background:var(--red);color:#fff}
 </style>
 <script>
 try{
@@ -874,6 +913,16 @@ try{
           <div class="field"><label>الوصف الفرعي</label><input type="text" id="txt-cl-sub" placeholder="أكثر من 30 علامة في قطاع السيارات المصري"></div>
         </div>
       </div>
+      <div class="card">
+        <div class="card-header"><div class="card-title"><svg viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>المؤثرات (موسيقى وعربية الدريفت)</div></div>
+        <div class="r2">
+          <div class="field"><label>موسيقى السباقات في الخلفية</label>
+            <select id="txt-fx-music"><option value="on">شغالة (زرار الكتم ظاهر للزائر)</option><option value="off">مقفولة تمامًا</option></select></div>
+          <div class="field"><label>عربية الدريفت اللي بتعدّي مع السكرول</label>
+            <select id="txt-fx-drift"><option value="on">شغالة (كل ~15 ثانية سكرول)</option><option value="off">مقفولة</option></select></div>
+        </div>
+        <div class="field-hint">الصوت بيتحكم فيه زرار الكتم للزائر. التغيير بيتطبق على الموقع بعد ما تحفظ وأي زائر يفتح الصفحة الرئيسية.</div>
+      </div>
       <button class="btn btn-p" onclick="saveTexts()">
         <svg viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
         حفظ النصوص
@@ -888,7 +937,7 @@ try{
       </div>
       <div class="card">
         <div class="card-header"><div class="card-title"><svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>الألوان العامة للموقع</div></div>
-        <div class="field-hint" style="margin-bottom:12px">لون واحد لكل عنصر يتطبق على الموقع كله فورًا (كل الأقسام اللي مالهاش لون مخصص تحتها في "ألوان الأقسام" تاخد اللون العام ده تلقائيًا). لو قسم معين عنده لون مخصص، الون المخصص بيفضل هو الغالب لنفس القسم.</div>
+        <div class="field-hint" style="margin-bottom:12px">القيم اللي قدامك هي ألوان تصميم التليمتري الحالية (أسود + أحمر + أخضر نيون). غيّر اللي محتاجه بس وسيب الباقي — وزرار "افتراضي" بيرجّعك للتصميم الأصلي. لون واحد لكل عنصر يتطبق على الموقع كله فورًا (كل الأقسام اللي مالهاش لون مخصص تحتها في "ألوان الأقسام" تاخد اللون العام ده تلقائيًا). لو قسم معين عنده لون مخصص، الون المخصص بيفضل هو الغالب لنفس القسم.</div>
         <div id="globalColorsEditor"></div>
         <button class="btn btn-p bsm" onclick="saveGlobalColors()" style="margin-top:12px">
           <svg viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
@@ -923,17 +972,17 @@ try{
               <input type="file" id="s-logo-f" accept="image/*" style="display:none" onchange="upBrand(this,'s-logo')">
             </div>
             <img id="s-logo-pv" class="port-preview" style="max-height:70px;object-fit:contain;background:var(--s2);padding:8px">
-            <div class="field-hint">يظهر في الشريط العلوي والفوتر — ده اللوجو المستخدم في الوضع الفاتح، وبرضو الافتراضي للوضع الداكن لو مفيش لوجو تاني مخصص له.</div>
+            <div class="field-hint">يظهر في الشريط العلوي والفوتر. ارفع النسخة الأصلية (حتى لو غامقة): الموقع بيقلبها <b>أبيض تلقائيًا</b> ويسيب الجزء الأحمر زي ما هو.</div>
           </div>
           <div class="field">
-            <label>لوجو الوضع الداكن (اختياري)</label>
+            <label>لوجو بديل (اختياري)</label>
             <input type="url" id="s-logo-dark" placeholder="https://..." oninput="prevBrand('s-logo-dark-pv',this.value)">
             <div class="upload-zone" onclick="document.getElementById('s-logo-dark-f').click()">
               📁 أو ارفع صورة من جهازك
               <input type="file" id="s-logo-dark-f" accept="image/*" style="display:none" onchange="upBrand(this,'s-logo-dark')">
             </div>
             <img id="s-logo-dark-pv" class="port-preview" style="max-height:70px;object-fit:contain;background:var(--s2);padding:8px">
-            <div class="field-hint">لو اللوجو الأساسي غامق اللون ومش واضح على الخلفية الزجاجية السودا، ارفع هنا نسخة فاتحة/أبيض تظهر بس لما الموقع في الوضع الداكن.</div>
+            <div class="field-hint">مش لازم تستخدمه: لو رفعت لوجو هنا هو اللي بيظهر في الموقع بدل الأساسي، وبرضو بيتحوّل لأبيض تلقائيًا.</div>
           </div>
           <div class="field">
             <label>أيقونة التبويب Favicon</label>
@@ -1045,7 +1094,11 @@ try{
         </div>
       </div>
       <div class="card">
-        <div class="card-header"><div class="card-title"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>خلفية الموقع الزجاجية</div></div>
+        <div class="card-header"><div class="card-title"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>مظهر الموقع</div></div>
+        <div class="field-hint" style="margin-bottom:14px;padding:14px 16px;border:1px solid var(--teal,#06A77D);background:var(--rdim)">
+          الموقع بقى بتصميم <b>التليمتري</b> الثابت (أسود + أحمر متدرج + أخضر نيون) فوضع الفاتح/الداكن، وقالب Glass/Flat، وصورة الخلفية الزجاجية <b>مبقوش بيأثروا على الموقع</b>. الإعدادات القديمة محفوظة زي ما هي ومخفية هنا عشان ماتتلخبطش.
+        </div>
+        <div style="display:none" aria-hidden="true">
         <div class="field">
           <label>وضع التصميم الزجاجي</label>
           <select id="s-theme-mode">
@@ -1072,6 +1125,7 @@ try{
           </div>
           <img id="s-site-bg-pv" class="port-preview" style="max-height:140px;object-fit:contain">
           <button type="button" class="btn btn-d bsm" onclick="clearSiteBg()">🗑 حذف صورة الخلفية</button>
+        </div>
         </div>
       </div>
       <div class="card sec-accent-promo">
@@ -2978,11 +3032,14 @@ function loadTextsEditor(){
   v('txt-port-title',textsData.port_title||'');
   v('txt-cl-title',textsData.cl_title||'');
   v('txt-cl-sub',textsData.cl_sub||'');
+  v('txt-fx-music',textsData.fx_music==='off'?'off':'on');
+  v('txt-fx-drift',textsData.fx_drift==='off'?'off':'on');
 }
 async function saveTexts(){
   textsData={
     port_title:g('txt-port-title'),
-    cl_title:g('txt-cl-title'),cl_sub:g('txt-cl-sub')
+    cl_title:g('txt-cl-title'),cl_sub:g('txt-cl-sub'),
+    fx_music:g('txt-fx-music')==='off'?'off':'on',fx_drift:g('txt-fx-drift')==='off'?'off':'on'
   };
   var{error}=await sb.from('ao_settings').upsert({id:1,page_texts:textsData,updated_at:new Date().toISOString()});
   if(error){toast('❌ '+error.message);return}
@@ -2991,12 +3048,12 @@ async function saveTexts(){
 
 // ── SECTION COLORS ───────────────────────────────────────
 var SECTION_COLOR_DEFS=[
-  {id:'home',label:'الهيرو (الصفحة الرئيسية)',defBg:'#ffffff',defText:'#18150f',defAccent:'#e8192c',defCard:'#ffffff',defIcon:'#e8192c',defCardText:'#18150f'},
-  {id:'secStats',label:'الشريط الإحصائي',defBg:'#e8192c',defText:'#ffffff',defAccent:'#e8192c',defCard:'#ffffff',defIcon:'#ffffff',defCardText:'#18150f',hide:['accent','card','cardText']},
-  {id:'secCatalogs',label:'قسم الكتالوجات',defBg:'#ffffff',defText:'#18150f',defAccent:'#e8192c',defCard:'#ffffff',defIcon:'#e8192c',defCardText:'#18150f'},
-  {id:'portfolio',label:'قسم الأعمال',defBg:'#f8f6f3',defText:'#18150f',defAccent:'#e8192c',defCard:'#ffffff',defIcon:'#e8192c',defCardText:'#18150f'},
-  {id:'clients',label:'قسم العملاء',defBg:'#ffffff',defText:'#18150f',defAccent:'#e8192c',defCard:'#ffffff',defIcon:'#e8192c',defCardText:'#18150f'},
-  {id:'secFooter',label:'الفوتر',defBg:'#f8f6f3',defText:'#18150f',defAccent:'#e8192c',defCard:'#ffffff',defIcon:'#e8192c',defCardText:'#18150f',hide:['card','cardText']}
+  {id:'home',label:'الهيرو (الصفحة الرئيسية)',defBg:'#000000',defText:'#ffffff',defAccent:'#ff0a0a',defCard:'#0a0a0a',defIcon:'#04f06a',defCardText:'#ffffff'},
+  {id:'secStats',label:'الشريط الإحصائي',defBg:'#000000',defText:'#ffffff',defAccent:'#ff0a0a',defCard:'#0a0a0a',defIcon:'#04f06a',defCardText:'#ffffff',hide:['accent','card','cardText']},
+  {id:'secCatalogs',label:'قسم الكتالوجات',defBg:'#1b1b1b',defText:'#ffffff',defAccent:'#ff0a0a',defCard:'#0a0a0a',defIcon:'#04f06a',defCardText:'#ffffff'},
+  {id:'portfolio',label:'قسم الأعمال',defBg:'#000000',defText:'#ffffff',defAccent:'#ff0a0a',defCard:'#0a0a0a',defIcon:'#04f06a',defCardText:'#ffffff'},
+  {id:'clients',label:'قسم العملاء',defBg:'#1b1b1b',defText:'#ffffff',defAccent:'#ff0a0a',defCard:'#0a0a0a',defIcon:'#04f06a',defCardText:'#ffffff'},
+  {id:'secFooter',label:'الفوتر',defBg:'#000000',defText:'#ffffff',defAccent:'#ff0a0a',defCard:'#0a0a0a',defIcon:'#04f06a',defCardText:'#ffffff',hide:['card','cardText']}
 ];
 var sectionColorsData={};
 function colorSwatch(id,key,val,title){
@@ -3013,7 +3070,7 @@ function renderColorsEditor(){
     var cols=[
       ['bg',bg,'لون الخلفية','خلفية'],
       ['text',text,'لون النصوص','نص'],
-      ['accent',accent,'لون الأزرار والشارات','أزرار'],
+      ['accent',accent,'لون الأزرار والشارات (بيتحوّل لتدرج أحمر)','أزرار'],
       ['icon',icon,'لون الأيقونات','أيقونات'],
       ['card',card,'لون خلفية الكروت','كروت'],
       ['cardText',cardText,'لون النص جوه الكروت','نص الكارت']
@@ -3043,7 +3100,7 @@ async function saveSectionColors(){
 }
 
 // ── GLOBAL SITE COLORS ──────────────────────────────────
-var GLOBAL_COLOR_DEF={defBg:'#ffffff',defText:'#18150f',defAccent:'#e8192c',defCard:'#ffffff',defIcon:'#e8192c',defCardText:'#18150f'};
+var GLOBAL_COLOR_DEF={defBg:'#000000',defText:'#ffffff',defAccent:'#ff0a0a',defCard:'#0a0a0a',defIcon:'#04f06a',defCardText:'#ffffff'};
 var globalColorsData={};
 function renderGlobalColorsEditor(){
   var cur=globalColorsData||{};
@@ -3052,7 +3109,7 @@ function renderGlobalColorsEditor(){
   var cols=[
     ['bg',bg,'لون خلفية الصفحة','خلفية'],
     ['text',text,'لون النصوص','نص'],
-    ['accent',accent,'لون الأزرار والشارات','أزرار'],
+    ['accent',accent,'لون الأزرار والشارات (بيتحوّل لتدرج أحمر)','أزرار'],
     ['icon',icon,'لون الأيقونات','أيقونات'],
     ['card',card,'لون خلفية الكروت','كروت'],
     ['cardText',cardText,'لون النص جوه الكروت','نص الكارت']

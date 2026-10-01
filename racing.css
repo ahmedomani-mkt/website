@@ -285,3 +285,9 @@ section .sec-head .sec-sub{margin-inline:0 auto!important}
   .pc-title{font-size:14px!important}
   .pc-price{font-size:16px!important}
 }
+
+/* client logos: every logo sits on a white tile so dark/coloured artwork stays readable on black */
+.cl-item{background:#fff!important;border-radius:3px;box-shadow:0 0 0 1px rgba(255,255,255,.18)}
+.cl-item img{opacity:1!important}
+.cl-item .cl-name,.cl-item:hover .cl-name{color:#111!important}
+.cl-item:hover{box-shadow:0 0 0 1px var(--race-red)}
