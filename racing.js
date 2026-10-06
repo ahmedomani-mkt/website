@@ -493,3 +493,29 @@
     if(++tries<40)setTimeout(wait,300);
   })();
 })();
+
+/* Meta Pixel — WhatsApp contact tracking for the pages that have no cart
+   (homepage + CMS pages). Every tap on a wa.me link fires the standard
+   "Contact" event plus a custom "WhatsAppClick", so Facebook ads can count
+   and optimise for WhatsApp conversations. The catalog/product pages already
+   fire Lead / Contact themselves, so this is skipped there. The pixel id is
+   cached so the pixel starts at first paint on later visits. */
+(function(){
+  var K='ao_px';
+  if(typeof window.pxTrack==='function')return;           // catalog + product handle their own events
+  function load(id){
+    if(!id||!/^[A-Za-z0-9_-]{1,64}$/.test(id)||window.fbq)return;
+    !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
+    window.fbq('init',id);window.fbq('track','PageView');
+  }
+  window.AOPixel={load:function(id){try{localStorage.setItem(K,id)}catch(e){}load(id)}};
+  try{if(localStorage.getItem('ao_no_track')!=='1'){var c=localStorage.getItem(K);if(c)load(c)}}catch(e){}
+  document.addEventListener('click',function(e){
+    var a=e.target.closest&&e.target.closest('a[href*="wa.me/"],a[href*="api.whatsapp.com"]');
+    if(!a||typeof window.fbq!=='function')return;
+    try{if(localStorage.getItem('ao_no_track')==='1')return}catch(x){}
+    var where=(a.closest('nav,.mobile-nav')?'nav':a.closest('footer')?'footer':a.closest('.wa-btn')?'float':'section');
+    window.fbq('track','Contact',{content_name:'whatsapp',content_category:where});
+    window.fbq('trackCustom','WhatsAppClick',{placement:where,page:location.pathname});
+  },true);
+})();

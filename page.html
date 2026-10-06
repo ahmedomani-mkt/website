@@ -312,11 +312,12 @@ async function loadPage(){
     logVisitOnce();
 
     var results=await Promise.all([
-      sb.from('ao_settings').select('whatsapp,logo_url,favicon_url,footer_text').single(),
+      sb.from('ao_settings').select('whatsapp,logo_url,favicon_url,footer_text,meta_pixel_id').single(),
       sb.from('ao_pages').select('*').eq('slug',slug).eq('is_published',true).single(),
     ]);
     var cfg=results[0].data;
     if(cfg&&cfg.whatsapp)_waNum=cfg.whatsapp;
+    if(cfg&&cfg.meta_pixel_id&&window.AOPixel)window.AOPixel.load(cfg.meta_pixel_id);
     var waHref='https://wa.me/'+_waNum+'?text='+encodeURIComponent('مرحبا، أريد الاستفسار عن خدماتكم');
     document.querySelectorAll('#navCta,#mCta').forEach(function(a){a.href=waHref});
     if(cfg&&cfg.logo_url){var nl=document.getElementById('navLogoImg');if(nl)nl.src=cfg.logo_url;}
