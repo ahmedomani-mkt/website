@@ -5,7 +5,8 @@
 ## المحتوى
 ```
 CLAUDE.md                      تعليمات عامة قصيرة فقط
-.claude/rules/                 قواعد حسب نوع الملف (rtl-arabic, visual-consistency, tracking-and-ads)
+.claude/rules/                 قواعد حسب نوع الملف (rtl-arabic [للمشاريع العربية فقط], visual-consistency)
+optional/rules/                tracking-and-ads — انسخها لـ .claude/rules/ فقط لو المشروع فيه إعلانات/بيكسل
 .claude/skills/                7 مهارات (كل واحدة لها دليل في السجل)
   brief-to-requirements · design-direction · ui-build · fix-and-verify · visual-qa (+ scripts/visual-qa.js جواها) · ship-and-verify (يدوي فقط: /ship-and-verify) · ads-tracking-audit
 docs/                          المنهج، تقرير التحقق، سجل التغييرات، سجل التصحيحات، الأنماط والتعارضات، checklists، قوالب، workflow، prompts، الأدلة

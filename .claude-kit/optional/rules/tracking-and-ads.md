@@ -3,7 +3,7 @@ paths:
   - "**/*.html"
   - "**/*.js"
 ---
-# Tracking & ads rules
+# Tracking & ads rules (optional — copy to `.claude/rules/` only when the project has ads/pixels)
 Evidence: corrections-log #21; one project only, so confidence is medium.
 
 - Every conversion CTA (WhatsApp, call, add-to-cart, form) on **every page that can receive ad traffic** fires an event. Audit all pages, not only the catalog.

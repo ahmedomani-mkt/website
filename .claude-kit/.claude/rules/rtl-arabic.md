@@ -5,6 +5,8 @@ paths:
   - "**/*.js"
 ---
 # Arabic / RTL UI rules
+**Applies only to Arabic/RTL projects** (`lang="ar"` or `dir="rtl"` present, or the user says so). In any other project, ignore this file.
+
 Evidence: corrections-log #5 (user report + code), #6 (found in review, verified in code). The kashida and `direction:ltr` lines come from session observations, not user statements: confidence medium.
 
 - Set `<html lang="ar" dir="rtl">`. Latin mono/code snippets inside RTL get `direction:ltr`.
