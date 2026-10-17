@@ -7,19 +7,22 @@
 CLAUDE.md                      تعليمات عامة قصيرة فقط
 .claude/rules/                 قواعد حسب نوع الملف (rtl-arabic, visual-consistency, tracking-and-ads)
 .claude/skills/                7 مهارات (كل واحدة لها دليل في السجل)
-  brief-to-requirements · design-direction · ui-build · fix-and-verify · visual-qa · ship-and-verify · ads-tracking-audit
-scripts/visual-qa.js           فحص Playwright بـ wheel حقيقي (جُرّب فعلًا)
-docs/                          المنهج، سجل التصحيحات، الأنماط والتعارضات، checklists، قوالب، workflow، prompts، الأدلة
+  brief-to-requirements · design-direction · ui-build · fix-and-verify · visual-qa (+ scripts/visual-qa.js جواها) · ship-and-verify (يدوي فقط: /ship-and-verify) · ads-tracking-audit
+docs/                          المنهج، تقرير التحقق، سجل التغييرات، سجل التصحيحات، الأنماط والتعارضات، checklists، قوالب، workflow، prompts، الأدلة
 ```
 **ليه مفيش Skills للـ Architecture / Backend / Database / Security / Code Review / Performance؟** ما ظهرش في الأدلة طلب ولا إجراء متكرر لها، فمخلقتهاش. بيتضافوا لما يظهر دليل في مشروع جديد (§الصيانة).
 
 ## الاستخدام في مشروع جديد
 ```bash
-cp -r .claude-kit/CLAUDE.md .claude-kit/.claude .claude-kit/scripts .claude-kit/docs <مشروع-جديد>/
+cp -r .claude-kit/CLAUDE.md .claude-kit/.claude .claude-kit/docs <مشروع-جديد>/
 mkdir -p <مشروع-جديد>/projects/<اسم>   # وحط فيه NOTES.md من docs/templates.md
 ```
 لو المشروع فيه `CLAUDE.md` أو `.claude/` بالفعل: **ادمج يدويًا ولا تستبدل** (الـ skills بأسمائها فريدة؛ CLAUDE.md اقرأه وأضف الأقسام الناقصة).
 بعدها اتبع `docs/project-bootstrap.md` من المرحلة 0. لتجربة الاستدعاء: اطلب بالاسم ("استخدم fix-and-verify على…") أو سيختارها Claude من الوصف.
+
+## ملاحظات من الاختبار الفعلي (راجع docs/validation-report.md)
+- الـ Skills **ما بتتشغّلش لوحدها بشكل موثوق**؛ لازم قسم Workflow triggers في `CLAUDE.md` (موجود) أو استدعاء يدوي `/اسم-الـ-skill`.
+- `ship-and-verify` استدعاؤه يدوي فقط (له آثار جانبية).
 
 ## كيف تعمل الأجزاء مع بعض
 - `CLAUDE.md` يُحمَّل دائمًا: قواعد عامة قصيرة (التواصل، النطاق، قواعد الأدلة، التحقق).

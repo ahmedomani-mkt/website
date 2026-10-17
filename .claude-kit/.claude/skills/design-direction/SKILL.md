@@ -18,7 +18,6 @@ Evidence: user said the result felt generic/constrained (L2220); 3 real mockups 
 - Compared against professional sites, not against "works".
 - No decorative element without a job; elements added as a bundle are individually removable.
 - Mood is set by the chosen direction: *restrained* and *playful* directions have different rules. Follow the chosen one; don't blend (docs/recurring-patterns.md, conflicts 2–3).
-- Colour never carries meaning alone; neon/accent only where the direction says.
 
 ## Don't
 Reuse the previous project's palette by default; claim a tool (Canva etc.) was used when it wasn't connected; ship a direction the user hasn't seen.

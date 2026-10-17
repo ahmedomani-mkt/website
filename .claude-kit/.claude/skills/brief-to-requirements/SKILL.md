@@ -12,6 +12,7 @@ Why: the user writes structured briefs (problem / required / forbidden) and judg
 4. **Write acceptance checks** per point: which viewport(s), which screenshot, which measurable condition (e.g. "all cards identical size", "CTA fully visible at 390px", "no horizontal overflow").
 5. **Feasibility questions** ("ينفع نعمل X؟"): answer *possible / not possible / possible with limits*, say what you'd need from the user, and don't build until they say go. Never promise a platform capability you haven't checked (e.g. a "live" feed).
 6. **Ask only what blocks you**: merge/deploy policy, missing assets, ambiguous conflicts with earlier instructions. Otherwise pick the conventional default and say so.
-7. Output: a short numbered list in Arabic for the user to approve, then start.
+7. Output **as visible text in your reply, before the first file is written or any code command is run**: a short numbered list in Arabic (requirements · protected list · acceptance checks · **assumptions you are making**). In an interactive session, stop and let the user approve.
+8. **No user available to approve** (headless/non-interactive run): still write that list first (print it in the reply; optionally also save it as a plan file), proceed on the stated assumptions, and repeat the assumptions in the final report.
 
 Don't: invent requirements, add scope "while I'm here", or re-open decisions the user already made.

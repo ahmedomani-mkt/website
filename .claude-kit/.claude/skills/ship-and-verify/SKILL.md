@@ -1,6 +1,7 @@
 ---
 name: ship-and-verify
-description: Commit, push, merge per the project's policy, wait for the deploy, and verify the live site. Use whenever a change should go live.
+description: Commit, push, merge per the project's policy, wait for the deploy, and verify the live site. Use only when the user asks to ship/merge/deploy.
+disable-model-invocation: true
 ---
 # Ship and verify
 
